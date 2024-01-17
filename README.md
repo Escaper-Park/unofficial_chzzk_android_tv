@@ -23,7 +23,7 @@
 > 1) USB를 TV에 연결하여 직접 APK 파일을 설치합니다.
 
 ### 다운로드
-> [APK 파일 다운로드](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.0.1)
+> [APK 파일 다운로드](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.0.2)
 >
 > TiVo Stream 4K 기준 **chzzkTV-armeabi-v7a-release.apk** 파일로 설치했습니다.
 >
