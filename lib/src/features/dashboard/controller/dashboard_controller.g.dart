@@ -6,24 +6,8 @@ part of 'dashboard_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dashboardFocusNodeHash() =>
-    r'f8d1c6c3cca3b8d40b5afe328afd6bec98bb98cc';
-
-/// See also [dashboardFocusNode].
-@ProviderFor(dashboardFocusNode)
-final dashboardFocusNodeProvider = AutoDisposeProvider<Raw<FocusNode>>.internal(
-  dashboardFocusNode,
-  name: r'dashboardFocusNodeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dashboardFocusNodeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef DashboardFocusNodeRef = AutoDisposeProviderRef<Raw<FocusNode>>;
 String _$dashboardControllerHash() =>
-    r'1cb041b570718836270fe540c7210cd2d100cdec';
+    r'8d54454a3e34c5aa40427903fbba9f75e9117413';
 
 /// See also [DashboardController].
 @ProviderFor(DashboardController)

@@ -36,7 +36,7 @@ final GlobalKey<NavigatorState> _rootNavigatorKey =
 Raw<GoRouter> appRouter(AppRouterRef ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    debugLogDiagnostics: true, // TODO : Set false
+    debugLogDiagnostics: false,
     initialLocation: AppRoute.splash.routePath,
     routes: [
       GoRoute(

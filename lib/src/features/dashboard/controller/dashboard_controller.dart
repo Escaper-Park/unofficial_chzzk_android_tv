@@ -33,8 +33,8 @@ class DashboardController extends _$DashboardController {
   }
 }
 
-// TODO : Make this to list to use it for all title menu.
-@riverpod
-Raw<FocusNode> dashboardFocusNode(DashboardFocusNodeRef ref) {
-  return FocusNode();
-}
+// // TODO : Make this to list to use it for all title menu.
+// @riverpod
+// Raw<FocusNode> dashboardFocusNode(DashboardFocusNodeRef ref) {
+//   return FocusNode();
+// }

@@ -76,7 +76,7 @@ class LiveContainer extends StatelessWidget {
     } else {
       final imageUrl =
           thumbnailUrl.replaceAll('image_{type}.jpg', 'image_480.jpg');
-
+      
       return CachedNetworkImage(
         imageUrl: imageUrl,
         imageBuilder: (context, imageProvider) {

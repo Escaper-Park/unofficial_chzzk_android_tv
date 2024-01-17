@@ -12,7 +12,7 @@ part 'home_popular_live_channels.g.dart';
 @riverpod
 Future<List<LiveDetail>?> popularLiveDetails(PopularLiveDetailsRef ref) async {
   return await ref
-      .read(clientRepositoryProvider.notifier)
+      .watch(clientRepositoryProvider.notifier)
       .getPopularChannelsLiveDetails();
 }
 

@@ -7,7 +7,7 @@ part of 'home_popular_live_channels.dart';
 // **************************************************************************
 
 String _$popularLiveDetailsHash() =>
-    r'9c1b1a894244710e8c3411d3795e30c1d10a07cc';
+    r'647c452ffe23e41d80ae1dbc96966924f6a7199e';
 
 /// See also [popularLiveDetails].
 @ProviderFor(popularLiveDetails)
