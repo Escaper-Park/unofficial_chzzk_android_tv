@@ -41,3 +41,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# NaverKey
+/android/app/src/main/res/values/*
+/android/app/src/main/res/values-night/*
+
+# TODO
+TODO.md

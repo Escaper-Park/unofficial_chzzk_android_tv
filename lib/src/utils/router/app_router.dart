@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../features/screens.dart';
+import '../../model/live/live.dart';
+import '../../ui/screens/screens.dart';
 
 export 'package:go_router/go_router.dart';
 
 part 'app_router.g.dart';
 
 enum AppRoute {
-  dashboard('/dashboard', 'dashboard'),
   splash('/splash', 'splash'),
   home('/home', 'home'),
-  auth('/auth', 'auth'),
   following('/following', 'following'),
   search('/search', 'search'),
-  naverLogin('/naverLogin', 'naverLogin'),
-  vod('/vod', 'vod'),
-  singleView('/singleView', 'singleView');
-  // channelDetail('/channelDetail', 'channelDetail');
+  setting('/setting', 'setting'),
+  auth('/auth', 'auth'),
+  singleViewLive('/singleViewLive', 'singleViewLive'),
+  singleViewVod('/singleViewVod', 'singleViewVod'),
+  multiView('/multiView', 'multiView'),
+  multiViewLive('/multiViewLive', 'multiViewLive'),
+  license('/license', 'license');
 
   final String routePath;
   final String routeName;
@@ -28,9 +30,6 @@ enum AppRoute {
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
-
-// final GlobalKey<NavigatorState> _shellNavigatorKey =
-//     GlobalKey<NavigatorState>(debugLabel: 'shell');
 
 @riverpod
 Raw<GoRouter> appRouter(AppRouterRef ref) {
@@ -44,44 +43,6 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
         name: AppRoute.splash.routeName,
         pageBuilder: (context, state) => NoTransitionPage(
           child: SplashScreen(key: state.pageKey),
-        ),
-      ),
-      GoRoute(
-        path: AppRoute.auth.routePath,
-        name: AppRoute.auth.routeName,
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: AuthScreen(key: state.pageKey),
-        ),
-      ),
-      GoRoute(
-        path: AppRoute.naverLogin.routePath,
-        name: AppRoute.naverLogin.routeName,
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: NaverLoginWebViewScreen(
-            key: state.pageKey,
-            id: state.uri.queryParameters['id']!,
-            password: state.uri.queryParameters['password']!,
-          ),
-        ),
-      ),
-      GoRoute(
-        path: AppRoute.singleView.routePath,
-        name: AppRoute.singleView.routeName,
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: SingleViewScreen(
-            key: state.pageKey,
-            videoPath: state.uri.queryParameters['videoPath']!,
-          ),
-        ),
-      ),
-      GoRoute(
-        path: AppRoute.vod.routePath,
-        name: AppRoute.vod.routeName,
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: VodScreen(
-            key: state.pageKey,
-            vodPath: state.uri.queryParameters['vodPath']!,
-          ),
         ),
       ),
       GoRoute(
@@ -105,37 +66,74 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
           child: SearchScreen(key: state.pageKey),
         ),
       ),
+      GoRoute(
+        path: AppRoute.setting.routePath,
+        name: AppRoute.setting.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: SettingScreen(key: state.pageKey),
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.auth.routePath,
+        name: AppRoute.auth.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: AuthScreen(key: state.pageKey),
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.singleViewLive.routePath,
+        name: AppRoute.singleViewLive.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: SingleViewLiveScreen(
+            key: state.pageKey,
+            videoPath: state.uri.queryParameters['videoPath']!,
+            channelId: state.uri.queryParameters['channelId']!,
+            chatChannelId: state.uri.queryParameters['chatChannelId']!,
+            openDate: state.uri.queryParameters['openDate']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.singleViewVod.routePath,
+        name: AppRoute.singleViewVod.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: SingleViewVodScreen(
+            key: state.pageKey,
+            vodPath: state.uri.queryParameters['vodPath']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoute.multiView.routePath,
+        name: AppRoute.multiView.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: MultiViewScreen(
+            key: state.pageKey,
+          ),
+        ),
+      ),
+      GoRoute(
+          path: AppRoute.multiViewLive.routePath,
+          name: AppRoute.multiViewLive.routeName,
+          pageBuilder: (context, state) {
+            List<LiveDetail> liveDetails = state.extra as List<LiveDetail>;
 
-      // Dashboard Shell
-      // ShellRoute(
-      //   navigatorKey: _shellNavigatorKey,
-      //   builder: (context, state, child) => DashboardScreen(
-      //     body: child,
-      //   ),
-      //   routes: [
-      //     GoRoute(
-      //       path: AppRoute.home.routePath,
-      //       name: AppRoute.home.routeName,
-      //       pageBuilder: (context, state) => NoTransitionPage(
-      //         child: HomeScreen(key: state.pageKey),
-      //       ),
-      //     ),
-      //     GoRoute(
-      //       path: AppRoute.following.routePath,
-      //       name: AppRoute.following.routeName,
-      //       pageBuilder: (context, state) => NoTransitionPage(
-      //         child: FollowingScreen(key: state.pageKey),
-      //       ),
-      //     ),
-      //     GoRoute(
-      //       path: AppRoute.search.routePath,
-      //       name: AppRoute.search.routeName,
-      //       pageBuilder: (context, state) => NoTransitionPage(
-      //         child: SearchScreen(key: state.pageKey),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+            return NoTransitionPage(
+              child: MultiViewLiveScreen(
+                key: state.pageKey,
+                liveDetails: liveDetails,
+              ),
+            );
+          }),
+      GoRoute(
+        path: AppRoute.license.routePath,
+        name: AppRoute.license.routeName,
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: OpenSourceLicenseScreen(
+            key: state.pageKey,
+          ),
+        ),
+      ),
     ],
     redirect: (context, state) {
       final bool isSplash = state.uri.toString() == AppRoute.splash.routePath;

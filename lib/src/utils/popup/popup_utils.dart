@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/styles.dart';
+
 class PopupUtils {
   static Future<void> showSingleDialog({
     required BuildContext context,
@@ -18,7 +20,8 @@ class PopupUtils {
           title: Text(
             titleText,
             style: const TextStyle(
-              fontSize: 14.0,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w700,
             ),
           ),
           content: SizedBox(
@@ -26,7 +29,11 @@ class PopupUtils {
             child: Center(
               child: Text(
                 contentText,
-                style: const TextStyle(fontSize: 12.0),
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  color: AppColors.greyColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -69,7 +76,8 @@ class PopupUtils {
           title: Text(
             titleText,
             style: const TextStyle(
-              fontSize: 14.0,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w700,
             ),
           ),
           content: SizedBox(
@@ -85,6 +93,7 @@ class PopupUtils {
               },
             ),
             PopupActionButton(
+              autoFocus: true,
               focusNode: confirmFocusNode,
               actionText: confirmText,
               onPressed: () {

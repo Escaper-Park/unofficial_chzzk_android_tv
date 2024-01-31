@@ -8,7 +8,9 @@
         android:required="false" />
     <!-- Android TV End -->
     <application
-        android:label="unofficial_chzzk_android_tv"
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
+        android:label="비공식 Chzzk for Android TV"
         android:banner="@drawable/banner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
