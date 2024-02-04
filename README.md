@@ -17,8 +17,8 @@
 - 홈 버튼으로 앱을 빠져나갔을 때, 백그라운드에서 채팅이 로드되던 현상 수정.
 - 앱을 일시정지 했다가 다시 실행헀을 때, 1분 이상 지나면 실시간 화면으로 재생. (1분 전에는 일시정지 했던 시점에서 재생)
 - 채팅창 설정 추가 (위치, 채팅창 크기, 글씨 크기 등)
-![채팅설정1](./images/11.jpg)
-![채팅설정2](./images/12.jpg)
+![채팅설정1](./images/11_1.jpg)
+![채팅설정2](./images/12_1.jpg)
 
 ## 패치노트 - v0.1
 ### 기능 수정 및 추가
@@ -66,7 +66,7 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 ```
 
 ## 다운로드
-[**APK 파일 다운로드 (v0.1.0)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.1.0)
+[**APK 파일 다운로드 (v0.1.1)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.1.1)
 
 TiVo Stream 4K 기준 **chzzkTV-armeabi-v7a-release-v0.1.0.apk** 파일로 설치했습니다.
 사용하시는 안드로이드 TV 환경에 따라 설치하시면 됩니다.
