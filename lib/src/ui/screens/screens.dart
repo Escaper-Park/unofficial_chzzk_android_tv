@@ -12,4 +12,4 @@ export './multi_view/multi_view_screen.dart';
 export './multi_view/multi_view_live_screen.dart';
 
 export './setting/setting_screen.dart';
-export './setting/license_screen.dart';
+export 'setting/widgets/license_screen.dart';

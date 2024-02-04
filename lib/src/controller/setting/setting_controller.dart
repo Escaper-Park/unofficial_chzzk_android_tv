@@ -25,6 +25,16 @@ class SettingController extends _$SettingController {
   String? getNaverIdPrefs() {
     return _settingRepository.getNaverIdPrefs();
   }
+
+  Future<void> setChatDelaySec(int value) async {
+    if (value <= 15 && value >= 0) {
+      await _settingRepository.setChatDelaySec(value);
+    }
+  }
+
+  int getChatDelaySec() {
+    return _settingRepository.getChatDelaySec();
+  }
 }
 
 @Riverpod(keepAlive: true)

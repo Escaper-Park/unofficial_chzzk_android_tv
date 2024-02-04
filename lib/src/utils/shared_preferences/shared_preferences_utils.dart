@@ -14,6 +14,8 @@ class SharedPrefencesKey {
   static const String chatContainerHeight = 'chatContainerHeight';
   static const String chatContainerWidth = 'chatContainerWidth';
   static const String chatContainerTransparency = 'chatContainerTransparency';
-  
+
+  static const String chatDelaySec = 'chatDelaySec';
+
   static const String naverId = 'naverId';
 }

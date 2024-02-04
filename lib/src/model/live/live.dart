@@ -40,7 +40,7 @@ class LivePlaybackConverter implements JsonConverter<String, String> {
 
     final List<dynamic> mediaList = json['media'];
 
-    final hls = mediaList.firstWhere((media) => media['mediaId'] == 'HLS');
+    final hls = mediaList.firstWhere((media) => media['mediaId'] == 'LLHLS');
 
     return hls['path'];
   }

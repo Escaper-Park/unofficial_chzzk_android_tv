@@ -79,4 +79,15 @@ class SettingRepository {
       chatPosition: position,
     );
   }
+
+  Future<void> setChatDelaySec(int value) async {
+    await _sharedPreferences.setInt(
+      SharedPrefencesKey.chatDelaySec,
+      value,
+    );
+  }
+
+  int getChatDelaySec() {
+    return _sharedPreferences.getInt(SharedPrefencesKey.chatDelaySec) ?? 0;
+  }
 }

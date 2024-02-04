@@ -8,6 +8,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../constants/api.dart';
 import '../../model/chat/chat.dart';
 import '../../service/chat/chat_repository.dart';
+import '../setting/setting_controller.dart';
 
 part 'chat_controller.g.dart';
 
@@ -23,6 +24,9 @@ class ChatController extends _$ChatController {
   }) async* {
     Random random = Random();
     int serverNo = random.nextInt(5) + 1;
+
+    final int chatDelaySec =
+        ref.read(settingControllerProvider.notifier).getChatDelaySec();
 
     _channel = WebSocketChannel.connect(
       Uri.parse(
@@ -44,24 +48,23 @@ class ChatController extends _$ChatController {
     // Disconnect chat ready
     ref.onDispose(_chatRepository.disconnect);
 
-    // const int chatDeleySec = 4;
+    final transformer = StreamTransformer<dynamic, dynamic>.fromHandlers(
+      handleData: (data, sink) {
+        if (data != null) {
+          Future.delayed(Duration(seconds: chatDelaySec), () {
+            sink.add(data);
+          });
+        }
+      },
+    );
 
-    // final transformer = StreamTransformer<dynamic, dynamic>.fromHandlers(
-    //   handleData: (data, sink) {
-    //     if (data != null) {
-    //       Future.delayed(const Duration(seconds: chatDeleySec), () {
-    //         sink.add(data);
-    //       });
-    //     }
-    //   },
-    // );
+    final Stream<dynamic> delayedStream = chatDelaySec == 0
+        ? _channel.stream
+        : _channel.stream.transform(transformer);
 
     List<Chat> allMessages = [];
 
-    // final transformChannelStream =
-    //     _channel.stream.transform(transformer).asBroadcastStream();
-
-    await for (final message in _channel.stream) {
+    await for (final message in delayedStream) {
       Map<String, dynamic> response = json.decode(message);
 
       // Get chat messages
