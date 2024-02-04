@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './src/constants/styles.dart';
 import './src/utils/router/app_router.dart';
+import './src/utils/shared_preferences/shared_preferences_utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,9 +18,15 @@ Future<void> main() async {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
 
+  // Get Shared Prefences Data
+  final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+
   runApp(
-    const ProviderScope(
-      child: ChzzkTV(),
+    ProviderScope(
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(sharedPrefs),
+      ],
+      child: const ChzzkTV(),
     ),
   );
 }

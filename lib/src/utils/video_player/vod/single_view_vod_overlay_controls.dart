@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
@@ -15,12 +13,12 @@ class SingleViewVodOverlayControls extends ConsumerWidget {
   const SingleViewVodOverlayControls({
     super.key,
     required this.chewieController,
-    required this.timer,
+    // required this.timer,
     required this.videoFocusNode,
   });
 
   final ChewieController chewieController;
-  final Timer timer;
+  // final Timer timer;
   final FocusNode videoFocusNode;
 
   @override
@@ -35,7 +33,7 @@ class SingleViewVodOverlayControls extends ConsumerWidget {
       },
       child: VodControllerButtons(
         chewieController: chewieController,
-        timer: timer,
+        // timer: timer,
         videoFocusNode: videoFocusNode,
       ),
     );
@@ -46,12 +44,12 @@ class VodControllerButtons extends HookConsumerWidget {
   const VodControllerButtons({
     super.key,
     required this.chewieController,
-    required this.timer,
+    // required this.timer,
     required this.videoFocusNode,
   });
 
   final ChewieController chewieController;
-  final Timer timer;
+  // final Timer timer;
   final FocusNode videoFocusNode;
 
   @override
@@ -78,6 +76,7 @@ class VodControllerButtons extends HookConsumerWidget {
                     children: [
                       ControlIcon(
                         iconData: Icons.replay_10_rounded,
+                        label: '되감기',
                         onPressed: () {
                           chewieController.pause();
 
@@ -94,13 +93,13 @@ class VodControllerButtons extends HookConsumerWidget {
                           ref
                               .read(videoControlsTimerProvider.notifier)
                               .showControlsWithTimer(
-                                videoFocusNode: videoFocusNode,
-                              );
+                                  videoFocusNode: videoFocusNode);
                         },
                       ),
                       const SizedBox(width: 10.0),
                       ControlIcon(
                         autofocus: true,
+                        label: videoIsPlaying.value ? '재생' : '일시정지',
                         iconData: videoIsPlaying.value
                             ? Icons.play_arrow
                             : Icons.pause,
@@ -115,6 +114,7 @@ class VodControllerButtons extends HookConsumerWidget {
                       const SizedBox(width: 10.0),
                       ControlIcon(
                         iconData: Icons.forward_10,
+                        label: '빨리감기',
                         onPressed: () {
                           chewieController.pause();
 
@@ -134,8 +134,7 @@ class VodControllerButtons extends HookConsumerWidget {
                           ref
                               .read(videoControlsTimerProvider.notifier)
                               .showControlsWithTimer(
-                                videoFocusNode: videoFocusNode,
-                              );
+                                  videoFocusNode: videoFocusNode);
                         },
                       ),
                     ],

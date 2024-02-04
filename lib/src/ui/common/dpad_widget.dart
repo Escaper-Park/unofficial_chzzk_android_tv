@@ -58,6 +58,7 @@ class DpadWidget extends HookWidget {
           switch (keyLabel) {
             case "Arrow Up": // up
               if (upCallback != null) upCallback!();
+              FocusScope.of(context).requestFocus(widgetFocusNode);
             case "Arrow Down": // down
               if (downCallback != null) downCallback!();
             case 'Arrow Left': // left

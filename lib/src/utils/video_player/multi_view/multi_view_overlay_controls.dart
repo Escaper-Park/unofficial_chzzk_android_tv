@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../network_video_controller.dart';
@@ -57,6 +58,8 @@ class MultiViewLiveControlButtons extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final focusScopeNode = useFocusScopeNode();
+
     return Stack(
       children: [
         // Play-Pause Button
@@ -66,17 +69,20 @@ class MultiViewLiveControlButtons extends HookConsumerWidget {
             height: double.infinity,
             width: 300,
             color: Colors.black.withOpacity(0.9),
-            child: ListView.builder(
-              itemCount: chewieControllers.length,
-              itemBuilder: (context, index) {
-                return MultiViewControlCard(
-                  autofocus: index == 0 ? true : false,
-                  index: index,
-                  profileImageUrl: profileImageUrls[index],
-                  videoFocusNode: videoFocusNode,
-                  controller: chewieControllers[index],
-                );
-              },
+            child: FocusScope(
+              node: focusScopeNode,
+              child: ListView.builder(
+                itemCount: chewieControllers.length,
+                itemBuilder: (context, index) {
+                  return MultiViewControlCard(
+                    autofocus: index == 0 ? true : false,
+                    index: index,
+                    profileImageUrl: profileImageUrls[index],
+                    videoFocusNode: videoFocusNode,
+                    controller: chewieControllers[index],
+                  );
+                },
+              ),
             ),
           ),
         ),

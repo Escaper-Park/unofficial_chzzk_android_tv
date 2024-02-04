@@ -113,7 +113,7 @@ class _MultiViewNetworkVideosState
 
   @override
   Widget build(BuildContext context) {
-    final bool showControls = ref.watch(showControlsProvider);
+    final showControls = ref.watch(showControlsProvider);
     final Timer? videoControlsTimer = ref.watch(videoControlsTimerProvider);
 
     bool allVideoControllsAreInitialized = videoPlayerControllers
@@ -131,7 +131,7 @@ class _MultiViewNetworkVideosState
                   ref
                       .read(videoControlsTimerProvider.notifier)
                       .showControlsWithTimer(
-                        videoFocusNode: _videoFocusNode,
+                        videoFocusNode: _videoFocusNode
                       );
                 },
                 child: Center(

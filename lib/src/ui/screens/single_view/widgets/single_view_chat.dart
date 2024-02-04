@@ -9,10 +9,12 @@ class SingleViewChat extends ConsumerWidget {
     super.key,
     required this.channelId,
     required this.chatChannelId,
+    required this.fontSize,
   });
 
   final String channelId;
   final String chatChannelId;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +31,7 @@ class SingleViewChat extends ConsumerWidget {
 
             return DelayedChat(
               chat: chat,
+              fontSize: fontSize,
             );
           },
         ),

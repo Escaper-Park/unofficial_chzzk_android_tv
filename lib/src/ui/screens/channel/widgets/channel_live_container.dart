@@ -1,33 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:dio/dio.dart';
 
 import '../../../../constants/dimensions.dart';
-import '../../../../controller/auth/auth_controller.dart';
 import '../../../../controller/live/live_controller.dart';
-import '../../../../model/live/live.dart';
-import '../../../../service/live/live_repository.dart';
+
 import '../../../common/header_text.dart';
 import '../../../common/live_container.dart';
-
-part 'channel_live_container.g.dart';
-
-@riverpod
-Future<LiveDetail?> currentChannelLive(
-  CurrentChannelLiveRef ref, {
-  required String channelId,
-}) async {
-  final auth = ref.watch(authControllerProvider).value;
-
-  Options? options = auth?.getOptions();
-
-  return await ref.watch(liveRepositoryProvider).getLiveDetail(
-        channelId: channelId,
-        options: options,
-      );
-}
 
 class ChannelLiveContainer extends ConsumerWidget {
   const ChannelLiveContainer({

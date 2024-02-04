@@ -24,7 +24,7 @@ final multiViewControllerProvider =
 
 typedef _$MultiViewController = AutoDisposeNotifier<List<LiveDetail>>;
 String _$multiViewVolumeControlsHash() =>
-    r'a9a8469c8f9fba57b7d923441de8badf0a23e983';
+    r'dca4871ca45c35c92cce049b87d9b4a6846366c5';
 
 /// See also [MultiViewVolumeControls].
 @ProviderFor(MultiViewVolumeControls)
@@ -41,7 +41,7 @@ final multiViewVolumeControlsProvider =
 
 typedef _$MultiViewVolumeControls = AutoDisposeNotifier<List<double>>;
 String _$currentSelectedChannelHash() =>
-    r'f55b26be2fbf0efa6a619e9b106008ee7f570ae8';
+    r'832db78dd9b003db0c6e84cab00765fbe34e457c';
 
 /// See also [CurrentSelectedChannel].
 @ProviderFor(CurrentSelectedChannel)

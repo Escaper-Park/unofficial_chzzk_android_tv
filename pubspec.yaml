@@ -3,7 +3,7 @@ description: "A Chzzk Android TV UnOfficial project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 1.0.0+1
+version: 0.1.1+1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -28,6 +28,7 @@ dependencies:
   video_player: ^2.8.1
   chewie: ^1.7.4
   web_socket_channel: ^2.4.0
+  shared_preferences: ^2.2.2
 
 
 dev_dependencies:

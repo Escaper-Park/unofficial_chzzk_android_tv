@@ -55,19 +55,21 @@ class _UptimeTimerState extends State<UptimeTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: RoundedContainer(
-        backgroundColor: AppColors.greyContainerColor.withOpacity(0.85),
-        padding: const EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 8.0,
-        ),
-        child: Text(
-          _passedTime,
-          style: const TextStyle(
-            fontSize: 14.0,
-            color: AppColors.whiteColor,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RoundedContainer(
+          backgroundColor: AppColors.greyContainerColor.withOpacity(0.85),
+          padding: const EdgeInsets.symmetric(
+            vertical: 5.0,
+            horizontal: 8.0,
+          ),
+          child: Text(
+            _passedTime,
+            style: const TextStyle(
+              fontSize: 14.0,
+              color: AppColors.whiteColor,
+            ),
           ),
         ),
       ),

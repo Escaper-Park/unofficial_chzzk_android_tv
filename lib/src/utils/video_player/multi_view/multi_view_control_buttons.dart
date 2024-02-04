@@ -35,10 +35,10 @@ class MultiViewControlButtons extends ConsumerWidget {
             flex: 1,
             child: MultiViewControlButton(
               autofocus: autofocus,
-              text: index == currentSelectedChannel ? '같이보기' : '크게보기',
+              text: index == currentSelectedChannel ? '크게보기' : '같이보기',
               iconData: index == currentSelectedChannel
-                  ? Icons.fullscreen_exit_rounded
-                  : Icons.fullscreen_rounded,
+                  ? Icons.fullscreen_rounded
+                  : Icons.fullscreen_exit_rounded,
               callback: () {
                 ref
                     .read(currentSelectedChannelProvider.notifier)
@@ -46,7 +46,9 @@ class MultiViewControlButtons extends ConsumerWidget {
 
                 ref
                     .read(videoControlsTimerProvider.notifier)
-                    .showControlsWithTimer(videoFocusNode: videoFocusNode);
+                    .showControlsWithTimer(
+                      videoFocusNode: videoFocusNode,
+                    );
               },
             ),
           ),
@@ -55,7 +57,7 @@ class MultiViewControlButtons extends ConsumerWidget {
             flex: 1,
             child: MultiViewControlButton(
               autofocus: false,
-              text: currentVolumne == 0.0 ? '음소거' : '소리 켜기',
+              text: currentVolumne == 0.0 ? '음소거' : '소리켜짐',
               iconData: currentVolumne == 0.0
                   ? Icons.volume_off_rounded
                   : Icons.volume_up_rounded,

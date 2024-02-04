@@ -4,9 +4,14 @@ import '../../../../constants/styles.dart';
 import '../../../../model/chat/chat.dart';
 
 class DelayedChat extends StatelessWidget {
-  const DelayedChat({super.key, required this.chat});
+  const DelayedChat({
+    super.key,
+    required this.chat,
+    required this.fontSize,
+  });
 
   final Chat chat;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class DelayedChat extends StatelessWidget {
             TextSpan(
               text: chat.nickname,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: fontSize,
                 color: nicknameColor,
                 fontWeight: FontWeight.w600,
               ),
@@ -30,8 +35,8 @@ class DelayedChat extends StatelessWidget {
             ),
             TextSpan(
               text: chat.msg,
-              style: const TextStyle(
-                fontSize: 14.0,
+              style: TextStyle(
+                fontSize: fontSize,
                 color: AppColors.chatColor,
                 fontWeight: FontWeight.w600,
               ),

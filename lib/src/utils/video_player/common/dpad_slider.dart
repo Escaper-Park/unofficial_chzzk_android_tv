@@ -45,9 +45,9 @@ class DpadSlider extends HookConsumerWidget {
 
         leftCallback(position.value);
 
-        ref
-            .read(videoControlsTimerProvider.notifier)
-            .showControlsWithTimer(videoFocusNode: videoFocusNode);
+        ref.read(videoControlsTimerProvider.notifier).showControlsWithTimer(
+              videoFocusNode: videoFocusNode,
+            );
       },
       rightCallback: () {
         if (position.value + interval < max) {
@@ -57,9 +57,9 @@ class DpadSlider extends HookConsumerWidget {
         }
         rightCallback(position.value);
 
-        ref
-            .read(videoControlsTimerProvider.notifier)
-            .showControlsWithTimer(videoFocusNode: videoFocusNode);
+        ref.read(videoControlsTimerProvider.notifier).showControlsWithTimer(
+              videoFocusNode: videoFocusNode,
+            );
       },
       child: LayoutBuilder(
         builder: (context, constraints) {

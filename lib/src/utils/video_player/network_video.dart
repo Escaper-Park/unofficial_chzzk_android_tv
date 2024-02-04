@@ -2,25 +2,31 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../controller/chat/chat_controller.dart';
+import '../../controller/live/live_controller.dart';
 import '../../ui/common/dpad_widget.dart';
-import 'single_view_live/single_view_live_overlay_controls.dart';
+import './single_view_live/single_view_live_overlay_controls.dart';
 import './network_video_controller.dart';
-import 'vod/single_view_vod_overlay_controls.dart';
+import './vod/single_view_vod_overlay_controls.dart';
+import 'single_view_live/single_view_chat_controls.dart';
 
-class NetworkVideo extends ConsumerStatefulWidget {
+class NetworkVideo extends StatefulHookConsumerWidget {
   const NetworkVideo({
     super.key,
     required this.videoPath,
+    this.channelId,
     this.isLive = true,
     this.openDate,
   });
 
   final String videoPath;
+  final String? channelId;
   final bool isLive;
   final String? openDate;
 
@@ -28,26 +34,26 @@ class NetworkVideo extends ConsumerStatefulWidget {
   ConsumerState<NetworkVideo> createState() => _NetworkVideoState();
 }
 
-class _NetworkVideoState extends ConsumerState<NetworkVideo> {
+class _NetworkVideoState extends ConsumerState<NetworkVideo>
+    with WidgetsBindingObserver {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
   int? bufferDelay;
-  late FocusNode _videoFocusNode;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WakelockPlus.enable();
-    _videoFocusNode = FocusNode(debugLabel: 'video');
 
     initializePlayer();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _videoPlayerController.dispose();
     _chewieController?.dispose();
-    _videoFocusNode.dispose();
 
     WakelockPlus.disable();
     super.dispose();
@@ -67,13 +73,39 @@ class _NetworkVideoState extends ConsumerState<NetworkVideo> {
     }
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.hidden:
+        break;
+      case AppLifecycleState.paused:
+        ref.read(videoControlsTimerProvider.notifier).cancelTimer();
+        ref.invalidate(chatControllerProvider);
+        break;
+      case AppLifecycleState.resumed:
+        if (widget.isLive && widget.channelId != null) {
+          await ref.read(liveControllerProvider.notifier).showNowLive(
+                context: context,
+                channelId: widget.channelId!,
+                videoController: _chewieController!,
+              );
+        }
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
   void _createChewieController() {
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
       looping: false,
       allowedScreenSleep: false,
-      isLive: false,
+      isLive: widget.isLive,
       draggableProgressBar: false,
       fullScreenByDefault: false,
       allowFullScreen: false,
@@ -86,8 +118,9 @@ class _NetworkVideoState extends ConsumerState<NetworkVideo> {
 
   @override
   Widget build(BuildContext context) {
-    final bool showControls = ref.watch(showControlsProvider);
-    final Timer? videoControlsTimer = ref.watch(videoControlsTimerProvider);
+    final showControls = ref.watch(showControlsProvider);
+    final showChatControls = ref.watch(showChatControlsProvider);
+    final videoFocusNode = useFocusNode();
 
     return _chewieController != null &&
             _chewieController!.videoPlayerController.value.isInitialized
@@ -95,15 +128,13 @@ class _NetworkVideoState extends ConsumerState<NetworkVideo> {
             children: [
               DpadWidget(
                 autofocus: true,
-                focusNode: _videoFocusNode,
+                focusNode: videoFocusNode,
                 okCallback: () {
-                  _videoFocusNode.unfocus();
+                  videoFocusNode.unfocus();
 
                   ref
                       .read(videoControlsTimerProvider.notifier)
-                      .showControlsWithTimer(
-                        videoFocusNode: _videoFocusNode,
-                      );
+                      .showControlsWithTimer(videoFocusNode: videoFocusNode);
                 },
                 child: Center(
                   child: AspectRatio(
@@ -112,23 +143,31 @@ class _NetworkVideoState extends ConsumerState<NetworkVideo> {
                   ),
                 ),
               ),
-              if (showControls && widget.isLive)
+              if (showControls &&
+                  !showChatControls &&
+                  widget.isLive &&
+                  widget.channelId != null)
                 SingleViewLiveOverlayControls(
                   videoController: _chewieController!,
-                  timer: videoControlsTimer!,
-                  videoFocusNode: _videoFocusNode,
+                  // timer: videoControlsTimer!,
+                  videoFocusNode: videoFocusNode,
                   openDate: widget.openDate ?? '2024-01-01 00:00:00',
+                  channelId: widget.channelId!,
                 ),
               if (showControls && !widget.isLive)
                 SingleViewVodOverlayControls(
                   chewieController: _chewieController!,
-                  timer: videoControlsTimer!,
-                  videoFocusNode: _videoFocusNode,
+                  // timer: videoControlsTimer!,
+                  videoFocusNode: videoFocusNode,
+                ),
+              if (!showControls && showChatControls)
+                SingleViewChatControls(
+                  videoFocusNode: videoFocusNode,
                 ),
             ],
           )
-        : const Center(
-            child: Text('라이브 불러오는 중...'),
+        : Center(
+            child: Text(widget.isLive ? '라이브 불러오는 중...' : '동영상 불러오는 중...'),
           );
   }
 }

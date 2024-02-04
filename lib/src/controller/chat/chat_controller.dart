@@ -30,7 +30,7 @@ class ChatController extends _$ChatController {
       ),
     );
 
-    _chatRepository = ref.watch(
+    _chatRepository = ref.read(
       // ignore: avoid_manual_providers_as_generated_provider_dependency
       ChatRepositoryProvider(
         channel: _channel,
@@ -44,24 +44,24 @@ class ChatController extends _$ChatController {
     // Disconnect chat ready
     ref.onDispose(_chatRepository.disconnect);
 
-    const int chatDeleySec = 4;
+    // const int chatDeleySec = 4;
 
-    final transformer = StreamTransformer<dynamic, dynamic>.fromHandlers(
-      handleData: (data, sink) {
-        if (data != null) {
-          Future.delayed(const Duration(seconds: chatDeleySec), () {
-            sink.add(data);
-          });
-        }
-      },
-    );
+    // final transformer = StreamTransformer<dynamic, dynamic>.fromHandlers(
+    //   handleData: (data, sink) {
+    //     if (data != null) {
+    //       Future.delayed(const Duration(seconds: chatDeleySec), () {
+    //         sink.add(data);
+    //       });
+    //     }
+    //   },
+    // );
 
     List<Chat> allMessages = [];
 
-    final transformChannelStream =
-        _channel.stream.transform(transformer).asBroadcastStream();
+    // final transformChannelStream =
+    //     _channel.stream.transform(transformer).asBroadcastStream();
 
-    await for (final message in transformChannelStream) {
+    await for (final message in _channel.stream) {
       Map<String, dynamic> response = json.decode(message);
 
       // Get chat messages
@@ -70,11 +70,14 @@ class ChatController extends _$ChatController {
 
         List<Chat> msg = (body as List)
             .map((res) {
-              String profile = res['profile'];
+              String? profile = res['profile'];
+
+              String? nickname =
+                  profile == null ? 'ERROR' : jsonDecode(profile)['nickname'];
 
               Map<String, dynamic> json = {
-                'nickname': jsonDecode(profile)['nickname'],
-                'msg': res['msg'],
+                'nickname': nickname ?? 'ERROR',
+                'msg': res['msg'] ?? 'ERROR',
               };
 
               return Chat.fromJson(json);

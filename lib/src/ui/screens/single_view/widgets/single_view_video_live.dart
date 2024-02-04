@@ -7,10 +7,12 @@ class SingleViewVideoLive extends StatelessWidget {
     super.key,
     required this.videoPath,
     required this.openDate,
+    required this.channelId,
   });
 
   final String videoPath;
   final String openDate;
+  final String channelId;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class SingleViewVideoLive extends StatelessWidget {
       videoPath: videoPath,
       isLive: true,
       openDate: openDate,
+      channelId: channelId,
     );
   }
 }

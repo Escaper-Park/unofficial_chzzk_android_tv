@@ -1,11 +1,31 @@
+import 'package:chewie/chewie.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../model/live/live.dart';
+import '../../service/live/live_repository.dart';
 import '../../utils/popup/popup_utils.dart';
 import '../../utils/router/app_router.dart';
+import '../../utils/video_player/network_video_controller.dart';
+import '../auth/auth_controller.dart';
 
 part 'live_controller.g.dart';
+
+@riverpod
+Future<LiveDetail?> currentChannelLive(
+  CurrentChannelLiveRef ref, {
+  required String channelId,
+}) async {
+  final auth = ref.watch(authControllerProvider).value;
+
+  Options? options = auth?.getOptions();
+
+  return await ref.watch(liveRepositoryProvider).getLiveDetail(
+        channelId: channelId,
+        options: options,
+      );
+}
 
 @riverpod
 class LiveController extends _$LiveController {
@@ -37,6 +57,40 @@ class LiveController extends _$LiveController {
           },
         );
       }
+    }
+  }
+
+  Future<void> showNowLive({
+    // ignore: avoid_build_context_in_providers
+    required BuildContext context,
+    required String channelId,
+    required ChewieController videoController,
+  }) async {
+    final currentLiveDetail =
+        await ref.read(liveRepositoryProvider).getLiveDetail(
+              channelId: channelId,
+            );
+
+    if (currentLiveDetail != null) {
+      if (context.mounted) {
+        // Timer close
+        ref.read(videoControlsTimerProvider.notifier).cancelTimer();
+
+        // Controls close
+        ref.read(showControlsProvider.notifier).setState(false);
+
+        context.pushReplacementNamed(
+          AppRoute.singleViewLive.routeName,
+          queryParameters: {
+            'videoPath': currentLiveDetail.livePath,
+            'channelId': currentLiveDetail.channel.channelId,
+            'chatChannelId': currentLiveDetail.chatChannelId,
+            'openDate': currentLiveDetail.openDate,
+          },
+        );
+      }
+    } else {
+      videoController.seekTo(const Duration(days: 3));
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import '../../../../constants/api.dart';
 import '../../../../controller/auth/auth_controller.dart';
+import '../../../../controller/setting/setting_controller.dart';
 import '../../../../utils/router/app_router.dart';
 
 class LoginWithHeadlessWebView extends StatefulHookConsumerWidget {
@@ -44,6 +45,10 @@ class _LoginWithHeadlessWebViewState
         cacheEnabled: true,
       ),
       onLoadStop: (controller, url) async {
+        await ref.read(settingControllerProvider.notifier).setNaverIdPrefs(
+              widget.id,
+            );
+
         final bool isLoggedIn =
             await ref.read(authControllerProvider.notifier).login(
                   controller: controller,

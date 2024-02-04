@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/ui/common/header_with_show_more_button.dart';
 
 import '../../../../constants/dimensions.dart';
 import '../../../../controller/dashboard/dashboard_controller.dart';
@@ -8,7 +7,9 @@ import '../../../../controller/following/following_controller.dart';
 
 import '../../../../controller/live/live_controller.dart';
 import '../../../../model/live/live.dart';
+import '../../../common/header_with_show_more_button.dart';
 import '../../../common/live_container.dart';
+import 'home_refresh_button.dart';
 
 class HomeFollowingLives extends ConsumerWidget {
   const HomeFollowingLives({super.key});
@@ -39,12 +40,14 @@ class HomeFollowingLives extends ConsumerWidget {
                       autofocus: index == 0 ? true : false,
                       liveDetail: liveDetail,
                       onPressed: () async {
-                        await ref
-                            .read(liveControllerProvider.notifier)
-                            .showSingleViewLive(
-                              context: context,
-                              liveDetail: liveDetail,
-                            );
+                        if (context.mounted) {
+                          await ref
+                              .read(liveControllerProvider.notifier)
+                              .showSingleViewLive(
+                                context: context,
+                                liveDetail: liveDetail,
+                              );
+                        }
                       },
                     );
                   },
@@ -74,9 +77,15 @@ class HomeFollowingLives extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HeaderWithShowMoreButton(
-          headerText: '팔로우 라이브 채널',
-          onPressed: showMoreCallback,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            HeaderWithShowMoreButton(
+              headerText: '팔로우 라이브 채널',
+              onPressed: showMoreCallback,
+            ),
+            const HomeRefreshButton(),
+          ],
         ),
         SizedBox(
           height: Dimensions.liveContainerHeight,

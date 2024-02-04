@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../../constants/styles.dart';
 import '../../../../utils/focus/focus_utils.dart';
@@ -6,7 +7,7 @@ import '../../../common/custom_outline_button.dart';
 import '../../../common/custom_text_field.dart';
 import '../../../common/dpad_widget.dart';
 
-class SearchTextField extends StatelessWidget {
+class SearchTextField extends HookWidget {
   const SearchTextField({
     super.key,
     required this.formKey,
@@ -26,22 +27,60 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final focusScopeNode = useFocusScopeNode();
     return Form(
       key: formKey,
-      child: Row(
-        children: [
-          Expanded(
-            child: DpadWidget(
-              okCallback: () {
+      child: FocusScope(
+        node: focusScopeNode,
+        child: Row(
+          children: [
+            Expanded(
+              child: DpadWidget(
+                okCallback: () {
+                  FocusUtils.changeFocus(
+                    currentFocus: textFocusNode,
+                    nextFocus: textFocusNode,
+                  );
+                },
+                rightCallback: () {
+                  FocusUtils.changeFocus(
+                    currentFocus: textFocusNode,
+                    nextFocus: buttonFocusNode,
+                  );
+                },
+                downCallback: () {
+                  FocusUtils.changeFocus(
+                    currentFocus: textFocusNode,
+                    nextFocus: resultsFocusNode,
+                  );
+                },
+                child: CustomTextFormField(
+                  autoFocus: true,
+                  focusNode: textFocusNode,
+                  controller: searchController,
+                  hintText: '검색어를 입력해주세요',
+                  onFieldSubmitted: (_) {
+                    FocusUtils.changeFocus(
+                      currentFocus: textFocusNode,
+                      nextFocus: buttonFocusNode,
+                    );
+                  },
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return '';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: 5.0),
+            DpadWidget(
+              okCallback: searchCallback,
+              leftCallback: () {
                 FocusUtils.changeFocus(
-                  currentFocus: textFocusNode,
+                  currentFocus: buttonFocusNode,
                   nextFocus: textFocusNode,
-                );
-              },
-              rightCallback: () {
-                FocusUtils.changeFocus(
-                  currentFocus: textFocusNode,
-                  nextFocus: buttonFocusNode,
                 );
               },
               downCallback: () {
@@ -50,48 +89,20 @@ class SearchTextField extends StatelessWidget {
                   nextFocus: resultsFocusNode,
                 );
               },
-              child: CustomTextFormField(
-                autoFocus: true,
-                focusNode: textFocusNode,
-                controller: searchController,
-                hintText: '검색어를 입력해주세요',
-                onFieldSubmitted: (_) {
-                  FocusUtils.changeFocus(
-                    currentFocus: textFocusNode,
-                    nextFocus: buttonFocusNode,
-                  );
+              child: CustomOutlineButton(
+                padding: const EdgeInsets.all(8.0),
+                onPressed: () {
+                  // OK Button bugs.
                 },
-                validator: (value) {
-                  if (value != null && value.isEmpty) {
-                    return '';
-                  }
-                  return null;
-                },
+                focusNode: buttonFocusNode,
+                child: const Icon(
+                  Icons.search,
+                  color: AppColors.greyColor,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 5.0),
-          DpadWidget(
-            okCallback: searchCallback,
-            leftCallback: () {
-              FocusUtils.changeFocus(
-                currentFocus: buttonFocusNode,
-                nextFocus: textFocusNode,
-              );
-            },
-            child: CustomOutlineButton(
-              padding: const EdgeInsets.all(8.0),
-              onPressed: () {
-                // OK Button bugs.
-              },
-              focusNode: buttonFocusNode,
-              child: const Icon(
-                Icons.search,
-                color: AppColors.greyColor,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
