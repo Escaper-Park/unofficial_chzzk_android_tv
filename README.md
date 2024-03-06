@@ -52,9 +52,9 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 [**APK 파일 다운로드 (v0.2.0)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.0)
 
 ### 설치 파일
-- TiVo Stream 4K: **chzzkTV-armeabi-v7a-release-v0.2.0.apk**
-- 크롬캐스트 최신: **chzzk-arm64-v8a-release.v0.2.0.apk**
-- 그 외: 사용하시는 TV의 CPU Type에 따라 다운로드 받으시면 됩니다.
+- 사용하시는 티비의 CPU에 따라 설치하시면 됩니다.
+- 설치가 되지 않는 다면 다른 버전으로 설치를 시도해보세요.
+- 최적화 버전(저용량 파일들)이 설치되지 않는다면 통합 APK 파일로 설치를 시도해보세요. (chzzk-v0.2.0.apk)
 
 ## 현재 사용 가능한 기능
 - 로그인 (Headless WebView)
