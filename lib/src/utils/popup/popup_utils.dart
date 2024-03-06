@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/styles.dart';
+import '../../common/constants/styles.dart';
 
 class PopupUtils {
   static Future<void> showSingleDialog({

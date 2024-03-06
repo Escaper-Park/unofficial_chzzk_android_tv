@@ -8,8 +8,12 @@ class FocusUtils {
     // If currentFocus == nextFocus, show textfield keyboard again.
     currentFocus.unfocus();
 
-    await Future.delayed(const Duration(milliseconds: 300)).then((_) {
+    await Future.delayed(const Duration(milliseconds: 100)).then((_) {
       nextFocus.requestFocus();
     });
+  }
+
+  static void refreshFocus(FocusNode currentFocusNode) async {
+    changeFocus(currentFocus: currentFocusNode, nextFocus: currentFocusNode);
   }
 }

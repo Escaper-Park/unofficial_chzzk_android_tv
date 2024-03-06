@@ -1,17 +1,19 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import './src/constants/styles.dart';
 import './src/utils/router/app_router.dart';
-import './src/utils/shared_preferences/shared_preferences_utils.dart';
+import './src/utils/shared_preferences/shared_prefs.dart';
+import './src/common/constants/styles.dart';
+import './src/utils/image_cache/image_cache_controller.dart';
 
-Future<void> main() async {
+void main() async {
+  // Set global image cache.
+  ImageCacheController();
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
@@ -20,6 +22,8 @@ Future<void> main() async {
 
   // Get Shared Prefences Data
   final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+
+  GoRouter.optionURLReflectsImperativeAPIs = true;
 
   runApp(
     ProviderScope(
