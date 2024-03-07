@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants/app_version.dart';
 import '../../common/widgets/focused_outline_button.dart';
 import '../../common/widgets/header_text.dart';
 import '../../utils/router/app_router.dart';
@@ -22,17 +23,31 @@ class SettingsScreen extends StatelessWidget {
               fontSize: 18.0,
             ),
             FocusedOutlineButton(
+              autofocus: true,
               padding: const EdgeInsets.all(10.0),
               onPressed: () {
                 context.pushNamed(AppRoute.license.routeName);
               },
               child: const Text('보기'),
             ),
+            const Divider(),
+            const HeaderText(
+              text: 'WebView 로그인 (로그인 오류 시 사용하세요)',
+              fontSize: 18.0,
+            ),
+            FocusedOutlineButton(
+              padding: const EdgeInsets.all(10.0),
+              onPressed: () {
+                context.pushNamed(AppRoute.naverLoginWithWebView.routeName);
+              },
+              child: const Text('WebView 로그인'),
+            ),
+            const Divider(),
             const HeaderText(
               text: '앱 버전',
               fontSize: 18.0,
             ),
-            const Text('v0.2.0-release'),
+            const Text(AppVersion.version),
           ],
         ),
       ),

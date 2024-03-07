@@ -1,6 +1,7 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../multi_view/controller/multi_view_controller.dart';
 import '../model/auth.dart';
 import '../repository/auth_repository.dart';
 
@@ -47,8 +48,8 @@ class AuthController extends _$AuthController {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      // multiview channel
-      // ref.invalidate(multiViewControllerProvider);
+      // invalidate multiview channel
+      ref.invalidate(multiViewControllerProvider);
 
       await ref.watch(authRepositoryProvider).deleteCookies();
 

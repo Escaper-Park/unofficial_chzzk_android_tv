@@ -26,7 +26,7 @@ enum AppRoute {
   multiView('multiView', 'multiView', 4),
   settings('settings', 'settings', 5),
 
-  // Login
+  // Login (Headless webview)
   id('id', 'id', 6),
   password('password', 'password', 7),
 
@@ -45,6 +45,9 @@ enum AppRoute {
 
   // Multi_view Streaming
   multiViewStreaming('multiViewStreaming', 'multiViewStreaming', 13),
+
+  // Login (Webview)
+  naverLoginWithWebView('naverLoginWithWebView', 'naverLoginWithWebView', 97),
 
   // license
   license('license', 'license', 98);
@@ -224,6 +227,14 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
                 ),
               );
             },
+          ),
+          // NaverLogin With WebView
+          GoRoute(
+            path: AppRoute.naverLoginWithWebView.routePath,
+            name: AppRoute.naverLoginWithWebView.routeName,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: NaverLoginWithWebViewScreen(key: state.pageKey),
+            ),
           ),
           // License
           GoRoute(

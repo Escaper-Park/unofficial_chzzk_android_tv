@@ -35,7 +35,12 @@ class _NaverLoginHeadlessWebViewState
   void initState() {
     super.initState();
     headlessWebView = HeadlessInAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri(APIUrl.naverLogin)),
+      initialUrlRequest: URLRequest(
+        url: WebUri(APIUrl.naverLogin),
+        headers: {
+          'User-Agent': 'Chrome/58.0.3029.110',
+        },
+      ),
       initialSettings: InAppWebViewSettings(
         useHybridComposition: true,
         javaScriptEnabled: true,
