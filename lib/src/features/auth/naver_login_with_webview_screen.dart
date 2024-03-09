@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/features/auth/repository/auth_repository.dart';
 
 import '../../common/constants/api.dart';
 import '../../common/widgets/base_scaffold.dart';
 import '../../utils/router/app_router.dart';
+import '../../utils/virtual_keyboard/controller/virtual_keyboard_input_controller.dart';
+import '../../utils/virtual_keyboard/virtual_keyboard_input_display.dart';
+import '../../utils/virtual_keyboard/virtual_keyboard_layout.dart';
 import '../dashboard/controller/dashboard_controller.dart';
-import 'controller/auth_controller.dart';
-import 'widgets/login_text_form_field.dart';
+import './controller/auth_controller.dart';
 
 enum LoginStep {
   id,
@@ -34,6 +35,8 @@ class _NaverLoginDpadWebViewState
     javaScriptCanOpenWindowsAutomatically: true,
     thirdPartyCookiesEnabled: true,
     cacheEnabled: true,
+    userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   );
 
   @override
@@ -44,12 +47,9 @@ class _NaverLoginDpadWebViewState
   @override
   Widget build(BuildContext context) {
     final webViewKey = useMemoized(GlobalKey.new, const []);
-    final textController = useTextEditingController();
-    final textInputFocusNode = useFocusNode();
     final loginStep = useState<LoginStep>(LoginStep.id);
-    final focusScopeNode = useFocusScopeNode();
     final isObscure = useState<bool>(false);
-    final passwordCount = useState<int>(0);
+    final passwordStepCount = useState<int>(0);
 
     final hintText = switch (loginStep.value) {
       LoginStep.id => '아이디를 입력해주세요',
@@ -82,87 +82,117 @@ class _NaverLoginDpadWebViewState
                 ),
                 child: Column(
                   children: [
-                    FocusScope(
-                      autofocus: true,
-                      node: focusScopeNode,
-                      child: LoginTextFormField(
-                        textEditingController: textController,
-                        textInputFocusNode: textInputFocusNode,
-                        enableSuggestion:
-                            loginStep.value == LoginStep.captcha ? true : false,
-                        buttonText: '전송',
-                        hintText: hintText,
+                    SizedBox(
+                      height: 100.0,
+                      child: VirtualKeyboardInputDisplay(
+                        headerText: hintText,
                         isObscure: isObscure.value,
-                        onPressed: (text) async {
+                      ),
+                    ),
+                    Expanded(
+                      child: VirtualKeyboardLayout(
+                        onEnterPressed: (inputString) async {
                           String script = """ """;
-                          switch (loginStep.value) {
-                            case LoginStep.id:
-                              script = """
+
+                          if (inputString.isNotEmpty) {
+                            switch (loginStep.value) {
+                              case LoginStep.id:
+                                script = """
       var idField = document.getElementById('id');
       if (idField.value === '') {
-      idField.value = '$text';
+      idField.value = '$inputString';
       }
-      """;
-                              loginStep.value = LoginStep.password;
-                              isObscure.value = true;
-                              textController.text = '';
-                              textInputFocusNode.requestFocus();
-                              break;
-                            case LoginStep.password:
-                              if (passwordCount.value == 0) {
-                                script = """
-      var passwordField = document.getElementById('pw');
-      if (passwordField.value === ''){
-      passwordField.value = '$text';
-      }
-      document.querySelector('[id="log.login"]').click();
       """;
                                 loginStep.value = LoginStep.password;
                                 isObscure.value = true;
-                                passwordCount.value += 1;
-                              } else {
-                                script = """
+                                ref
+                                    .read(virtualKeyboardInputControllerProvider
+                                        .notifier)
+                                    .reset();
+
+                                if (_controller != null) {
+                                  await _controller!
+                                      .evaluateJavascript(source: script);
+                                }
+                                break;
+                              case LoginStep.password:
+                                if (passwordStepCount.value == 0) {
+                                  script = """
       var passwordField = document.getElementById('pw');
       if (passwordField.value === ''){
-      passwordField.value = '$text';
+      passwordField.value = '$inputString';
+      }
+      """;
+
+                                  if (_controller != null) {
+                                    await _controller!
+                                        .evaluateJavascript(source: script);
+                                  }
+
+                                  script = """
+document.querySelector('[id="log.login"]').click();
+""";
+
+                                  await Future.delayed(
+                                    const Duration(seconds: 1),
+                                    () {
+                                      _controller!
+                                          .evaluateJavascript(source: script);
+                                    },
+                                  );
+                                  loginStep.value = LoginStep.password;
+                                  isObscure.value = true;
+                                  passwordStepCount.value += 1;
+                                } else {
+                                  script = """
+      var passwordField = document.getElementById('pw');
+      if (passwordField.value === ''){
+      passwordField.value = '$inputString';
       }
       var captchaField = document.getElementById('captcha');
       captchaField.focus();
-      
       """;
-                                loginStep.value = LoginStep.captcha;
-                                isObscure.value = false;
-                                textController.text = '';
-                              }
-                              break;
-                            case LoginStep.captcha:
-                              script = """
+                                  loginStep.value = LoginStep.captcha;
+                                  isObscure.value = false;
+                                  ref
+                                      .read(
+                                          virtualKeyboardInputControllerProvider
+                                              .notifier)
+                                      .reset();
+                                }
+
+                                if (_controller != null) {
+                                  await _controller!
+                                      .evaluateJavascript(source: script);
+                                }
+                                break;
+                              case LoginStep.captcha:
+                                script = """
       var captchaField = document.getElementById('captcha');
       if (captchaField.value === ''){
-      captchaField.value = '$text';
+      captchaField.value = '$inputString';
       }
-      document.querySelector('[id="log.login"]').click();
       """;
-                              break;
-                          }
-                          if (_controller != null) {
-                            _controller!.evaluateJavascript(source: script);
+
+                                if (_controller != null) {
+                                  await _controller!
+                                      .evaluateJavascript(source: script);
+                                }
+                                script = """
+document.querySelector('[id="log.login"]').click();
+""";
+
+                                await Future.delayed(
+                                  const Duration(seconds: 1),
+                                  () {
+                                    _controller!
+                                        .evaluateJavascript(source: script);
+                                  },
+                                );
+                                break;
+                            }
                           }
                         },
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        """비밀번호를 여러 번 틀려 로그인에 문제가 생기면 CAPTCHA 화면이 나오게 됩니다.\n
-비밀번호 입력 후 로그인이 안된다면, 바로 다시 한 번 전송 버튼을 누르시고,\n
-CAPTCHA 정답을 입력하고 전송 후 로그인이 완료되면 치지직 웹 페이지가 나옵니다.\n
-치지직 웹 페이지가 로드되고 로그인이 완료된 것을 확인하셨으면 뒤로가기 버튼을 눌러\n
-화면에서 빠져나와주세요.""",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                        ),
                       ),
                     ),
                   ],
@@ -170,28 +200,38 @@ CAPTCHA 정답을 입력하고 전송 후 로그인이 완료되면 치지직 �
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 1,
               child: InAppWebView(
                 key: webViewKey,
-                initialUrlRequest: URLRequest(
-                  url: WebUri(APIUrl.naverLogin),
-                  headers: {
-                    'User-Agent': 'Chrome/58.0.3029.110',
-                  },
-                ),
+                initialUrlRequest: URLRequest(url: WebUri(APIUrl.naverLogin)),
                 initialSettings: settings,
                 onWebViewCreated: (controller) {
                   _controller = controller;
                 },
                 onLoadStop: (controller, url) async {
-                  // Keep login
-                  _controller!.evaluateJavascript(source: """            
+                  if (loginStep.value == LoginStep.id) {
+                    // Keep login
+                    _controller!.evaluateJavascript(source: """
+              var smartLevel = document.getElementById('smart_LEVEL');
+              smartLevel.value = '-1';
+              
+              var switchBlind = document.getElementById('switch_blind');
+              if (switchBlind != null) {
+                switchBlind.checked = false;
+                switchBlind.innerText = 'off';
+              }
+
               var checkbox = document.querySelector('.input_keep');
               if (checkbox !== null) {
                 checkbox.checked = true;
                 checkbox.value = 'on';
-              }""");
-                  _controller!.scrollTo(x: 0, y: 0);
+              }
+              """);
+
+                    await Future.delayed(const Duration(seconds: 1), () {
+                      _controller!.scrollTo(x: 0, y: 0);
+                    });
+                  }
                 },
               ),
             ),

@@ -11,9 +11,8 @@
 ![동영상다시보기](./images/02.png)
 ![라이브탐색](./images/05.png)
 
-## Hotfix - v0.2.1
-- HeadlessWebView로 로그인이 진행되지 않는 분들을 위해 WebView 로그인을 추가했습니다. (설정 -> WebView 로그인)
-
+## 핫픽스 - v0.2.1
+- HeadlessWebView로 로그인이 진행되지 않는 분들을 위해 WebView 로그인을 추가했습니다. 가상 키보드에 문제가 있으신 분도 WebView 로그인을 사용해주세요. (설정 -> WebView 로그인)
 
 ## 패치노트 - v0.2.0
 ### 1. 카테고리 검색, 라이브, 동영상, 홈 화면 즐겨찾기(로컬)
@@ -53,15 +52,14 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 ```
 
 ## 다운로드
-[**APK 파일 다운로드 (v0.2.1)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.0)
+[**APK 파일 다운로드 (v0.2.1)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.1)
 
 ### 설치 파일
-- TiVo Stream 4K: **chzzkTV-armeabi-v7a-release-v0.2.0.apk**
-- 크롬캐스트 최신: **chzzk-arm64-v8a-release.v0.2.0.apk**
-- 그 외: 사용하시는 TV의 CPU Type에 따라 다운로드 받으시면 됩니다.
+- 사용하시는 CPU 타입에 따라 설치하시면 됩니다.
+- 가능한 최적화 버전(v8a, v7a, x86)으로 설치해주세요. (설치 불가시 통합버전으로 설치)
 
 ## 현재 사용 가능한 기능
-- 로그인 (Headless WebView)
+- 로그인 (Headless WebView 또는 WebView)
 - 팔로우 채널 목록
 - 인기 채널 목록
 - 채널 검색

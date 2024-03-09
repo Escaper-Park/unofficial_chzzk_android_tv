@@ -163,8 +163,9 @@ class _NetworkVideoState extends ConsumerState<LiveStreamingNetworkVideo>
                     ref
                         .read(controlOverlayTimerProvider.notifier)
                         .showOverlayAndStartTimer(
-                            videoFocusNode: videoFocusNode,
-                            overlayType: OverlayType.main);
+                          videoFocusNode: videoFocusNode,
+                          overlayType: OverlayType.main,
+                        );
                   },
                   DpadAction.arrowUp: () {
                     videoFocusNode.unfocus();
@@ -173,7 +174,7 @@ class _NetworkVideoState extends ConsumerState<LiveStreamingNetworkVideo>
                         .read(controlOverlayTimerProvider.notifier)
                         .showOverlayAndStartTimer(
                           videoFocusNode: videoFocusNode,
-                          overlayType: OverlayType.popular,
+                          overlayType: OverlayType.following,
                         );
                   }
                 },

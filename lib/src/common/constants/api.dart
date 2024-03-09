@@ -6,6 +6,9 @@ class APIUrl {
   static const String naverLogin =
       'https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fchzzk.naver.com%2F&locale=ko_KR&svctype=1';
 
+  static const String naverQRLogin =
+      'https://nid.naver.com/nidlogin.login?mode=qrcode&url=https%3A%2F%2Fchzzk.naver.com%2F&locale=ko_KR&svctype=1';
+
   static String channel(String channelId) =>
       '$_chzzkAPIUrl/service/v1/channels/$channelId';
 

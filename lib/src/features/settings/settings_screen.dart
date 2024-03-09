@@ -32,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const Divider(),
             const HeaderText(
-              text: 'WebView 로그인 (로그인 오류 시 사용하세요)',
+              text: 'WebView 로그인',
               fontSize: 18.0,
             ),
             FocusedOutlineButton(

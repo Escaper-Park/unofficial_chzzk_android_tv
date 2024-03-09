@@ -472,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  hangul:
+    dependency: "direct main"
+    description:
+      name: hangul
+      sha256: "0b04b4de6200cd64e1aab430e520643b8dcf22dcbb78d71808262fd1a47d83a3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   hooks_riverpod:
     dependency: "direct main"
     description:

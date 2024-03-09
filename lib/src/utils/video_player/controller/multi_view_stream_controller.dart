@@ -43,7 +43,6 @@ class MultiViewVolumeController extends _$MultiViewVolumeController {
     List<double> newState = [...state];
     newState[index] = volume;
 
-    //TODO Controller
     state = newState;
   }
 
@@ -53,12 +52,10 @@ class MultiViewVolumeController extends _$MultiViewVolumeController {
     // Unmute
     if (newState[index] == 0.0) {
       newState[index] = init ? 1.0 : state[index];
-      // TODO: controller
     }
     // mute
     else {
       newState[index] = init ? 0.0 : state[index];
-      // TODO controller
     }
 
     state = newState;
