@@ -9,6 +9,7 @@ import '../../../utils/focus/focus_utils.dart';
 class LoginTextFormField extends HookWidget {
   const LoginTextFormField({
     super.key,
+    this.textEditingController,
     required this.textInputFocusNode,
     required this.buttonText,
     required this.hintText,
@@ -16,8 +17,11 @@ class LoginTextFormField extends HookWidget {
     this.initText,
     this.goBackAction,
     this.isObscure = false,
+    this.autofocus = false,
+    this.enableSuggestion = false,
   });
 
+  final TextEditingController? textEditingController;
   final FocusNode textInputFocusNode;
   final String buttonText;
   final String hintText;
@@ -25,10 +29,13 @@ class LoginTextFormField extends HookWidget {
   final String? initText;
   final VoidCallback? goBackAction;
   final Function(String? text)? onPressed;
+  final bool autofocus;
+  final bool enableSuggestion;
 
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController(text: initText);
+    final controller =
+        textEditingController ?? useTextEditingController(text: initText);
     final formKey = useMemoized(GlobalKey<FormState>.new, const []);
     useListenable(controller);
 
@@ -67,11 +74,12 @@ class LoginTextFormField extends HookWidget {
                     }
                   },
                   child: CustomTextFormField(
-                    autofocus: false,
+                    autofocus: autofocus,
                     focusNode: textInputFocusNode,
                     controller: controller,
                     isObscure: isObscure,
                     hintText: hintText,
+                    enableSuggestion: enableSuggestion,
                     onFieldSubmitted: (_) {
                       FocusUtils.changeFocus(
                         currentFocus: textInputFocusNode,

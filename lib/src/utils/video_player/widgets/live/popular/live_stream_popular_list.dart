@@ -2,6 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unofficial_chzzk_android_tv/src/common/widgets/focused_outline_button.dart';
 
 import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
@@ -133,6 +134,17 @@ class LiveStreamPopularList extends HookConsumerWidget {
                                                 '연령 제한된 콘텐츠는 로그인해야 시청할 수 있습니다',
                                           );
                                         } else {
+                                          // controller disappear
+                                          ref
+                                              .read(controlOverlayTimerProvider
+                                                  .notifier)
+                                              .showOverlayAndStartTimer(
+                                                videoFocusNode: videoFocusNode,
+                                                seconds: 0,
+                                                overlayType:
+                                                    OverlayType.popular,
+                                              );
+
                                           ref
                                               .read(liveStreamControllerProvider
                                                   .notifier)
@@ -147,8 +159,20 @@ class LiveStreamPopularList extends HookConsumerWidget {
                                   );
                                 },
                               ),
-                        AsyncError() =>
-                          const CenterText(text: '인기 채널을 불러오는데 실패했습니다'),
+                        AsyncError() => FocusedOutlineButton(
+                            autofocus: true,
+                            onPressed: () {
+                              ref
+                                  .read(controlOverlayTimerProvider.notifier)
+                                  .showOverlayAndStartTimer(
+                                    videoFocusNode: videoFocusNode,
+                                    seconds: 0,
+                                    overlayType: OverlayType.popular,
+                                  );
+                            },
+                            child:
+                                const CenterText(text: '인기 채널을 불러오는데 실패했습니다'),
+                          ),
                         _ => const CenterText(text: '인기 채널 불러오는 중...'),
                       },
                     ),

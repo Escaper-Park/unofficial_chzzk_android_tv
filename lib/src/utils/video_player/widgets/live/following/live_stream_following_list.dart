@@ -136,6 +136,16 @@ class LiveStreamFollowingList extends HookConsumerWidget {
                                                 '연령 제한된 콘텐츠는 로그인해야 시청할 수 있습니다',
                                           );
                                         } else {
+                                          // controller disappear
+                                          ref
+                                              .read(controlOverlayTimerProvider
+                                                  .notifier)
+                                              .showOverlayAndStartTimer(
+                                                videoFocusNode: videoFocusNode,
+                                                seconds: 0,
+                                                overlayType:
+                                                    OverlayType.following,
+                                              );
                                           ref
                                               .read(liveStreamControllerProvider
                                                   .notifier)

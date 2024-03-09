@@ -7,7 +7,7 @@ part of 'multi_view_stream_controller.dart';
 // **************************************************************************
 
 String _$multiViewStreamControllerHash() =>
-    r'1e28877a9d94fccdc223ac9d37a3a243db0902ae';
+    r'21d1028d133df7b41ffd1ead9117ba76a5a32d18';
 
 /// See also [MultiViewStreamController].
 @ProviderFor(MultiViewStreamController)

@@ -1,7 +1,7 @@
 name: unofficial_chzzk_android_tv
 description: "A Chzzk TV for Android TV"
 publish_to: "none"
-version: 0.2.0+1
+version: 0.2.1
 
 environment:
   sdk: ">=3.2.6 <4.0.0"
@@ -27,6 +27,7 @@ dependencies:
   flutter_hls_parser: ^2.0.1
   video_player: ^2.8.1
   chewie: ^1.7.4
+  hangul: ^0.6.0
 
 dev_dependencies:
   flutter_test:
