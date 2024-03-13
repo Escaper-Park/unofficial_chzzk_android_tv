@@ -73,15 +73,9 @@ class VirtualKeyboardLayout extends HookConsumerWidget {
                           : KeyboardLanguage.english;
 
                 default:
-                  if (keyboardLanguage.value == KeyboardLanguage.korean) {
-                    ref
-                        .read(virtualKeyboardInputControllerProvider.notifier)
-                        .addKoreanCharacter(keyboardKey);
-                  } else {
-                    ref
-                        .read(virtualKeyboardInputControllerProvider.notifier)
-                        .addCharacter(keyboardKey);
-                  }
+                  ref
+                      .read(virtualKeyboardInputControllerProvider.notifier)
+                      .addCharacter(keyboardKey, keyboardLanguage.value);
 
                   break;
               }

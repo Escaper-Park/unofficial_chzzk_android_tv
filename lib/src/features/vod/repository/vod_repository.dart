@@ -28,11 +28,14 @@ class VodRepository {
     ),
   );
 
-  Future<int?> getChannelTotalPages({required String channelId}) async {
+  Future<int?> getChannelTotalPages({
+    required String channelId,
+    required Options? options,
+  }) async {
     final url = APIUrl.vodList(channelId);
 
     // Don't need auth options
-    final response = await _dio.get(url);
+    final response = await _dio.get(url, options: options);
 
     return response.data['content']['totalPages'];
   }

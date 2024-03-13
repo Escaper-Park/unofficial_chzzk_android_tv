@@ -49,12 +49,12 @@ class DpadWidget extends HookWidget {
       return null;
     }, [widgetFocusNode]);
 
-    return RawKeyboardListener(
+    return KeyboardListener(
       autofocus: autofocus,
       focusNode: widgetFocusNode,
-      onKey: (event) {
-        if ((!useKeyUpEvent && event is RawKeyDownEvent) ||
-            (useKeyUpEvent && event is RawKeyUpEvent)) {
+      onKeyEvent: (event) {
+        if ((!useKeyUpEvent && event is KeyDownEvent) ||
+            (useKeyUpEvent && event is KeyUpEvent)) {
           onkeyEvent(context, event);
         }
       },
@@ -76,7 +76,7 @@ class DpadWidget extends HookWidget {
     );
   }
 
-  void onkeyEvent(BuildContext context, RawKeyEvent event) {
+  void onkeyEvent(BuildContext context, KeyEvent event) {
     final String keyLabel = event.logicalKey.keyLabel;
 
     switch (keyLabel) {
