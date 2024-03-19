@@ -7,7 +7,7 @@ part of 'virtual_keyboard_input_controller.dart';
 // **************************************************************************
 
 String _$virtualKeyboardInputControllerHash() =>
-    r'ce0a13ff5ecc2f2728767edc4158b3d6a78d8ba8';
+    r'6b8c8264933a55d87e4908442879219ae2bff056';
 
 /// See also [VirtualKeyboardInputController].
 @ProviderFor(VirtualKeyboardInputController)

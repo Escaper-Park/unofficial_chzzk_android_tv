@@ -85,4 +85,11 @@ class ChannelVodController extends _$ChannelVodController {
           options: _options,
         );
   }
+
+  Future<String?> getVodPath({required int videoNo}) async {
+    return await ref.watch(vodRepositoryProvider).getVodPath(
+          videoNo: videoNo,
+          options: _options,
+        );
+  }
 }

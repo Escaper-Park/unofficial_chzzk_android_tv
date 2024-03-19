@@ -62,6 +62,13 @@ class CategoryVodList extends HookConsumerWidget {
                     VodContainer(
                       autofocus: index == 0 ? true : false,
                       vod: vod,
+                      getVodPath: () async {
+                        return await ref
+                            .read(categoryVodControllerProvider(
+                              category: category,
+                            ).notifier)
+                            .getVodPath(videoNo: vod.videoNo);
+                      },
                     ),
                     CategoryVodChannelInfo(channel: vod.channel),
                   ],

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/vod/repository/vod_repository.dart';
 
 import '../../auth/controller/auth_controller.dart';
 import '../../vod/model/vod.dart';
@@ -56,5 +57,12 @@ class CategoryVodController extends _$CategoryVodController {
         return [...prev!, ...response!.vods!];
       });
     }
+  }
+
+  Future<String?> getVodPath({required int videoNo}) async {
+    return await ref.watch(vodRepositoryProvider).getVodPath(
+          videoNo: videoNo,
+          options: _options,
+        );
   }
 }

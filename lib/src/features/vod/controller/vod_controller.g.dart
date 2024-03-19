@@ -7,7 +7,7 @@ part of 'vod_controller.dart';
 // **************************************************************************
 
 String _$channelVodTotalPagesHash() =>
-    r'b24d46c85b3c79b2232e7dc2945b51134097a326';
+    r'4168fb92621877dcd2de28fbb87f7e82f4dedaf6';
 
 /// Copied from Dart SDK
 class _SystemHash {

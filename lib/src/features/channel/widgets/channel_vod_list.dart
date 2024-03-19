@@ -53,6 +53,13 @@ class ChannelVodList extends ConsumerWidget {
                         return VodContainer(
                           autofocus: index == 0 ? true : false,
                           vod: vod,
+                          getVodPath: () async {
+                            return await ref
+                                .read(channelVodControllerProvider(
+                                        channelId: vod.channel.channelId)
+                                    .notifier)
+                                .getVodPath(videoNo: vod.videoNo);
+                          },
                         );
                       },
                     ),
