@@ -28,6 +28,7 @@ dependencies:
   video_player: ^2.8.3
   chewie: ^1.7.5
   hangul: ^0.6.0
+  gif: ^2.3.0
 
 dev_dependencies:
   flutter_test:
