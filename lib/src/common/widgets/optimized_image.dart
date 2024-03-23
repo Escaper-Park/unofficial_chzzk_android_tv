@@ -167,7 +167,7 @@ class _OptimizedGifImageState extends State<OptimizedGifImage>
     return Gif(
       controller: controller,
       fps: _fps,
-      autostart: Autostart.once,
+      autostart: Autostart.loop,
       useCache: true,
       height: widget.imageHeight,
       width: widget.imageWidth,
