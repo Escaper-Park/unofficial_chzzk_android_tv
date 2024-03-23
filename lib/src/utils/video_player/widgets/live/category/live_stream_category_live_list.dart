@@ -1,12 +1,11 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:chewie/chewie.dart';
 
 import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
 import '../../../../../common/widgets/center_text.dart';
-import '../../../../../common/widgets/focused_outline_button.dart';
 import '../../../../../common/widgets/header_text.dart';
 import '../../../../../features/category/controller/category_live_controller.dart';
 import '../../../../../features/category/model/category.dart';
@@ -17,6 +16,7 @@ import '../../../../focus/dpad_widget.dart';
 import '../../../../popup/popup_utils.dart';
 import '../../../controller/live_stream_controller.dart';
 import '../../../controller/network_video_controller.dart';
+import '../../common/live_explore_error_button.dart';
 
 class LiveStreamCategoryLiveList extends HookConsumerWidget {
   const LiveStreamCategoryLiveList({
@@ -129,32 +129,44 @@ class LiveStreamCategoryLiveList extends HookConsumerWidget {
                     const HeaderText(text: '카테고리 라이브 채널'),
                     HomeBaseContainer(
                       child: switch (asyncCategoryLives) {
-                        AsyncData(:final value) =>
-                          (value == null || value.isEmpty)
-                              ? const CenterText(text: '카테고리 채널에 동영상이 없습니다')
-                              : ListView.builder(
-                                  controller: scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: value.length,
-                                  itemBuilder: (context, index) {
-                                    final liveDetail = value[index];
+                        AsyncData(:final value) => (value == null ||
+                                value.isEmpty)
+                            ? LiveExploreErrorButton(
+                                text: '해당 카테고리에 영상이 없습니다',
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                          controlOverlayTimerProvider.notifier)
+                                      .showOverlayAndStartTimer(
+                                        videoFocusNode: videoFocusNode,
+                                        seconds: 0,
+                                        overlayType: OverlayType.category,
+                                      );
+                                },
+                              )
+                            : ListView.builder(
+                                controller: scrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: value.length,
+                                itemBuilder: (context, index) {
+                                  final liveDetail = value[index];
 
-                                    return LiveContainer(
-                                      autofocus: index == 0 ? true : false,
-                                      liveDetail: liveDetail,
-                                      onPressed: () async {
-                                        await watchLive(
-                                          context,
-                                          ref,
-                                          liveDetail,
-                                          category,
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                        AsyncError() => FocusedOutlineButton(
-                            autofocus: true,
+                                  return LiveContainer(
+                                    autofocus: index == 0 ? true : false,
+                                    liveDetail: liveDetail,
+                                    onPressed: () async {
+                                      await watchLive(
+                                        context,
+                                        ref,
+                                        liveDetail,
+                                        category,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                        AsyncError() => LiveExploreErrorButton(
+                            text: '카테고리 채널을 불러오는데 실패했거나, 카테고리가 설정되어 있지 않습니다.',
                             onPressed: () {
                               ref
                                   .read(controlOverlayTimerProvider.notifier)
@@ -164,9 +176,6 @@ class LiveStreamCategoryLiveList extends HookConsumerWidget {
                                     overlayType: OverlayType.category,
                                   );
                             },
-                            child: const CenterText(
-                                text:
-                                    '카테고리 채널을 불러오는데 실패했거나, 카테고리가 설정되어 있지 않습니다.'),
                           ),
                         _ => const CenterText(text: '카테고리 채널 불러오는 중...'),
                       },

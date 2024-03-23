@@ -7,7 +7,7 @@ part of 'category_vod_controller.dart';
 // **************************************************************************
 
 String _$categoryVodControllerHash() =>
-    r'828f6740390b22262ee1d16f755ec8cd23187deb';
+    r'e05976664757a3ce8ba0932e32c6d833fadb7e1c';
 
 /// Copied from Dart SDK
 class _SystemHash {

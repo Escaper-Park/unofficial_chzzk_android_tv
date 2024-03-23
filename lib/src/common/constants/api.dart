@@ -1,3 +1,5 @@
+import '../../features/live/repository/live_repository.dart';
+
 class APIUrl {
   static const String _chzzkAPIUrl = 'https://api.chzzk.naver.com';
   static const String _naverGameUrl =
@@ -47,15 +49,16 @@ class APIUrl {
   }) =>
       '$_chzzkAPIUrl/service/v1/search/channels?keyword=$keyword&offset=$offset&size=$size&withFirstChannelContent=$withFirstChannelContent';
 
-  static String popularLive({
+  static String allLives({
     required int? concurrentUserCount,
     required int? liveId,
-    int size = 20,
+    int size = 18,
+    LiveSortType sortType = LiveSortType.popular,
   }) {
     if (concurrentUserCount == null || liveId == null) {
-      return '$_chzzkAPIUrl/service/v1/lives?size=$size&sortType=POPULAR';
+      return '$_chzzkAPIUrl/service/v1/lives?size=$size&sortType=${sortType.sortType}';
     } else {
-      return '$_chzzkAPIUrl/service/v1/lives?concurrentUserCount=$concurrentUserCount&liveId=$liveId&sortType=POPULAR';
+      return '$_chzzkAPIUrl/service/v1/lives?concurrentUserCount=$concurrentUserCount&liveId=$liveId&sortType=${sortType.sortType}';
     }
   }
 
@@ -110,4 +113,8 @@ class APIUrl {
 
   static String chatServer(int serverNo) =>
       'wss://kr-ss$serverNo.chat.naver.com/chat';
+
+  // Github update check
+  static String latestApp() =>
+      'https://api.github.com/repos/Escaper-Park/unofficial_chzzk_android_tv/releases/latest';
 }

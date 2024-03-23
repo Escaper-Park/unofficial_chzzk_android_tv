@@ -123,7 +123,7 @@ class _LiveThumbnailImage extends StatelessWidget {
                   imageWidth: liveThumbnailWidth,
                   imageHeight: liveThumbnailHeight,
                 ),
-                if (liveDetail.userAdultStatus == 'ADULT')
+                if (liveDetail.userAdultStatus == 'ADULT' || liveDetail.adult)
                   OptimizedAssetImage(
                     imagePath: AssetsPath.ageRestrictionTransprent,
                     imageWidth: liveThumbnailWidth,

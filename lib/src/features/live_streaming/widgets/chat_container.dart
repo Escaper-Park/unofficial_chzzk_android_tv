@@ -21,18 +21,38 @@ class ChatContainer extends StatelessWidget {
     final Color nicknameColor = getNicknameColor(chat.nickname);
     List<InlineSpan> textSpans = [];
 
+    if (chat.emojis == null) {
+      textSpans.add(
+        TextSpan(
+          text: chat.msg,
+          style: TextStyle(
+            fontSize: fontSize,
+          ),
+        ),
+      );
+    }
+
     if (chat.emojis != null) {
       chat.msg.splitMapJoin(
         RegExp(r'\{:([^}]+):\}'),
         onMatch: (match) {
           final String? emojiKey = match.group(1);
+          // Emoji
           if (chat.emojis!.containsKey(emojiKey)) {
+            final imageUrl = chat.emojis![emojiKey]!;
+
             textSpans.add(WidgetSpan(
-              child: OptimizedNetworkImage(
-                imageUrl: chat.emojis![emojiKey]!,
-                imageWidth: fontSize + 5.0,
-                imageHeight: fontSize + 5.0,
-              ),
+              child: imageUrl.contains('.gif')
+                  ? OptimizedGifImage(
+                      imageUrl: imageUrl,
+                      imageWidth: fontSize + 5.0,
+                      imageHeight: fontSize + 5.0,
+                    )
+                  : OptimizedNetworkImage(
+                      imageUrl: imageUrl,
+                      imageWidth: fontSize + 5.0,
+                      imageHeight: fontSize + 5.0,
+                    ),
             ));
           } else {
             textSpans.add(
@@ -46,6 +66,7 @@ class ChatContainer extends StatelessWidget {
           }
           return '';
         },
+        // Chat
         onNonMatch: (nonMatch) {
           textSpans.add(
             TextSpan(

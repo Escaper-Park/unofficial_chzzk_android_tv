@@ -2,7 +2,6 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/common/widgets/focused_outline_button.dart';
 
 import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
@@ -15,6 +14,7 @@ import '../../../../focus/dpad_widget.dart';
 import '../../../../popup/popup_utils.dart';
 import '../../../controller/live_stream_controller.dart';
 import '../../../controller/network_video_controller.dart';
+import '../../common/live_explore_error_button.dart';
 
 class LiveStreamPopularList extends HookConsumerWidget {
   const LiveStreamPopularList({
@@ -31,7 +31,7 @@ class LiveStreamPopularList extends HookConsumerWidget {
     final focusScopeNode = useFocusScopeNode();
 
     final scrollController = useScrollController();
-    final asyncPopularLives = ref.watch(popularLiveControllerProvider);
+    final asyncPopularLives = ref.watch(popularLivesControllerProvider);
 
     useEffect(() {
       scrollController.addListener(() async {
@@ -39,7 +39,7 @@ class LiveStreamPopularList extends HookConsumerWidget {
         if (scrollController.offset >=
                 scrollController.position.maxScrollExtent - 50.0 &&
             !scrollController.position.outOfRange) {
-          await ref.read(popularLiveControllerProvider.notifier).fetchMore();
+          await ref.read(popularLivesControllerProvider.notifier).fetchMore();
         }
       });
       return null;
@@ -113,7 +113,19 @@ class LiveStreamPopularList extends HookConsumerWidget {
                     HomeBaseContainer(
                       child: switch (asyncPopularLives) {
                         AsyncData(:final value) => value == null
-                            ? const CenterText(text: '인기 채널을 불러오는데 실패했습니다')
+                            ? LiveExploreErrorButton(
+                                text: '인기 채널을 불러오는 데 실패했습니다',
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                          controlOverlayTimerProvider.notifier)
+                                      .showOverlayAndStartTimer(
+                                        videoFocusNode: videoFocusNode,
+                                        seconds: 0,
+                                        overlayType: OverlayType.popular,
+                                      );
+                                },
+                              )
                             : ListView.builder(
                                 controller: scrollController,
                                 scrollDirection: Axis.horizontal,
@@ -159,8 +171,8 @@ class LiveStreamPopularList extends HookConsumerWidget {
                                   );
                                 },
                               ),
-                        AsyncError() => FocusedOutlineButton(
-                            autofocus: true,
+                        AsyncError() => LiveExploreErrorButton(
+                            text: '인기 채널을 불러오는 데 실패했습니다',
                             onPressed: () {
                               ref
                                   .read(controlOverlayTimerProvider.notifier)
@@ -170,8 +182,6 @@ class LiveStreamPopularList extends HookConsumerWidget {
                                     overlayType: OverlayType.popular,
                                   );
                             },
-                            child:
-                                const CenterText(text: '인기 채널을 불러오는데 실패했습니다'),
                           ),
                         _ => const CenterText(text: '인기 채널 불러오는 중...'),
                       },

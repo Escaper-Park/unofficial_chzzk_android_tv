@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 
 import '../constants/styles.dart';
 
@@ -122,6 +123,62 @@ class OptimizedAssetImage extends StatelessWidget {
       height: imageHeight,
       cacheWidth: cacheWidth,
       fit: fit,
+    );
+  }
+}
+
+class OptimizedGifImage extends StatefulWidget {
+  const OptimizedGifImage({
+    super.key,
+    required this.imageUrl,
+    required this.imageWidth,
+    this.imageHeight,
+    this.fit = BoxFit.cover,
+  });
+
+  final String imageUrl;
+  final double imageWidth;
+  final double? imageHeight;
+  final BoxFit fit;
+
+  @override
+  State<OptimizedGifImage> createState() => _OptimizedGifImageState();
+}
+
+class _OptimizedGifImageState extends State<OptimizedGifImage>
+    with TickerProviderStateMixin {
+  late final GifController controller;
+  final int _fps = 30;
+
+  @override
+  void initState() {
+    controller = GifController(vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Gif(
+      controller: controller,
+      fps: _fps,
+      autostart: Autostart.once,
+      useCache: true,
+      height: widget.imageHeight,
+      width: widget.imageWidth,
+      image: NetworkImage(
+        widget.imageUrl,
+      ),
+      fit: widget.fit,
+      placeholder: (context) => SizedBox(
+        height: widget.imageHeight,
+        width: widget.imageWidth,
+      ),
     );
   }
 }

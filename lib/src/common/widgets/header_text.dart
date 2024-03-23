@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/styles.dart';
-import 'focused_outline_button.dart';
+import './focused_outline_button.dart';
 
 class HeaderText extends StatelessWidget {
   /// A subject title header in a screen.
@@ -11,6 +11,7 @@ class HeaderText extends StatelessWidget {
     this.verticalPadding = 12.0,
     this.fontSize = 20.0,
     this.useShowMoreButton = false,
+    this.focusNode,
     this.onPressed,
   });
 
@@ -18,6 +19,7 @@ class HeaderText extends StatelessWidget {
   final double verticalPadding;
   final double fontSize;
   final bool useShowMoreButton;
+  final FocusNode? focusNode;
   final VoidCallback? onPressed;
 
   @override
@@ -29,6 +31,7 @@ class HeaderText extends StatelessWidget {
             children: [
               _headerText(),
               FocusedOutlineButton(
+                focusNode: focusNode,
                 padding: const EdgeInsets.all(5.0),
                 onPressed: onPressed,
                 child: const Icon(
@@ -43,7 +46,11 @@ class HeaderText extends StatelessWidget {
 
   Widget _headerText() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+      padding: EdgeInsets.only(
+        top: verticalPadding,
+        bottom: verticalPadding,
+        left: 5.0,
+      ),
       child: Text(
         text,
         style: TextStyle(

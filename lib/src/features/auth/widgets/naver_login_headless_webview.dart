@@ -61,11 +61,10 @@ class _NaverLoginHeadlessWebViewState
                 );
 
         if (isLoggedIn) {
-          if (context.mounted) {
-            ref
-                .read(dashboardControllerProvider.notifier)
-                .changeScreen(context, AppRoute.home);
-          }
+          if (!mounted) return;
+          ref
+              .read(dashboardControllerProvider.notifier)
+              .changeScreen(context, AppRoute.home);
         } else {
           // Check Error
           final errorMsg = await controller.evaluateJavascript(source: '''

@@ -7,7 +7,6 @@ import '../../../common/widgets/focused_outline_button.dart';
 import '../../../common/widgets/rounded_container.dart';
 import '../../../utils/popup/popup_utils.dart';
 import '../../../utils/router/app_router.dart';
-import '../controller/vod_controller.dart';
 import '../model/vod.dart';
 import 'vod_thumbnail.dart';
 import 'vod_info.dart';
@@ -16,11 +15,13 @@ class VodContainer extends ConsumerWidget {
   const VodContainer({
     super.key,
     required this.vod,
+    required this.getVodPath,
     this.autofocus = false,
   });
 
   final Vod vod;
   final bool autofocus;
+  final Future<String?> Function() getVodPath;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,10 +34,7 @@ class VodContainer extends ConsumerWidget {
         child: FocusedOutlineButton(
           autofocus: autofocus,
           onPressed: () async {
-            final String? vodPath = await ref
-                .read(vodControllerProvider(channelId: vod.channel.channelId)
-                    .notifier)
-                .getVodPath(videoNo: vod.videoNo);
+            final String? vodPath = await getVodPath();
 
             if (context.mounted) {
               if (vodPath == null) {

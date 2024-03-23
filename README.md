@@ -11,10 +11,17 @@
 ![동영상다시보기](./images/02.png)
 ![라이브탐색](./images/05.png)
 
-## 핫픽스 - v0.2.1
+## 업데이트
+### v0.2.2
+- 채널 동영상에서 연령 인증 동영상이 재생되지 않는 현상 수정
+- gif 이모티콘 성능 최적화, 채팅이 가끔 나오지 않는 현상 수정
+- 전체 라이브 페이지 추가 (홈 화면 상단 -> 전체 라이브)
+- 기타 기능 및 버그 수정
+
+### v0.2.1
 - HeadlessWebView로 로그인이 진행되지 않는 분들을 위해 WebView 로그인을 추가했습니다. 가상 키보드에 문제가 있으신 분도 WebView 로그인을 사용해주세요. (설정 -> WebView 로그인)
 
-## 패치노트 - v0.2.0
+## 패치노트 - v0.2
 ### 1. 카테고리 검색, 라이브, 동영상, 홈 화면 즐겨찾기(로컬)
 - 홈 화면 즐겨찾기는 로컬 데이터로 저장되기 때문에 캐시를 삭제하면 초기화됩니다.
 ### 2. 동영상 전체 다시보기 추가
@@ -29,6 +36,9 @@
 ## 개발자의 말
 - 로그인 버튼 클릭 후 동작이 없으면 **모바일 네이버 앱 알림**을 확인해주세요(2단계 인증). 그래도 진행되지 않는다면 아이디 비밀번호를 다시 확인해주세요. (취소 후 다시 시도)
 - 텍스트 입력 시 리모컨 뒤로가기 버튼 대신, 가상키보드의 엔터 버튼으로 입력을 부탁드립니다.
+- 유플러스 셋톱박스(또는 다른 TV)에서 리모컨 확인버튼이 클릭되지 않는 경우에 모바일 리모컨 어플리케이션을 통해 사용해주세요.
+
+    [**U+tv리모컨앱 정보**](https://www.lguplus.com/iptv/main-feature/000PPT0036), [**U+tv리모컨앱 iOS**](https://apps.apple.com/kr/app/u-tv-%EB%A6%AC%EB%AA%A8%EC%BB%A8%EC%95%B1/id1637815745), [**U+tv리모컨앱 Android**](https://play.google.com/store/apps/details?id=com.lguplus.remocon&hl=ko&gl=US)
 
 ![로그인](./images/06.png)
   
@@ -52,7 +62,7 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 ```
 
 ## 다운로드
-[**APK 파일 다운로드 (v0.2.1)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.1)
+[**APK 파일 다운로드 (v0.2.2)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.2)
 
 ### 설치 파일
 - 사용하시는 CPU 타입에 따라 설치하시면 됩니다.
@@ -80,7 +90,6 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 
 ## Future Works
 - 화질 설정 (멀티뷰 성능 이슈)
-- 멀티뷰 소리조절
+- 멀티뷰 최적화
 - 팔로우 추가/제거
 - 삼성TV (Tizen OS) 지원 (오래걸림)
-

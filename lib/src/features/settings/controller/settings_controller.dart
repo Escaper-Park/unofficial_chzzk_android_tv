@@ -35,4 +35,3 @@ class SettingsController extends _$SettingsController {
     return _settingRepository.getPopularChannelsLength();
   }
 }
-

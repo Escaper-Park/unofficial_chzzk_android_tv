@@ -31,42 +31,7 @@ class ChannelRepository {
     return Channel.fromJson(response.data['content']);
   }
 
-  Future<PopularChannelResponse?> getPopularChannelResponse({
-    required Options? options,
-    required int? concurrentUserCount,
-    required int? liveId,
-    int size = 20,
-  }) async {
-    final url = APIUrl.popularLive(
-      concurrentUserCount: concurrentUserCount,
-      liveId: liveId,
-      size: size,
-    );
-
-    final response = await _dio.get(url, options: options);
-
-    final Map<String, dynamic>? pageResponse = response.data['content']['page'];
-    final List<dynamic> channelsResponse = response.data['content']['data'];
-
-    final PopularChannelPage? page = pageResponse == null
-        ? null
-        : PopularChannelPage.fromJson(pageResponse['next']);
-    final List<Channel> channels = channelsResponse
-        // remove blocked channel
-        .where((response) {
-          final personalData = response['channel']['personalData'];
-          if (personalData == null) return true;
-
-          return personalData['privateUserBlock'] != true;
-        })
-        .map((response) => Channel.fromJson(response['channel']))
-        .toList();
-
-    return PopularChannelResponse(
-      channels: channels,
-      page: page,
-    );
-  }
+  
 
   Future<List<Channel>?> getRecommendChannels({
     required Options? options,

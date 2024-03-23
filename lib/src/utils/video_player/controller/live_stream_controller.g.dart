@@ -7,7 +7,7 @@ part of 'live_stream_controller.dart';
 // **************************************************************************
 
 String _$liveStreamControllerHash() =>
-    r'170dc49da59f02a1700087a81bc13fee1c1e3d16';
+    r'5389b0a1c8ae6936ee575306c75c3bee9022c238';
 
 /// See also [LiveStreamController].
 @ProviderFor(LiveStreamController)

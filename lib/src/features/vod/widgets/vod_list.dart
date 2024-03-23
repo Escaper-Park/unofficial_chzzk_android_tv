@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/dimensions.dart';
 import '../../../common/widgets/center_text.dart';
-import 'vod_container.dart';
+import './vod_container.dart';
 import '../controller/vod_controller.dart';
 
 class VodList extends ConsumerWidget {
@@ -40,6 +40,13 @@ class VodList extends ConsumerWidget {
                 return VodContainer(
                   autofocus: index == 0 ? true : false,
                   vod: vod,
+                  getVodPath: () async {
+                    return await ref
+                        .read(vodControllerProvider(
+                                channelId: vod.channel.channelId)
+                            .notifier)
+                        .getVodPath(videoNo: vod.videoNo);
+                  },
                 );
               },
             ),

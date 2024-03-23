@@ -43,7 +43,6 @@ class LiveStreamController extends _$LiveStreamController {
       // Start pause Timer
       ref.read(pauseTimerProvider.notifier).pauseAndStartTimer();
     }
-
     // Play
     else {
       // Play back from pause
@@ -66,6 +65,7 @@ class LiveStreamController extends _$LiveStreamController {
   ) async {
     controller.pause();
     ref.read(controlOverlayTimerProvider.notifier).cancelTimer();
+    ref.read(overlayControllerProvider.notifier).setState(OverlayType.none);
 
     if (context.mounted) {
       context.pushReplacementNamed(

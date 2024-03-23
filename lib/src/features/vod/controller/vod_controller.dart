@@ -67,9 +67,14 @@ FutureOr<int?> channelVodTotalPages(
   ChannelVodTotalPagesRef ref, {
   required String channelId,
 }) async {
-  return await ref
-      .watch(vodRepositoryProvider)
-      .getChannelTotalPages(channelId: channelId);
+  final auth = await ref.watch(authControllerProvider.future);
+
+  final options = auth?.getOptions();
+
+  return await ref.watch(vodRepositoryProvider).getChannelTotalPages(
+        channelId: channelId,
+        options: options,
+      );
 }
 
 @riverpod

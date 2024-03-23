@@ -46,6 +46,9 @@ enum AppRoute {
   // Multi_view Streaming
   multiViewStreaming('multiViewStreaming', 'multiViewStreaming', 13),
 
+  // allLives channels
+  allLives('allLives', 'allLives', 14),
+
   // Login (Webview)
   naverLoginWithWebView('naverLoginWithWebView', 'naverLoginWithWebView', 97),
 
@@ -228,6 +231,18 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               );
             },
           ),
+          GoRoute(
+            path: AppRoute.allLives.routePath,
+            name: AppRoute.allLives.routeName,
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: AllLivesScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+
           // NaverLogin With WebView
           GoRoute(
             path: AppRoute.naverLoginWithWebView.routePath,
