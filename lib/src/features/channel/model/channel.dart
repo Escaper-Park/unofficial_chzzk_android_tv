@@ -29,22 +29,3 @@ class PersonalData with _$PersonalData {
   factory PersonalData.fromJson(Map<String, dynamic> json) =>
       _$PersonalDataFromJson(json);
 }
-
-@freezed
-class PopularChannelPage with _$PopularChannelPage {
-  factory PopularChannelPage({
-    required int? concurrentUserCount,
-    required int? liveId,
-  }) = _PopularChannelPage;
-
-  factory PopularChannelPage.fromJson(Map<String, dynamic> json) =>
-      _$PopularChannelPageFromJson(json);
-}
-
-@freezed
-class PopularChannelResponse with _$PopularChannelResponse {
-  const factory PopularChannelResponse({
-    required List<Channel>? channels,
-    required PopularChannelPage? page,
-  }) = _PopularChannelResponse;
-}

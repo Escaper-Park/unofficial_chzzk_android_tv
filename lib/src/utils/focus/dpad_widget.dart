@@ -23,6 +23,7 @@ class DpadWidget extends HookWidget {
     this.borderRadius = 10.0,
     this.useKeyUpEvent = false,
     this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.focusNode,
   });
 
@@ -33,6 +34,7 @@ class DpadWidget extends HookWidget {
   final double borderRadius;
   final bool useKeyUpEvent;
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
   final FocusNode? focusNode;
 
   @override
@@ -60,6 +62,7 @@ class DpadWidget extends HookWidget {
       },
       child: useFocusedBorder
           ? Container(
+              margin: margin,
               padding: padding,
               decoration: BoxDecoration(
                 border: Border.all(

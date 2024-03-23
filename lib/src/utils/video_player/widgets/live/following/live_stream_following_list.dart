@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
 import '../../../../../common/widgets/center_text.dart';
-import '../../../../../common/widgets/focused_outline_button.dart';
 import '../../../../../common/widgets/header_text.dart';
 import '../../../../../features/home/widgets/home_base_container.dart';
 import '../../../../../features/live/controller/live_controller.dart';
@@ -15,6 +14,7 @@ import '../../../../focus/dpad_widget.dart';
 import '../../../../popup/popup_utils.dart';
 import '../../../controller/live_stream_controller.dart';
 import '../../../controller/network_video_controller.dart';
+import '../../common/live_explore_error_button.dart';
 
 class LiveStreamFollowingList extends HookConsumerWidget {
   const LiveStreamFollowingList({
@@ -101,8 +101,8 @@ class LiveStreamFollowingList extends HookConsumerWidget {
                       child: switch (asyncFollowingLives) {
                         AsyncData(:final value) => (value == null ||
                                 value.isEmpty)
-                            ? FocusedOutlineButton(
-                                autofocus: true,
+                            ? LiveExploreErrorButton(
+                                text: '팔로잉 채널이 없습니다',
                                 onPressed: () {
                                   ref
                                       .read(
@@ -113,9 +113,6 @@ class LiveStreamFollowingList extends HookConsumerWidget {
                                         overlayType: OverlayType.following,
                                       );
                                 },
-                                child: const CenterText(
-                                  text: '팔로잉 채널이 없습니다',
-                                ),
                               )
                             : ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -160,8 +157,8 @@ class LiveStreamFollowingList extends HookConsumerWidget {
                                   );
                                 },
                               ),
-                        AsyncError() => FocusedOutlineButton(
-                            autofocus: true,
+                        AsyncError() => LiveExploreErrorButton(
+                            text: '팔로잉 채널을 불러오는 데 실패했습니다',
                             onPressed: () {
                               ref
                                   .read(controlOverlayTimerProvider.notifier)
@@ -171,8 +168,6 @@ class LiveStreamFollowingList extends HookConsumerWidget {
                                     overlayType: OverlayType.following,
                                   );
                             },
-                            child:
-                                const CenterText(text: '팔로잉 채널을 불러오는데 실패했습니다'),
                           ),
                         _ => const CenterText(
                             text: '팔로잉 채널 불러오는 중...',

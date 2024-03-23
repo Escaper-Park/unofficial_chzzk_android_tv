@@ -23,12 +23,10 @@ class ChatContainer extends StatelessWidget {
 
     if (chat.emojis == null) {
       textSpans.add(
-        WidgetSpan(
-          child: Text(
-            chat.msg,
-            style: TextStyle(
-              fontSize: fontSize,
-            ),
+        TextSpan(
+          text: chat.msg,
+          style: TextStyle(
+            fontSize: fontSize,
           ),
         ),
       );

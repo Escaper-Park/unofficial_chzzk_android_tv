@@ -127,6 +127,6 @@ class SettingsRepository {
   int getPopularChannelsLength() {
     return _sharedPreferences
             .getInt(SharedPrefencesKey.popularChannelsLength) ??
-        20;
+        18;
   }
 }

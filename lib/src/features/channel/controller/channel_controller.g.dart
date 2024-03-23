@@ -192,7 +192,7 @@ class _ChannelLiveControllerProviderElement
 }
 
 String _$channelVodControllerHash() =>
-    r'd3cae44e11cd006b9644a45c3bb5a3654b114935';
+    r'c19867db02352d0507a9826a7c2c3152a3112a2e';
 
 abstract class _$ChannelVodController
     extends BuildlessAutoDisposeAsyncNotifier<List<Vod>?> {

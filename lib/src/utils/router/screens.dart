@@ -9,16 +9,10 @@ export '../../features/settings/settings_screen.dart';
 export '../../features/auth/id_input_screen.dart';
 export '../../features/auth/password_input_screen.dart';
 export '../../features/vod/vod_screen.dart';
-
-// Multiview selection
 export '../../features/multi_view/multi_view_screen.dart';
-
 export '../../features/live_streaming/live_streaming_screen.dart';
 export '../../features/vod_streaming/vod_streaming_screen.dart';
-
 export '../../features/multi_view_streaming/multi_view_streaming_screen.dart';
-
 export '../../features/settings/widgets/open_source_license_screen.dart';
-
-// Login Webview
 export '../../features/auth/naver_login_with_webview_screen.dart';
+export '../../features/live/all_lives_screen.dart';

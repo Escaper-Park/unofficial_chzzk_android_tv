@@ -3,10 +3,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/controller/auth_controller.dart';
 import '../../channel/model/channel.dart';
-import '../../channel/repository/channel_repository.dart';
 import '../../following/model/following.dart';
 import '../../following/repository/following_repository.dart';
 import '../../settings/controller/settings_controller.dart';
+import '../model/all_lives.dart';
 import '../model/live.dart';
 import '../repository/live_repository.dart';
 
@@ -52,11 +52,10 @@ class FollowingLiveController extends _$FollowingLiveController {
   }
 }
 
-// Home Popular Controller
 @riverpod
-class PopularLiveController extends _$PopularLiveController {
+class PopularLivesController extends _$PopularLivesController {
   Options? _options;
-  PopularChannelPage? _next;
+  AllLivesChannelPage? _next;
 
   @override
   FutureOr<List<LiveDetail>?> build() async {
@@ -68,16 +67,20 @@ class PopularLiveController extends _$PopularLiveController {
         .read(settingsControllerProvider.notifier)
         .getPopularChannelsLength();
 
-    return await _initFetch(size: size);
+    return _initFetch(size: size, sortType: LiveSortType.popular);
   }
 
-  Future<List<LiveDetail>?> _initFetch({required int size}) async {
-    final PopularChannelResponse? channelResponse =
-        await ref.watch(channelRepositoryProvider).getPopularChannelResponse(
+  Future<List<LiveDetail>?> _initFetch({
+    required int size,
+    required LiveSortType sortType,
+  }) async {
+    final AllLivesChannelResponse? channelResponse =
+        await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
               options: _options,
               concurrentUserCount: null,
               liveId: null,
               size: size,
+              sortType: sortType,
             );
 
     _next = channelResponse?.page;
@@ -106,13 +109,12 @@ class PopularLiveController extends _$PopularLiveController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final response = await ref
-            .watch(channelRepositoryProvider)
-            .getPopularChannelResponse(
-              options: _options,
-              concurrentUserCount: _next?.concurrentUserCount,
-              liveId: _next?.liveId,
-            );
+        final response =
+            await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
+                  options: _options,
+                  concurrentUserCount: _next?.concurrentUserCount,
+                  liveId: _next?.liveId,
+                );
 
         _next = response?.page;
 
@@ -135,5 +137,131 @@ class PopularLiveController extends _$PopularLiveController {
         }
       });
     }
+  }
+}
+
+@riverpod
+class AllLivesController extends _$AllLivesController {
+  Options? _options;
+  AllLivesChannelPage? _next;
+
+  @override
+  FutureOr<List<LiveDetail>?> build() async {
+    final auth = await ref.watch(authControllerProvider.future);
+
+    _options = auth?.getOptions();
+
+    final int size = ref
+        .read(settingsControllerProvider.notifier)
+        .getPopularChannelsLength();
+
+    final sortType = ref.watch(currentLiveSortTypeProvider);
+
+    return await _initFetch(
+      size: size,
+      sortType: sortType,
+    );
+  }
+
+  Future<List<LiveDetail>?> _initFetch({
+    required int size,
+    required LiveSortType sortType,
+  }) async {
+    final AllLivesChannelResponse? channelResponse =
+        await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
+              options: _options,
+              concurrentUserCount: null,
+              liveId: null,
+              size: size,
+              sortType: sortType,
+            );
+
+    _next = channelResponse?.page;
+
+    if (channelResponse?.channels != null) {
+      List<LiveDetail> liveDetails = [];
+
+      for (Channel channel in channelResponse!.channels!) {
+        final LiveDetail? liveDetail =
+            await ref.watch(liveRepositoryProvider).getLiveDetail(
+                  channelId: channel.channelId,
+                  options: _options,
+                );
+
+        if (liveDetail != null) liveDetails.add(liveDetail);
+      }
+
+      return liveDetails;
+    }
+
+    return null;
+  }
+
+  Future<void> fetchMore() async {
+    if (_next != null) {
+      final prev = state.value;
+
+      // Show loading state in all lives page
+      ref.read(allLivesLoadingStateProvider.notifier).setState(true);
+
+      state = await AsyncValue.guard(() async {
+        final response =
+            await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
+                  options: _options,
+                  concurrentUserCount: _next?.concurrentUserCount,
+                  liveId: _next?.liveId,
+                );
+
+        _next = response?.page;
+
+        if (response?.channels == null || _next == null) {
+          // Show loading state in all lives page
+          ref.read(allLivesLoadingStateProvider.notifier).setState(false);
+
+          return [...prev!];
+        } else {
+          List<LiveDetail> liveDetails = [];
+
+          for (Channel channel in response!.channels!) {
+            final LiveDetail? liveDetail =
+                await ref.watch(liveRepositoryProvider).getLiveDetail(
+                      channelId: channel.channelId,
+                      options: _options,
+                    );
+
+            if (liveDetail != null) liveDetails.add(liveDetail);
+          }
+
+          // Show loading state in all lives page
+          ref.read(allLivesLoadingStateProvider.notifier).setState(false);
+
+          return [...prev!, ...liveDetails];
+        }
+      });
+    }
+  }
+}
+
+@riverpod
+class AllLivesLoadingState extends _$AllLivesLoadingState {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void setState(bool value) {
+    state = value;
+  }
+}
+
+@riverpod
+class CurrentLiveSortType extends _$CurrentLiveSortType {
+  @override
+  LiveSortType build() {
+    return LiveSortType.popular;
+  }
+
+  void setState(LiveSortType sortType) {
+    if (state != sortType) state = sortType;
   }
 }

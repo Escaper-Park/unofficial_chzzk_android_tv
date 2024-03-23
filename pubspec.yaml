@@ -29,6 +29,8 @@ dependencies:
   chewie: ^1.7.5
   hangul: ^0.6.0
   gif: ^2.3.0
+  path_provider: ^2.1.2
+  device_info_plus: ^10.0.1
 
 dev_dependencies:
   flutter_test:

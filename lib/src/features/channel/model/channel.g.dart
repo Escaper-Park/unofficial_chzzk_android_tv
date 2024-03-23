@@ -41,17 +41,3 @@ Map<String, dynamic> _$$PersonalDataImplToJson(_$PersonalDataImpl instance) =>
     <String, dynamic>{
       'privateUserBlock': instance.privateUserBlock,
     };
-
-_$PopularChannelPageImpl _$$PopularChannelPageImplFromJson(
-        Map<String, dynamic> json) =>
-    _$PopularChannelPageImpl(
-      concurrentUserCount: json['concurrentUserCount'] as int?,
-      liveId: json['liveId'] as int?,
-    );
-
-Map<String, dynamic> _$$PopularChannelPageImplToJson(
-        _$PopularChannelPageImpl instance) =>
-    <String, dynamic>{
-      'concurrentUserCount': instance.concurrentUserCount,
-      'liveId': instance.liveId,
-    };
