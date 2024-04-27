@@ -25,9 +25,17 @@ class CircleAvatarProfileImage extends StatelessWidget {
             backgroundColor: Colors.black54,
           )
         : profileImageUrl!.contains('.gif')
-            ? CircleAvatar(
-                radius: radius,
-                backgroundColor: Colors.black54,
+            ? Container(
+                width: radius * 2,
+                height: radius * 2,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color:
+                        hasBorder ? AppColors.chzzkColor : Colors.transparent,
+                    width: 2.0,
+                  ),
+                ),
               )
             : OptimizedCachedNetworkImage(
                 imageUrl: profileImageUrl!,

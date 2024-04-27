@@ -25,6 +25,7 @@ class DpadWidget extends HookWidget {
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
     this.focusNode,
+    this.useKeyRepeatEvent = false,
   });
 
   final Map<DpadAction, VoidCallback?> actionCallbacks;
@@ -36,6 +37,8 @@ class DpadWidget extends HookWidget {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
   final FocusNode? focusNode;
+
+  final bool useKeyRepeatEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,12 @@ class DpadWidget extends HookWidget {
       onKeyEvent: (event) {
         if ((!useKeyUpEvent && event is KeyDownEvent) ||
             (useKeyUpEvent && event is KeyUpEvent)) {
-          onkeyEvent(context, event);
+          _onkeyEvent(context, event);
+        }
+
+        // key pressed
+        if (useKeyRepeatEvent && event is KeyRepeatEvent) {
+          _onkeyEvent(context, event);
         }
       },
       child: useFocusedBorder
@@ -79,7 +87,7 @@ class DpadWidget extends HookWidget {
     );
   }
 
-  void onkeyEvent(BuildContext context, KeyEvent event) {
+  void _onkeyEvent(BuildContext context, KeyEvent event) {
     final String keyLabel = event.logicalKey.keyLabel;
 
     switch (keyLabel) {

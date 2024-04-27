@@ -33,31 +33,49 @@ class CategorySidebarButtons extends HookConsumerWidget {
         onFocusChange: (value) {
           if (value) focusNodes[currentIndex].requestFocus();
         },
-        child: ListView.builder(
-          itemCount: itemCount,
-          itemBuilder: (context, index) {
-            return FocusedOutlineButton(
-              focusNode: focusNodes[index],
-              padding: const EdgeInsets.all(10.0),
-              onPressed: () {
-                if (currentIndex != index) {
-                  ref.read(currentCategoryItemProvider.notifier).setState(
-                        index == 0 ? CategoryItem.live : CategoryItem.vod,
-                      );
-                }
-              },
-              child: Center(
-                child: Text(
-                  index == 0 ? '라이브' : '동영상',
-                  style: TextStyle(
-                    color: currentIndex == index
-                        ? AppColors.chzzkColor
-                        : AppColors.whiteColor,
-                  ),
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: itemCount,
+                itemBuilder: (context, index) {
+                  return FocusedOutlineButton(
+                    focusNode: focusNodes[index],
+                    padding: const EdgeInsets.all(10.0),
+                    onPressed: () {
+                      if (currentIndex != index) {
+                        ref.read(currentCategoryItemProvider.notifier).setState(
+                              index == 0 ? CategoryItem.live : CategoryItem.vod,
+                            );
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        index == 0 ? '라이브' : '동영상',
+                        style: TextStyle(
+                          color: currentIndex == index
+                              ? AppColors.chzzkColor
+                              : AppColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+            Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                final loadingState = ref.watch(categoryLoadingStateProvider);
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(loadingState == true ? '로딩중...' : ' '),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

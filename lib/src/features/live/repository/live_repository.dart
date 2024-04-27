@@ -36,14 +36,18 @@ class LiveRepository {
   }) async {
     final url = APIUrl.liveDetail(channelId);
 
-    final response = await _dio.get(
-      url,
-      options: options,
-    );
+    try {
+      final response = await _dio.get(
+        url,
+        options: options,
+      );
 
-    final Map<String, dynamic>? jsonData = response.data['content'];
+      final Map<String, dynamic>? jsonData = response.data['content'];
 
-    return jsonData == null ? null : LiveDetail.fromJson(jsonData);
+      return jsonData == null ? null : LiveDetail.fromJson(jsonData);
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<AllLivesChannelResponse?> getAllChannelsResponse({

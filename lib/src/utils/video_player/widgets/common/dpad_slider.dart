@@ -39,6 +39,7 @@ class DpadSlider extends HookConsumerWidget {
 
     return DpadWidget(
       useFocusedBorder: true,
+      useKeyRepeatEvent: true,
       padding: const EdgeInsets.all(5.0),
       actionCallbacks: {
         DpadAction.arrowLeft: () {

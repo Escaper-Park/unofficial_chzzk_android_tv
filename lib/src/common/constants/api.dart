@@ -22,7 +22,7 @@ class APIUrl {
 
   static String user() => '$_naverGameUrl/v1/user/getUserStatus';
 
-  static String following({int size = 10, int page = 0}) =>
+  static String following({int size = 505, int page = 0}) =>
       '$_chzzkAPIUrl/service/v1/channels/followings?size=$size&page=$page';
 
   static String followingLiveChannels() =>
@@ -85,11 +85,12 @@ class APIUrl {
     required String categoryId,
     required int? concurrentUserCount,
     required int? liveId,
+    int size = 18,
   }) {
     if (concurrentUserCount == null || liveId == null) {
-      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/lives?';
+      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/lives?size=$size';
     } else {
-      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/lives?concurrentUserCount=$concurrentUserCount&liveId=$liveId';
+      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/lives?size=$size&concurrentUserCount=$concurrentUserCount&liveId=$liveId';
     }
   }
 
@@ -98,11 +99,12 @@ class APIUrl {
     required String categoryId,
     required int? publishDateAt,
     required int? readCount,
+    int size = 18,
   }) {
     if (publishDateAt == null || readCount == null) {
-      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/videos?';
+      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/videos?size=$size';
     } else {
-      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/videos?publishDateAt=$publishDateAt&readCount=$readCount';
+      return '$_chzzkAPIUrl/service/v2/categories/$categoryType/$categoryId/videos?size=$size&publishDateAt=$publishDateAt&readCount=$readCount';
     }
   }
 

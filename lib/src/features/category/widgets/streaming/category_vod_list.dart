@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../common/constants/dimensions.dart';
 import '../../../../common/widgets/center_text.dart';
 import '../../../vod/widgets/vod_container.dart';
-import '../../controller/category_vod_controller.dart';
+import '../../controller/category_controller.dart';
 import '../../model/category.dart';
 import './category_vod_channel_info.dart';
 

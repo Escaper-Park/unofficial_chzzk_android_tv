@@ -67,6 +67,8 @@ class VodScreen extends HookConsumerWidget {
                     ),
                     Expanded(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             width: sidebarWidth,
