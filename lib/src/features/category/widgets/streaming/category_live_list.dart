@@ -8,7 +8,7 @@ import '../../../../utils/popup/popup_utils.dart';
 import '../../../../utils/router/app_router.dart';
 import '../../../live/model/live.dart';
 import '../../../live/widgets/live_container.dart';
-import '../../controller/category_live_controller.dart';
+import '../../controller/category_controller.dart';
 import '../../model/category.dart';
 
 class CategoryLiveList extends HookConsumerWidget {

@@ -28,7 +28,6 @@ class BaseScaffold extends ConsumerWidget {
   /// screen overflow error.
   final bool useTextField;
 
-  ///
   final AppBar? appBar;
 
   @override

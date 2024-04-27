@@ -37,23 +37,28 @@ class CategoryRepository {
       concurrentUserCount: concurrentUserCount,
       openLiveCount: openLiveCount,
     );
+    try {
+      final response = await _dio.get(url, options: options);
 
-    final response = await _dio.get(url, options: options);
+      final Map<String, dynamic>? pageResponse =
+          response.data['content']['page'];
+      final List<dynamic>? categoriesResponse =
+          response.data['content']['data'];
 
-    final Map<String, dynamic>? pageResponse = response.data['content']['page'];
-    final List<dynamic>? categoriesResponse = response.data['content']['data'];
+      final CategoryPage? page = pageResponse == null
+          ? null
+          : CategoryPage.fromJson(pageResponse['next']);
 
-    final CategoryPage? page = pageResponse == null
-        ? null
-        : CategoryPage.fromJson(pageResponse['next']);
+      final List<Category>? categories =
+          categoriesResponse?.map((json) => Category.fromJson(json)).toList();
 
-    final List<Category>? categories =
-        categoriesResponse?.map((json) => Category.fromJson(json)).toList();
-
-    return CategoryResponse(
-      categories: categories,
-      page: page,
-    );
+      return CategoryResponse(
+        categories: categories,
+        page: page,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<LiveResponse?> getCategoryLiveResponses({

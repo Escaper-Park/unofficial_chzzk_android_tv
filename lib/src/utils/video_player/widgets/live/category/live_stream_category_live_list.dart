@@ -7,7 +7,7 @@ import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
 import '../../../../../common/widgets/center_text.dart';
 import '../../../../../common/widgets/header_text.dart';
-import '../../../../../features/category/controller/category_live_controller.dart';
+import '../../../../../features/category/controller/category_controller.dart';
 import '../../../../../features/category/model/category.dart';
 import '../../../../../features/home/widgets/home_base_container.dart';
 import '../../../../../features/live/model/live.dart';

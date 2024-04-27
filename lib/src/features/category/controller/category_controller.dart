@@ -4,6 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/shared_preferences/shared_prefs.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../live/model/live.dart';
+import '../../live/repository/live_repository.dart';
+import '../../vod/model/vod.dart';
+import '../../vod/repository/vod_repository.dart';
 import '../model/category.dart';
 import '../repository/category_repository.dart';
 
@@ -116,5 +120,152 @@ class CurrentCategoryItem extends _$CurrentCategoryItem {
 
   void setState(CategoryItem item) {
     if (state != item) state = item;
+  }
+}
+
+@riverpod
+class CategoryLiveController extends _$CategoryLiveController {
+  Options? _options;
+  LivePage? _next;
+
+  @override
+  FutureOr<List<LiveDetail>?> build({required Category category}) async {
+    final auth = await ref.read(authControllerProvider.future);
+
+    _options = auth?.getOptions();
+
+    return await _initFetch();
+  }
+
+  Future<List<LiveDetail>?> _initFetch() async {
+    final LiveResponse? liveResponse =
+        await ref.watch(categoryRepositoryProvider).getCategoryLiveResponses(
+              category: category,
+              next: _next,
+              options: _options,
+            );
+
+    _next = liveResponse?.page;
+
+    return liveResponse?.liveDetails ?? [];
+  }
+
+  Future<void> fetchMore() async {
+    if (_next != null) {
+      final prev = state.value;
+
+      // Show Loading State in Category Lives Page
+      ref.read(categoryLoadingStateProvider.notifier).setState(true);
+
+      state = await AsyncValue.guard(() async {
+        final response = await ref
+            .watch(categoryRepositoryProvider)
+            .getCategoryLiveResponses(
+              category: category,
+              next: _next,
+              options: _options,
+            );
+
+        _next = response?.page;
+
+        if (response?.liveDetails == null || _next == null) {
+          // Show Loading State in Category Lives Page
+          ref.read(categoryLoadingStateProvider.notifier).setState(false);
+
+          return [...prev!];
+        }
+
+        ref.read(categoryLoadingStateProvider.notifier).setState(false);
+        return [...prev!, ...response!.liveDetails!];
+      });
+    }
+  }
+
+  Future<LiveDetail?> getLiveDetail(final String channelId) async {
+    try {
+      return await ref.watch(liveRepositoryProvider).getLiveDetail(
+            channelId: channelId,
+            options: _options,
+          );
+    } catch (_) {
+      return null;
+    }
+  }
+}
+
+@riverpod
+class CategoryVodController extends _$CategoryVodController {
+  Options? _options;
+  VodPage? _next;
+
+  @override
+  FutureOr<List<Vod>?> build({required Category category}) async {
+    final auth = await ref.read(authControllerProvider.future);
+
+    _options = auth?.getOptions();
+
+    return await _initFetch();
+  }
+
+  Future<List<Vod>?> _initFetch() async {
+    final VodResponse? vodResponse =
+        await ref.watch(categoryRepositoryProvider).getCategoryVodResponse(
+              category: category,
+              next: _next,
+              options: _options,
+            );
+
+    _next = vodResponse?.page;
+
+    return vodResponse?.vods ?? [];
+  }
+
+  Future<void> fetchMore() async {
+    if (_next != null) {
+      final prev = state.value;
+
+      // Show Loading State in Category Vods Page
+      ref.read(categoryLoadingStateProvider.notifier).setState(true);
+
+      state = await AsyncValue.guard(() async {
+        final response =
+            await ref.watch(categoryRepositoryProvider).getCategoryVodResponse(
+                  category: category,
+                  next: _next,
+                  options: _options,
+                );
+
+        _next = response?.page;
+
+        if (response?.vods == null || _next == null) {
+          // Show Loading State in Category Vods Page
+          ref.read(categoryLoadingStateProvider.notifier).setState(false);
+
+          return [...prev!];
+        }
+
+        ref.read(categoryLoadingStateProvider.notifier).setState(false);
+        return [...prev!, ...response!.vods!];
+      });
+    }
+  }
+
+  Future<String?> getVodPath({required int videoNo}) async {
+    return await ref.watch(vodRepositoryProvider).getVodPath(
+          videoNo: videoNo,
+          options: _options,
+        );
+  }
+}
+
+@riverpod
+class CategoryLoadingState extends _$CategoryLoadingState {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void setState(bool value) {
+    state = value;
   }
 }

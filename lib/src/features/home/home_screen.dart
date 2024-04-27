@@ -11,7 +11,7 @@ import './widgets/home_popular_lives.dart';
 import './widgets/home_favorite_categories.dart';
 import 'widgets/home_function_buttons.dart';
 
-class HomeScreen extends HookConsumerWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override

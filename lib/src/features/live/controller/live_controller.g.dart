@@ -24,7 +24,7 @@ final followingLiveControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$FollowingLiveController = AutoDisposeAsyncNotifier<List<LiveDetail>?>;
 String _$popularLivesControllerHash() =>
-    r'768408111fa907644b7006b3587a0913f2b89bb5';
+    r'b9f4284de016e151182cd7d1d40d9d97fea24388';
 
 /// See also [PopularLivesController].
 @ProviderFor(PopularLivesController)

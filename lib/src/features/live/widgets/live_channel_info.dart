@@ -28,7 +28,8 @@ class LiveChannelInfo extends StatelessWidget {
           SizedBox(
             width: 30.0,
             child: CircleAvatarProfileImage(
-                profileImageUrl: liveDetail.channel.channelImageUrl),
+              profileImageUrl: liveDetail.channel.channelImageUrl,
+            ),
           ),
           const SizedBox(width: 15.0),
           Expanded(
