@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:unofficial_chzzk_android_tv/src/common/image_extension.dart';
 
 import '../constants/styles.dart';
 
@@ -22,8 +23,7 @@ class OptimizedCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final int cacheSize = (imageWidth * devicePixelRatio).round();
+    final int cacheSize = imageWidth.cacheSize(context);
 
     return CachedNetworkImage(
       key: UniqueKey(),
