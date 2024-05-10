@@ -127,11 +127,12 @@ class OptimizedAssetImage extends StatelessWidget {
   }
 }
 
-class OptimizedGifImage extends StatefulWidget {
+class OptimizedGifImage extends StatelessWidget {
   const OptimizedGifImage({
     super.key,
     required this.imageUrl,
     required this.imageWidth,
+    required this.controller,
     this.imageHeight,
     this.fit = BoxFit.cover,
   });
@@ -140,27 +141,8 @@ class OptimizedGifImage extends StatefulWidget {
   final double imageWidth;
   final double? imageHeight;
   final BoxFit fit;
-
-  @override
-  State<OptimizedGifImage> createState() => _OptimizedGifImageState();
-}
-
-class _OptimizedGifImageState extends State<OptimizedGifImage>
-    with TickerProviderStateMixin {
-  late final GifController controller;
+  final GifController controller;
   final int _fps = 30;
-
-  @override
-  void initState() {
-    controller = GifController(vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,15 +151,15 @@ class _OptimizedGifImageState extends State<OptimizedGifImage>
       fps: _fps,
       autostart: Autostart.loop,
       useCache: true,
-      height: widget.imageHeight,
-      width: widget.imageWidth,
+      height: imageHeight,
+      width: imageWidth,
       image: NetworkImage(
-        widget.imageUrl,
+        imageUrl,
       ),
-      fit: widget.fit,
+      fit: fit,
       placeholder: (context) => SizedBox(
-        height: widget.imageHeight,
-        width: widget.imageWidth,
+        height: imageHeight,
+        width: imageWidth,
       ),
     );
   }
