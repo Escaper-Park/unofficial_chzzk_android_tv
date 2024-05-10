@@ -146,20 +146,22 @@ class OptimizedGifImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Gif(
-      controller: controller,
-      fps: _fps,
-      autostart: Autostart.loop,
-      useCache: true,
-      height: imageHeight,
-      width: imageWidth,
-      image: NetworkImage(
-        imageUrl,
-      ),
-      fit: fit,
-      placeholder: (context) => SizedBox(
+    return RepaintBoundary(
+      child: Gif(
+        controller: controller,
+        fps: _fps,
+        autostart: Autostart.loop,
+        useCache: true,
         height: imageHeight,
         width: imageWidth,
+        image: NetworkImage(
+          imageUrl,
+        ),
+        fit: fit,
+        placeholder: (context) => SizedBox(
+          height: imageHeight,
+          width: imageWidth,
+        ),
       ),
     );
   }
