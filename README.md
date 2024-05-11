@@ -64,7 +64,7 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 ```
 
 ## 다운로드
-[**APK 파일 다운로드 (v0.2.2)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.3)
+[**APK 파일 다운로드 (v0.2.3)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.3)
 
 ### 설치 파일
 - 대부분 v7a로 설치 가능. 설치 불가시 통합버전 또는 사용하시는 CPU 타입에 따라 설치하시면 됩니다. (가능한 v7a로 설치)

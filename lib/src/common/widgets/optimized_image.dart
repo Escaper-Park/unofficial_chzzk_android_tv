@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:unofficial_chzzk_android_tv/src/common/image_extension.dart';
 
 import '../constants/styles.dart';
 
@@ -22,8 +23,7 @@ class OptimizedCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final int cacheSize = (imageWidth * devicePixelRatio).round();
+    final int cacheSize = imageWidth.cacheSize(context);
 
     return CachedNetworkImage(
       key: UniqueKey(),
@@ -127,11 +127,12 @@ class OptimizedAssetImage extends StatelessWidget {
   }
 }
 
-class OptimizedGifImage extends StatefulWidget {
+class OptimizedGifImage extends StatelessWidget {
   const OptimizedGifImage({
     super.key,
     required this.imageUrl,
     required this.imageWidth,
+    required this.controller,
     this.imageHeight,
     this.fit = BoxFit.cover,
   });
@@ -140,44 +141,27 @@ class OptimizedGifImage extends StatefulWidget {
   final double imageWidth;
   final double? imageHeight;
   final BoxFit fit;
-
-  @override
-  State<OptimizedGifImage> createState() => _OptimizedGifImageState();
-}
-
-class _OptimizedGifImageState extends State<OptimizedGifImage>
-    with TickerProviderStateMixin {
-  late final GifController controller;
+  final GifController controller;
   final int _fps = 30;
 
   @override
-  void initState() {
-    controller = GifController(vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Gif(
-      controller: controller,
-      fps: _fps,
-      autostart: Autostart.loop,
-      useCache: true,
-      height: widget.imageHeight,
-      width: widget.imageWidth,
-      image: NetworkImage(
-        widget.imageUrl,
-      ),
-      fit: widget.fit,
-      placeholder: (context) => SizedBox(
-        height: widget.imageHeight,
-        width: widget.imageWidth,
+    return RepaintBoundary(
+      child: Gif(
+        controller: controller,
+        fps: _fps,
+        autostart: Autostart.loop,
+        useCache: true,
+        height: imageHeight,
+        width: imageWidth,
+        image: NetworkImage(
+          imageUrl,
+        ),
+        fit: fit,
+        placeholder: (context) => SizedBox(
+          height: imageHeight,
+          width: imageWidth,
+        ),
       ),
     );
   }
