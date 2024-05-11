@@ -29,7 +29,7 @@ class OptimizedCachedNetworkImage extends StatelessWidget {
       key: UniqueKey(),
       imageUrl: imageUrl,
       imageBuilder: imageBuilder,
-      // maxWidthDiskCache: cacheSize
+      maxWidthDiskCache: cacheSize,
       memCacheWidth: cacheSize,
       placeholder: (context, url) => SizedBox(
         width: imageWidth,

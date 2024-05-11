@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 
 import '../constants/styles.dart';
 import 'optimized_image.dart';
@@ -36,7 +37,20 @@ class CircleAvatarProfileImage extends StatelessWidget {
                     width: 2.0,
                   ),
                 ),
-                child: const Center(child: Text('TEST')),
+                child: ClipOval(
+                  child: Gif(
+                    image: NetworkImage(profileImageUrl!),
+                    height: radius * 2,
+                    width: radius * 2,
+                    fit: fit,
+                    useCache: true,
+                    autostart: Autostart.no,
+                    placeholder: (context) => SizedBox(
+                      height: radius * 2,
+                      width: radius * 2,
+                    ),
+                  ),
+                ),
               )
             : OptimizedCachedNetworkImage(
                 imageUrl: profileImageUrl!,
