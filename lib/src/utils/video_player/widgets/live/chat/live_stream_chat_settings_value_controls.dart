@@ -202,8 +202,8 @@ class _ChatSettingControl extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    return SizedBox(
+      height: 120.0,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,46 +212,48 @@ class _ChatSettingControl extends ConsumerWidget {
             text: headerText,
             fontSize: 16.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 45.0,
-                child: Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: AppColors.whiteColor,
-                    fontWeight: FontWeight.w600,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 50.0,
+                  child: Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      color: AppColors.whiteColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10.0),
-              ControlIcon(
-                iconData: Icons.arrow_upward_rounded,
-                onPressed: () {
-                  ref
-                      .read(controlOverlayTimerProvider.notifier)
-                      .showOverlayAndStartTimer(
-                          videoFocusNode: videoFocusNode,
-                          overlayType: OverlayType.chatSettings);
-                  onPressedUp();
-                },
-              ),
-              const SizedBox(width: 5.0),
-              ControlIcon(
-                iconData: Icons.arrow_downward_rounded,
-                onPressed: () {
-                  ref
-                      .read(controlOverlayTimerProvider.notifier)
-                      .showOverlayAndStartTimer(
-                          videoFocusNode: videoFocusNode,
-                          overlayType: OverlayType.chatSettings);
+                const SizedBox(width: 10.0),
+                ControlIcon(
+                  iconData: Icons.arrow_upward_rounded,
+                  onPressed: () {
+                    ref
+                        .read(controlOverlayTimerProvider.notifier)
+                        .showOverlayAndStartTimer(
+                            videoFocusNode: videoFocusNode,
+                            overlayType: OverlayType.chatSettings);
+                    onPressedUp();
+                  },
+                ),
+                const SizedBox(width: 5.0),
+                ControlIcon(
+                  iconData: Icons.arrow_downward_rounded,
+                  onPressed: () {
+                    ref
+                        .read(controlOverlayTimerProvider.notifier)
+                        .showOverlayAndStartTimer(
+                            videoFocusNode: videoFocusNode,
+                            overlayType: OverlayType.chatSettings);
 
-                  onPressedDown();
-                },
-              ),
-            ],
+                    onPressedDown();
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

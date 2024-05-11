@@ -36,6 +36,7 @@ class CircleAvatarProfileImage extends StatelessWidget {
                     width: 2.0,
                   ),
                 ),
+                child: const Center(child: Text('TEST')),
               )
             : OptimizedCachedNetworkImage(
                 imageUrl: profileImageUrl!,

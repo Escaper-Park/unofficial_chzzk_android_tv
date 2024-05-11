@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
-import 'package:unofficial_chzzk_android_tv/src/common/image_extension.dart';
 
+import '../../../src/utils/image_cache/image_extension.dart';
 import '../constants/styles.dart';
 
 class OptimizedCachedNetworkImage extends StatelessWidget {

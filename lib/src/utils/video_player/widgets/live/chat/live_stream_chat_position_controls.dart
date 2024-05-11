@@ -34,7 +34,10 @@ class LiveStreamChatPositionControls extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HeaderText(text: '채팅창 위치'),
+          const HeaderText(
+            text: '채팅창 위치',
+            fontSize: 16.0,
+          ),
           Expanded(
             child: Row(
               children: [

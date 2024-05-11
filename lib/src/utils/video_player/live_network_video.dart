@@ -6,7 +6,6 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../common/constants/styles.dart';
 import '../../features/chat/controller/chat_controller.dart';
 import '../../features/chat/controller/chat_settings_controller.dart';
 import '../../features/chat/model/chat_settings.dart';
@@ -190,14 +189,14 @@ class _NetworkVideoState extends ConsumerState<LiveStreamingNetworkVideo>
                 Align(
                   alignment: ChatPositionData
                       .chatPositionsData[chatPositionIndex].alignment,
-                  child: Container(
-                    color: AppColors.blackColor.withOpacity(opacity),
+                  child: SizedBox(
                     width: maxWidth * chatContainerWidth * 0.01,
                     height: maxHeight * chatContainerHeight * 0.01,
                     child: LiveChatStream(
                       liveDetail: widget.liveDetail,
                       fontSize: chatFontSize,
                       verticalInterval: verticalInterval,
+                      opacity: opacity,
                     ),
                   ),
                 ),

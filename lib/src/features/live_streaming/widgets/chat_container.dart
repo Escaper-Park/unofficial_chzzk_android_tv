@@ -3,6 +3,7 @@ import 'package:gif/gif.dart';
 
 import '../../../common/constants/styles.dart';
 import '../../../common/widgets/optimized_image.dart';
+import '../../../common/widgets/rounded_container.dart';
 import '../../chat/model/chat.dart';
 
 class ChatContainer extends StatefulWidget {
@@ -11,14 +12,16 @@ class ChatContainer extends StatefulWidget {
     required this.chat,
     required this.fontSize,
     required this.verticalInterval,
+    required this.opacity,
   });
 
   final Chat chat;
   final double fontSize;
   final double verticalInterval;
+  final double opacity;
 
   @override
-  _ChatContainerState createState() => _ChatContainerState();
+  State<ChatContainer> createState() => _ChatContainerState();
 }
 
 class _ChatContainerState extends State<ChatContainer>
@@ -108,22 +111,26 @@ class _ChatContainerState extends State<ChatContainer>
         horizontal: 5.0,
         vertical: widget.verticalInterval / 2,
       ),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: widget.chat.nickname,
-              style: TextStyle(
-                fontSize: widget.fontSize,
-                color: nicknameColor,
-                fontWeight: FontWeight.w600,
+      child: RoundedContainer(
+        backgroundColor: AppColors.blackColor.withOpacity(widget.opacity),
+        padding: const EdgeInsets.all(5.0),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: widget.chat.nickname,
+                style: TextStyle(
+                  fontSize: widget.fontSize,
+                  color: nicknameColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const WidgetSpan(
-              child: SizedBox(width: 5.0),
-            ),
-            ...textSpans,
-          ],
+              const WidgetSpan(
+                child: SizedBox(width: 5.0),
+              ),
+              ...textSpans,
+            ],
+          ),
         ),
       ),
     );

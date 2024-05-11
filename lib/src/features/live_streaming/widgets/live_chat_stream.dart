@@ -12,11 +12,13 @@ class LiveChatStream extends ConsumerWidget {
     required this.liveDetail,
     required this.fontSize,
     required this.verticalInterval,
+    this.opacity = 0.0,
   });
 
   final LiveDetail liveDetail;
   final double fontSize;
   final double verticalInterval;
+  final double opacity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,6 +42,7 @@ class LiveChatStream extends ConsumerWidget {
                 chat: chat,
                 fontSize: fontSize,
                 verticalInterval: verticalInterval,
+                opacity: opacity,
               );
             },
           ),
