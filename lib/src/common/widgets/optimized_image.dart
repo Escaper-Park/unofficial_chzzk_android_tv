@@ -23,14 +23,17 @@ class OptimizedCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int cacheSize = imageWidth.cacheSize(context);
+    final int cacheWidth = imageWidth.cacheSize(context);
+    final int? cacheHeight = imageHeight?.cacheSize(context);
 
     return CachedNetworkImage(
       key: UniqueKey(),
       imageUrl: imageUrl,
       imageBuilder: imageBuilder,
-      maxWidthDiskCache: cacheSize,
-      memCacheWidth: cacheSize,
+      // maxWidthDiskCache: cacheWidth,
+      // maxHeightDiskCache: cacheHeight,
+      memCacheWidth: cacheWidth,
+      memCacheHeight: cacheHeight,
       placeholder: (context, url) => SizedBox(
         width: imageWidth,
         height: imageHeight,
@@ -142,26 +145,24 @@ class OptimizedGifImage extends StatelessWidget {
   final double? imageHeight;
   final BoxFit fit;
   final GifController controller;
-  final int _fps = 30;
+  // final int _fps = 30;
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Gif(
-        controller: controller,
-        fps: _fps,
-        autostart: Autostart.loop,
-        useCache: true,
+    return Gif(
+      controller: controller,
+      // fps: _fps,
+      autostart: Autostart.loop,
+      useCache: true,
+      height: imageHeight,
+      width: imageWidth,
+      image: NetworkImage(
+        imageUrl,
+      ),
+      fit: fit,
+      placeholder: (context) => SizedBox(
         height: imageHeight,
         width: imageWidth,
-        image: NetworkImage(
-          imageUrl,
-        ),
-        fit: fit,
-        placeholder: (context) => SizedBox(
-          height: imageHeight,
-          width: imageWidth,
-        ),
       ),
     );
   }

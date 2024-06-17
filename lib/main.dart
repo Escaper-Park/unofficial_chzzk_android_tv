@@ -9,11 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './src/utils/router/app_router.dart';
 import './src/utils/shared_preferences/shared_prefs.dart';
 import './src/common/constants/styles.dart';
-import './src/utils/image_cache/image_cache_controller.dart';
+// import './src/utils/image_cache/image_cache_controller.dart';
 
 void main() async {
   // Set global image cache.
-  ImageCacheController();
+  // ImageCacheController();
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
