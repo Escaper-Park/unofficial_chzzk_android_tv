@@ -59,7 +59,7 @@ final currentCategoryItemProvider =
 
 typedef _$CurrentCategoryItem = AutoDisposeNotifier<CategoryItem>;
 String _$categoryLiveControllerHash() =>
-    r'847a4f8b6a6d2c69cc8d7d9c724eeeac1c2d237c';
+    r'b478d57de69b60612843648fcfa75b57852bf22b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -229,7 +229,7 @@ class _CategoryLiveControllerProviderElement
 }
 
 String _$categoryVodControllerHash() =>
-    r'4d38e6e646a86b31a28165e54c7bb363ce84d4ad';
+    r'0de166bb742ea1c9dc85898479a9007c3e0ac1e4';
 
 abstract class _$CategoryVodController
     extends BuildlessAutoDisposeAsyncNotifier<List<Vod>?> {

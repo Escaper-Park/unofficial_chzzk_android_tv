@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import '../../../common/constants/api.dart';
+import '../model/access_token.dart';
 
 part 'chat_repository.g.dart';
 
@@ -46,17 +50,44 @@ class ChatRepository {
   final WebSocketChannel channel;
   String chatChannelId;
 
+  final Dio _dio = Dio(
+    BaseOptions(
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+      },
+    ),
+  );
+
   ChatRepository({
     required this.channel,
     required this.chatChannelId,
   });
 
-  void connect() {
+  Future<void> connect({
+    required String? uid,
+    required Options? options,
+  }) async {
+    final accTknUrl = APIUrl.accessToken(chatChannelId);
+
+    AccessToken? accessToken;
+
+    if (options != null) {
+      try {
+        final response = await _dio.get(accTknUrl, options: options);
+        final content = response.data['content'];
+
+        accessToken = AccessToken.fromJson(content);
+      } catch (e) {
+        accessToken = null;
+      }
+    }
+
     channel.sink.add(json.encode({
       'bdy': {
-        'accTkn': null,
-        'auth': 'READ',
-        'uid': null,
+        'accTkn': accessToken?.accessToken,
+        'auth': uid == null ? 'READ' : 'SEND',
+        'uid': uid,
       },
       'cmd': ChatCmd.connect.cmdNumber,
       'tid': 1,

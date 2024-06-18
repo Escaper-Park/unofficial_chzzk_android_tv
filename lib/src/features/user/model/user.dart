@@ -6,6 +6,7 @@ part 'user.g.dart';
 @freezed
 class User with _$User {
   const factory User({
+    required String? userIdHash,
     required bool hasProfile,
     required String nickname,
     required String? profileImageUrl,

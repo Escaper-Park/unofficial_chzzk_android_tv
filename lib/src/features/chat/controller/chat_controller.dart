@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../common/constants/api.dart';
+import '../../auth/controller/auth_controller.dart';
+import '../../user/controller/user_controller.dart';
 import '../model/chat.dart';
 import '../repository/chat_repository.dart';
 import './chat_settings_controller.dart';
@@ -16,12 +19,17 @@ part 'chat_controller.g.dart';
 class ChatController extends _$ChatController {
   late WebSocketChannel _channel;
   late ChatRepository _chatRepository;
+  Options? _options;
 
   @override
   Stream<List<Chat>> build({
     required String channelId,
     required String chatChannelId,
   }) async* {
+    final auth = await ref.watch(authControllerProvider.future);
+    final user = await ref.watch(userControllerProvider.future);
+    _options = auth?.getOptions();
+    
     Random random = Random();
     int serverNo = random.nextInt(5) + 1;
 
@@ -42,7 +50,10 @@ class ChatController extends _$ChatController {
     );
 
     // Connect
-    _chatRepository.connect();
+    await _chatRepository.connect(
+      options: _options,
+      uid: user?.userIdHash,
+    );
 
     // Disconnect chat ready
     ref.onDispose(_chatRepository.disconnect);

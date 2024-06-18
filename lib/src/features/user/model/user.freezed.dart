@@ -20,6 +20,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  String? get userIdHash => throw _privateConstructorUsedError;
   bool get hasProfile => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   String? get profileImageUrl => throw _privateConstructorUsedError;
@@ -34,7 +35,11 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({bool hasProfile, String nickname, String? profileImageUrl});
+  $Res call(
+      {String? userIdHash,
+      bool hasProfile,
+      String nickname,
+      String? profileImageUrl});
 }
 
 /// @nodoc
@@ -50,11 +55,16 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? userIdHash = freezed,
     Object? hasProfile = null,
     Object? nickname = null,
     Object? profileImageUrl = freezed,
   }) {
     return _then(_value.copyWith(
+      userIdHash: freezed == userIdHash
+          ? _value.userIdHash
+          : userIdHash // ignore: cast_nullable_to_non_nullable
+              as String?,
       hasProfile: null == hasProfile
           ? _value.hasProfile
           : hasProfile // ignore: cast_nullable_to_non_nullable
@@ -78,7 +88,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$UserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool hasProfile, String nickname, String? profileImageUrl});
+  $Res call(
+      {String? userIdHash,
+      bool hasProfile,
+      String nickname,
+      String? profileImageUrl});
 }
 
 /// @nodoc
@@ -91,11 +105,16 @@ class __$$UserImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? userIdHash = freezed,
     Object? hasProfile = null,
     Object? nickname = null,
     Object? profileImageUrl = freezed,
   }) {
     return _then(_$UserImpl(
+      userIdHash: freezed == userIdHash
+          ? _value.userIdHash
+          : userIdHash // ignore: cast_nullable_to_non_nullable
+              as String?,
       hasProfile: null == hasProfile
           ? _value.hasProfile
           : hasProfile // ignore: cast_nullable_to_non_nullable
@@ -116,13 +135,16 @@ class __$$UserImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserImpl implements _User {
   const _$UserImpl(
-      {required this.hasProfile,
+      {required this.userIdHash,
+      required this.hasProfile,
       required this.nickname,
       required this.profileImageUrl});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
 
+  @override
+  final String? userIdHash;
   @override
   final bool hasProfile;
   @override
@@ -132,7 +154,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(hasProfile: $hasProfile, nickname: $nickname, profileImageUrl: $profileImageUrl)';
+    return 'User(userIdHash: $userIdHash, hasProfile: $hasProfile, nickname: $nickname, profileImageUrl: $profileImageUrl)';
   }
 
   @override
@@ -140,6 +162,8 @@ class _$UserImpl implements _User {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
+            (identical(other.userIdHash, userIdHash) ||
+                other.userIdHash == userIdHash) &&
             (identical(other.hasProfile, hasProfile) ||
                 other.hasProfile == hasProfile) &&
             (identical(other.nickname, nickname) ||
@@ -150,8 +174,8 @@ class _$UserImpl implements _User {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, hasProfile, nickname, profileImageUrl);
+  int get hashCode => Object.hash(
+      runtimeType, userIdHash, hasProfile, nickname, profileImageUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -169,12 +193,15 @@ class _$UserImpl implements _User {
 
 abstract class _User implements User {
   const factory _User(
-      {required final bool hasProfile,
+      {required final String? userIdHash,
+      required final bool hasProfile,
       required final String nickname,
       required final String? profileImageUrl}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
+  @override
+  String? get userIdHash;
   @override
   bool get hasProfile;
   @override

@@ -116,6 +116,8 @@ class APIUrl {
   static String chatServer(int serverNo) =>
       'wss://kr-ss$serverNo.chat.naver.com/chat';
 
+  static String accessToken(String channelId) => '$_naverGameUrl/v1/chats/access-token?channelId=$channelId&chatType=STREAMING';
+
   // Github update check
   static String latestApp() =>
       'https://api.github.com/repos/Escaper-Park/unofficial_chzzk_android_tv/releases/latest';
