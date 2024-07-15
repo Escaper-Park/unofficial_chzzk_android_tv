@@ -69,9 +69,9 @@ class _ChatContainerState extends State<ChatContainer>
               child: imageUrl.contains('.gif')
                   ? OptimizedGifImage(
                       controller: controller,
-                      imageUrl: imageUrl,
                       imageWidth: widget.fontSize + 5.0,
                       imageHeight: widget.fontSize + 5.0,
+                      image: NetworkImage(imageUrl),
                     )
                   : OptimizedNetworkImage(
                       imageUrl: imageUrl,

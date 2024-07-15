@@ -30,7 +30,7 @@ class SearchResultInfoCard extends StatelessWidget {
             width: 30.0,
             child: CircleAvatarProfileImage(
               profileImageUrl: channel.channelImageUrl,
-              hasBorder: channel.openLive == true,
+              useBorder: channel.openLive == true,
             ),
           ),
           const SizedBox(width: 10.0),

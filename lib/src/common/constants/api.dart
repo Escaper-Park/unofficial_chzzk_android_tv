@@ -15,7 +15,7 @@ class APIUrl {
       '$_chzzkAPIUrl/service/v1/channels/$channelId';
 
   static String liveDetail(String channelId) =>
-      '$_chzzkAPIUrl/service/v2/channels/$channelId/live-detail';
+      '$_chzzkAPIUrl/service/v3/channels/$channelId/live-detail';
 
   static String liveStatus(String channelId) =>
       '$_chzzkAPIUrl/service/v2/channels/$channelId/live-status';
@@ -116,7 +116,8 @@ class APIUrl {
   static String chatServer(int serverNo) =>
       'wss://kr-ss$serverNo.chat.naver.com/chat';
 
-  static String accessToken(String channelId) => '$_naverGameUrl/v1/chats/access-token?channelId=$channelId&chatType=STREAMING';
+  static String accessToken(String channelId) =>
+      '$_naverGameUrl/v1/chats/access-token?channelId=$channelId&chatType=STREAMING';
 
   // Github update check
   static String latestApp() =>

@@ -34,8 +34,8 @@ class MultiViewControlCard extends ConsumerWidget {
           ),
           child: CircleAvatarProfileImage(
             profileImageUrl: profileImageUrl,
-            radius: 20.0,
-            hasBorder: false,
+            radius: 40.0,
+            useBorder: false,
           ),
         ),
         Expanded(

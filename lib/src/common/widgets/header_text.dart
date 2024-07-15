@@ -38,7 +38,7 @@ class HeaderText extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   color: AppColors.whiteColor,
                 ),
-              )
+              ),
             ],
           )
         : _headerText();

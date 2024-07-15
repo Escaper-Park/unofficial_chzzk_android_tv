@@ -31,8 +31,8 @@ class MultiViewSelectedChannelCard extends ConsumerWidget {
         children: [
           CircleAvatarProfileImage(
             profileImageUrl: liveDetail.channel.channelImageUrl,
-            hasBorder: true,
-            radius: 15.0,
+            useBorder: true,
+            radius: 30.0,
           ),
           const SizedBox(width: 10.0),
           Expanded(

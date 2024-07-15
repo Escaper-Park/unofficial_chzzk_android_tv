@@ -1,97 +1,85 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gif/gif.dart';
 
-import '../../../src/utils/image_cache/image_extension.dart';
+import '../../utils/image/image_utils.dart';
 import '../constants/styles.dart';
 
-class OptimizedCachedNetworkImage extends StatelessWidget {
-  ///
-  const OptimizedCachedNetworkImage({
+class OptimizedNetworkImage extends StatelessWidget {
+  /// A CachedNetworkImage with the cache.
+  const OptimizedNetworkImage({
     super.key,
-    required this.imageUrl,
-    required this.imageWidth,
-    required this.imageBuilder,
+    this.useCacheKey = true,
+    this.useDynamicCacheKey = false,
+    this.fit = BoxFit.cover,
     this.imageHeight,
+    this.imageWidth,
+    required this.imageUrl,
+    this.imageBuilder,
   });
 
-  final String imageUrl;
-  final double imageWidth;
+  /// Set this true for updating live images, but set this false to profile images.
+  final bool useCacheKey;
+
+  /// Set this value to true if you want to change the image over time,
+  final bool useDynamicCacheKey;
+  final BoxFit fit;
+
   final double? imageHeight;
-  final Widget Function(BuildContext context, ImageProvider imageProvider)
+  final double? imageWidth;
+
+  final String imageUrl;
+  final Widget Function(BuildContext context, ImageProvider imageProvider)?
       imageBuilder;
 
   @override
   Widget build(BuildContext context) {
-    final int cacheWidth = imageWidth.cacheSize(context);
+    final int? cacheWidth = imageWidth?.cacheSize(context);
     final int? cacheHeight = imageHeight?.cacheSize(context);
 
+    const int updateCacheInterval =
+        5; // update image every {updateCacheInterval} mins
+
+    final String cacheKey = useDynamicCacheKey
+        ? '${imageUrl}_${DateTime.now().minute ~/ updateCacheInterval}'
+        : imageUrl;
+
     return CachedNetworkImage(
-      key: UniqueKey(),
       imageUrl: imageUrl,
       imageBuilder: imageBuilder,
-      // maxWidthDiskCache: cacheWidth,
-      // maxHeightDiskCache: cacheHeight,
+      width: imageWidth,
+      height: imageHeight,
       memCacheWidth: cacheWidth,
       memCacheHeight: cacheHeight,
+      maxWidthDiskCache: cacheWidth,
+      maxHeightDiskCache: cacheHeight,
+      cacheKey:
+          useCacheKey ? cacheKey : null, // Use cache key to update live images
+      fit: fit,
       placeholder: (context, url) => SizedBox(
         width: imageWidth,
         height: imageHeight,
       ),
       errorWidget: (context, url, error) {
-        return SizedBox(
+        return Image.network(
+          imageUrl,
+          cacheHeight: cacheHeight,
+          cacheWidth: cacheWidth,
+          fit: fit,
           width: imageWidth,
           height: imageHeight,
-          child: const Center(
-            child: Text(
-              '오류',
-              style: TextStyle(color: AppColors.redColor),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class OptimizedNetworkImage extends StatelessWidget {
-  const OptimizedNetworkImage({
-    super.key,
-    required this.imageUrl,
-    required this.imageWidth,
-    this.imageHeight,
-    this.fit = BoxFit.cover,
-  });
-
-  final String imageUrl;
-  final double imageWidth;
-  final double? imageHeight;
-  final BoxFit fit;
-
-  @override
-  Widget build(BuildContext context) {
-    final double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final int cacheWidth = (imageWidth * devicePixelRatio).round();
-
-    final int? cacheHeight =
-        imageHeight == null ? null : (imageHeight! * devicePixelRatio).round();
-
-    return Image.network(
-      key: UniqueKey(),
-      imageUrl,
-      width: imageWidth,
-      height: imageHeight,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
-      fit: fit,
-      errorBuilder: (context, error, stackTrace) {
-        return SizedBox(
-          width: imageWidth,
-          height: imageHeight,
-          child: const Center(
-            child: Text(
-              '이미지 로딩 에러',
-              style: TextStyle(color: AppColors.redColor),
+          errorBuilder: (context, error, stackTrace) => SizedBox(
+            width: imageWidth,
+            height: imageHeight,
+            child: const Center(
+              child: Text(
+                '오류',
+                style: TextStyle(
+                  fontSize: 11.0,
+                  color: AppColors.redColor,
+                  overflow: TextOverflow.visible,
+                ),
+              ),
             ),
           ),
         );
@@ -101,6 +89,7 @@ class OptimizedNetworkImage extends StatelessWidget {
 }
 
 class OptimizedAssetImage extends StatelessWidget {
+  /// An optimized asset image with cache.
   const OptimizedAssetImage({
     super.key,
     required this.imagePath,
@@ -116,16 +105,32 @@ class OptimizedAssetImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final int cacheWidth = (imageWidth * devicePixelRatio).round();
+    final int cacheWidth = imageWidth.cacheSize(context);
+    final int? cacheHeight = imageHeight?.cacheSize(context);
 
     return Image.asset(
-      key: UniqueKey(),
       imagePath,
       width: imageWidth,
       height: imageHeight,
       cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
       fit: fit,
+      errorBuilder: (context, error, stackTrace) => SizedBox(
+        width: imageWidth,
+        height: imageHeight,
+        child: const FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Center(
+            child: Text(
+              '오류',
+              style: TextStyle(
+                fontSize: 10.0,
+                color: AppColors.redColor,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -133,32 +138,35 @@ class OptimizedAssetImage extends StatelessWidget {
 class OptimizedGifImage extends StatelessWidget {
   const OptimizedGifImage({
     super.key,
-    required this.imageUrl,
-    required this.imageWidth,
-    required this.controller,
+    required this.image,
+    this.controller,
+    this.imageWidth,
     this.imageHeight,
+    this.autostart = Autostart.loop,
+    this.useCache = false,
+    this.fps,
     this.fit = BoxFit.cover,
   });
 
-  final String imageUrl;
-  final double imageWidth;
+  final ImageProvider image;
+  final GifController? controller;
+  final double? imageWidth;
   final double? imageHeight;
+  final Autostart autostart;
+  final bool useCache;
   final BoxFit fit;
-  final GifController controller;
-  // final int _fps = 30;
+  final int? fps;
 
   @override
   Widget build(BuildContext context) {
     return Gif(
       controller: controller,
-      // fps: _fps,
-      autostart: Autostart.loop,
-      useCache: true,
-      height: imageHeight,
+      autostart: autostart,
+      useCache: useCache,
+      image: image,
       width: imageWidth,
-      image: NetworkImage(
-        imageUrl,
-      ),
+      height: imageHeight,
+      fps: fps,
       fit: fit,
       placeholder: (context) => SizedBox(
         height: imageHeight,

@@ -35,7 +35,7 @@ class LiveStreamInfo extends StatelessWidget {
                   width: profileImageRadius * 2,
                   child: CircleAvatarProfileImage(
                     profileImageUrl: liveDetail.channel.channelImageUrl,
-                    radius: profileImageRadius,
+                    radius: profileImageRadius * 2,
                   ),
                 ),
                 const SizedBox(width: 10.0),
