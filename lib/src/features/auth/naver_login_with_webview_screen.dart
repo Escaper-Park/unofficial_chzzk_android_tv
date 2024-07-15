@@ -96,6 +96,7 @@ class _NaverLoginDpadWebViewState
 
                           if (inputString.isNotEmpty) {
                             switch (loginStep.value) {
+                              // ID
                               case LoginStep.id:
                                 script = """
       var idField = document.getElementById('id');

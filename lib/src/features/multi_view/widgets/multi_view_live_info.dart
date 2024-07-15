@@ -31,8 +31,8 @@ class MultiViewLiveInfo extends StatelessWidget {
             // Check
             child: CircleAvatarProfileImage(
               profileImageUrl: liveDetail.channel.channelImageUrl,
-              hasBorder: true,
-              radius: 20.0,
+              useBorder: true,
+              radius: 40.0,
             ),
           ),
           const SizedBox(height: 5.0),

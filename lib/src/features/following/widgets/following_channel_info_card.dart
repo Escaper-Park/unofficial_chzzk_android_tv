@@ -30,7 +30,7 @@ class FollowingChannelInfoCard extends StatelessWidget {
             width: 30.0,
             child: CircleAvatarProfileImage(
               profileImageUrl: following.channel.channelImageUrl,
-              hasBorder: following.streamer.openLive,
+              useBorder: following.streamer.openLive,
             ),
           ),
           const SizedBox(width: 10.0),

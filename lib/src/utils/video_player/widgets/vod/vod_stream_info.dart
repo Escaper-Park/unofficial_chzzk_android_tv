@@ -41,7 +41,7 @@ class VodStreamInfo extends StatelessWidget {
                   width: profileImageRadius * 2,
                   child: CircleAvatarProfileImage(
                     profileImageUrl: vod.channel.channelImageUrl,
-                    radius: profileImageRadius,
+                    radius: profileImageRadius * 2,
                   ),
                 ),
                 const SizedBox(width: 10.0),

@@ -112,8 +112,8 @@ class _ProfileImageWithLiveBadge extends StatelessWidget {
   Widget _profileImage() {
     return CircleAvatarProfileImage(
       profileImageUrl: channel.channelImageUrl,
-      hasBorder: channel.openLive ?? false,
-      radius: profileImageRadius,
+      useBorder: channel.openLive ?? false,
+      radius: profileImageRadius * 2,
     );
   }
 }

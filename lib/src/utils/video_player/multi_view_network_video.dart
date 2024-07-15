@@ -8,6 +8,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../common/widgets/center_text.dart';
 import '../../features/live/model/live.dart';
 import '../focus/dpad_widget.dart';
+import '../hls_parser/hls_parser.dart';
 import './controller/network_video_controller.dart';
 import './widgets/multi_view/multi_view_control_overlay.dart';
 import './widgets/multi_view/multi_view_dynamic_screens.dart';
@@ -82,19 +83,16 @@ class _MultiViewNetworkVideosState extends ConsumerState<MultiViewNetworkVideos>
   Future<void> initialize() async {
     // int index = 0;
     for (LiveDetail liveDetail in widget.liveDetails) {
-      // final livePath720p =
-      //     await HlsParser(liveDetail.livePath!).getMediaPlaylistUrls();
+      final mediaList =
+          await HlsParser(liveDetail.livePath!).getMediaPlaylistUrls();
+      final media720pUrl = mediaList![1].toString();
 
       videoPlayerControllers.add(
         VideoPlayerController.networkUrl(
-          // widget.initialVolumeSettings[index] > 0.99
-          //     ? Uri.parse(liveDetail.livePath!)
-          //     : livePath720p![1]!,
-          Uri.parse(liveDetail.livePath!),
+          Uri.parse(media720pUrl),
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
         ),
       );
-      // index += 1;
     }
 
     List<Future> initializeFutures = List.generate(
