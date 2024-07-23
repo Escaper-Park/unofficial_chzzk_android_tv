@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../common/constants/api.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../model/vod.dart';
 import '../repository/vod_repository.dart';
@@ -9,97 +10,124 @@ part 'vod_controller.g.dart';
 
 @riverpod
 class VodController extends _$VodController {
-  Options? _options;
-  late String _channelId;
+  late VodRepository _repository;
 
   @override
-  FutureOr<List<Vod>?> build({required String channelId}) async {
+  void build() {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = VodRepository(dio);
+
+    return;
+  }
+
+  Future<Vod?> getVod({required int videoNo}) async {
+    return await _repository.getVod(videoNo: videoNo);
+  }
+
+  // Don't use repository for the unity of dio client.
+  // This request doesn't use response.data['content'] so can't use dio interceptor.
+  Future<String?> getVodPlayback({required int videoNo}) async {
+    final Vod? vod = await getVod(videoNo: videoNo);
+
     final auth = await ref.watch(authControllerProvider.future);
+    final dio = ref.read(dioClientProvider.notifier).getBaseDio();
 
-    _options = auth?.getOptions();
-
-    _channelId = channelId;
-
-    final sortType = ref.watch(vodSortTypeControllerProvider);
-
-    // (currentPage, vodList)
-    return await fetchVodList(page: 0, sortType: sortType);
-  }
-
-  Future<List<Vod>?> fetchVodList({
-    required int page,
-    VodSortType sortType = VodSortType.latest,
-  }) async {
-    return await ref.watch(vodRepositoryProvider).getChannelVodList(
-          channelId: _channelId,
-          options: _options,
-          page: page,
-          vodSortType: sortType,
+    if (vod != null && vod.inKey != null) {
+      try {
+        final response = await dio.get(
+          options: auth?.getOptions(),
+          '${ApiUrl.vodPlayback}/${vod.videoId}',
+          queryParameters: {'key': vod.inKey},
         );
-  }
 
-  Future<void> fetchVodListByPage({required int page}) async {
-    state = const AsyncLoading();
+        final vodPath = response.data?['period'][0]['adaptationSet'][0]
+            ['representation'][0]['baseURL'][0]['value'];
 
-    state = await AsyncValue.guard(() async {
-      final sortType = ref.watch(vodSortTypeControllerProvider);
+        return vodPath;
+      } catch (_) {
+        return null;
+      }
+    }
 
-      final vodList = await fetchVodList(
-        page: page,
-        sortType: sortType,
-      );
-
-      return vodList;
-    });
-  }
-
-  Future<String?> getVodPath({required int videoNo}) async {
-    final String? vodPath = await ref
-        .watch(vodRepositoryProvider)
-        .getVodPath(videoNo: videoNo, options: _options);
-
-    return vodPath;
+    return null;
   }
 }
 
 @riverpod
-FutureOr<int?> channelVodTotalPages(
-  ChannelVodTotalPagesRef ref, {
-  required String channelId,
-}) async {
-  final auth = await ref.watch(authControllerProvider.future);
+class FollowingVodController extends _$FollowingVodController {
+  late VodRepository _repository;
+  int? _next;
 
-  final options = auth?.getOptions();
-
-  return await ref.watch(vodRepositoryProvider).getChannelTotalPages(
-        channelId: channelId,
-        options: options,
-      );
-}
-
-@riverpod
-class VodSortTypeController extends _$VodSortTypeController {
   @override
-  VodSortType build() {
-    return VodSortType.latest;
+  FutureOr<List<Vod>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = VodRepository(dio);
+
+    return await _initFetchFollowingVods();
   }
 
-  void setState(VodSortType sortType) {
-    if (state != sortType) {
-      ref.read(currentVodPageIndexProvider.notifier).setState(0);
-      state = sortType;
+  Future<List<Vod>?> _initFetchFollowingVods() async {
+    final followingVodResponse = await _repository.getFollowingVods(
+      size: 18,
+      nextNo: null,
+    );
+
+    _next = followingVodResponse?.next;
+
+    return followingVodResponse?.data.map((e) => e.vod).toList();
+  }
+
+  Future<void> fetchMore() async {
+    if (_next != null) {
+      ref.read(followingVodFetchMoreStateProvider.notifier).setState(true);
+      final prev = state.value;
+
+      state = await AsyncValue.guard(() async {
+        final followingVodResponse = await _repository.getFollowingVods(
+          size: 18,
+          nextNo: _next,
+        );
+
+        _next = followingVodResponse?.next;
+
+        if (followingVodResponse?.data == null || _next == null) {
+          return [...prev!];
+        }
+
+        ref.read(followingVodFetchMoreStateProvider.notifier).setState(false);
+        return [...prev!, ...followingVodResponse!.data.map((e) => e.vod)];
+      });
     }
   }
 }
 
 @riverpod
-class CurrentVodPageIndex extends _$CurrentVodPageIndex {
+class PopularVodController extends _$PopularVodController {
+  late VodRepository _repository;
+
   @override
-  int build() {
-    return 0;
+  FutureOr<List<Vod>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = VodRepository(dio);
+
+    return await fetchPopularVodList();
   }
 
-  void setState(int value) {
-    if (state != value) state = value;
+  Future<List<Vod>?> fetchPopularVodList() async {
+    final popularVodResponse = await _repository.getPopularVods(size: 60);
+
+    return popularVodResponse?.videos;
+  }
+}
+
+@riverpod
+class FollowingVodFetchMoreState extends _$FollowingVodFetchMoreState {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void setState(bool value) {
+    state = value;
   }
 }

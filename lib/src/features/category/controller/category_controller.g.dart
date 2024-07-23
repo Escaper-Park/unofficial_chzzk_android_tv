@@ -7,7 +7,7 @@ part of 'category_controller.dart';
 // **************************************************************************
 
 String _$categoryControllerHash() =>
-    r'874e64f886cd4fa6c6643d6e202a56d8586c6c14';
+    r'5f3cf67e575398471d6a224fd218c9d8b454fa9e';
 
 /// See also [CategoryController].
 @ProviderFor(CategoryController)
@@ -23,43 +23,8 @@ final categoryControllerProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$CategoryController = AutoDisposeAsyncNotifier<List<Category>?>;
-String _$favoriteCategoriesControllerHash() =>
-    r'f4bbc6c4b43047e29ca1a3ed4ede1d898ccd8cc2';
-
-/// See also [FavoriteCategoriesController].
-@ProviderFor(FavoriteCategoriesController)
-final favoriteCategoriesControllerProvider = AutoDisposeAsyncNotifierProvider<
-    FavoriteCategoriesController, List<Category>>.internal(
-  FavoriteCategoriesController.new,
-  name: r'favoriteCategoriesControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$favoriteCategoriesControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$FavoriteCategoriesController
-    = AutoDisposeAsyncNotifier<List<Category>>;
-String _$currentCategoryItemHash() =>
-    r'3960b9b2b441c2761adb401184b5526751b62e5f';
-
-/// See also [CurrentCategoryItem].
-@ProviderFor(CurrentCategoryItem)
-final currentCategoryItemProvider =
-    AutoDisposeNotifierProvider<CurrentCategoryItem, CategoryItem>.internal(
-  CurrentCategoryItem.new,
-  name: r'currentCategoryItemProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentCategoryItemHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$CurrentCategoryItem = AutoDisposeNotifier<CategoryItem>;
-String _$categoryLiveControllerHash() =>
-    r'b478d57de69b60612843648fcfa75b57852bf22b';
+String _$categoryLivesControllerHash() =>
+    r'f4e25494173b2d9f360dc8973208ad6c42198ad2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -82,37 +47,37 @@ class _SystemHash {
   }
 }
 
-abstract class _$CategoryLiveController
-    extends BuildlessAutoDisposeAsyncNotifier<List<LiveDetail>?> {
+abstract class _$CategoryLivesController
+    extends BuildlessAutoDisposeAsyncNotifier<List<LiveInfo>?> {
   late final Category category;
 
-  FutureOr<List<LiveDetail>?> build({
+  FutureOr<List<LiveInfo>?> build({
     required Category category,
   });
 }
 
-/// See also [CategoryLiveController].
-@ProviderFor(CategoryLiveController)
-const categoryLiveControllerProvider = CategoryLiveControllerFamily();
+/// See also [CategoryLivesController].
+@ProviderFor(CategoryLivesController)
+const categoryLivesControllerProvider = CategoryLivesControllerFamily();
 
-/// See also [CategoryLiveController].
-class CategoryLiveControllerFamily
-    extends Family<AsyncValue<List<LiveDetail>?>> {
-  /// See also [CategoryLiveController].
-  const CategoryLiveControllerFamily();
+/// See also [CategoryLivesController].
+class CategoryLivesControllerFamily
+    extends Family<AsyncValue<List<LiveInfo>?>> {
+  /// See also [CategoryLivesController].
+  const CategoryLivesControllerFamily();
 
-  /// See also [CategoryLiveController].
-  CategoryLiveControllerProvider call({
+  /// See also [CategoryLivesController].
+  CategoryLivesControllerProvider call({
     required Category category,
   }) {
-    return CategoryLiveControllerProvider(
+    return CategoryLivesControllerProvider(
       category: category,
     );
   }
 
   @override
-  CategoryLiveControllerProvider getProviderOverride(
-    covariant CategoryLiveControllerProvider provider,
+  CategoryLivesControllerProvider getProviderOverride(
+    covariant CategoryLivesControllerProvider provider,
   ) {
     return call(
       category: provider.category,
@@ -131,31 +96,31 @@ class CategoryLiveControllerFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'categoryLiveControllerProvider';
+  String? get name => r'categoryLivesControllerProvider';
 }
 
-/// See also [CategoryLiveController].
-class CategoryLiveControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<CategoryLiveController,
-        List<LiveDetail>?> {
-  /// See also [CategoryLiveController].
-  CategoryLiveControllerProvider({
+/// See also [CategoryLivesController].
+class CategoryLivesControllerProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<CategoryLivesController,
+        List<LiveInfo>?> {
+  /// See also [CategoryLivesController].
+  CategoryLivesControllerProvider({
     required Category category,
   }) : this._internal(
-          () => CategoryLiveController()..category = category,
-          from: categoryLiveControllerProvider,
-          name: r'categoryLiveControllerProvider',
+          () => CategoryLivesController()..category = category,
+          from: categoryLivesControllerProvider,
+          name: r'categoryLivesControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$categoryLiveControllerHash,
-          dependencies: CategoryLiveControllerFamily._dependencies,
+                  : _$categoryLivesControllerHash,
+          dependencies: CategoryLivesControllerFamily._dependencies,
           allTransitiveDependencies:
-              CategoryLiveControllerFamily._allTransitiveDependencies,
+              CategoryLivesControllerFamily._allTransitiveDependencies,
           category: category,
         );
 
-  CategoryLiveControllerProvider._internal(
+  CategoryLivesControllerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -168,8 +133,8 @@ class CategoryLiveControllerProvider
   final Category category;
 
   @override
-  FutureOr<List<LiveDetail>?> runNotifierBuild(
-    covariant CategoryLiveController notifier,
+  FutureOr<List<LiveInfo>?> runNotifierBuild(
+    covariant CategoryLivesController notifier,
   ) {
     return notifier.build(
       category: category,
@@ -177,10 +142,10 @@ class CategoryLiveControllerProvider
   }
 
   @override
-  Override overrideWith(CategoryLiveController Function() create) {
+  Override overrideWith(CategoryLivesController Function() create) {
     return ProviderOverride(
       origin: this,
-      override: CategoryLiveControllerProvider._internal(
+      override: CategoryLivesControllerProvider._internal(
         () => create()..category = category,
         from: from,
         name: null,
@@ -193,14 +158,14 @@ class CategoryLiveControllerProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<CategoryLiveController,
-      List<LiveDetail>?> createElement() {
-    return _CategoryLiveControllerProviderElement(this);
+  AutoDisposeAsyncNotifierProviderElement<CategoryLivesController,
+      List<LiveInfo>?> createElement() {
+    return _CategoryLivesControllerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CategoryLiveControllerProvider &&
+    return other is CategoryLivesControllerProvider &&
         other.category == category;
   }
 
@@ -213,25 +178,25 @@ class CategoryLiveControllerProvider
   }
 }
 
-mixin CategoryLiveControllerRef
-    on AutoDisposeAsyncNotifierProviderRef<List<LiveDetail>?> {
+mixin CategoryLivesControllerRef
+    on AutoDisposeAsyncNotifierProviderRef<List<LiveInfo>?> {
   /// The parameter `category` of this provider.
   Category get category;
 }
 
-class _CategoryLiveControllerProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<CategoryLiveController,
-        List<LiveDetail>?> with CategoryLiveControllerRef {
-  _CategoryLiveControllerProviderElement(super.provider);
+class _CategoryLivesControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<CategoryLivesController,
+        List<LiveInfo>?> with CategoryLivesControllerRef {
+  _CategoryLivesControllerProviderElement(super.provider);
 
   @override
-  Category get category => (origin as CategoryLiveControllerProvider).category;
+  Category get category => (origin as CategoryLivesControllerProvider).category;
 }
 
-String _$categoryVodControllerHash() =>
-    r'0de166bb742ea1c9dc85898479a9007c3e0ac1e4';
+String _$categoryVodsControllerHash() =>
+    r'44e36678b9655a00014eba7cec8674ca5aa4f96a';
 
-abstract class _$CategoryVodController
+abstract class _$CategoryVodsController
     extends BuildlessAutoDisposeAsyncNotifier<List<Vod>?> {
   late final Category category;
 
@@ -240,27 +205,27 @@ abstract class _$CategoryVodController
   });
 }
 
-/// See also [CategoryVodController].
-@ProviderFor(CategoryVodController)
-const categoryVodControllerProvider = CategoryVodControllerFamily();
+/// See also [CategoryVodsController].
+@ProviderFor(CategoryVodsController)
+const categoryVodsControllerProvider = CategoryVodsControllerFamily();
 
-/// See also [CategoryVodController].
-class CategoryVodControllerFamily extends Family<AsyncValue<List<Vod>?>> {
-  /// See also [CategoryVodController].
-  const CategoryVodControllerFamily();
+/// See also [CategoryVodsController].
+class CategoryVodsControllerFamily extends Family<AsyncValue<List<Vod>?>> {
+  /// See also [CategoryVodsController].
+  const CategoryVodsControllerFamily();
 
-  /// See also [CategoryVodController].
-  CategoryVodControllerProvider call({
+  /// See also [CategoryVodsController].
+  CategoryVodsControllerProvider call({
     required Category category,
   }) {
-    return CategoryVodControllerProvider(
+    return CategoryVodsControllerProvider(
       category: category,
     );
   }
 
   @override
-  CategoryVodControllerProvider getProviderOverride(
-    covariant CategoryVodControllerProvider provider,
+  CategoryVodsControllerProvider getProviderOverride(
+    covariant CategoryVodsControllerProvider provider,
   ) {
     return call(
       category: provider.category,
@@ -279,31 +244,31 @@ class CategoryVodControllerFamily extends Family<AsyncValue<List<Vod>?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'categoryVodControllerProvider';
+  String? get name => r'categoryVodsControllerProvider';
 }
 
-/// See also [CategoryVodController].
-class CategoryVodControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<CategoryVodController,
+/// See also [CategoryVodsController].
+class CategoryVodsControllerProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<CategoryVodsController,
         List<Vod>?> {
-  /// See also [CategoryVodController].
-  CategoryVodControllerProvider({
+  /// See also [CategoryVodsController].
+  CategoryVodsControllerProvider({
     required Category category,
   }) : this._internal(
-          () => CategoryVodController()..category = category,
-          from: categoryVodControllerProvider,
-          name: r'categoryVodControllerProvider',
+          () => CategoryVodsController()..category = category,
+          from: categoryVodsControllerProvider,
+          name: r'categoryVodsControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$categoryVodControllerHash,
-          dependencies: CategoryVodControllerFamily._dependencies,
+                  : _$categoryVodsControllerHash,
+          dependencies: CategoryVodsControllerFamily._dependencies,
           allTransitiveDependencies:
-              CategoryVodControllerFamily._allTransitiveDependencies,
+              CategoryVodsControllerFamily._allTransitiveDependencies,
           category: category,
         );
 
-  CategoryVodControllerProvider._internal(
+  CategoryVodsControllerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -317,7 +282,7 @@ class CategoryVodControllerProvider
 
   @override
   FutureOr<List<Vod>?> runNotifierBuild(
-    covariant CategoryVodController notifier,
+    covariant CategoryVodsController notifier,
   ) {
     return notifier.build(
       category: category,
@@ -325,10 +290,10 @@ class CategoryVodControllerProvider
   }
 
   @override
-  Override overrideWith(CategoryVodController Function() create) {
+  Override overrideWith(CategoryVodsController Function() create) {
     return ProviderOverride(
       origin: this,
-      override: CategoryVodControllerProvider._internal(
+      override: CategoryVodsControllerProvider._internal(
         () => create()..category = category,
         from: from,
         name: null,
@@ -341,14 +306,15 @@ class CategoryVodControllerProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<CategoryVodController, List<Vod>?>
+  AutoDisposeAsyncNotifierProviderElement<CategoryVodsController, List<Vod>?>
       createElement() {
-    return _CategoryVodControllerProviderElement(this);
+    return _CategoryVodsControllerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CategoryVodControllerProvider && other.category == category;
+    return other is CategoryVodsControllerProvider &&
+        other.category == category;
   }
 
   @override
@@ -360,37 +326,55 @@ class CategoryVodControllerProvider
   }
 }
 
-mixin CategoryVodControllerRef
+mixin CategoryVodsControllerRef
     on AutoDisposeAsyncNotifierProviderRef<List<Vod>?> {
   /// The parameter `category` of this provider.
   Category get category;
 }
 
-class _CategoryVodControllerProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<CategoryVodController,
-        List<Vod>?> with CategoryVodControllerRef {
-  _CategoryVodControllerProviderElement(super.provider);
+class _CategoryVodsControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<CategoryVodsController,
+        List<Vod>?> with CategoryVodsControllerRef {
+  _CategoryVodsControllerProviderElement(super.provider);
 
   @override
-  Category get category => (origin as CategoryVodControllerProvider).category;
+  Category get category => (origin as CategoryVodsControllerProvider).category;
 }
 
-String _$categoryLoadingStateHash() =>
-    r'77ad2a88498e19a242c4c9672ea12f07e8b846f2';
+String _$followingCategoriesControllerHash() =>
+    r'31529edf3b0d04eff49b9457808d9a258cbc6c21';
 
-/// See also [CategoryLoadingState].
-@ProviderFor(CategoryLoadingState)
-final categoryLoadingStateProvider =
-    AutoDisposeNotifierProvider<CategoryLoadingState, bool>.internal(
-  CategoryLoadingState.new,
-  name: r'categoryLoadingStateProvider',
+/// See also [FollowingCategoriesController].
+@ProviderFor(FollowingCategoriesController)
+final followingCategoriesControllerProvider = AutoDisposeAsyncNotifierProvider<
+    FollowingCategoriesController, List<Category>?>.internal(
+  FollowingCategoriesController.new,
+  name: r'followingCategoriesControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$categoryLoadingStateHash,
+      : _$followingCategoriesControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CategoryLoadingState = AutoDisposeNotifier<bool>;
+typedef _$FollowingCategoriesController
+    = AutoDisposeAsyncNotifier<List<Category>?>;
+String _$categoryFetchMoreLoadingStateHash() =>
+    r'e1151bb7126fb080838972c19d8ebf1aba685708';
+
+/// See also [CategoryFetchMoreLoadingState].
+@ProviderFor(CategoryFetchMoreLoadingState)
+final categoryFetchMoreLoadingStateProvider =
+    AutoDisposeNotifierProvider<CategoryFetchMoreLoadingState, bool>.internal(
+  CategoryFetchMoreLoadingState.new,
+  name: r'categoryFetchMoreLoadingStateProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$categoryFetchMoreLoadingStateHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CategoryFetchMoreLoadingState = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,249 +1,117 @@
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../auth/controller/auth_controller.dart';
-import '../../channel/model/channel.dart';
-import '../../following/model/following.dart';
-import '../../following/repository/following_repository.dart';
-import '../../settings/controller/settings_controller.dart';
-import '../model/all_lives.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../model/live.dart';
 import '../repository/live_repository.dart';
 
 part 'live_controller.g.dart';
 
 @riverpod
-class FollowingLiveController extends _$FollowingLiveController {
-  Options? _options;
+class LiveController extends _$LiveController {
+  late LiveRepository _repository;
 
   @override
-  FutureOr<List<LiveDetail>?> build() async {
-    final auth = await ref.watch(authControllerProvider.future);
+  void build() {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = LiveRepository(dio);
 
-    _options = auth?.getOptions();
-
-    return _options == null ? null : await fetchFollowingLives();
+    return;
   }
 
-  Future<List<LiveDetail>?> fetchFollowingLives() async {
-    if (_options != null) {
-      final List<Following>? followingChannels = await ref
-          .watch(followingRepositoryProvider)
-          .getFollowingLiveChannels(options: _options);
-
-      if (followingChannels != null) {
-        List<LiveDetail> liveDetails = [];
-
-        for (Following following in followingChannels) {
-          final LiveDetail? liveDetail =
-              await ref.watch(liveRepositoryProvider).getLiveDetail(
-                    channelId: following.channel.channelId,
-                    options: _options,
-                  );
-
-          if (liveDetail != null) liveDetails.add(liveDetail);
-        }
-
-        return liveDetails;
-      }
-    }
-
-    return null;
-  }
-}
-
-@riverpod
-class PopularLivesController extends _$PopularLivesController {
-  Options? _options;
-  AllLivesChannelPage? _next;
-
-  @override
-  FutureOr<List<LiveDetail>?> build() async {
-    final auth = await ref.watch(authControllerProvider.future);
-
-    _options = auth?.getOptions();
-
-    final int size = ref
-        .read(settingsControllerProvider.notifier)
-        .getPopularChannelsLength();
-
-    return _initFetch(size: size, sortType: LiveSortType.popular);
+  /// Get [LiveDetail] using [LiveInfo] data at [LiveContainer].
+  Future<LiveDetail?> getLiveDetail({required String channelId}) async {
+    return await _repository.getLiveDetail(channelId: channelId);
   }
 
-  Future<List<LiveDetail>?> _initFetch({
-    required int size,
-    required LiveSortType sortType,
-  }) async {
-    final AllLivesChannelResponse? channelResponse =
-        await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
-              options: _options,
-              concurrentUserCount: null,
-              liveId: null,
-              size: size,
-              sortType: sortType,
-            );
-
-    _next = channelResponse?.page;
-
-    if (channelResponse?.channels != null) {
-      List<LiveDetail> liveDetails = [];
-
-      for (Channel channel in channelResponse!.channels!) {
-        final LiveDetail? liveDetail =
-            await ref.watch(liveRepositoryProvider).getLiveDetail(
-                  channelId: channel.channelId,
-                  options: _options,
-                );
-
-        if (liveDetail != null) liveDetails.add(liveDetail);
-      }
-
-      return liveDetails;
-    }
-
-    return null;
-  }
-
-  Future<void> fetchMore() async {
-    if (_next != null) {
-      final prev = state.value;
-
-      state = await AsyncValue.guard(() async {
-        final response =
-            await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
-                  options: _options,
-                  concurrentUserCount: _next?.concurrentUserCount,
-                  liveId: _next?.liveId,
-                );
-
-        _next = response?.page;
-
-        if (response?.channels == null || _next == null) {
-          return [...prev!];
-        } else {
-          List<LiveDetail> liveDetails = [];
-
-          for (Channel channel in response!.channels!) {
-            final LiveDetail? liveDetail =
-                await ref.watch(liveRepositoryProvider).getLiveDetail(
-                      channelId: channel.channelId,
-                      options: _options,
-                    );
-
-            if (liveDetail != null) liveDetails.add(liveDetail);
-          }
-
-          return [...prev!, ...liveDetails];
-        }
-      });
-    }
+  /// Get [LiveStatus] when watching a live stream.
+  Future<LiveStatus?> getLiveStatus({required String channelId}) async {
+    return await _repository.getLiveStatus(channelId: channelId);
   }
 }
 
 @riverpod
 class AllLivesController extends _$AllLivesController {
-  Options? _options;
-  AllLivesChannelPage? _next;
+  late LiveRepository _repository;
 
+  /// For infinite scrolling
+  LivePage? _next;
+
+  /// All Lives sort by LiveSortType
   @override
-  FutureOr<List<LiveDetail>?> build() async {
-    final auth = await ref.watch(authControllerProvider.future);
+  FutureOr<List<LiveInfo>?> build({required LiveSortType sortType}) async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = LiveRepository(dio);
 
-    _options = auth?.getOptions();
-
-    final int size = ref
-        .read(settingsControllerProvider.notifier)
-        .getPopularChannelsLength();
-
-    final sortType = ref.watch(currentLiveSortTypeProvider);
-
-    return await _initFetch(
-      size: size,
-      sortType: sortType,
-    );
+    return await _initFetch();
   }
 
-  Future<List<LiveDetail>?> _initFetch({
-    required int size,
-    required LiveSortType sortType,
-  }) async {
-    final AllLivesChannelResponse? channelResponse =
-        await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
-              options: _options,
-              concurrentUserCount: null,
-              liveId: null,
-              size: size,
-              sortType: sortType,
-            );
+  Future<List<LiveInfo>?> _initFetch() async {
+    final response = await _repository.getLiveResponse(
+      size: 18,
+      sortType: sortType.value,
+      concurrentUserCount: null,
+      liveId: null,
+    );
 
-    _next = channelResponse?.page;
+    _next = response?.next;
 
-    if (channelResponse?.channels != null) {
-      List<LiveDetail> liveDetails = [];
-
-      for (Channel channel in channelResponse!.channels!) {
-        final LiveDetail? liveDetail =
-            await ref.watch(liveRepositoryProvider).getLiveDetail(
-                  channelId: channel.channelId,
-                  options: _options,
-                );
-
-        if (liveDetail != null) liveDetails.add(liveDetail);
-      }
-
-      return liveDetails;
-    }
-
-    return null;
+    return response?.data;
   }
 
   Future<void> fetchMore() async {
     if (_next != null) {
+      ref.read(liveFetchMoreLoadingStateProvider.notifier).setState(true);
       final prev = state.value;
 
-      // Show loading state in all lives page
-      ref.read(allLivesLoadingStateProvider.notifier).setState(true);
-
       state = await AsyncValue.guard(() async {
-        final response =
-            await ref.watch(liveRepositoryProvider).getAllChannelsResponse(
-                  options: _options,
-                  concurrentUserCount: _next?.concurrentUserCount,
-                  liveId: _next?.liveId,
-                );
+        final liveRespnse = await _repository.getLiveResponse(
+          size: 18,
+          sortType: sortType.value,
+          concurrentUserCount: _next!.concurrentUserCount,
+          liveId: _next!.liveId,
+        );
 
-        _next = response?.page;
+        _next = liveRespnse?.next;
 
-        if (response?.channels == null || _next == null) {
-          // Show loading state in all lives page
-          ref.read(allLivesLoadingStateProvider.notifier).setState(false);
-
+        if (liveRespnse?.data == null || _next == null) {
           return [...prev!];
-        } else {
-          List<LiveDetail> liveDetails = [];
-
-          for (Channel channel in response!.channels!) {
-            final LiveDetail? liveDetail =
-                await ref.watch(liveRepositoryProvider).getLiveDetail(
-                      channelId: channel.channelId,
-                      options: _options,
-                    );
-
-            if (liveDetail != null) liveDetails.add(liveDetail);
-          }
-
-          // Show loading state in all lives page
-          ref.read(allLivesLoadingStateProvider.notifier).setState(false);
-
-          return [...prev!, ...liveDetails];
         }
+
+        ref.read(liveFetchMoreLoadingStateProvider.notifier).setState(false);
+        return [...prev!, ...liveRespnse!.data];
       });
     }
   }
 }
 
 @riverpod
-class AllLivesLoadingState extends _$AllLivesLoadingState {
+class HomePopularLivesController extends _$HomePopularLivesController {
+  late LiveRepository _repository;
+
+  /// Home screen popular lives
+  @override
+  FutureOr<List<LiveInfo>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = LiveRepository(dio);
+
+    return await _initFetch();
+  }
+
+  Future<List<LiveInfo>?> _initFetch() async {
+    final response = await _repository.getLiveResponse(
+      size: 20,
+      sortType: LiveSortType.popular.value,
+      concurrentUserCount: null,
+      liveId: null,
+    );
+
+    return response?.data;
+  }
+}
+
+@riverpod
+class LiveFetchMoreLoadingState extends _$LiveFetchMoreLoadingState {
+  /// To show 'Loading...' msg in video gridview screen's sidebar.
   @override
   bool build() {
     return false;
@@ -251,17 +119,5 @@ class AllLivesLoadingState extends _$AllLivesLoadingState {
 
   void setState(bool value) {
     state = value;
-  }
-}
-
-@riverpod
-class CurrentLiveSortType extends _$CurrentLiveSortType {
-  @override
-  LiveSortType build() {
-    return LiveSortType.popular;
-  }
-
-  void setState(LiveSortType sortType) {
-    if (state != sortType) state = sortType;
   }
 }

@@ -1,47 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../common/widgets/center_text.dart';
 import '../../../common/widgets/header_text.dart';
+import '../../../common/widgets/dpad_widgets.dart';
 import '../../channel/controller/channel_controller.dart';
-import '../controller/following_controller.dart';
-import 'following_channel_info_card.dart';
+import '../model/following.dart';
+import './following_channel_info_card.dart';
 
-class FollowingList extends ConsumerWidget {
-  const FollowingList({super.key});
+class FollowingList extends StatelessWidget {
+  const FollowingList({
+    super.key,
+    required this.followingList,
+    required this.followingListFSN,
+    required this.sidebarFSN,
+    required this.channelDataFSN,
+  });
+
+  final List<Following> followingList;
+  final FocusScopeNode followingListFSN;
+
+  /// Sidebar is located on the left side of following list.
+  final FocusScopeNode sidebarFSN;
+
+  /// Channel data is located on the right side of following list.
+  final FocusScopeNode channelDataFSN;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final asyncFollowingList = ref.watch(followingControllerProvider);
-
+  Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const HeaderText(text: '팔로잉 채널'),
         Expanded(
-          child: switch (asyncFollowingList) {
-            AsyncData(:final value) => value == null
-                ? const CenterText(text: '팔로잉 채널이 없습니다')
-                : ListView.builder(
-                    itemCount: value.length,
-                    itemBuilder: (context, index) {
-                      final following = value[index];
+          child: DpadFocusScopeNavigator(
+            node: followingListFSN,
+            dpadKeyFocusScopeNodeMap: {
+              DpadAction.arrowLeft: sidebarFSN,
+              DpadAction.arrowRight: channelDataFSN,
+            },
+            child: ListView.builder(
+              itemCount: followingList.length,
+              itemBuilder: (context, index) {
+                final following = followingList[index];
 
-                      return FollowingChannelInfoCard(
-                        autofocus: index == 0 ? true : false,
-                        following: following,
-                        onPressed: () {
-                          ref
-                              .read(channelControllerProvider.notifier)
-                              .selectChannel(following.channel.channelId);
-                        },
-                      );
-                    },
-                  ),
-            AsyncError() => const CenterText(text: '팔로잉 목록을 불러오는데 실패했습니다'),
-            _ => const CenterText(text: '팔로잉 채널 불러오는 중...')
-          },
+                return Consumer(
+                  builder: (context, ref, child) {
+                    return FollowingChannelInfoCard(
+                      autofocus: index == 0 ? true : false,
+                      following: following,
+                      onPressed: () {
+                        // Select channel to show details.
+                        ref
+                            .read(channelControllerProvider.notifier)
+                            .selectChannel(following.channelId);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
         ),
       ],
     );

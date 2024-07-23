@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Global Image cache. Have to add key in a image.
-class ImageCacheController extends WidgetsFlutterBinding {
-  @override
-  ImageCache createImageCache() {
-    ImageCache imageCache = super.createImageCache();
-
-    imageCache.maximumSizeBytes = 500 * 1024 * 1024; // 500 mb
-
-    return imageCache;
-  }
+extension ImageCacheX on num {
+  /// Use imageWidth.cacheSize(context), imageHeight.cacheSize(context) or both
+  int cacheSize(BuildContext context) =>
+      (this * MediaQuery.of(context).devicePixelRatio).round();
 }
 
 class ImageUtils {
@@ -35,10 +29,4 @@ class ImageUtils {
     required double imageWidth,
   }) =>
       imageWidth / w * h;
-}
-
-extension ImageCacheX on num {
-  // Use imageWidth.cacheSize(context), imageHeight.cacheSize(context) or both
-  int cacheSize(BuildContext context) =>
-      (this * MediaQuery.of(context).devicePixelRatio).round();
 }

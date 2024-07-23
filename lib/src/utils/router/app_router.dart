@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/category/model/category.dart';
+import '../../features/channel/model/channel.dart';
 import '../../features/live/model/live.dart';
 import '../../features/vod/model/vod.dart';
-import 'screens.dart'; // index
+import './screen_index.dart';
 
 export 'package:go_router/go_router.dart';
 
@@ -14,46 +15,36 @@ part 'app_router.g.dart';
 enum AppRoute {
   splash('/splash', 'splash', 99),
 
-  // Search
+  // Main sidebar
   search('search', 'search', 0),
-
-  // Home
   home('home', 'home', 1),
-
-  // Home - Subroutes
   following('following', 'following', 2),
   category('category', 'category', 3),
-  multiView('multiView', 'multiView', 4),
-  settings('settings', 'settings', 5),
+  settings('settings', 'settings', 4),
+  user('user', 'user', 5),
+  auth('auth', 'auth', 6),
 
-  // Login (Headless webview)
-  id('id', 'id', 6),
-  password('password', 'password', 7),
+  // Home Headers
+  allLives('allLives', 'allLives', 7),
+  allVods('allVods', 'allVods', 8),
 
-  // Vod - Full
-  vod('vod', 'vod', 8),
+  // Channel vod
+  channelVods('channelVods', 'channelVods', 9),
+
+  // Live Streaming
+  liveStreaming('liveStreaming', 'liveStreaming', 10),
+
+  // Vod Streaming
+  vodStreaming('vodStreaming', 'vodStreaming', 11),
 
   // Search results
-  searchResults('searchResults', 'searchResults', 9),
+  searchResults('searchResults', 'searchResults', 12),
 
-  // Category Steaming
-  categoryStreaming('categoryStreaming', 'categoryStreaming', 10),
+  // Category details
+  categoryDetail('categoryDetail', 'categoryDetail', 13),
 
-  // Single-view
-  liveStreaming('liveStreaming', 'liveStreaming', 11),
-  vodStreaming('vodStreaming', 'vodStreaming', 12),
-
-  // Multi_view Streaming
-  multiViewStreaming('multiViewStreaming', 'multiViewStreaming', 13),
-
-  // allLives channels
-  allLives('allLives', 'allLives', 14),
-
-  // Login (Webview)
-  naverLoginWithWebView('naverLoginWithWebView', 'naverLoginWithWebView', 97),
-
-  // license
-  license('license', 'license', 98);
+  // TODO: Remove
+  temp('temp', 'temp', 100);
 
   final String routePath;
   final String routeName;
@@ -72,17 +63,18 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
     debugLogDiagnostics: true,
     initialLocation: AppRoute.splash.routePath,
     routes: [
+      // Splash
       GoRoute(
         path: AppRoute.splash.routePath,
         name: AppRoute.splash.routeName,
         pageBuilder: (context, state) {
-          // Return [HomeScreen] to stack base page for using [PopScope]
+          // Stacking base page for using [PopScope]
           return MaterialPage(
             child: SplashScreen(key: state.pageKey),
           );
         },
-        routes: [
-          // Settings
+        routes: <GoRoute>[
+          // Search: 0
           GoRoute(
             path: AppRoute.search.routePath,
             name: AppRoute.search.routeName,
@@ -90,17 +82,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: SearchScreen(key: state.pageKey),
             ),
           ),
-          GoRoute(
-            path: AppRoute.searchResults.routePath,
-            name: AppRoute.searchResults.routeName,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: SearchResultsScreen(
-                key: state.pageKey,
-                keyword: state.uri.queryParameters['keyword']!,
-              ),
-            ),
-          ),
-          // Home
+          // Home: 1
           GoRoute(
             path: AppRoute.home.routePath,
             name: AppRoute.home.routeName,
@@ -108,7 +90,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: HomeScreen(key: state.pageKey),
             ),
           ),
-          // Following
+          // Following: 2
           GoRoute(
             path: AppRoute.following.routePath,
             name: AppRoute.following.routeName,
@@ -116,7 +98,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: FollowingScreen(key: state.pageKey),
             ),
           ),
-          // Category
+          // Category: 3
           GoRoute(
             path: AppRoute.category.routePath,
             name: AppRoute.category.routeName,
@@ -124,30 +106,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: CategoryScreen(key: state.pageKey),
             ),
           ),
-          GoRoute(
-            path: AppRoute.categoryStreaming.routePath,
-            name: AppRoute.categoryStreaming.routeName,
-            pageBuilder: (context, state) {
-              final fields = state.extra as Map<String, dynamic>;
-
-              return NoTransitionPage(
-                child: CategoryStreamingScreen(
-                  key: state.pageKey,
-                  category: fields['category'] as Category,
-                  fromHome: fields['fromHome'] as bool,
-                ),
-              );
-            },
-          ),
-          // Multiview
-          GoRoute(
-            path: AppRoute.multiView.routePath,
-            name: AppRoute.multiView.routeName,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: MultiViewScreen(key: state.pageKey),
-            ),
-          ),
-          // Settings
+          // Settings: 4
           GoRoute(
             path: AppRoute.settings.routePath,
             name: AppRoute.settings.routeName,
@@ -155,109 +114,113 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: SettingsScreen(key: state.pageKey),
             ),
           ),
-          // Login
+          // User: 5
           GoRoute(
-            path: AppRoute.id.routePath,
-            name: AppRoute.id.routeName,
+            path: AppRoute.user.routePath,
+            name: AppRoute.user.routeName,
             pageBuilder: (context, state) => NoTransitionPage(
-              child: IdInputScreen(key: state.pageKey),
+              child: UserScreen(key: state.pageKey),
             ),
           ),
+          // Auth: 6
           GoRoute(
-            path: AppRoute.password.routePath,
-            name: AppRoute.password.routeName,
+            path: AppRoute.auth.routePath,
+            name: AppRoute.auth.routeName,
             pageBuilder: (context, state) => NoTransitionPage(
-              child: PasswordInputScreen(
-                key: state.pageKey,
-                id: state.uri.queryParameters['id']!,
-              ),
+              child: AuthScreen(key: state.pageKey),
             ),
           ),
-          // Vod
+          // All Lives: 7
           GoRoute(
-            path: AppRoute.vod.routePath,
-            name: AppRoute.vod.routeName,
+            path: AppRoute.allLives.routePath,
+            name: AppRoute.allLives.routeName,
             pageBuilder: (context, state) => NoTransitionPage(
-              child: VodScreen(
-                key: state.pageKey,
-                channelId: state.uri.queryParameters['channelId']!,
-                channelName: state.uri.queryParameters['channelName']!,
-              ),
+              child: AllLivesScreen(key: state.pageKey),
             ),
           ),
-          // live streaming
+          // All Vods: 8
+          GoRoute(
+            path: AppRoute.allVods.routePath,
+            name: AppRoute.allVods.routeName,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: AllVodsScreen(key: state.pageKey),
+            ),
+          ),
+          // Channel Vods: 9
+          GoRoute(
+            path: AppRoute.channelVods.routePath,
+            name: AppRoute.channelVods.routeName,
+            pageBuilder: (context, state) {
+              final fields = state.extra as Map<String, dynamic>;
+
+              return NoTransitionPage(
+                child: ChannelVodsScreen(
+                  key: state.pageKey,
+                  channel: fields['channel'] as Channel,
+                ),
+              );
+            },
+          ),
+          // Live Streaming: 10
           GoRoute(
             path: AppRoute.liveStreaming.routePath,
             name: AppRoute.liveStreaming.routeName,
             pageBuilder: (context, state) {
-              final liveDetail = state.extra as LiveDetail;
+              final fields = state.extra as Map<String, dynamic>;
 
               return NoTransitionPage(
                 child: LiveStreamingScreen(
                   key: state.pageKey,
-                  liveDetail: liveDetail,
+                  liveDetail: fields['liveDetail'] as LiveDetail,
                 ),
               );
             },
           ),
-          // vod streaming
+          // Vod Streaming: 11
           GoRoute(
             path: AppRoute.vodStreaming.routePath,
             name: AppRoute.vodStreaming.routeName,
             pageBuilder: (context, state) {
-              final extras = state.extra as Map<String, dynamic>;
+              final fields = state.extra as Map<String, dynamic>;
 
               return NoTransitionPage(
                 child: VodStreamingScreen(
                   key: state.pageKey,
-                  vodPath: extras['vodPath'] as String,
-                  vod: extras['vod'] as Vod,
+                  vodPath: fields['vodPath'] as String,
+                  vod: fields['vod'] as Vod,
                 ),
               );
             },
           ),
-          // multiview streaming
+          // Search Results: 12
           GoRoute(
-            path: AppRoute.multiViewStreaming.routePath,
-            name: AppRoute.multiViewStreaming.routeName,
+            path: AppRoute.searchResults.routePath,
+            name: AppRoute.searchResults.routeName,
             pageBuilder: (context, state) {
-              final liveDetails = state.extra as List<LiveDetail>;
+              final fields = state.extra as Map<String, dynamic>;
 
               return NoTransitionPage(
-                child: MultiViewStreamingScreen(
+                child: SearchResultScreen(
                   key: state.pageKey,
-                  liveDetails: liveDetails,
+                  keyword: fields['keyword'] as String,
                 ),
               );
             },
           ),
+          // Category details: 13
           GoRoute(
-            path: AppRoute.allLives.routePath,
-            name: AppRoute.allLives.routeName,
+            path: AppRoute.categoryDetail.routePath,
+            name: AppRoute.categoryDetail.routeName,
             pageBuilder: (context, state) {
+              final fields = state.extra as Map<String, dynamic>;
+
               return NoTransitionPage(
-                child: AllLivesScreen(
+                child: CategoryDetailScreen(
                   key: state.pageKey,
+                  category: fields['category'] as Category,
                 ),
               );
             },
-          ),
-
-          // NaverLogin With WebView
-          GoRoute(
-            path: AppRoute.naverLoginWithWebView.routePath,
-            name: AppRoute.naverLoginWithWebView.routeName,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: NaverLoginWithWebViewScreen(key: state.pageKey),
-            ),
-          ),
-          // License
-          GoRoute(
-            path: AppRoute.license.routePath,
-            name: AppRoute.license.routeName,
-            pageBuilder: (context, state) => NoTransitionPage(
-              child: OpenSourceLicenseScreen(key: state.pageKey),
-            ),
           ),
         ],
       ),

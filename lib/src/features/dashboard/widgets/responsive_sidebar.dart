@@ -3,97 +3,121 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/dimensions.dart';
+import '../../../common/widgets/dpad_widgets.dart';
 import '../../../utils/router/app_router.dart';
 import '../controller/dashboard_controller.dart';
-import './responsive_chzzk_logo.dart';
-import './responsive_login_button.dart';
-import './sidebar_item.dart';
-import 'user_profile.dart';
+import './responsive_sidebar_menu.dart';
+import './responsive_user_button.dart';
+
+// typedef: SidebarItem to create menu items.
+typedef SidebarItem = (IconData, String, AppRoute);
 
 class ResponsiveSidebar extends HookConsumerWidget {
-  /// A responsive sidebar.
+  /// A responsive sidebar with FocusScope.
   ///
-  /// The width of this widget varies depending on the focus state.
-  const ResponsiveSidebar(
-    this.parentFocusNode, {
+  /// If sidebar's focusScopeNode has focus, this will be expanded.
+  const ResponsiveSidebar({
     super.key,
+    required this.sidebarFSN,
+    required this.contentScreenFSN,
   });
 
-  final FocusNode parentFocusNode;
+  /// This sidebar's FocusScopeNode.
+  final FocusScopeNode sidebarFSN;
+
+  /// Content area's FocusScopeNode to navigate focus.
+  final FocusScopeNode contentScreenFSN;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parentHasFocus = useState<bool>(parentFocusNode.hasFocus);
+    // To highlight and auto-focus current screen's menu item.
     final currentScreenIndex = ref.watch(dashboardControllerProvider);
 
-    final List<(IconData, String, AppRoute)> itemData = [
+    // Use state to change the [Sizedbox]'s width when the sidebar's focus state changes.
+    final sidebarHasFocus = useState<bool>(sidebarFSN.hasFocus);
+
+    // Menu items without login button(or user profile).
+    final List<SidebarItem> sidebarMenuItemData = [
       (Icons.search_rounded, '검색', AppRoute.search),
       (Icons.home_rounded, '홈', AppRoute.home),
       (Icons.favorite_rounded, '팔로잉', AppRoute.following),
       (Icons.category_rounded, '카테고리', AppRoute.category),
-      (Icons.window_rounded, '멀티뷰', AppRoute.multiView),
       (Icons.settings_rounded, '설정', AppRoute.settings),
     ];
 
+    // Add focusNodes to auto-focus current screen's menu item.
+    //
+    // This focusNodes' length have to be sidebarMenuItemData + 1,
+    // because of the seperated login button.
     final focusNodes = List.generate(
-      itemData.length + 1, // +1 : login button's fucusNode.
+      sidebarMenuItemData.length + 1,
       (index) => useFocusNode(),
     );
 
-    final List<SidebarItem> items = List.generate(
-      itemData.length,
-      (index) {
-        return SidebarItem(
-          parentHasFocus: parentHasFocus.value,
-          focusNode: focusNodes[index],
-          currentIndex: currentScreenIndex,
-          screenIndex: index,
-          iconData: itemData[index].$1,
-          text: itemData[index].$2,
-          onPressed: () {
-            ref
-                .read(dashboardControllerProvider.notifier)
-                .changeScreen(context, itemData[index].$3);
-          },
-        );
+    // Create menu items.
+    final List<ResponsiveSidebarMenu> menuItems =
+        List.generate(sidebarMenuItemData.length, (index) {
+      final item = sidebarMenuItemData[index];
+
+      return ResponsiveSidebarMenu(
+        sidebarHasFocus: sidebarHasFocus.value,
+        focusNode: focusNodes[index],
+        currentScreenIndex: currentScreenIndex,
+        menuIndex: index,
+        iconData: item.$1,
+        menuText: item.$2,
+        onPressed: () {
+          ref
+              .read(dashboardControllerProvider.notifier)
+              .changeScreen(context, item.$3);
+        },
+      );
+    });
+
+    // Last menu item. Login or user profile button.
+    final ResponsiveUserButton userButton = ResponsiveUserButton(
+      sidebarHasFocus: sidebarHasFocus.value,
+      focusNode: focusNodes[sidebarMenuItemData.length],
+      currentScreenIndex: currentScreenIndex,
+      menuIndex: sidebarMenuItemData
+          .length, // 0: search ~ user: sidebarMenuItem.length.
+      onPressedSignInButton: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.auth);
+      },
+      onPressedUserProfile: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.user);
       },
     );
 
-    return Focus(
-      focusNode: parentFocusNode,
-      skipTraversal: true, // Set this true to use [FocusNode] of children.
-      autofocus: false,
-      onFocusChange: (value) {
-        parentHasFocus.value = parentFocusNode.hasFocus;
-        // Request focus to a menu item according to the currnet screen's index.
-        if (parentHasFocus.value) focusNodes[currentScreenIndex].requestFocus();
+    // Sidebar item's focus nodes to auto-focus current screen's menu item.
+    return DpadFocusScopeNavigator(
+      node: sidebarFSN,
+      onFocusChange: (hasFocus) {
+        sidebarHasFocus.value = hasFocus;
+        if (hasFocus) {
+          focusNodes[currentScreenIndex].requestFocus();
+        }
+      },
+      dpadKeyFocusScopeNodeMap: {
+        DpadAction.arrowRight: contentScreenFSN,
       },
       child: SizedBox(
-        width: parentHasFocus.value
-            ? Dimensions.sidebarWidth
-            : Dimensions.logoIconWidth,
+        // Responsive width
+        width: sidebarHasFocus.value
+            ? Dimensions.expandedSidebarWidth
+            : Dimensions.collapsedSidebarWidth,
         child: Column(
+          // use spaceBetween to seperate the menu items and the user(or login) button.
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Logo
-                ResponsiveChzzkLogo(parentHasFocus: parentHasFocus.value),
-                const SizedBox(height: 5.0),
-                // Profile
-                UserProfile(parentHasFocus: parentHasFocus.value),
-                // Menu items
-                ...items.sublist(0, itemData.length)
-              ],
-            ),
-            // Login button
-            ResponsiveLoginButton(
-              parentHasFocus: parentHasFocus.value,
-              focusNode: focusNodes.last,
-              currentIndex: currentScreenIndex,
-              screenIndex: focusNodes.length - 1,
-            ),
+            // Menu Itmes
+            Column(children: menuItems),
+            // User profile or login button
+            userButton,
           ],
         ),
       ),

@@ -20,14 +20,16 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Channel {
+// required
   String get channelId => throw _privateConstructorUsedError;
   String get channelName => throw _privateConstructorUsedError;
   String? get channelImageUrl => throw _privateConstructorUsedError;
-  bool get verifiedMark => throw _privateConstructorUsedError;
-  int? get followerCount => throw _privateConstructorUsedError;
-  String? get channelDescription => throw _privateConstructorUsedError;
-  bool? get openLive => throw _privateConstructorUsedError;
+  bool get verifiedMark => throw _privateConstructorUsedError; // optional
   PersonalData? get personalData => throw _privateConstructorUsedError;
+  int? get followerCount => throw _privateConstructorUsedError;
+  bool? get openLive => throw _privateConstructorUsedError;
+  String? get channelType => throw _privateConstructorUsedError;
+  String? get channelDescription => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,10 +46,11 @@ abstract class $ChannelCopyWith<$Res> {
       String channelName,
       String? channelImageUrl,
       bool verifiedMark,
+      PersonalData? personalData,
       int? followerCount,
-      String? channelDescription,
       bool? openLive,
-      PersonalData? personalData});
+      String? channelType,
+      String? channelDescription});
 
   $PersonalDataCopyWith<$Res>? get personalData;
 }
@@ -69,10 +72,11 @@ class _$ChannelCopyWithImpl<$Res, $Val extends Channel>
     Object? channelName = null,
     Object? channelImageUrl = freezed,
     Object? verifiedMark = null,
-    Object? followerCount = freezed,
-    Object? channelDescription = freezed,
-    Object? openLive = freezed,
     Object? personalData = freezed,
+    Object? followerCount = freezed,
+    Object? openLive = freezed,
+    Object? channelType = freezed,
+    Object? channelDescription = freezed,
   }) {
     return _then(_value.copyWith(
       channelId: null == channelId
@@ -91,22 +95,26 @@ class _$ChannelCopyWithImpl<$Res, $Val extends Channel>
           ? _value.verifiedMark
           : verifiedMark // ignore: cast_nullable_to_non_nullable
               as bool,
-      followerCount: freezed == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      channelDescription: freezed == channelDescription
-          ? _value.channelDescription
-          : channelDescription // ignore: cast_nullable_to_non_nullable
-              as String?,
-      openLive: freezed == openLive
-          ? _value.openLive
-          : openLive // ignore: cast_nullable_to_non_nullable
-              as bool?,
       personalData: freezed == personalData
           ? _value.personalData
           : personalData // ignore: cast_nullable_to_non_nullable
               as PersonalData?,
+      followerCount: freezed == followerCount
+          ? _value.followerCount
+          : followerCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      openLive: freezed == openLive
+          ? _value.openLive
+          : openLive // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      channelType: freezed == channelType
+          ? _value.channelType
+          : channelType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      channelDescription: freezed == channelDescription
+          ? _value.channelDescription
+          : channelDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -135,10 +143,11 @@ abstract class _$$ChannelImplCopyWith<$Res> implements $ChannelCopyWith<$Res> {
       String channelName,
       String? channelImageUrl,
       bool verifiedMark,
+      PersonalData? personalData,
       int? followerCount,
-      String? channelDescription,
       bool? openLive,
-      PersonalData? personalData});
+      String? channelType,
+      String? channelDescription});
 
   @override
   $PersonalDataCopyWith<$Res>? get personalData;
@@ -159,10 +168,11 @@ class __$$ChannelImplCopyWithImpl<$Res>
     Object? channelName = null,
     Object? channelImageUrl = freezed,
     Object? verifiedMark = null,
-    Object? followerCount = freezed,
-    Object? channelDescription = freezed,
-    Object? openLive = freezed,
     Object? personalData = freezed,
+    Object? followerCount = freezed,
+    Object? openLive = freezed,
+    Object? channelType = freezed,
+    Object? channelDescription = freezed,
   }) {
     return _then(_$ChannelImpl(
       channelId: null == channelId
@@ -181,22 +191,26 @@ class __$$ChannelImplCopyWithImpl<$Res>
           ? _value.verifiedMark
           : verifiedMark // ignore: cast_nullable_to_non_nullable
               as bool,
-      followerCount: freezed == followerCount
-          ? _value.followerCount
-          : followerCount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      channelDescription: freezed == channelDescription
-          ? _value.channelDescription
-          : channelDescription // ignore: cast_nullable_to_non_nullable
-              as String?,
-      openLive: freezed == openLive
-          ? _value.openLive
-          : openLive // ignore: cast_nullable_to_non_nullable
-              as bool?,
       personalData: freezed == personalData
           ? _value.personalData
           : personalData // ignore: cast_nullable_to_non_nullable
               as PersonalData?,
+      followerCount: freezed == followerCount
+          ? _value.followerCount
+          : followerCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      openLive: freezed == openLive
+          ? _value.openLive
+          : openLive // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      channelType: freezed == channelType
+          ? _value.channelType
+          : channelType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      channelDescription: freezed == channelDescription
+          ? _value.channelDescription
+          : channelDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -204,19 +218,21 @@ class __$$ChannelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ChannelImpl implements _Channel {
-  const _$ChannelImpl(
+  _$ChannelImpl(
       {required this.channelId,
       required this.channelName,
       required this.channelImageUrl,
       required this.verifiedMark,
+      required this.personalData,
       required this.followerCount,
-      required this.channelDescription,
       required this.openLive,
-      required this.personalData});
+      required this.channelType,
+      required this.channelDescription});
 
   factory _$ChannelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChannelImplFromJson(json);
 
+// required
   @override
   final String channelId;
   @override
@@ -225,18 +241,21 @@ class _$ChannelImpl implements _Channel {
   final String? channelImageUrl;
   @override
   final bool verifiedMark;
+// optional
+  @override
+  final PersonalData? personalData;
   @override
   final int? followerCount;
   @override
-  final String? channelDescription;
-  @override
   final bool? openLive;
   @override
-  final PersonalData? personalData;
+  final String? channelType;
+  @override
+  final String? channelDescription;
 
   @override
   String toString() {
-    return 'Channel(channelId: $channelId, channelName: $channelName, channelImageUrl: $channelImageUrl, verifiedMark: $verifiedMark, followerCount: $followerCount, channelDescription: $channelDescription, openLive: $openLive, personalData: $personalData)';
+    return 'Channel(channelId: $channelId, channelName: $channelName, channelImageUrl: $channelImageUrl, verifiedMark: $verifiedMark, personalData: $personalData, followerCount: $followerCount, openLive: $openLive, channelType: $channelType, channelDescription: $channelDescription)';
   }
 
   @override
@@ -252,14 +271,16 @@ class _$ChannelImpl implements _Channel {
                 other.channelImageUrl == channelImageUrl) &&
             (identical(other.verifiedMark, verifiedMark) ||
                 other.verifiedMark == verifiedMark) &&
+            (identical(other.personalData, personalData) ||
+                other.personalData == personalData) &&
             (identical(other.followerCount, followerCount) ||
                 other.followerCount == followerCount) &&
-            (identical(other.channelDescription, channelDescription) ||
-                other.channelDescription == channelDescription) &&
             (identical(other.openLive, openLive) ||
                 other.openLive == openLive) &&
-            (identical(other.personalData, personalData) ||
-                other.personalData == personalData));
+            (identical(other.channelType, channelType) ||
+                other.channelType == channelType) &&
+            (identical(other.channelDescription, channelDescription) ||
+                other.channelDescription == channelDescription));
   }
 
   @JsonKey(ignore: true)
@@ -270,10 +291,11 @@ class _$ChannelImpl implements _Channel {
       channelName,
       channelImageUrl,
       verifiedMark,
+      personalData,
       followerCount,
-      channelDescription,
       openLive,
-      personalData);
+      channelType,
+      channelDescription);
 
   @JsonKey(ignore: true)
   @override
@@ -290,19 +312,20 @@ class _$ChannelImpl implements _Channel {
 }
 
 abstract class _Channel implements Channel {
-  const factory _Channel(
+  factory _Channel(
       {required final String channelId,
       required final String channelName,
       required final String? channelImageUrl,
       required final bool verifiedMark,
+      required final PersonalData? personalData,
       required final int? followerCount,
-      required final String? channelDescription,
       required final bool? openLive,
-      required final PersonalData? personalData}) = _$ChannelImpl;
+      required final String? channelType,
+      required final String? channelDescription}) = _$ChannelImpl;
 
   factory _Channel.fromJson(Map<String, dynamic> json) = _$ChannelImpl.fromJson;
 
-  @override
+  @override // required
   String get channelId;
   @override
   String get channelName;
@@ -310,14 +333,16 @@ abstract class _Channel implements Channel {
   String? get channelImageUrl;
   @override
   bool get verifiedMark;
+  @override // optional
+  PersonalData? get personalData;
   @override
   int? get followerCount;
   @override
-  String? get channelDescription;
-  @override
   bool? get openLive;
   @override
-  PersonalData? get personalData;
+  String? get channelType;
+  @override
+  String? get channelDescription;
   @override
   @JsonKey(ignore: true)
   _$$ChannelImplCopyWith<_$ChannelImpl> get copyWith =>
@@ -330,7 +355,9 @@ PersonalData _$PersonalDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PersonalData {
+  PersonalFollowing? get following => throw _privateConstructorUsedError;
   bool get privateUserBlock => throw _privateConstructorUsedError;
+  bool? get subscription => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -344,7 +371,12 @@ abstract class $PersonalDataCopyWith<$Res> {
           PersonalData value, $Res Function(PersonalData) then) =
       _$PersonalDataCopyWithImpl<$Res, PersonalData>;
   @useResult
-  $Res call({bool privateUserBlock});
+  $Res call(
+      {PersonalFollowing? following,
+      bool privateUserBlock,
+      bool? subscription});
+
+  $PersonalFollowingCopyWith<$Res>? get following;
 }
 
 /// @nodoc
@@ -360,14 +392,36 @@ class _$PersonalDataCopyWithImpl<$Res, $Val extends PersonalData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? following = freezed,
     Object? privateUserBlock = null,
+    Object? subscription = freezed,
   }) {
     return _then(_value.copyWith(
+      following: freezed == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as PersonalFollowing?,
       privateUserBlock: null == privateUserBlock
           ? _value.privateUserBlock
           : privateUserBlock // ignore: cast_nullable_to_non_nullable
               as bool,
+      subscription: freezed == subscription
+          ? _value.subscription
+          : subscription // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PersonalFollowingCopyWith<$Res>? get following {
+    if (_value.following == null) {
+      return null;
+    }
+
+    return $PersonalFollowingCopyWith<$Res>(_value.following!, (value) {
+      return _then(_value.copyWith(following: value) as $Val);
+    });
   }
 }
 
@@ -379,7 +433,13 @@ abstract class _$$PersonalDataImplCopyWith<$Res>
       __$$PersonalDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool privateUserBlock});
+  $Res call(
+      {PersonalFollowing? following,
+      bool privateUserBlock,
+      bool? subscription});
+
+  @override
+  $PersonalFollowingCopyWith<$Res>? get following;
 }
 
 /// @nodoc
@@ -393,13 +453,23 @@ class __$$PersonalDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? following = freezed,
     Object? privateUserBlock = null,
+    Object? subscription = freezed,
   }) {
     return _then(_$PersonalDataImpl(
+      following: freezed == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as PersonalFollowing?,
       privateUserBlock: null == privateUserBlock
           ? _value.privateUserBlock
           : privateUserBlock // ignore: cast_nullable_to_non_nullable
               as bool,
+      subscription: freezed == subscription
+          ? _value.subscription
+          : subscription // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -407,17 +477,24 @@ class __$$PersonalDataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PersonalDataImpl implements _PersonalData {
-  const _$PersonalDataImpl({required this.privateUserBlock});
+  const _$PersonalDataImpl(
+      {required this.following,
+      required this.privateUserBlock,
+      required this.subscription});
 
   factory _$PersonalDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$PersonalDataImplFromJson(json);
 
   @override
+  final PersonalFollowing? following;
+  @override
   final bool privateUserBlock;
+  @override
+  final bool? subscription;
 
   @override
   String toString() {
-    return 'PersonalData(privateUserBlock: $privateUserBlock)';
+    return 'PersonalData(following: $following, privateUserBlock: $privateUserBlock, subscription: $subscription)';
   }
 
   @override
@@ -425,13 +502,18 @@ class _$PersonalDataImpl implements _PersonalData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PersonalDataImpl &&
+            (identical(other.following, following) ||
+                other.following == following) &&
             (identical(other.privateUserBlock, privateUserBlock) ||
-                other.privateUserBlock == privateUserBlock));
+                other.privateUserBlock == privateUserBlock) &&
+            (identical(other.subscription, subscription) ||
+                other.subscription == subscription));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, privateUserBlock);
+  int get hashCode =>
+      Object.hash(runtimeType, following, privateUserBlock, subscription);
 
   @JsonKey(ignore: true)
   @override
@@ -448,16 +530,201 @@ class _$PersonalDataImpl implements _PersonalData {
 }
 
 abstract class _PersonalData implements PersonalData {
-  const factory _PersonalData({required final bool privateUserBlock}) =
-      _$PersonalDataImpl;
+  const factory _PersonalData(
+      {required final PersonalFollowing? following,
+      required final bool privateUserBlock,
+      required final bool? subscription}) = _$PersonalDataImpl;
 
   factory _PersonalData.fromJson(Map<String, dynamic> json) =
       _$PersonalDataImpl.fromJson;
 
   @override
+  PersonalFollowing? get following;
+  @override
   bool get privateUserBlock;
+  @override
+  bool? get subscription;
   @override
   @JsonKey(ignore: true)
   _$$PersonalDataImplCopyWith<_$PersonalDataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PersonalFollowing _$PersonalFollowingFromJson(Map<String, dynamic> json) {
+  return _PersonalFollowing.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PersonalFollowing {
+  bool get following => throw _privateConstructorUsedError;
+  bool get notification => throw _privateConstructorUsedError;
+  String? get followDate => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PersonalFollowingCopyWith<PersonalFollowing> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PersonalFollowingCopyWith<$Res> {
+  factory $PersonalFollowingCopyWith(
+          PersonalFollowing value, $Res Function(PersonalFollowing) then) =
+      _$PersonalFollowingCopyWithImpl<$Res, PersonalFollowing>;
+  @useResult
+  $Res call({bool following, bool notification, String? followDate});
+}
+
+/// @nodoc
+class _$PersonalFollowingCopyWithImpl<$Res, $Val extends PersonalFollowing>
+    implements $PersonalFollowingCopyWith<$Res> {
+  _$PersonalFollowingCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? following = null,
+    Object? notification = null,
+    Object? followDate = freezed,
+  }) {
+    return _then(_value.copyWith(
+      following: null == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as bool,
+      notification: null == notification
+          ? _value.notification
+          : notification // ignore: cast_nullable_to_non_nullable
+              as bool,
+      followDate: freezed == followDate
+          ? _value.followDate
+          : followDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PersonalFollowingImplCopyWith<$Res>
+    implements $PersonalFollowingCopyWith<$Res> {
+  factory _$$PersonalFollowingImplCopyWith(_$PersonalFollowingImpl value,
+          $Res Function(_$PersonalFollowingImpl) then) =
+      __$$PersonalFollowingImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool following, bool notification, String? followDate});
+}
+
+/// @nodoc
+class __$$PersonalFollowingImplCopyWithImpl<$Res>
+    extends _$PersonalFollowingCopyWithImpl<$Res, _$PersonalFollowingImpl>
+    implements _$$PersonalFollowingImplCopyWith<$Res> {
+  __$$PersonalFollowingImplCopyWithImpl(_$PersonalFollowingImpl _value,
+      $Res Function(_$PersonalFollowingImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? following = null,
+    Object? notification = null,
+    Object? followDate = freezed,
+  }) {
+    return _then(_$PersonalFollowingImpl(
+      following: null == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as bool,
+      notification: null == notification
+          ? _value.notification
+          : notification // ignore: cast_nullable_to_non_nullable
+              as bool,
+      followDate: freezed == followDate
+          ? _value.followDate
+          : followDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PersonalFollowingImpl implements _PersonalFollowing {
+  const _$PersonalFollowingImpl(
+      {required this.following,
+      required this.notification,
+      required this.followDate});
+
+  factory _$PersonalFollowingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PersonalFollowingImplFromJson(json);
+
+  @override
+  final bool following;
+  @override
+  final bool notification;
+  @override
+  final String? followDate;
+
+  @override
+  String toString() {
+    return 'PersonalFollowing(following: $following, notification: $notification, followDate: $followDate)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PersonalFollowingImpl &&
+            (identical(other.following, following) ||
+                other.following == following) &&
+            (identical(other.notification, notification) ||
+                other.notification == notification) &&
+            (identical(other.followDate, followDate) ||
+                other.followDate == followDate));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, following, notification, followDate);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PersonalFollowingImplCopyWith<_$PersonalFollowingImpl> get copyWith =>
+      __$$PersonalFollowingImplCopyWithImpl<_$PersonalFollowingImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PersonalFollowingImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PersonalFollowing implements PersonalFollowing {
+  const factory _PersonalFollowing(
+      {required final bool following,
+      required final bool notification,
+      required final String? followDate}) = _$PersonalFollowingImpl;
+
+  factory _PersonalFollowing.fromJson(Map<String, dynamic> json) =
+      _$PersonalFollowingImpl.fromJson;
+
+  @override
+  bool get following;
+  @override
+  bool get notification;
+  @override
+  String? get followDate;
+  @override
+  @JsonKey(ignore: true)
+  _$$PersonalFollowingImplCopyWith<_$PersonalFollowingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

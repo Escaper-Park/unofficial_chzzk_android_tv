@@ -4,8 +4,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'auth.freezed.dart';
 part 'auth.g.dart';
 
+/// Get Auth from cookies in webview.
+///
+/// Use 'NID_AUT' and 'NID_SES'.
 @freezed
 class Auth with _$Auth {
+  // Add this to use custom method.
   const Auth._();
 
   const factory Auth({
@@ -13,10 +17,12 @@ class Auth with _$Auth {
     required String nidSession,
   }) = _Auth;
 
-  Options getOptions() {
-    final Set cookie = {'NID_AUT=$nidAuth; NID_SES=$nidSession'};
+  Set getCookie() => {'NID_AUT=$nidAuth; NID_SES=$nidSession'};
 
-    return Options(headers: {'Cookie': cookie});
+  Options getOptions() {
+    final Set cookies = getCookie();
+
+    return Options(headers: {'Cookie': cookies});
   }
 
   factory Auth.fromJson(Map<String, dynamic> json) => _$AuthFromJson(json);

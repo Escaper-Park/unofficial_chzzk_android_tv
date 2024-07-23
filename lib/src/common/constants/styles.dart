@@ -81,11 +81,10 @@ class AppColors {
     errorContainer: Color(0xFF93000A),
     onError: Color(0xFF690005),
     onErrorContainer: Color(0xFFFFDAD6),
-    background: Color(0xFF191C1A),
-    onBackground: Color(0xFFE1E3DE),
+    // background: Color(0xFF191C1A), // Deprecated
+    // onBackground: Color(0xFFE1E3DE), // Deprecated
     surface: Color(0xFF191C1A),
     onSurface: Color(0xFFE1E3DE),
-    surfaceVariant: Color(0xFF404942),
     onSurfaceVariant: Color(0xFFC0C9C0),
     outline: Color(0xFF8A938B),
     onInverseSurface: Color(0xFF191C1A),
@@ -99,7 +98,7 @@ class AppColors {
 }
 
 class AppTheme {
-  static final darkThemeData = ThemeData(
+  static final basicThemeData = ThemeData(
     useMaterial3: true,
     colorScheme: AppColors.darkColorScheme,
     fontFamily: 'Pretendard',

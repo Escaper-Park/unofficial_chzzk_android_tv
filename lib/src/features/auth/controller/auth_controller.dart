@@ -1,58 +1,49 @@
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../multi_view/controller/multi_view_controller.dart';
+import '../../../utils/dio/dio_client.dart';
+import '../../user/controller/user_controller.dart';
 import '../model/auth.dart';
 import '../repository/auth_repository.dart';
 
 part 'auth_controller.g.dart';
 
-@riverpod
+// Set keepAlive to true!
+@Riverpod(keepAlive: true)
 class AuthController extends _$AuthController {
   @override
   FutureOr<Auth?> build() async {
-    return await ref.watch(authRepositoryProvider).getAuthWithCookies();
+    return await getAuthWithCookies();
   }
 
-  /// Return login successful result.
-  Future<bool> login({
-    required InAppWebViewController controller,
-    required WebUri? webUri,
-    required String id,
-    required String password,
-  }) async {
+  Future<Auth?> getAuthWithCookies() async {
+    final Auth? auth =
+        await ref.read(authRepositoryProvider).getAuthWithCookies();
+
+    if (auth != null) {
+      // Add global dio settings to use login cookie options.
+      ref.read(dioClientProvider.notifier).addCookies(auth.getCookie());
+    }
+
+    return auth;
+  }
+
+  Future<void> signIn() async {
+    final Auth? auth = await getAuthWithCookies();
+
+    state = AsyncData(auth);
+  }
+
+  Future<void> signOut() async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      // Login
-      await ref.watch(authRepositoryProvider).naverLogin(
-            controller: controller,
-            webUri: webUri,
-            id: id,
-            password: password,
-          );
-
-      // Set Cookies expires date.
-      await ref.watch(authRepositoryProvider).setExpiresDate();
-
-      final Auth? auth =
-          await ref.watch(authRepositoryProvider).getAuthWithCookies();
-
-      return auth;
-    });
-
-    return state.value == null ? false : true;
-  }
-
-  Future<void> logOut() async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      // invalidate multiview channel
-      ref.invalidate(multiViewControllerProvider);
-
-      await ref.watch(authRepositoryProvider).deleteCookies();
-
+      // delete all cookies
+      await ref.read(authRepositoryProvider).deleteCookies();
+      // reset user profile
+      ref.read(userControllerProvider.notifier).signOut();
+      // reset dio cookies
+      ref.read(dioClientProvider.notifier).singOut();
+      
       return null;
     });
   }

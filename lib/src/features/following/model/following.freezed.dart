@@ -20,6 +20,7 @@ Following _$FollowingFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Following {
+  String get channelId => throw _privateConstructorUsedError;
   Channel get channel => throw _privateConstructorUsedError;
   Streamer get streamer => throw _privateConstructorUsedError;
   LiveInfo get liveInfo => throw _privateConstructorUsedError;
@@ -35,7 +36,11 @@ abstract class $FollowingCopyWith<$Res> {
   factory $FollowingCopyWith(Following value, $Res Function(Following) then) =
       _$FollowingCopyWithImpl<$Res, Following>;
   @useResult
-  $Res call({Channel channel, Streamer streamer, LiveInfo liveInfo});
+  $Res call(
+      {String channelId,
+      Channel channel,
+      Streamer streamer,
+      LiveInfo liveInfo});
 
   $ChannelCopyWith<$Res> get channel;
   $StreamerCopyWith<$Res> get streamer;
@@ -55,11 +60,16 @@ class _$FollowingCopyWithImpl<$Res, $Val extends Following>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? channelId = null,
     Object? channel = null,
     Object? streamer = null,
     Object? liveInfo = null,
   }) {
     return _then(_value.copyWith(
+      channelId: null == channelId
+          ? _value.channelId
+          : channelId // ignore: cast_nullable_to_non_nullable
+              as String,
       channel: null == channel
           ? _value.channel
           : channel // ignore: cast_nullable_to_non_nullable
@@ -108,7 +118,11 @@ abstract class _$$FollowingImplCopyWith<$Res>
       __$$FollowingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Channel channel, Streamer streamer, LiveInfo liveInfo});
+  $Res call(
+      {String channelId,
+      Channel channel,
+      Streamer streamer,
+      LiveInfo liveInfo});
 
   @override
   $ChannelCopyWith<$Res> get channel;
@@ -129,11 +143,16 @@ class __$$FollowingImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? channelId = null,
     Object? channel = null,
     Object? streamer = null,
     Object? liveInfo = null,
   }) {
     return _then(_$FollowingImpl(
+      channelId: null == channelId
+          ? _value.channelId
+          : channelId // ignore: cast_nullable_to_non_nullable
+              as String,
       channel: null == channel
           ? _value.channel
           : channel // ignore: cast_nullable_to_non_nullable
@@ -154,11 +173,16 @@ class __$$FollowingImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$FollowingImpl implements _Following {
   const _$FollowingImpl(
-      {required this.channel, required this.streamer, required this.liveInfo});
+      {required this.channelId,
+      required this.channel,
+      required this.streamer,
+      required this.liveInfo});
 
   factory _$FollowingImpl.fromJson(Map<String, dynamic> json) =>
       _$$FollowingImplFromJson(json);
 
+  @override
+  final String channelId;
   @override
   final Channel channel;
   @override
@@ -168,7 +192,7 @@ class _$FollowingImpl implements _Following {
 
   @override
   String toString() {
-    return 'Following(channel: $channel, streamer: $streamer, liveInfo: $liveInfo)';
+    return 'Following(channelId: $channelId, channel: $channel, streamer: $streamer, liveInfo: $liveInfo)';
   }
 
   @override
@@ -176,6 +200,8 @@ class _$FollowingImpl implements _Following {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FollowingImpl &&
+            (identical(other.channelId, channelId) ||
+                other.channelId == channelId) &&
             (identical(other.channel, channel) || other.channel == channel) &&
             (identical(other.streamer, streamer) ||
                 other.streamer == streamer) &&
@@ -185,7 +211,8 @@ class _$FollowingImpl implements _Following {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, channel, streamer, liveInfo);
+  int get hashCode =>
+      Object.hash(runtimeType, channelId, channel, streamer, liveInfo);
 
   @JsonKey(ignore: true)
   @override
@@ -203,13 +230,16 @@ class _$FollowingImpl implements _Following {
 
 abstract class _Following implements Following {
   const factory _Following(
-      {required final Channel channel,
+      {required final String channelId,
+      required final Channel channel,
       required final Streamer streamer,
       required final LiveInfo liveInfo}) = _$FollowingImpl;
 
   factory _Following.fromJson(Map<String, dynamic> json) =
       _$FollowingImpl.fromJson;
 
+  @override
+  String get channelId;
   @override
   Channel get channel;
   @override
@@ -358,35 +388,35 @@ abstract class _Streamer implements Streamer {
       throw _privateConstructorUsedError;
 }
 
-LiveInfo _$LiveInfoFromJson(Map<String, dynamic> json) {
-  return _LiveInfo.fromJson(json);
+FollowingResponse _$FollowingResponseFromJson(Map<String, dynamic> json) {
+  return _FollowingResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$LiveInfo {
-  String? get liveTitle => throw _privateConstructorUsedError;
-  int get concurrentUserCount => throw _privateConstructorUsedError;
-  String? get liveCategoryValue => throw _privateConstructorUsedError;
+mixin _$FollowingResponse {
+  int get totalCount => throw _privateConstructorUsedError;
+  int? get totalPage => throw _privateConstructorUsedError;
+  List<Following> get followingList => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $LiveInfoCopyWith<LiveInfo> get copyWith =>
+  $FollowingResponseCopyWith<FollowingResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LiveInfoCopyWith<$Res> {
-  factory $LiveInfoCopyWith(LiveInfo value, $Res Function(LiveInfo) then) =
-      _$LiveInfoCopyWithImpl<$Res, LiveInfo>;
+abstract class $FollowingResponseCopyWith<$Res> {
+  factory $FollowingResponseCopyWith(
+          FollowingResponse value, $Res Function(FollowingResponse) then) =
+      _$FollowingResponseCopyWithImpl<$Res, FollowingResponse>;
   @useResult
-  $Res call(
-      {String? liveTitle, int concurrentUserCount, String? liveCategoryValue});
+  $Res call({int totalCount, int? totalPage, List<Following> followingList});
 }
 
 /// @nodoc
-class _$LiveInfoCopyWithImpl<$Res, $Val extends LiveInfo>
-    implements $LiveInfoCopyWith<$Res> {
-  _$LiveInfoCopyWithImpl(this._value, this._then);
+class _$FollowingResponseCopyWithImpl<$Res, $Val extends FollowingResponse>
+    implements $FollowingResponseCopyWith<$Res> {
+  _$FollowingResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -396,143 +426,304 @@ class _$LiveInfoCopyWithImpl<$Res, $Val extends LiveInfo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? liveTitle = freezed,
-    Object? concurrentUserCount = null,
-    Object? liveCategoryValue = freezed,
+    Object? totalCount = null,
+    Object? totalPage = freezed,
+    Object? followingList = null,
   }) {
     return _then(_value.copyWith(
-      liveTitle: freezed == liveTitle
-          ? _value.liveTitle
-          : liveTitle // ignore: cast_nullable_to_non_nullable
-              as String?,
-      concurrentUserCount: null == concurrentUserCount
-          ? _value.concurrentUserCount
-          : concurrentUserCount // ignore: cast_nullable_to_non_nullable
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
-      liveCategoryValue: freezed == liveCategoryValue
-          ? _value.liveCategoryValue
-          : liveCategoryValue // ignore: cast_nullable_to_non_nullable
-              as String?,
+      totalPage: freezed == totalPage
+          ? _value.totalPage
+          : totalPage // ignore: cast_nullable_to_non_nullable
+              as int?,
+      followingList: null == followingList
+          ? _value.followingList
+          : followingList // ignore: cast_nullable_to_non_nullable
+              as List<Following>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$LiveInfoImplCopyWith<$Res>
-    implements $LiveInfoCopyWith<$Res> {
-  factory _$$LiveInfoImplCopyWith(
-          _$LiveInfoImpl value, $Res Function(_$LiveInfoImpl) then) =
-      __$$LiveInfoImplCopyWithImpl<$Res>;
+abstract class _$$FollowingResponseImplCopyWith<$Res>
+    implements $FollowingResponseCopyWith<$Res> {
+  factory _$$FollowingResponseImplCopyWith(_$FollowingResponseImpl value,
+          $Res Function(_$FollowingResponseImpl) then) =
+      __$$FollowingResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? liveTitle, int concurrentUserCount, String? liveCategoryValue});
+  $Res call({int totalCount, int? totalPage, List<Following> followingList});
 }
 
 /// @nodoc
-class __$$LiveInfoImplCopyWithImpl<$Res>
-    extends _$LiveInfoCopyWithImpl<$Res, _$LiveInfoImpl>
-    implements _$$LiveInfoImplCopyWith<$Res> {
-  __$$LiveInfoImplCopyWithImpl(
-      _$LiveInfoImpl _value, $Res Function(_$LiveInfoImpl) _then)
+class __$$FollowingResponseImplCopyWithImpl<$Res>
+    extends _$FollowingResponseCopyWithImpl<$Res, _$FollowingResponseImpl>
+    implements _$$FollowingResponseImplCopyWith<$Res> {
+  __$$FollowingResponseImplCopyWithImpl(_$FollowingResponseImpl _value,
+      $Res Function(_$FollowingResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? liveTitle = freezed,
-    Object? concurrentUserCount = null,
-    Object? liveCategoryValue = freezed,
+    Object? totalCount = null,
+    Object? totalPage = freezed,
+    Object? followingList = null,
   }) {
-    return _then(_$LiveInfoImpl(
-      liveTitle: freezed == liveTitle
-          ? _value.liveTitle
-          : liveTitle // ignore: cast_nullable_to_non_nullable
-              as String?,
-      concurrentUserCount: null == concurrentUserCount
-          ? _value.concurrentUserCount
-          : concurrentUserCount // ignore: cast_nullable_to_non_nullable
+    return _then(_$FollowingResponseImpl(
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
-      liveCategoryValue: freezed == liveCategoryValue
-          ? _value.liveCategoryValue
-          : liveCategoryValue // ignore: cast_nullable_to_non_nullable
-              as String?,
+      totalPage: freezed == totalPage
+          ? _value.totalPage
+          : totalPage // ignore: cast_nullable_to_non_nullable
+              as int?,
+      followingList: null == followingList
+          ? _value._followingList
+          : followingList // ignore: cast_nullable_to_non_nullable
+              as List<Following>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$LiveInfoImpl implements _LiveInfo {
-  const _$LiveInfoImpl(
-      {required this.liveTitle,
-      required this.concurrentUserCount,
-      required this.liveCategoryValue});
+class _$FollowingResponseImpl implements _FollowingResponse {
+  const _$FollowingResponseImpl(
+      {required this.totalCount,
+      required this.totalPage,
+      required final List<Following> followingList})
+      : _followingList = followingList;
 
-  factory _$LiveInfoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LiveInfoImplFromJson(json);
+  factory _$FollowingResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FollowingResponseImplFromJson(json);
 
   @override
-  final String? liveTitle;
+  final int totalCount;
   @override
-  final int concurrentUserCount;
+  final int? totalPage;
+  final List<Following> _followingList;
   @override
-  final String? liveCategoryValue;
+  List<Following> get followingList {
+    if (_followingList is EqualUnmodifiableListView) return _followingList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_followingList);
+  }
 
   @override
   String toString() {
-    return 'LiveInfo(liveTitle: $liveTitle, concurrentUserCount: $concurrentUserCount, liveCategoryValue: $liveCategoryValue)';
+    return 'FollowingResponse(totalCount: $totalCount, totalPage: $totalPage, followingList: $followingList)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LiveInfoImpl &&
-            (identical(other.liveTitle, liveTitle) ||
-                other.liveTitle == liveTitle) &&
-            (identical(other.concurrentUserCount, concurrentUserCount) ||
-                other.concurrentUserCount == concurrentUserCount) &&
-            (identical(other.liveCategoryValue, liveCategoryValue) ||
-                other.liveCategoryValue == liveCategoryValue));
+            other is _$FollowingResponseImpl &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            (identical(other.totalPage, totalPage) ||
+                other.totalPage == totalPage) &&
+            const DeepCollectionEquality()
+                .equals(other._followingList, _followingList));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, liveTitle, concurrentUserCount, liveCategoryValue);
+  int get hashCode => Object.hash(runtimeType, totalCount, totalPage,
+      const DeepCollectionEquality().hash(_followingList));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LiveInfoImplCopyWith<_$LiveInfoImpl> get copyWith =>
-      __$$LiveInfoImplCopyWithImpl<_$LiveInfoImpl>(this, _$identity);
+  _$$FollowingResponseImplCopyWith<_$FollowingResponseImpl> get copyWith =>
+      __$$FollowingResponseImplCopyWithImpl<_$FollowingResponseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LiveInfoImplToJson(
+    return _$$FollowingResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _LiveInfo implements LiveInfo {
-  const factory _LiveInfo(
-      {required final String? liveTitle,
-      required final int concurrentUserCount,
-      required final String? liveCategoryValue}) = _$LiveInfoImpl;
+abstract class _FollowingResponse implements FollowingResponse {
+  const factory _FollowingResponse(
+      {required final int totalCount,
+      required final int? totalPage,
+      required final List<Following> followingList}) = _$FollowingResponseImpl;
 
-  factory _LiveInfo.fromJson(Map<String, dynamic> json) =
-      _$LiveInfoImpl.fromJson;
+  factory _FollowingResponse.fromJson(Map<String, dynamic> json) =
+      _$FollowingResponseImpl.fromJson;
 
   @override
-  String? get liveTitle;
+  int get totalCount;
   @override
-  int get concurrentUserCount;
+  int? get totalPage;
   @override
-  String? get liveCategoryValue;
+  List<Following> get followingList;
   @override
   @JsonKey(ignore: true)
-  _$$LiveInfoImplCopyWith<_$LiveInfoImpl> get copyWith =>
+  _$$FollowingResponseImplCopyWith<_$FollowingResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+FollowingCategoryResponse _$FollowingCategoryResponseFromJson(
+    Map<String, dynamic> json) {
+  return _FollowingCategoryResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FollowingCategoryResponse {
+  List<Category>? get followingList => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FollowingCategoryResponseCopyWith<FollowingCategoryResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FollowingCategoryResponseCopyWith<$Res> {
+  factory $FollowingCategoryResponseCopyWith(FollowingCategoryResponse value,
+          $Res Function(FollowingCategoryResponse) then) =
+      _$FollowingCategoryResponseCopyWithImpl<$Res, FollowingCategoryResponse>;
+  @useResult
+  $Res call({List<Category>? followingList});
+}
+
+/// @nodoc
+class _$FollowingCategoryResponseCopyWithImpl<$Res,
+        $Val extends FollowingCategoryResponse>
+    implements $FollowingCategoryResponseCopyWith<$Res> {
+  _$FollowingCategoryResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? followingList = freezed,
+  }) {
+    return _then(_value.copyWith(
+      followingList: freezed == followingList
+          ? _value.followingList
+          : followingList // ignore: cast_nullable_to_non_nullable
+              as List<Category>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FollowingCategoryResponseImplCopyWith<$Res>
+    implements $FollowingCategoryResponseCopyWith<$Res> {
+  factory _$$FollowingCategoryResponseImplCopyWith(
+          _$FollowingCategoryResponseImpl value,
+          $Res Function(_$FollowingCategoryResponseImpl) then) =
+      __$$FollowingCategoryResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<Category>? followingList});
+}
+
+/// @nodoc
+class __$$FollowingCategoryResponseImplCopyWithImpl<$Res>
+    extends _$FollowingCategoryResponseCopyWithImpl<$Res,
+        _$FollowingCategoryResponseImpl>
+    implements _$$FollowingCategoryResponseImplCopyWith<$Res> {
+  __$$FollowingCategoryResponseImplCopyWithImpl(
+      _$FollowingCategoryResponseImpl _value,
+      $Res Function(_$FollowingCategoryResponseImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? followingList = freezed,
+  }) {
+    return _then(_$FollowingCategoryResponseImpl(
+      followingList: freezed == followingList
+          ? _value._followingList
+          : followingList // ignore: cast_nullable_to_non_nullable
+              as List<Category>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FollowingCategoryResponseImpl implements _FollowingCategoryResponse {
+  const _$FollowingCategoryResponseImpl(
+      {required final List<Category>? followingList})
+      : _followingList = followingList;
+
+  factory _$FollowingCategoryResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FollowingCategoryResponseImplFromJson(json);
+
+  final List<Category>? _followingList;
+  @override
+  List<Category>? get followingList {
+    final value = _followingList;
+    if (value == null) return null;
+    if (_followingList is EqualUnmodifiableListView) return _followingList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'FollowingCategoryResponse(followingList: $followingList)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FollowingCategoryResponseImpl &&
+            const DeepCollectionEquality()
+                .equals(other._followingList, _followingList));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_followingList));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FollowingCategoryResponseImplCopyWith<_$FollowingCategoryResponseImpl>
+      get copyWith => __$$FollowingCategoryResponseImplCopyWithImpl<
+          _$FollowingCategoryResponseImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FollowingCategoryResponseImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FollowingCategoryResponse implements FollowingCategoryResponse {
+  const factory _FollowingCategoryResponse(
+          {required final List<Category>? followingList}) =
+      _$FollowingCategoryResponseImpl;
+
+  factory _FollowingCategoryResponse.fromJson(Map<String, dynamic> json) =
+      _$FollowingCategoryResponseImpl.fromJson;
+
+  @override
+  List<Category>? get followingList;
+  @override
+  @JsonKey(ignore: true)
+  _$$FollowingCategoryResponseImplCopyWith<_$FollowingCategoryResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
