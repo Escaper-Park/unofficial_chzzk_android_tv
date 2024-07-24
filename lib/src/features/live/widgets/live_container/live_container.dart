@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/constants/dimensions.dart';
 import '../../../../common/constants/styles.dart';
+import '../../../../common/widgets/center_widgets.dart';
 import '../../../../common/widgets/rounded_container.dart';
 import '../../../../common/widgets/focused_widget.dart';
 import '../../../../utils/popup/popup_utils.dart';
@@ -43,6 +44,10 @@ class LiveContainer extends StatelessWidget {
             autofocus: autofocus,
             focusNode: focusNode,
             onPressed: () async {
+              if (liveInfo.channel?.personalData?.privateUserBlock == true) {
+                return;
+              }
+
               // Adult restriction
               if (liveInfo.adult! && liveInfo.liveImageUrl == null) {
                 if (context.mounted) {
@@ -53,6 +58,7 @@ class LiveContainer extends StatelessWidget {
                         '사용자 보호를 위해 연령 제한이 설정된 라이브입니다.\n시청을 원하면 로그인 후 본인 인증을 완료해주세요.',
                   );
                 }
+                return;
               }
               // Get LiveDetail;
               else {
@@ -64,37 +70,42 @@ class LiveContainer extends StatelessWidget {
                   context.pushNamed(AppRoute.liveStreaming.routeName,
                       extra: {'liveDetail': liveDetail});
                 }
+                return;
               }
             },
-            child: (hasFocus) => Column(
-              children: [
-                // Top Side
-                SizedBox(
-                  width: Dimensions.videoThumbnailSize.width,
-                  height: Dimensions.videoThumbnailSize.height,
-                  child: Stack(
-                    children: [
-                      // Thumbnail image
-                      LiveThumbnail(liveInfo: liveInfo),
-                      // userCount,
-                      LiveStatusContainer(
-                          concurrentUserCount: liveInfo.concurrentUserCount),
-                      // Uptime
-                      if (liveInfo.openDate != null)
-                        LiveUptime(strOpenDate: liveInfo.openDate),
-                    ],
-                  ),
-                ),
-                // Bottom Side
-                Expanded(
-                  child: LiveInfoCard(
-                    hasFocus: hasFocus ?? false,
-                    channel: channel,
-                    liveInfo: liveInfo,
-                  ),
-                )
-              ],
-            ),
+            child: (hasFocus) =>
+                liveInfo.channel?.personalData?.privateUserBlock == true
+                    ? const CenteredText(text: '차단한 유저의 라이브입니다')
+                    : Column(
+                        children: [
+                          // Top Side
+                          SizedBox(
+                            width: Dimensions.videoThumbnailSize.width,
+                            height: Dimensions.videoThumbnailSize.height,
+                            child: Stack(
+                              children: [
+                                // Thumbnail image
+                                LiveThumbnail(liveInfo: liveInfo),
+                                // userCount,
+                                LiveStatusContainer(
+                                    concurrentUserCount:
+                                        liveInfo.concurrentUserCount),
+                                // Uptime
+                                if (liveInfo.openDate != null)
+                                  LiveUptime(strOpenDate: liveInfo.openDate),
+                              ],
+                            ),
+                          ),
+                          // Bottom Side
+                          Expanded(
+                            child: LiveInfoCard(
+                              hasFocus: hasFocus ?? false,
+                              channel: channel,
+                              liveInfo: liveInfo,
+                            ),
+                          )
+                        ],
+                      ),
           );
         },
       ),

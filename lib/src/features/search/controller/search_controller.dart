@@ -25,6 +25,7 @@ class SearchController extends _$SearchController {
     if (searchResponse != null && searchResponse.data.isNotEmpty) {
       final channelListResponse = searchResponse.data;
 
+      // Check privateUserBlock
       final results = channelListResponse
           .where((response) {
             final personalData = response.channel.personalData;

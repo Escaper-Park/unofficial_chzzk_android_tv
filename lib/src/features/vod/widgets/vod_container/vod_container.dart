@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/constants/dimensions.dart';
 import '../../../../common/constants/styles.dart';
+import '../../../../common/widgets/center_widgets.dart';
 import '../../../../common/widgets/focused_widget.dart';
 import '../../../../common/widgets/rounded_container.dart';
 
@@ -39,6 +40,10 @@ class VodContainer extends StatelessWidget {
             autofocus: autofocus,
             focusNode: focusNode,
             onPressed: () async {
+              if (vod.channel.personalData?.privateUserBlock == true) {
+                return;
+              }
+
               final vodResponse = await ref
                   .read(vodControllerProvider.notifier)
                   .getVodPlayback(videoNo: vod.videoNo);
@@ -52,25 +57,28 @@ class VodContainer extends StatelessWidget {
                 }
               }
             },
-            child: (hasFocus) => Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: Dimensions.videoThumbnailSize.width,
-                  height: Dimensions.videoThumbnailSize.height,
-                  child: Stack(
+            child: (hasFocus) => vod.channel.personalData?.privateUserBlock ==
+                    true
+                ? const CenteredText(text: '차단한 유저의 영상입니다')
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      VodThumbnail(vod: vod),
-                      VodDuration(durationInSeconds: vod.duration),
-                      VodPublishDateAt(publishDateAt: vod.publishDateAt),
+                      SizedBox(
+                        width: Dimensions.videoThumbnailSize.width,
+                        height: Dimensions.videoThumbnailSize.height,
+                        child: Stack(
+                          children: [
+                            VodThumbnail(vod: vod),
+                            VodDuration(durationInSeconds: vod.duration),
+                            VodPublishDateAt(publishDateAt: vod.publishDateAt),
+                          ],
+                        ),
+                      ),
+                      // Info Widget
+                      Expanded(child: infoWidget),
                     ],
                   ),
-                ),
-                // Info Widget
-                Expanded(child: infoWidget),
-              ],
-            ),
           );
         },
       ),
