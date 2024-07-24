@@ -80,7 +80,6 @@ class DpadFocusScopeNavigator extends StatelessWidget {
   }
 }
 
-// TODO : CHECK THIS
 class DpadWidget extends HookWidget {
   /// Do action when you press directional keys.
   const DpadWidget({
@@ -202,34 +201,29 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
             (index) => useFocusNode(),
           );
 
-          useEffect(
-            () {
-              for (var i = 1; i < focusNodes.length - 1; i++) {
-                final focusNode = focusNodes[i];
-                focusNode.addListener(() {
-                  if (focusNode.hasPrimaryFocus) {
-                    final movePosition =
-                        i * (containerWidth + 10.0) - 20.0; // -20.0 padding.
+          for (var i = 1; i < focusNodes.length - 1; i++) {
+            final focusNode = focusNodes[i];
+            focusNode.addListener(() {
+              if (focusNode.hasPrimaryFocus) {
+                final movePosition =
+                    i * (containerWidth + 10.0) - 20.0; // -20.0 padding.
 
-                    final maxScrollExtent =
-                        scrollController.position.maxScrollExtent;
+                final maxScrollExtent =
+                    scrollController.position.maxScrollExtent;
 
-                    final targetPosition = movePosition > maxScrollExtent
-                        ? maxScrollExtent
-                        : movePosition;
+                final targetPosition = movePosition > maxScrollExtent
+                    ? maxScrollExtent
+                    : movePosition;
 
-                    scrollController.animateTo(
-                      targetPosition,
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                });
+                scrollController.animateTo(
+                  targetPosition,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                );
               }
-              return null;
-            },
-            [scrollController],
-          );
+            });
+          }
+
           return DpadFocusScopeNavigator(
             node: listFSN,
             dpadKeyFocusScopeNodeMap: {

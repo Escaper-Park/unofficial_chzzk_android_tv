@@ -23,7 +23,7 @@ class SearchResultChannelInfoCard extends StatelessWidget {
       autofocus: autofocus,
       onPressed: onPressed,
       padding: const EdgeInsets.all(10.0),
-      child: Row(
+      child: (_) => Row(
         children: [
           // Profile Image
           SizedBox(

@@ -45,7 +45,7 @@ class ResponsiveSidebarItemContainer extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         focusNode: focusNode,
         onPressed: onPressed,
-        child: sidebarHasFocus
+        child: (_) => sidebarHasFocus
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

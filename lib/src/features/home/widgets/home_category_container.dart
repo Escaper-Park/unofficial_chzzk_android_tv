@@ -38,7 +38,7 @@ class HomeCategoryContainer extends StatelessWidget {
           );
         }
       },
-      child: Stack(
+      child: (_) => Stack(
         children: [
           // Image
           ClipRRect(

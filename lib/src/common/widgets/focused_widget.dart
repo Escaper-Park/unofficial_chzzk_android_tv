@@ -40,7 +40,7 @@ class FocusedOutlinedButton extends HookWidget {
   /// Use [FocusNode] if you want to call the focusNode in other widgets.
   final FocusNode? focusNode;
   final VoidCallback? onPressed;
-  final Widget child;
+  final Widget Function(bool? hasFocus) child;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class FocusedOutlinedButton extends HookWidget {
         ),
       ),
       onPressed: onPressed,
-      child: child,
+      child: child(focusState.value),
     );
   }
 }

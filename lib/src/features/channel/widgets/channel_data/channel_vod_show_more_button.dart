@@ -60,7 +60,7 @@ class ChannelVodShowMoreButton extends HookWidget {
                 );
               }
             },
-            child: const Icon(
+            child: (_) => const Icon(
               Icons.arrow_forward_ios_rounded,
               color: AppColors.whiteColor,
             ),

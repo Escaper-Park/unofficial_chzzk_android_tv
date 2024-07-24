@@ -117,7 +117,7 @@ class ChannelVodController extends _$ChannelVodController {
   }
 
   Future<void> fetchMore() async {
-    if (_next <= _totalPages) {
+    if (_next < _totalPages) {
       ref.read(channelFetchMoreLoadingStateProvider.notifier).setState(true);
       final prev = state.value;
 

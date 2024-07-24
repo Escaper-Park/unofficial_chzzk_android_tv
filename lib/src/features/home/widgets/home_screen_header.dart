@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -157,7 +157,7 @@ class HomeScreenHeaderButton extends StatelessWidget {
           focusNode: focusNode,
           onPressed: onPressed,
           padding: const EdgeInsets.all(10.0),
-          child: Row(
+          child: (_) => Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(

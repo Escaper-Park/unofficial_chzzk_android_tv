@@ -42,7 +42,7 @@ class CategoryContainer extends StatelessWidget {
       child: FocusedOutlinedButton(
         autofocus: autofocus,
         onPressed: onPressed,
-        child: Column(
+        child: (_) => Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

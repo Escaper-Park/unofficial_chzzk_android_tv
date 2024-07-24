@@ -52,7 +52,7 @@ class VodContainer extends StatelessWidget {
                 }
               }
             },
-            child: Column(
+            child: (hasFocus) => Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

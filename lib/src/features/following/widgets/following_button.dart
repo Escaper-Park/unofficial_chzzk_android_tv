@@ -106,7 +106,7 @@ class _FollowingButtonContainer extends HookWidget {
       child: FocusedOutlinedButton(
         focusNode: focusNode,
         onPressed: onPressed,
-        child: RoundedContainer(
+        child: (_) => RoundedContainer(
           backgroundColor: AppColors.greyContainerColor,
           padding: const EdgeInsets.all(10.0),
           child: Row(

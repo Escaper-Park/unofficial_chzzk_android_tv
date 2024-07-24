@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -364,7 +364,7 @@ class VideoScreenSidebar extends HookWidget {
                         item.$2();
                         currentItemIndex.value = index;
                       },
-                      child: CenteredText(
+                      child: (_) => CenteredText(
                         text: item.$1,
                         fontSize: 14.0,
                         overflow: TextOverflow.ellipsis,

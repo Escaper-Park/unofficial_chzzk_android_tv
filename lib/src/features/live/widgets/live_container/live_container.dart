@@ -66,7 +66,7 @@ class LiveContainer extends StatelessWidget {
                 }
               }
             },
-            child: Column(
+            child: (hasFocus) => Column(
               children: [
                 // Top Side
                 SizedBox(
@@ -88,6 +88,7 @@ class LiveContainer extends StatelessWidget {
                 // Bottom Side
                 Expanded(
                   child: LiveInfoCard(
+                    hasFocus: hasFocus ?? false,
                     channel: channel,
                     liveInfo: liveInfo,
                   ),

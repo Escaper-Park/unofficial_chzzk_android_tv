@@ -40,7 +40,7 @@ class VirtualKeyboardKeyButton extends StatelessWidget {
       onPressed: () {
         onPressed(keyboardKey);
       },
-      child: RoundedContainer(
+      child: (_) => RoundedContainer(
         borderRadius: borderRadius,
         borderColor: borderColor,
         padding: const EdgeInsets.all(5.0),

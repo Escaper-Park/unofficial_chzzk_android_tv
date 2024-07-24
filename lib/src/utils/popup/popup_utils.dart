@@ -143,7 +143,7 @@ class PopupActionButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       unFocusedBorderColor: AppColors.greyColor,
-      child: Text(
+      child: (_) => Text(
         actionText,
         style: TextStyle(
           color: AppColors.whiteColor,

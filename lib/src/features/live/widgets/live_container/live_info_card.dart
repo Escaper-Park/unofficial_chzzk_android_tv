@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unofficial_chzzk_android_tv/src/utils/marquee/marquee.dart';
 
 import '../../../../common/constants/styles.dart';
 import '../../../../common/widgets/circle_avatar_profile_image.dart';
@@ -13,10 +14,12 @@ class LiveInfoCard extends StatelessWidget {
   /// Basic live information.
   const LiveInfoCard({
     super.key,
+    required this.hasFocus,
     required this.channel,
     required this.liveInfo,
   });
 
+  final bool hasFocus;
   final Channel channel;
   final LiveInfo liveInfo;
 
@@ -45,7 +48,10 @@ class LiveInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Live title
-                LiveTitle(liveTitle: liveInfo.liveTitle ?? ''),
+                LiveTitle(
+                  hasFocus: hasFocus,
+                  liveTitle: liveInfo.liveTitle ?? '',
+                ),
                 const SizedBox(height: 3.0),
                 // Channel name
                 ChannelNameWithVerifiedMark(
@@ -54,7 +60,10 @@ class LiveInfoCard extends StatelessWidget {
                 ),
                 // Category
                 const SizedBox(height: 3.0),
-                LiveCategoryWithTags(liveInfo: liveInfo),
+                LiveCategoryWithTags(
+                  hasFocus: hasFocus,
+                  liveInfo: liveInfo,
+                ),
               ],
             ),
           ),
@@ -65,8 +74,13 @@ class LiveInfoCard extends StatelessWidget {
 }
 
 class LiveTitle extends StatelessWidget {
-  const LiveTitle({super.key, required this.liveTitle});
+  const LiveTitle({
+    super.key,
+    required this.hasFocus,
+    required this.liveTitle,
+  });
 
+  final bool hasFocus;
   final String liveTitle;
 
   @override
@@ -74,22 +88,33 @@ class LiveTitle extends StatelessWidget {
     // remove new line
     final newlineRemovedTitle = liveTitle.replaceAll('\n', ' ');
 
-    return Text(
-      newlineRemovedTitle,
-      style: const TextStyle(
-        fontSize: 13.0,
-        overflow: TextOverflow.ellipsis,
-        color: AppColors.whiteColor,
-        fontWeight: FontWeight.w600,
-      ),
+    return Marquee(
+      behavior: MarqueeBehavior.scroll,
+      hasFocus: hasFocus,
+      items: [
+        Text(
+          newlineRemovedTitle,
+          style: const TextStyle(
+            fontSize: 13.0,
+            // overflow: TextOverflow.ellipsis,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
 
 class LiveCategoryWithTags extends StatelessWidget {
   /// Live category with tags.
-  const LiveCategoryWithTags({super.key, required this.liveInfo});
+  const LiveCategoryWithTags({
+    super.key,
+    required this.hasFocus,
+    required this.liveInfo,
+  });
 
+  final bool hasFocus;
   final LiveInfo liveInfo;
 
   @override
@@ -97,17 +122,15 @@ class LiveCategoryWithTags extends StatelessWidget {
     final categoryValue = liveInfo.liveCategoryValue;
     final tags = liveInfo.tags;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const NeverScrollableScrollPhysics(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LiveTagBadge(tag: categoryValue),
-          if (tags != null && tags.isNotEmpty) LiveTags(tags: tags),
-        ],
-      ),
+    final List<Widget> items = [
+      LiveTagBadge(tag: categoryValue),
+      if (tags != null && tags.isNotEmpty) LiveTags(tags: tags),
+    ];
+
+    return Marquee(
+      behavior: MarqueeBehavior.alternate,
+      hasFocus: hasFocus,
+      items: items,
     );
   }
 }
