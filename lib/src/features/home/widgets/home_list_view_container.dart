@@ -21,6 +21,7 @@ class HomeListViewContainer<T> extends StatelessWidget {
     required this.sidebarFSN,
     this.aboveFSN,
     this.belowFSN,
+    required this.fallback,
     required this.itemBuilder,
   });
 
@@ -40,6 +41,8 @@ class HomeListViewContainer<T> extends StatelessWidget {
   final FocusScopeNode sidebarFSN;
   final FocusScopeNode? aboveFSN;
   final FocusScopeNode? belowFSN;
+
+  final VoidCallback fallback;
 
   /// FocusNode to move focus the sidebar when the item index is 0 and press arrowLeft key.
   final Widget Function(int index, FocusNode focusNode, T object) itemBuilder;
@@ -65,6 +68,7 @@ class HomeListViewContainer<T> extends StatelessWidget {
             sidebarFSN: sidebarFSN,
             aboveFSN: aboveFSN,
             belowFSN: belowFSN,
+            fallback: fallback,
             itemBuilder: itemBuilder,
           ),
         ],

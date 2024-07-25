@@ -31,7 +31,10 @@ class PopularVodList extends ConsumerWidget {
         return VodContainer(
           autofocus: index == 0 ? true : false,
           vod: object,
-          infoWidget: VodInfoWithChannel(vod: object),
+          infoWidget: (hasFocus) => VodInfoWithChannel(
+            hasFocus: hasFocus,
+            vod: object,
+          ),
         );
       },
     );

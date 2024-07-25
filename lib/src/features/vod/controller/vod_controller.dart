@@ -37,7 +37,14 @@ class VodController extends _$VodController {
         final response = await dio.get(
           options: auth?.getOptions(),
           '${ApiUrl.vodPlayback}/${vod.videoId}',
-          queryParameters: {'key': vod.inKey},
+          queryParameters: {
+            'key': vod.inKey,
+            // 'sid': 2099,
+            // 'env': 'real',
+            // 'st': 5,
+            // 'lc': 'ko_KR',
+            // 'cpl': 'ko_KR',
+          },
         );
 
         final vodPath = response.data?['period'][0]['adaptationSet'][0]

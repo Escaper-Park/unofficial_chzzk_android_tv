@@ -43,7 +43,9 @@ class HomeScreen extends HookConsumerWidget {
                   final List<double> offsets = [
                     0.0,
                     0.0,
-                    Dimensions.videoContainerHeight + 80.0,
+                    scrollController.position.maxScrollExtent -
+                        Dimensions.followingCategoryContainerSize.height +
+                        100.0,
                     scrollController.position.maxScrollExtent,
                   ];
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../utils/router/app_router.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
 import '../../following/controller/following_controller.dart';
 import '../../following/model/following.dart';
 import '../../live/widgets/live_container/live_container.dart';
@@ -27,12 +29,17 @@ class HomeFollowingLives extends ConsumerWidget {
     return HomeListViewContainer<Following>(
       headerText: '팔로잉 채널 라이브',
       asyncValue: asyncFollowingLives,
-      emptyText: '생방송 채널이 없습니다',
+      emptyText: '생방송 중인 팔로잉 채널이 없습니다',
       errorText: '팔로잉 채널 라이브를 불러올 수 없습니다',
       listFSN: listFSN,
       sidebarFSN: sidebarFSN,
       aboveFSN: aboveFSN,
       belowFSN: belowFSN,
+      fallback: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.following);
+      },
       itemBuilder: (index, focusNode, object) {
         return LiveContainer(
           autofocus: index == 0 ? true : false,

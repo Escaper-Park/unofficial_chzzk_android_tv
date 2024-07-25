@@ -5,18 +5,18 @@ import '../../../../utils/formatter/formatter.dart';
 import '../../../../common/constants/styles.dart';
 import '../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
 import '../../model/vod.dart';
+import './vod_title.dart';
 
 class VodInfo extends StatelessWidget {
   /// Vod info
   const VodInfo({
     super.key,
-    this.overflow = TextOverflow.clip,
     this.showChannelName = false,
+    this.hasFocus,
     required this.vod,
   });
 
-  /// Video title overflow.
-  final TextOverflow overflow;
+  final bool? hasFocus;
 
   /// Show channe name and verified mark.
   final bool showChannelName;
@@ -33,15 +33,10 @@ class VodInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Vod title
-        Expanded(
-          child: Text(
-            vod.videoTitle.replaceAll('\n', ' '),
-            style: TextStyle(
-              fontSize: 13.0,
-              color: AppColors.whiteColor,
-              overflow: overflow,
-            ),
-          ),
+        VodTitle(
+          useMarquee: showChannelName,
+          hasFocus: hasFocus,
+          vodTitle: vod.videoTitle,
         ),
         const SizedBox(height: 3.0),
         // Channel name
@@ -62,8 +57,13 @@ class VodInfo extends StatelessWidget {
 
 class VodInfoWithChannel extends StatelessWidget {
   /// Vod info with the channel profile.
-  const VodInfoWithChannel({super.key, required this.vod});
+  const VodInfoWithChannel({
+    super.key,
+    required this.hasFocus,
+    required this.vod,
+  });
 
+  final bool? hasFocus;
   final Vod vod;
 
   @override
@@ -89,9 +89,9 @@ class VodInfoWithChannel extends StatelessWidget {
           const SizedBox(width: 10.0),
           Expanded(
             child: VodInfo(
+              hasFocus: hasFocus,
               vod: vod,
               showChannelName: true,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

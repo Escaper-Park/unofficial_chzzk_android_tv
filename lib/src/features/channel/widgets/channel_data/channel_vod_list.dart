@@ -39,13 +39,10 @@ class ChannelVodList extends ConsumerWidget {
       listFSN: vodListFSN,
       aboveFSN: showMoreFSN,
       sidebarFSN: channelListFSN,
+      useExceptionFallbackWidget: false,
       itemBuilder: (index, focusNode, object) {
         return ChannelVodContainer(
-          autofocus: channel.openLive == true
-              ? false
-              : index == 0
-                  ? true
-                  : false,
+          autofocus: index == 0 ? true : false,
           focusNode: focusNode,
           vod: object,
         );

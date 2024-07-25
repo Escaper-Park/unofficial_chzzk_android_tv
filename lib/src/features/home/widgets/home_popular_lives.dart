@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../utils/router/app_router.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
 import '../../live/controller/live_controller.dart';
 import '../../live/model/live.dart';
 import '../../live/widgets/live_container/live_container.dart';
@@ -35,6 +37,11 @@ class HomePopularLives extends ConsumerWidget {
       sidebarFSN: sidebarFSN,
       aboveFSN: aboveFSN,
       belowFSN: belowFSN,
+      fallback: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.allLives);
+      },
       itemBuilder: (index, focusNode, object) {
         return LiveContainer(
           autofocus: index == 0 ? autofocus : false,

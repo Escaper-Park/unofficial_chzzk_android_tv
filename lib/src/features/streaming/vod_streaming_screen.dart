@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../video_player/vod_player.dart';
 import '../vod/model/vod.dart';
 
 class VodStreamingScreen extends StatelessWidget {
@@ -15,7 +16,7 @@ class VodStreamingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(),
+      body: VodPlayer(vodPath: vodPath, vod: vod),
     );
   }
 }

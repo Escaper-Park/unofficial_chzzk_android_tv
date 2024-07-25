@@ -10,23 +10,21 @@ import '../../../../common/widgets/rounded_container.dart';
 import '../../../../utils/router/app_router.dart';
 import '../../controller/vod_controller.dart';
 import '../../model/vod.dart';
-import 'vod_container_widgets.dart';
+import './vod_container_widgets.dart';
 
 class VodContainer extends StatelessWidget {
   const VodContainer({
     super.key,
     this.autofocus = false,
-    this.focusNode,
     required this.vod,
     required this.infoWidget,
   });
 
   final bool autofocus;
-  final FocusNode? focusNode;
   final Vod vod;
 
   /// Vod info is different when using in Channel Vod Container.
-  final Widget infoWidget;
+  final Widget Function(bool? hasFocus) infoWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,6 @@ class VodContainer extends StatelessWidget {
         builder: (context, ref, child) {
           return FocusedOutlinedButton(
             autofocus: autofocus,
-            focusNode: focusNode,
             onPressed: () async {
               if (vod.channel.personalData?.privateUserBlock == true) {
                 return;
@@ -76,7 +73,9 @@ class VodContainer extends StatelessWidget {
                         ),
                       ),
                       // Info Widget
-                      Expanded(child: infoWidget),
+                      Expanded(
+                        child: infoWidget(hasFocus),
+                      ),
                     ],
                   ),
           );

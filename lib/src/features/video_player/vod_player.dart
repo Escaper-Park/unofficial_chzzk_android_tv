@@ -1,15 +1,146 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-class VodPlayer extends StatefulWidget {
-  const VodPlayer({super.key});
+import '../../common/widgets/center_widgets.dart';
+import '../vod/model/vod.dart';
+
+class VodPlayer extends ConsumerStatefulWidget {
+  const VodPlayer({
+    super.key,
+    required this.vodPath,
+    required this.vod,
+  });
+
+  final String vodPath;
+  final Vod vod;
 
   @override
-  State<VodPlayer> createState() => _VodPlayerState();
+  ConsumerState<VodPlayer> createState() => _VodPlayerState();
 }
 
-class _VodPlayerState extends State<VodPlayer> {
+class _VodPlayerState extends ConsumerState<VodPlayer>
+    with WidgetsBindingObserver {
+  VideoPlayerController? _videoPlayerController;
+  String msg = '라이브 로딩 중...';
+  bool _videoEnds = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // add observer for detecting App Life cycle
+    WidgetsBinding.instance.addObserver(this);
+
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    _videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.vodPath),
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+
+    await Future.wait([_videoPlayerController!.initialize()]);
+    _videoPlayerController!.play();
+
+    if (!await WakelockPlus.enabled) {
+      await WakelockPlus.enable();
+    }
+
+    if (!_videoEnds) {
+      _videoPlayerController?.addListener(_checkVideoEnds);
+    }
+
+    if (context.mounted) {
+      setState(() {});
+    }
+  }
+
+  void _checkVideoEnds() async {
+    if (_videoPlayerController != null) {
+      final value = _videoPlayerController!.value;
+
+      if (value.hasError == true) {
+        setState(() {
+          msg = '영상이 마지막까지 재생되었습니다';
+          WakelockPlus.disable();
+          _videoPlayerController = null;
+          _videoEnds = true;
+        });
+      }
+      // Ends
+      else if (value.isInitialized &&
+          (value.position >= value.duration) &&
+          !value.isPlaying) {
+        setState(() {
+          msg = '영상이 마지막까지 재생되었습니다';
+          WakelockPlus.disable();
+          _videoPlayerController = null;
+          _videoEnds = true;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    WakelockPlus.disable();
+    if (_videoPlayerController != null) {
+      _videoPlayerController!.pause();
+      _videoPlayerController!.removeListener(_checkVideoEnds);
+      _videoPlayerController!.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.hidden:
+        break;
+      // Pause
+      case AppLifecycleState.paused:
+        _videoPlayerController?.pause();
+        WakelockPlus.disable();
+        break;
+      // Pause -> Resume
+      case AppLifecycleState.resumed:
+        if (_videoPlayerController?.value.isPlaying == false) {
+          _videoPlayerController?.play();
+          await WakelockPlus.enable();
+        }
+        break;
+      // System Ends
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return _videoPlayerController != null &&
+            _videoPlayerController!.value.isInitialized
+        ? Stack(
+            children: [
+              Center(
+                child: AspectRatio(
+                  aspectRatio: _videoPlayerController!.value.aspectRatio,
+                  child: VideoPlayer(_videoPlayerController!),
+                ),
+              ),
+              // Controls
+              // VodControlsOverlay(
+              //   videoPlayerController: _videoPlayerController!,
+              //   vod: widget.vod,
+              // )
+            ],
+          )
+        : CenteredText(text: msg);
   }
 }

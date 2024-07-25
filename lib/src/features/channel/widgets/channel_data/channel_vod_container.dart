@@ -21,8 +21,7 @@ class ChannelVodContainer extends StatelessWidget {
     return VodContainer(
       vod: vod,
       autofocus: autofocus,
-      focusNode: focusNode,
-      infoWidget: ChannelVodInfo(vod: vod),
+      infoWidget: (hasFocus) => ChannelVodInfo(vod: vod),
     );
   }
 }

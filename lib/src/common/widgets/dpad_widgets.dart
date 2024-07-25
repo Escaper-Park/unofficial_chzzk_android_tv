@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unofficial_chzzk_android_tv/src/common/widgets/focused_widget.dart';
 
 import '../constants/dimensions.dart';
 import './center_widgets.dart';
@@ -154,8 +155,13 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
     this.sidebarFSN,
     this.aboveFSN,
     this.belowFSN,
+    this.useExceptionFallbackWidget = true,
+    this.fallback,
     required this.itemBuilder,
-  });
+  }) : assert(
+          !(useExceptionFallbackWidget && fallback == null),
+          'fallback must not be null when useExceptionFallbackWidget is true.',
+        );
 
   /// An async T list.
   final AsyncValue<List<T>?> asyncValue;
@@ -179,6 +185,13 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
   final FocusScopeNode? aboveFSN;
   final FocusScopeNode? belowFSN;
 
+  /// If data is null or empty, use this fallback widget at the home screen
+  /// to avoid focus stucks.
+  final bool useExceptionFallbackWidget;
+
+  /// Fallback actions for exception handling
+  final VoidCallback? fallback;
+
   /// ItemBuilder that has own focusNode.
   final Widget Function(int index, FocusNode focusNode, T object) itemBuilder;
 
@@ -191,9 +204,17 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
       height: containerHeight,
       child: asyncValue.when(
         data: (data) {
-          if (data == null) return CenteredText(text: errorText);
+          if (data == null) {
+            return useExceptionFallbackWidget
+                ? _exceptionFallbackWidget(errorText, fallback ?? () {})
+                : CenteredText(text: errorText);
+          }
 
-          if (data.isEmpty) return CenteredText(text: emptyText);
+          if (data.isEmpty) {
+            return useExceptionFallbackWidget
+                ? _exceptionFallbackWidget(emptyText, fallback ?? () {})
+                : CenteredText(text: emptyText);
+          }
 
           // Generate focus nodes to check the first index item to move focus to sidebar.
           final focusNodes = List.generate(
@@ -262,6 +283,42 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
         },
         error: (_, __) => CenteredText(text: errorText),
         loading: () => const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _exceptionFallbackWidget(String exceptionText, VoidCallback fallback) {
+    final focusNode = useFocusNode();
+
+    return Center(
+      child: SizedBox(
+        width: 300.0,
+        height: 50.0,
+        child: CallbackShortcuts(
+          bindings: {
+            const SingleActivator(LogicalKeyboardKey.arrowUp): () {
+              if (aboveFSN != null) aboveFSN!.requestFocus();
+            },
+            const SingleActivator(LogicalKeyboardKey.arrowDown): () {
+              if (belowFSN != null) belowFSN!.requestFocus();
+            },
+            const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
+              if (sidebarFSN != null) sidebarFSN!.requestFocus();
+            }
+          },
+          child: FocusScope(
+            node: listFSN,
+            onFocusChange: (value) {
+              if (value) focusNode.requestFocus();
+            },
+            child: FocusedOutlinedButton(
+              autofocus: true,
+              focusNode: focusNode,
+              onPressed: fallback,
+              child: (hasFocus) => CenteredText(text: emptyText),
+            ),
+          ),
+        ),
       ),
     );
   }

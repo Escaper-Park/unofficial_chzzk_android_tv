@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/dimensions.dart';
+import '../../../utils/router/app_router.dart';
 import '../../category/controller/category_controller.dart';
 import '../../category/model/category.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
 import 'home_category_container.dart';
 import 'home_list_view_container.dart';
 
@@ -34,6 +36,11 @@ class HomeFollowingCategories extends ConsumerWidget {
       listFSN: listFSN,
       sidebarFSN: sidebarFSN,
       aboveFSN: aboveFSN,
+      fallback: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.category);
+      },
       itemBuilder: (index, focusNode, object) {
         return HomeCategoryContainer(
           autofocus: false,
