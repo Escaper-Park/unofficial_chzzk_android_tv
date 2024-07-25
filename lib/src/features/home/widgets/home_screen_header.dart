@@ -39,10 +39,10 @@ class HomeScreenHeader extends HookConsumerWidget {
       (
         Icons.refresh_rounded,
         '새로고침',
-        () {
-          ref.invalidate(followingLivesControllerProvider);
-          ref.invalidate(homePopularLivesControllerProvider);
-          ref.invalidate(followingCategoriesControllerProvider);
+        () async {
+          ref.read(followingLivesControllerProvider.notifier).refresh();
+          ref.read(homePopularLivesControllerProvider.notifier).refresh();
+          ref.read(followingCategoriesControllerProvider.notifier).refresh();
         }
       ),
       (

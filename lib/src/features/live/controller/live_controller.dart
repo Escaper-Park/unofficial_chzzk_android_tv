@@ -107,6 +107,16 @@ class HomePopularLivesController extends _$HomePopularLivesController {
 
     return response?.data;
   }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        return await _initFetch();
+      },
+    );
+  }
 }
 
 @riverpod

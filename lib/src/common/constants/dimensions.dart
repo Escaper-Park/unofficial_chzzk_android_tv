@@ -14,6 +14,7 @@ class Dimensions {
   // Home
   static const double homeChzzkTextLogoWidth = 150.0;
   static const Size followingCategoryContainerSize = Size(120.0, 150.0);
+  static const Size exceptionFallbackWidgetSize = Size(300.0, 50.0);
 
   // Following
   static const double followingListWidth = 220.0;

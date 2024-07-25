@@ -24,7 +24,6 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
     with WidgetsBindingObserver {
   VideoPlayerController? _videoPlayerController;
   String msg = '라이브 로딩 중...';
-  bool _videoEnds = false;
 
   @override
   void initState() {
@@ -44,13 +43,12 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
     await Future.wait([_videoPlayerController!.initialize()]);
     _videoPlayerController!.play();
 
+    // Check wakelock
     if (!await WakelockPlus.enabled) {
       await WakelockPlus.enable();
     }
 
-    if (!_videoEnds) {
-      _videoPlayerController?.addListener(_checkVideoEnds);
-    }
+    _videoPlayerController?.addListener(_checkVideoEnds);
 
     if (context.mounted) {
       setState(() {});
@@ -61,23 +59,18 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
     if (_videoPlayerController != null) {
       final value = _videoPlayerController!.value;
 
-      if (value.hasError == true) {
+      // Sometimes this package detects the end of video as an error situation.
+      final bool checkEnds = value.hasError == true || // Error
+          // Ends
+          (value.isInitialized &&
+              (value.position >= value.duration) &&
+              !value.isPlaying);
+
+      if (checkEnds) {
         setState(() {
           msg = '영상이 마지막까지 재생되었습니다';
           WakelockPlus.disable();
           _videoPlayerController = null;
-          _videoEnds = true;
-        });
-      }
-      // Ends
-      else if (value.isInitialized &&
-          (value.position >= value.duration) &&
-          !value.isPlaying) {
-        setState(() {
-          msg = '영상이 마지막까지 재생되었습니다';
-          WakelockPlus.disable();
-          _videoPlayerController = null;
-          _videoEnds = true;
         });
       }
     }
@@ -88,7 +81,7 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
     WidgetsBinding.instance.removeObserver(this);
     WakelockPlus.disable();
     if (_videoPlayerController != null) {
-      _videoPlayerController!.pause();
+      _videoPlayerController!.pause(); // To avoid android errors.
       _videoPlayerController!.removeListener(_checkVideoEnds);
       _videoPlayerController!.dispose();
     }

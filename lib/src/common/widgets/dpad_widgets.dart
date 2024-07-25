@@ -282,7 +282,10 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
           );
         },
         error: (_, __) => CenteredText(text: errorText),
-        loading: () => const SizedBox.shrink(),
+        loading: () {
+          isFirstFocused.value = true;
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
@@ -292,8 +295,8 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
 
     return Center(
       child: SizedBox(
-        width: 300.0,
-        height: 50.0,
+        width: Dimensions.exceptionFallbackWidgetSize.width,
+        height: Dimensions.exceptionFallbackWidgetSize.height,
         child: CallbackShortcuts(
           bindings: {
             const SingleActivator(LogicalKeyboardKey.arrowUp): () {

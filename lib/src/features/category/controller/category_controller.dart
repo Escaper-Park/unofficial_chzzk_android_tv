@@ -184,7 +184,7 @@ class FollowingCategoriesController extends _$FollowingCategoriesController {
     final Dio dio = ref.watch(dioClientProvider);
     _repository = CategoryRepository(dio);
 
-    return fetchFollowingCategories();
+    return await fetchFollowingCategories();
   }
 
   Future<List<Category>?> fetchFollowingCategories() async {
@@ -215,6 +215,16 @@ class FollowingCategoriesController extends _$FollowingCategoriesController {
         .catchError((_) => false);
 
     return response;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        return await fetchFollowingCategories();
+      },
+    );
   }
 }
 

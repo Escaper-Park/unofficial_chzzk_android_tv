@@ -64,4 +64,14 @@ class FollowingLivesController extends _$FollowingLivesController {
 
     return followingResponse?.followingList;
   }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        return await fetchFollowingLives();
+      },
+    );
+  }
 }
