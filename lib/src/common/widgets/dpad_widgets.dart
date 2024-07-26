@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unofficial_chzzk_android_tv/src/common/widgets/focused_widget.dart';
 
 import '../constants/dimensions.dart';
+import '../constants/styles.dart';
 import './center_widgets.dart';
 // import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -88,6 +89,8 @@ class DpadWidget extends HookWidget {
     this.autofocus = false,
     this.focusNode,
     this.useKeyRepeatEvent = false,
+    this.useFocusedBorder = true,
+    this.borderRadius = 12.0,
     required this.dpadActionCallbacks,
     required this.child,
   });
@@ -97,6 +100,10 @@ class DpadWidget extends HookWidget {
 
   /// Repeat when the button is long-pressed.
   final bool useKeyRepeatEvent;
+
+  /// Show border when this widget has focus.
+  final bool useFocusedBorder;
+  final double borderRadius;
 
   /// Add a map that constists of [Direction(DpadAction)] and [VoidCallback].
   /// The callback is activated when you press a directional key.
@@ -108,6 +115,15 @@ class DpadWidget extends HookWidget {
   Widget build(BuildContext context) {
     // If focusNode is null, create it's own [FocusNode] using hooks to show focused border.
     final widgetFocusNode = focusNode ?? useFocusNode();
+    final focusState = useState<bool>(widgetFocusNode.hasFocus);
+
+    // Add listener to highlight border
+    useEffect(() {
+      widgetFocusNode.addListener(() {
+        if (context.mounted) focusState.value = widgetFocusNode.hasFocus;
+      });
+      return null;
+    }, [widgetFocusNode]);
 
     return KeyboardListener(
       autofocus: autofocus,
@@ -121,7 +137,20 @@ class DpadWidget extends HookWidget {
           _onKeyEvent(event);
         }
       },
-      child: child,
+      child: useFocusedBorder
+          ? Container(
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius),
+                border: Border.all(
+                  width: 1.5,
+                  color: AppColors.chzzkColor,
+                ),
+              ),
+              child: child,
+            )
+          : child,
     );
   }
 

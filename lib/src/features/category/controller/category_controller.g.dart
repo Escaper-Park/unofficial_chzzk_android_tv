@@ -342,7 +342,7 @@ class _CategoryVodsControllerProviderElement
 }
 
 String _$followingCategoriesControllerHash() =>
-    r'31529edf3b0d04eff49b9457808d9a258cbc6c21';
+    r'50dbfff4d7b1fdde7bccdb107c79093a7c3fb0c0';
 
 /// See also [FollowingCategoriesController].
 @ProviderFor(FollowingCategoriesController)

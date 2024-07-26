@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../video_player/vod_player.dart';
+import '../video_player/vod/vod_player.dart';
 import '../vod/model/vod.dart';
 
 class VodStreamingScreen extends StatelessWidget {

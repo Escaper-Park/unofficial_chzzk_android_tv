@@ -3,8 +3,8 @@ import 'package:video_player/video_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../common/widgets/center_widgets.dart';
-import '../vod/model/vod.dart';
+import '../../../common/widgets/center_widgets.dart';
+import '../../vod/model/vod.dart';
 
 class VodPlayer extends ConsumerStatefulWidget {
   const VodPlayer({
@@ -23,6 +23,8 @@ class VodPlayer extends ConsumerStatefulWidget {
 class _VodPlayerState extends ConsumerState<VodPlayer>
     with WidgetsBindingObserver {
   VideoPlayerController? _videoPlayerController;
+
+  // Show current state.
   String msg = '라이브 로딩 중...';
 
   @override

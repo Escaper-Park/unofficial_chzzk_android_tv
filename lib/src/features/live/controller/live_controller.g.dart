@@ -190,7 +190,7 @@ class _AllLivesControllerProviderElement
 }
 
 String _$homePopularLivesControllerHash() =>
-    r'f836380c7454c40bbc85e2b1bbd56f449e570958';
+    r'f0971cf37b34855ae73b512c986b1a8694e03296';
 
 /// See also [HomePopularLivesController].
 @ProviderFor(HomePopularLivesController)
