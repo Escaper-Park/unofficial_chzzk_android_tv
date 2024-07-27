@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-// TODO : 
+// TODO :
 class VideoNavigatorOverlay extends StatelessWidget {
-  /// Navigator overlay to explore other vods or live stream channels 
+  /// Navigator overlay to explore other vods or live stream channels
   /// when waching video.
   const VideoNavigatorOverlay({super.key});
 

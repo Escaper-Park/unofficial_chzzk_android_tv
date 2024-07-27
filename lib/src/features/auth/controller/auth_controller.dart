@@ -42,8 +42,8 @@ class AuthController extends _$AuthController {
       // reset user profile
       ref.read(userControllerProvider.notifier).signOut();
       // reset dio cookies
-      ref.read(dioClientProvider.notifier).singOut();
-      
+      ref.read(dioClientProvider.notifier).signOut();
+
       return null;
     });
   }

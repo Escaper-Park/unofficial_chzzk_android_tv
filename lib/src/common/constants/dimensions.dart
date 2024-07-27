@@ -33,5 +33,5 @@ class Dimensions {
   static const Size categoryInfoSize = Size(200.0, 120.0);
 
   // Vod streaming
-  static const double vodStreamInfoContainerHeight = 220.0;
+  static const double vodStreamInfoContainerHeight = 120.0;
 }

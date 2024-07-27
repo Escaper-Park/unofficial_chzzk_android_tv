@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:unofficial_chzzk_android_tv/src/utils/marquee/marquee.dart';
 
 import '../../../../common/constants/styles.dart';
 import '../../../../common/widgets/circle_avatar_profile_image.dart';
 import '../../../../common/widgets/rounded_container.dart';
 
+import '../../../../utils/marquee/marquee.dart';
 import '../../../channel/model/channel.dart';
 import '../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
 

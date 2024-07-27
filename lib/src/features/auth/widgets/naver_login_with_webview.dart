@@ -128,6 +128,8 @@ class _NaverLoginWithWebviewState extends ConsumerState<NaverLoginWithWebview> {
             .read(authControllerProvider.notifier)
             .getAuthWithCookies();
 
+        ref.invalidate(authControllerProvider);
+
         // Change Screen
         if (context.mounted && auth != null) {
           ref

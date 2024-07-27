@@ -17,10 +17,27 @@ class VodStreamStatus extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _VodStreamCategory(vod.videoCategoryValue),
+        const SizedBox(width: 3.0),
         _VodStreamReadCount(vod.readCount),
         const SizedBox(width: 3.0),
-        _VodStreamPublishDateAt(vod.publishDateAt),
+        _VodStreamPublishDate(vod.publishDate),
       ],
+    );
+  }
+}
+
+class _VodStreamCategory extends StatelessWidget {
+  const _VodStreamCategory(this.category);
+
+  final String? category;
+
+  @override
+  Widget build(BuildContext context) {
+    return TagBadge(
+      text: category ?? '?',
+      backgroundColor: AppColors.blackColor,
+      fontColor: AppColors.whiteColor,
     );
   }
 }
@@ -40,20 +57,15 @@ class _VodStreamReadCount extends StatelessWidget {
   }
 }
 
-class _VodStreamPublishDateAt extends StatelessWidget {
-  // Since
-  const _VodStreamPublishDateAt(this.publishDateAt);
+class _VodStreamPublishDate extends StatelessWidget {
+  const _VodStreamPublishDate(this.publishDate);
 
-  final int publishDateAt;
+  final String publishDate;
 
   @override
   Widget build(BuildContext context) {
-    final int diff = DateTime.now().millisecondsSinceEpoch - publishDateAt;
-    final int hoursAt = (diff / (1000 * 60 * 60)).floor();
-    final String since = hoursAt > 24 ? '${hoursAt ~/ 24}일 전' : '$hoursAt시간 전';
-
     return TagBadge(
-      text: since,
+      text: publishDate.split(' ')[0],
       backgroundColor: AppColors.blackColor,
     );
   }

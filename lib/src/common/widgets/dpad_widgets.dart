@@ -17,6 +17,7 @@ enum DpadAction {
   arrowDown,
   arrowLeft,
   arrowRight,
+  select,
 }
 
 class DpadFocusScopeNavigator extends StatelessWidget {
@@ -70,6 +71,7 @@ class DpadFocusScopeNavigator extends StatelessWidget {
           DpadAction.arrowDown => LogicalKeyboardKey.arrowDown,
           DpadAction.arrowLeft => LogicalKeyboardKey.arrowLeft,
           DpadAction.arrowRight => LogicalKeyboardKey.arrowRight,
+          DpadAction.select => LogicalKeyboardKey.select,
         };
 
         bindings[SingleActivator(key)] = () {
@@ -82,9 +84,9 @@ class DpadFocusScopeNavigator extends StatelessWidget {
   }
 }
 
-class DpadWidget extends HookWidget {
-  /// Do action when you press directional keys.
-  const DpadWidget({
+class DpadActionWidget extends HookWidget {
+  /// Do action when a directional key is pressed.
+  const DpadActionWidget({
     super.key,
     this.autofocus = false,
     this.focusNode,
@@ -160,13 +162,21 @@ class DpadWidget extends HookWidget {
     switch (keyLabel) {
       case "Arrow Up": // up
         dpadActionCallbacks[DpadAction.arrowUp]?.call();
+        break;
       case "Arrow Down": // down
         dpadActionCallbacks[DpadAction.arrowDown]?.call();
+        break;
       case 'Arrow Left': // left
         dpadActionCallbacks[DpadAction.arrowLeft]?.call();
+        break;
       case "Arrow Right": // right
         dpadActionCallbacks[DpadAction.arrowRight]?.call();
+        break;
+      case "Select": // select
+        dpadActionCallbacks[DpadAction.select]?.call();
+        break;
       default:
+        break;
     }
   }
 }

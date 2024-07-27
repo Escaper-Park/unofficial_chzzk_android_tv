@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../common/constants/dimensions.dart';
 import '../../common/widgets/center_widgets.dart';
+import '../auth/controller/auth_controller.dart';
 import '../dashboard/dashboard_screen.dart';
-import '../user/controller/user_controller.dart';
 
 import './widgets/home_widgets.dart';
 
@@ -27,7 +27,7 @@ class HomeScreen extends HookConsumerWidget {
 
     // Add a user state to show suitable only the lists that is appropriate for
     // the current login status.
-    final asyncUser = ref.watch(userControllerProvider);
+    final asyncAuth = ref.watch(authControllerProvider);
 
     return DashboardScreen(
       sidebarFSN: sidebarFSN,
@@ -36,16 +36,18 @@ class HomeScreen extends HookConsumerWidget {
         padding: const EdgeInsets.all(10.0),
         child: FocusScope(
           node: contentScreenFSN,
-          child: asyncUser.when(
-            data: (user) {
+          child: asyncAuth.when(
+            data: (auth) {
               SchedulerBinding.instance.addPostFrameCallback(
                 (_) {
                   final List<double> offsets = [
                     0.0,
                     0.0,
-                    scrollController.position.maxScrollExtent -
-                        Dimensions.followingCategoryContainerSize.height +
-                        100.0,
+                    auth == null
+                        ? 0.0
+                        : scrollController.position.maxScrollExtent -
+                            Dimensions.followingCategoryContainerSize.height +
+                            100.0,
                     scrollController.position.maxScrollExtent,
                   ];
 
@@ -75,9 +77,9 @@ class HomeScreen extends HookConsumerWidget {
                     HomeScreenHeader(
                       headerFSN: nodes[0],
                       sidebarFSN: sidebarFSN,
-                      belowFSN: nodes[1],
+                      belowFSN: auth == null ? nodes[2] : nodes[1],
                     ),
-                    if (user != null)
+                    if (auth != null)
                       HomeFollowingLives(
                         listFSN: nodes[1],
                         sidebarFSN: sidebarFSN,
@@ -85,13 +87,13 @@ class HomeScreen extends HookConsumerWidget {
                         belowFSN: nodes[2],
                       ),
                     HomePopularLives(
-                      autofocus: user == null ? true : false,
+                      autofocus: auth == null ? true : false,
                       listFSN: nodes[2],
                       sidebarFSN: sidebarFSN,
-                      aboveFSN: user == null ? nodes[0] : nodes[1],
+                      aboveFSN: auth == null ? nodes[0] : nodes[1],
                       belowFSN: nodes[3],
                     ),
-                    if (user != null)
+                    if (auth != null)
                       HomeFollowingCategories(
                         listFSN: nodes[3],
                         sidebarFSN: sidebarFSN,

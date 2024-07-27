@@ -5,6 +5,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../common/widgets/center_widgets.dart';
 import '../../vod/model/vod.dart';
+import 'vod_controls_overlay.dart';
 
 class VodPlayer extends ConsumerStatefulWidget {
   const VodPlayer({
@@ -130,10 +131,10 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
                 ),
               ),
               // Controls
-              // VodControlsOverlay(
-              //   videoPlayerController: _videoPlayerController!,
-              //   vod: widget.vod,
-              // )
+              VodControlsOverlay(
+                controller: _videoPlayerController!,
+                vod: widget.vod,
+              )
             ],
           )
         : CenteredText(text: msg);

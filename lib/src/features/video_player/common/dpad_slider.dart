@@ -84,7 +84,7 @@ class DpadSlider extends HookWidget {
       onFocusChange: (value) {
         if (value) dpadFocusNode.requestFocus();
       },
-      child: DpadWidget(
+      child: DpadActionWidget(
         focusNode: dpadFocusNode,
         useFocusedBorder: true,
         useKeyRepeatEvent: true,

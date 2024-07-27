@@ -9,7 +9,7 @@ part 'vod_player_controller.g.dart';
 enum VodOverlayType {
   none,
   main,
-  channel, // show channel data.
+  channelData, // show channel data.
 }
 
 enum PlaybackDirection {

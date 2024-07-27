@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:unofficial_chzzk_android_tv/src/utils/marquee/marquee.dart';
 
 import '../../../../common/constants/styles.dart';
+import '../../../../utils/marquee/marquee.dart';
 
 class VodTitle extends StatelessWidget {
   const VodTitle({

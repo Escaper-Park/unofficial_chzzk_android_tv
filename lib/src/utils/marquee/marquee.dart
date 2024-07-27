@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 enum MarqueeBehavior {
@@ -49,6 +51,9 @@ class Marquee extends StatefulWidget {
 
 class _MarqueeState extends State<Marquee> {
   final ScrollController _scrollController = ScrollController();
+  Timer? _timer;
+
+  bool _canScroll = false;
 
   // Set this true if widget's focus state updated.
   bool _isRunning = false;
@@ -64,57 +69,63 @@ class _MarqueeState extends State<Marquee> {
     itemCount = widget.items.length;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (_scrollController.hasClients && widget.hasFocus) {
-        _resetScrollPosition(); // reset
-        _scroll();
+      if (_scrollController.hasClients) {
+        final maxExtent = _scrollController.position.maxScrollExtent;
+        if (maxExtent > 0.0 && maxExtent.isFinite) {
+          _canScroll = true;
+        } else {
+          _canScroll = false;
+        }
       }
     });
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _scrollController.dispose();
-    _isRunning = false;
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant Marquee oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.hasFocus != oldWidget.hasFocus) {
+    if (widget.hasFocus != oldWidget.hasFocus && _canScroll) {
       if (widget.hasFocus) {
-        _isRunning = true;
         _scroll();
       } else {
-        _isRunning = false;
         _resetScrollPosition();
       }
     }
   }
 
-  Future<bool> _scroll() async {
-    await _wait(1);
+  Future<void> _scroll() async {
+    if (!_scrollController.hasClients) return;
 
-    switch (widget.behavior) {
-      case MarqueeBehavior.scroll:
-        await _animateScroll();
-        break;
-      case MarqueeBehavior.alternate:
-        await _animateAlternate();
-        break;
-      case MarqueeBehavior.slide:
-        await _animateSlide();
-        break;
-    }
+    setState(() {
+      _isRunning = true;
+    });
 
-    return widget.hasFocus;
+    _wait(1, () async {
+      switch (widget.behavior) {
+        case MarqueeBehavior.scroll:
+          await _animateScroll();
+          break;
+        case MarqueeBehavior.alternate:
+          await _animateAlternate();
+          break;
+        case MarqueeBehavior.slide:
+          await _animateSlide();
+          break;
+      }
+    });
   }
 
   Future<void> _animateScroll() async {
     if (_scrollController.hasClients) {
       // Check the text or widget is overflow
       final maxExtent = _scrollController.position.maxScrollExtent;
-      if (maxExtent > 0.1) {
+      if (maxExtent > 0.1 && maxExtent.isFinite) {
         // if overflow, use infinite scrolling
         // else, don't scroll
         setState(() {
@@ -123,7 +134,9 @@ class _MarqueeState extends State<Marquee> {
         });
       }
 
-      while (_isRunning && itemCount == null) {
+      while (_canScroll && _isRunning && itemCount == null) {
+        if (!_isRunning) break; // Exit if scrolling is no longer needed
+
         if (_scrollController.hasClients) {
           _position += widget.velocity;
 
@@ -136,29 +149,39 @@ class _MarqueeState extends State<Marquee> {
             curve: Curves.linear,
           );
         }
+
+        // Check again if _isRunning changed during animation
+        if (!_isRunning) break;
       }
     }
   }
 
   Future<void> _animateAlternate() async {
     // Sperate Future.delayed and scroll controlls to prevent bugs.
-    while (_isRunning) {
+    while (_canScroll && _isRunning) {
+      if (!_isRunning) break;
+
       // forward
       await _animateTo(true);
-      await _wait(2);
-      // backward
+
       await _animateTo(false);
-      await _wait(1);
+
+      // backward
+
+      if (!_isRunning) break;
     }
   }
 
   Future<void> _animateSlide() async {
     // just scroll once.
     await _animateTo(true);
+    setState(() {
+      _isRunning = false;
+    });
   }
 
   Future<void> _animateTo(bool forward) async {
-    if (_scrollController.hasClients && _isRunning) {
+    if (_scrollController.hasClients && _canScroll && _isRunning) {
       // Check the text or widget is overflow
       final maxExtent = _scrollController.position.maxScrollExtent;
       final int duration =
@@ -176,14 +199,21 @@ class _MarqueeState extends State<Marquee> {
   }
 
   // wait before start scrolling with multiple times.
-  Future<void> _wait(int multiple) async {
-    await Future<void>.delayed(
-        Duration(milliseconds: widget.startAfter * multiple));
+  // Use [Timer] to avoid infinite loop bugs when using [Future.delayed].
+  void _wait(int multiple, VoidCallback callback) {
+    _timer = Timer(
+      Duration(milliseconds: widget.startAfter * multiple),
+      () {
+        callback();
+      },
+    );
   }
 
   void _resetScrollPosition() {
     setState(() {
-      // [MarqueeBehavior.scroll]
+      _timer?.cancel();
+      itemCount = widget.items.length;
+      _isRunning = false;
       _position = 0.0;
       _scrollController.jumpTo(0.0);
     });

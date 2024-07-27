@@ -62,7 +62,7 @@ class DioClient extends _$DioClient {
     state = dio;
   }
 
-  void singOut() {
-    state = getBaseDio();
+  void signOut() {
+    state = init();
   }
 }

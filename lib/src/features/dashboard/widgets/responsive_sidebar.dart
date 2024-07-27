@@ -9,6 +9,9 @@ import '../controller/dashboard_controller.dart';
 import './responsive_sidebar_menu.dart';
 import './responsive_user_button.dart';
 
+// TODO : CHECK
+import '../../auth/controller/auth_controller.dart';
+
 // typedef: SidebarItem to create menu items.
 typedef SidebarItem = (IconData, String, AppRoute);
 
@@ -87,9 +90,10 @@ class ResponsiveSidebar extends HookConsumerWidget {
             .changeScreen(context, AppRoute.auth);
       },
       onPressedUserProfile: () {
-        ref
-            .read(dashboardControllerProvider.notifier)
-            .changeScreen(context, AppRoute.user);
+        ref.read(authControllerProvider.notifier).signOut();
+        // ref
+        //     .read(dashboardControllerProvider.notifier)
+        //     .changeScreen(context, AppRoute.user);
       },
     );
 
