@@ -77,7 +77,7 @@ class ResponsiveUserButton extends ConsumerWidget {
         ),
       ),
       // nickname
-      expandedWidget: CenteredText(text: user.nickname),
+      expandedWidget: CenteredText(text: user.nickname ?? 'error'),
     );
   }
 }

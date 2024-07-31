@@ -42,7 +42,10 @@ class CategoryHeader extends StatelessWidget {
             child: SizedBox(
               width: infoSize.width,
               height: infoSize.height,
-              child: CategoryInfo(category: category),
+              child: CategoryInfo(
+                category: category,
+                titleFontSize: 20.0,
+              ),
             ),
           ),
           // Following

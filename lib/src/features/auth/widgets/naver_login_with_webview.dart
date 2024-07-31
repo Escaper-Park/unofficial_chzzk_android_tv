@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:unofficial_chzzk_android_tv/src/features/dashboard/controller/dashboard_controller.dart';
 
 import '../../../common/constants/api.dart';
 import '../../../common/constants/dimensions.dart';
@@ -12,8 +11,10 @@ import '../../../utils/virtual_keyboard/controller/virtual_keyboard_controller.d
 import '../../../utils/virtual_keyboard/widgets/virtual_keyboard_input_field.dart';
 import '../../../utils/virtual_keyboard/widgets/virtual_keyboard_layout.dart';
 
+import '../../dashboard/controller/dashboard_controller.dart';
+import '../../user/controller/user_controller.dart';
+import '../../user/model/user.dart';
 import '../controller/auth_controller.dart';
-import '../model/auth.dart';
 import './naver_login_scripts.dart';
 
 enum LoginStep {
@@ -124,14 +125,16 @@ class _NaverLoginWithWebviewState extends ConsumerState<NaverLoginWithWebview> {
             source: NaverLoginJavaScriptSource().toggleKeepLogin());
 
         // Check login state.
-        final Auth? auth = await ref
-            .read(authControllerProvider.notifier)
-            .getAuthWithCookies();
+        await ref.read(authControllerProvider.notifier).getAuthWithCookies();
+
+        final User? user =
+            await ref.read(userControllerProvider.notifier).fetchUser();
 
         ref.invalidate(authControllerProvider);
+        ref.invalidate(userControllerProvider);
 
         // Change Screen
-        if (context.mounted && auth != null) {
+        if (context.mounted && user != null) {
           ref
               .read(dashboardControllerProvider.notifier)
               .changeScreen(context, AppRoute.home);

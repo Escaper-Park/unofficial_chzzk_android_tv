@@ -8,8 +8,9 @@ import '../../../common/widgets/dpad_widgets.dart';
 import '../../vod/model/vod.dart';
 
 import './controller/vod_player_controller.dart';
-import './widgets/controls/vod_stream_main_controls.dart';
+import './widgets/controls/main/vod_stream_main_controls.dart';
 import './widgets/status/vod_stream_info.dart';
+import 'widgets/controls/channel/vod_stream_channel_data_controls.dart';
 
 class VodControlsOverlay extends HookConsumerWidget {
   const VodControlsOverlay({
@@ -24,9 +25,34 @@ class VodControlsOverlay extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videoFocusNode = useFocusNode();
-    final controlsFSN = useFocusScopeNode();
+    final mainControlsFSN = useFocusScopeNode();
+    final channelDataControlsFSN = useFocusScopeNode();
 
     final vodPlayerController = ref.watch(vodPlayerControllerProvider);
+
+    final Widget currentControls = switch (vodPlayerController) {
+      VodOverlayType.none => const SizedBox.shrink(),
+      VodOverlayType.main => FocusScope(
+          node: mainControlsFSN,
+          child: Stack(
+            children: [
+              VodStreamInfo(vod: vod),
+              VodStreamMainControls(
+                controller: controller,
+                videoFocusNode: videoFocusNode,
+                vod: vod,
+              ),
+            ],
+          ),
+        ),
+      VodOverlayType.channelData => FocusScope(
+          node: channelDataControlsFSN,
+          child: VodStreamChannelDataControls(
+            videoFocusNode: videoFocusNode,
+            vod: vod,
+          ),
+        ),
+    };
 
     return PopScope(
       canPop: false,
@@ -43,46 +69,38 @@ class VodControlsOverlay extends HookConsumerWidget {
               );
         }
       },
-      child: DpadActionWidget(
-        autofocus: true,
-        focusNode: videoFocusNode,
-        useFocusedBorder: false,
-        useKeyRepeatEvent: false,
-        borderRadius: 0.0,
-        dpadActionCallbacks: {
-          DpadAction.select: () {
-            videoFocusNode.unfocus();
-            controlsFSN.requestFocus();
+      child: Stack(
+        children: [
+          // Dpad Controller
+          DpadActionWidget(
+            autofocus: true,
+            focusNode: videoFocusNode,
+            useFocusedBorder: false,
+            useKeyRepeatEvent: false,
+            borderRadius: 0.0,
+            dpadActionCallbacks: {
+              DpadAction.select: () {
+                videoFocusNode.unfocus();
+                mainControlsFSN.requestFocus();
 
-            ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
-                  overlayType: VodOverlayType.main,
-                  videoFocusNode: videoFocusNode,
-                );
-          },
-          DpadAction.arrowUp: () {
-            // TODO : show channel vod list
-          },
-          DpadAction.arrowDown: () {
-            // TODO : show channel data
-          },
-        },
-        child: switch (vodPlayerController) {
-          VodOverlayType.none => const SizedBox.shrink(),
-          VodOverlayType.main => FocusScope(
-              node: controlsFSN,
-              child: Stack(
-                children: [
-                  VodStreamInfo(vod: vod),
-                  VodStreamMainControls(
-                    controller: controller,
-                    videoFocusNode: videoFocusNode,
-                    vod: vod,
-                  ),
-                ],
-              ),
-            ),
-          VodOverlayType.channelData => const SizedBox.shrink(),
-        },
+                ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+                      overlayType: VodOverlayType.main,
+                      videoFocusNode: videoFocusNode,
+                    );
+              },
+              DpadAction.arrowUp: () {
+                videoFocusNode.unfocus();
+                ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+                      overlayType: VodOverlayType.channelData,
+                      videoFocusNode: videoFocusNode,
+                    );
+              },
+            },
+            child: const SizedBox.shrink(),
+          ),
+          // Controls
+          currentControls,
+        ],
       ),
     );
   }

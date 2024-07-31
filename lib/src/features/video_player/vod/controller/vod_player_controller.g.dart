@@ -7,7 +7,7 @@ part of 'vod_player_controller.dart';
 // **************************************************************************
 
 String _$vodPlayerControllerHash() =>
-    r'843731cf5dbec648557961c63fcfab133f003301';
+    r'8d127d31ed6ee83da290ec5030bf0597b0b263bf';
 
 /// See also [VodPlayerController].
 @ProviderFor(VodPlayerController)
@@ -24,7 +24,7 @@ final vodPlayerControllerProvider =
 
 typedef _$VodPlayerController = AutoDisposeNotifier<VodOverlayType>;
 String _$vodPlayerOverlayTimerHash() =>
-    r'263658ab535bf4c0cd3a9a253cff86e3107b859e';
+    r'55e7349d5384267a0da20b9cdf80caae36741df5';
 
 /// Set this true to ensure that the existing state is maintained wherever this timer is called.
 ///

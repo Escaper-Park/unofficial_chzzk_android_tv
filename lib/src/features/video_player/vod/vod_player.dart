@@ -26,7 +26,7 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
   VideoPlayerController? _videoPlayerController;
 
   // Show current state.
-  String msg = '라이브 로딩 중...';
+  String msg = '동영상 로딩 중...';
 
   @override
   void initState() {

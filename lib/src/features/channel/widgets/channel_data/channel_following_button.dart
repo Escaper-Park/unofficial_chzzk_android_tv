@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../common/constants/dimensions.dart';
 import '../../../../common/widgets/dpad_widgets.dart';
 import '../../../following/controller/following_controller.dart';
 import '../../../following/model/following.dart';
@@ -13,15 +14,26 @@ class ChannelFollowingButton extends HookConsumerWidget {
   /// Following button of a channel.
   const ChannelFollowingButton({
     super.key,
+    this.alignment = Alignment.topRight,
+    this.buttonHeight = Dimensions.followingButtonHeight,
+    this.buttonWidth = Dimensions.followingButtonWidth,
     required this.channel,
     required this.followingButtonFSN,
-    required this.channelListFSN,
+    this.channelListFSN,
     required this.belowFSN,
   });
 
+  /// position of button.
+  final Alignment alignment;
+
+  /// Container height.
+  final double buttonHeight;
+
+  /// Container width.
+  final double buttonWidth;
   final Channel channel;
   final FocusScopeNode followingButtonFSN;
-  final FocusScopeNode channelListFSN;
+  final FocusScopeNode? channelListFSN;
   final FocusScopeNode belowFSN;
 
   @override
@@ -42,8 +54,8 @@ class ChannelFollowingButton extends HookConsumerWidget {
         if (value) focusNode.requestFocus();
       },
       child: Align(
-        alignment: Alignment.topRight,
-        child: FollowingButton<Following>(
+        alignment: alignment,
+        child: FollowingButtonWithAsyncValue<Following>(
           focusNode: focusNode,
           asyncValue: asyncFollowingChannels,
           checkIsFollowing: (following) =>

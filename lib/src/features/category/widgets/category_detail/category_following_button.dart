@@ -39,7 +39,7 @@ class CategoryFollowingButton extends HookConsumerWidget {
       onFocusChange: (value) {
         if (value) focusNode.requestFocus();
       },
-      child: FollowingButton<Category>(
+      child: FollowingButtonWithAsyncValue<Category>(
         focusNode: focusNode,
         asyncValue: asyncFollowingCategories,
         checkIsFollowing: (following) =>

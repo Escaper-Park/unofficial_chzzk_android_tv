@@ -31,7 +31,7 @@ class VodContainer extends StatelessWidget {
     return RoundedContainer(
       backgroundColor: AppColors.greyContainerColor,
       borderRadius: 12.0,
-      width: Dimensions.videoThumbnailSize.width,
+      width: Dimensions.videoThumbnailWidth,
       child: Consumer(
         builder: (context, ref, child) {
           return FocusedOutlinedButton(
@@ -62,8 +62,8 @@ class VodContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: Dimensions.videoThumbnailSize.width,
-                        height: Dimensions.videoThumbnailSize.height,
+                        width: Dimensions.videoThumbnailWidth,
+                        height: Dimensions.videoThumbnailHeight,
                         child: Stack(
                           children: [
                             VodThumbnail(vod: vod),

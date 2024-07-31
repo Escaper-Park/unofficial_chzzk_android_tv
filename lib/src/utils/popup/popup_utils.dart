@@ -22,6 +22,7 @@ class PopupUtils {
     String confirmText = '확인',
     String cancelText = '취소',
     VoidCallback? confirmCallback,
+    VoidCallback? cancelFallback,
   }) async {
     showDialog(
       context: context,
@@ -62,16 +63,17 @@ class PopupUtils {
             DialogButtonType.doubleButton => [
                 // Cancel
                 PopupActionButton(
-                  autofocus: false,
+                  autofocus: true,
                   actionText: cancelText,
                   onPressed: () {
+                    if (cancelFallback != null) cancelFallback();
                     // Escape from popup dialog
                     if (dialogContext.mounted) Navigator.pop(dialogContext);
                   },
                 ),
                 // Confirm
                 PopupActionButton(
-                  autofocus: true,
+                  autofocus: false,
                   actionText: confirmText,
                   onPressed: () {
                     // Do action

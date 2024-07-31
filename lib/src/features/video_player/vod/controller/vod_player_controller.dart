@@ -29,6 +29,7 @@ class VodPlayerController extends _$VodPlayerController {
   }
 
   void changeOverlay({
+    int seconds = 10, // TODO : Change
     required VodOverlayType overlayType,
 
     /// Request focus to video when the timer ends.
@@ -43,15 +44,17 @@ class VodPlayerController extends _$VodPlayerController {
     // Show overlay
     else {
       ref.read(vodPlayerOverlayTimerProvider.notifier).startTimer(
-        startCallback: () {
-          setState(overlayType);
-        },
-        endCallback: () {
-          // hide overlay and request focus to video
-          setState(VodOverlayType.none);
-          videoFocusNode.requestFocus();
-        },
-      );
+            seconds: seconds,
+            startCallback: () {
+              videoFocusNode.unfocus();
+              setState(overlayType);
+            },
+            endCallback: () {
+              // hide overlay and request focus to video
+              setState(VodOverlayType.none);
+              videoFocusNode.requestFocus();
+            },
+          );
     }
   }
 

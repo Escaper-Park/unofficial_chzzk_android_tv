@@ -7,10 +7,11 @@ part of 'user.dart';
 // **************************************************************************
 
 _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
-      userIdHash: json['userIdHash'] as String,
-      nickname: json['nickname'] as String,
+      userIdHash: json['userIdHash'] as String?,
+      nickname: json['nickname'] as String?,
       profileImageUrl: json['profileImageUrl'] as String?,
-      hasProfile: json['hasProfile'] as bool,
+      hasProfile: json['hasProfile'] as bool?,
+      loggedIn: json['loggedIn'] as bool?,
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'nickname': instance.nickname,
       'profileImageUrl': instance.profileImageUrl,
       'hasProfile': instance.hasProfile,
+      'loggedIn': instance.loggedIn,
     };

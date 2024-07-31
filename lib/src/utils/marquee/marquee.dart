@@ -53,6 +53,7 @@ class _MarqueeState extends State<Marquee> {
   final ScrollController _scrollController = ScrollController();
   Timer? _timer;
 
+  // If scroll's maxExtent is over 0.0 and isFinite
   bool _canScroll = false;
 
   // Set this true if widget's focus state updated.
@@ -82,31 +83,35 @@ class _MarqueeState extends State<Marquee> {
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _scrollController.dispose();
+    _resetScrollPosition();
+    // _scrollController.dispose();
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant Marquee oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.hasFocus != oldWidget.hasFocus && _canScroll) {
-      if (widget.hasFocus) {
-        _scroll();
-      } else {
-        _resetScrollPosition();
-      }
+
+    if (widget.hasFocus) {
+      _scroll();
+    } else {
+      _resetScrollPosition();
     }
   }
 
   Future<void> _scroll() async {
     if (!_scrollController.hasClients) return;
 
-    setState(() {
-      _isRunning = true;
-    });
+    if (context.mounted) {
+      setState(() {
+        _isRunning = true;
+      });
+    }
 
+    // Wait 1 sec and Do scroll
     _wait(1, () async {
+      if (!context.mounted) return;
+
       switch (widget.behavior) {
         case MarqueeBehavior.scroll:
           await _animateScroll();
@@ -128,10 +133,12 @@ class _MarqueeState extends State<Marquee> {
       if (maxExtent > 0.1 && maxExtent.isFinite) {
         // if overflow, use infinite scrolling
         // else, don't scroll
-        setState(() {
-          // 'itemCount = null' means using infinite scrolling.
-          itemCount = null;
-        });
+        if (context.mounted) {
+          setState(() {
+            // 'itemCount = null' means using infinite scrolling.
+            itemCount = null;
+          });
+        }
       }
 
       while (_canScroll && _isRunning && itemCount == null) {
@@ -166,8 +173,6 @@ class _MarqueeState extends State<Marquee> {
 
       await _animateTo(false);
 
-      // backward
-
       if (!_isRunning) break;
     }
   }
@@ -175,9 +180,12 @@ class _MarqueeState extends State<Marquee> {
   Future<void> _animateSlide() async {
     // just scroll once.
     await _animateTo(true);
-    setState(() {
-      _isRunning = false;
-    });
+    if (context.mounted) {
+      setState(() {
+        _isRunning = false;
+        _timer?.cancel();
+      });
+    }
   }
 
   Future<void> _animateTo(bool forward) async {
@@ -210,13 +218,16 @@ class _MarqueeState extends State<Marquee> {
   }
 
   void _resetScrollPosition() {
-    setState(() {
+    if (context.mounted) {
       _timer?.cancel();
-      itemCount = widget.items.length;
-      _isRunning = false;
-      _position = 0.0;
-      _scrollController.jumpTo(0.0);
-    });
+
+      setState(() {
+        itemCount = widget.items.length;
+        _isRunning = false;
+        _position = 0.0;
+        _scrollController.jumpTo(0.0);
+      });
+    }
   }
 
   @override

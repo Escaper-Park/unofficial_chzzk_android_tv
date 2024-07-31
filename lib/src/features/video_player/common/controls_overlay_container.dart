@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/constants/styles.dart';
+
 class ControlsOverlayContainer extends StatelessWidget {
   /// Top parent Container for overlays.
   ///
   /// Wrap this to [Stack].
   const ControlsOverlayContainer({
     super.key,
-    required this.alignment,
-    required this.width,
-    required this.height,
-    required this.backgroundColor,
-    required this.backgroundOpacity,
-    required this.margin,
-    required this.padding,
+    this.alignment = Alignment.bottomCenter,
+    this.width,
+    this.height,
+    this.margin,
+    this.padding,
+    this.backgroundColor = AppColors.greyContainerColor,
+    this.backgroundOpacity = 0.7,
+    this.borderRadius = 0.0,
+    this.useTopBorder = false,
+    this.useBottomBorder = false,
     required this.child,
   });
 
@@ -20,10 +25,16 @@ class ControlsOverlayContainer extends StatelessWidget {
   final Alignment alignment;
 
   /// Container width.
-  final double width;
+  final double? width;
 
   /// Container height.
-  final double height;
+  final double? height;
+
+  /// Empty space outside container.
+  final EdgeInsetsGeometry? margin;
+
+  /// Empty space inside container.
+  final EdgeInsetsGeometry? padding;
 
   /// Container background color.
   final Color backgroundColor;
@@ -31,11 +42,12 @@ class ControlsOverlayContainer extends StatelessWidget {
   /// Opacity of background color.
   final double backgroundOpacity;
 
-  /// Empty space outside container.
-  final EdgeInsetsGeometry margin;
+  /// If true, top borders are rounded.
+  final bool useTopBorder;
 
-  /// Empty space inside container.
-  final EdgeInsetsGeometry padding;
+  /// If true, bottom borders are rounded.
+  final bool useBottomBorder;
+  final double borderRadius;
 
   final Widget child;
 
@@ -48,7 +60,14 @@ class ControlsOverlayContainer extends StatelessWidget {
         height: height,
         margin: margin,
         padding: padding,
-        color: backgroundColor.withOpacity(backgroundOpacity),
+        decoration: BoxDecoration(
+          color: backgroundColor.withOpacity(backgroundOpacity),
+          borderRadius: BorderRadius.vertical(
+            top: useTopBorder ? Radius.circular(borderRadius) : Radius.zero,
+            bottom:
+                useBottomBorder ? Radius.circular(borderRadius) : Radius.zero,
+          ),
+        ),
         child: child,
       ),
     );

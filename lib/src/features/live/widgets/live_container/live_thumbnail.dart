@@ -9,9 +9,16 @@ class LiveThumbnail extends StatelessWidget {
   /// Thumbnail of live streaming updated every 5 mins.
   ///
   /// If user is unauthenticated, show the ageRestriction mark.
-  const LiveThumbnail({super.key, required this.liveInfo});
+  const LiveThumbnail({
+    super.key,
+    required this.liveInfo,
+    this.imageWidth = Dimensions.videoThumbnailWidth,
+    this.imageHeight = Dimensions.videoThumbnailHeight,
+  });
 
   final LiveInfo liveInfo;
+  final double imageWidth;
+  final double imageHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +26,6 @@ class LiveThumbnail extends StatelessWidget {
         (liveInfo.defaultThumbnailImageUrl?.isNotEmpty ?? false)
             ? liveInfo.defaultThumbnailImageUrl
             : liveInfo.liveImageUrl;
-
-    final double imageWidth = Dimensions.videoThumbnailSize.width;
-    final double imageHeight = Dimensions.videoThumbnailSize.height;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0),

@@ -11,7 +11,7 @@ class ChannelNameWithVerifiedMark extends StatelessWidget {
     super.key,
     required this.channel,
     this.fontColor = AppColors.greyColor,
-    this.fontSize = 13.0,
+    this.fontSize = 12.0,
     this.fontWeight = FontWeight.w700,
   });
 

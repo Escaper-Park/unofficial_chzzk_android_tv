@@ -147,7 +147,9 @@ class DpadActionWidget extends HookWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
                 border: Border.all(
                   width: 1.5,
-                  color: AppColors.chzzkColor,
+                  color: focusState.value
+                      ? AppColors.chzzkColor
+                      : Colors.transparent,
                 ),
               ),
               child: child,
@@ -196,6 +198,7 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
     this.belowFSN,
     this.useExceptionFallbackWidget = true,
     this.fallback,
+    this.scrollPadding = 20.0,
     required this.itemBuilder,
   }) : assert(
           !(useExceptionFallbackWidget && fallback == null),
@@ -231,6 +234,9 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
   /// Fallback actions for exception handling
   final VoidCallback? fallback;
 
+  /// Scroll Padding to show a former item.
+  final double scrollPadding;
+
   /// ItemBuilder that has own focusNode.
   final Widget Function(int index, FocusNode focusNode, T object) itemBuilder;
 
@@ -265,8 +271,8 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
             final focusNode = focusNodes[i];
             focusNode.addListener(() {
               if (focusNode.hasPrimaryFocus) {
-                final movePosition =
-                    i * (containerWidth + 10.0) - 20.0; // -20.0 padding.
+                final movePosition = i * (containerWidth + 10.0) -
+                    scrollPadding; // -20.0 padding.
 
                 final maxScrollExtent =
                     scrollController.position.maxScrollExtent;

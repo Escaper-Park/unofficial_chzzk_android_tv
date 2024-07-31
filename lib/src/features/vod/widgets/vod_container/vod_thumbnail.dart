@@ -6,15 +6,19 @@ import '../../../../common/widgets/optimized_image.dart';
 import '../../model/vod.dart';
 
 class VodThumbnail extends StatelessWidget {
-  const VodThumbnail({super.key, required this.vod});
+  const VodThumbnail({
+    super.key,
+    required this.vod,
+    this.imageHeight = Dimensions.videoThumbnailHeight,
+    this.imageWidth = Dimensions.videoThumbnailWidth,
+  });
 
   final Vod vod;
+  final double imageHeight;
+  final double imageWidth;
 
   @override
   Widget build(BuildContext context) {
-    final imageWidth = Dimensions.videoThumbnailSize.width;
-    final imageHeight = Dimensions.videoThumbnailSize.height;
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0),
       child: vod.thumbnailImageUrl != null

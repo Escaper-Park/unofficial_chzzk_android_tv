@@ -18,10 +18,13 @@ class Dimensions {
 
   // Following
   static const double followingListWidth = 220.0;
-  static const Size followingButtonSize = Size(100.0, 40.0);
+  static const double followingButtonHeight = 40.0;
+  static const double followingButtonWidth = 100.0;
 
   // Video
-  static const Size videoThumbnailSize = Size(256.0, 144.0);
+  static const double videoThumbnailWidth = 256.0;
+  static const double videoThumbnailHeight = 144.0;
+
   static const double videoContainerWidth = 256.0;
   static const double videoContainerHeight = 220.0;
 
@@ -33,5 +36,14 @@ class Dimensions {
   static const Size categoryInfoSize = Size(200.0, 120.0);
 
   // Vod streaming
-  static const double vodStreamInfoContainerHeight = 120.0;
+  static const double vodStreamInfoContainerHeight = 95.0;
+  static const double vodStreamMainControlsHeight = 120.0;
+  static const double playbackTimeIndicatorWidth = 140.0;
+
+  static const double vodStreamChannelDataControlsHeight = 180.0;
+  static const double vodStreamFollowingButtonContainerHeight = 40.0;
+  static const double vodStreamVodContainerHeight = 130.0;
+
+  static const double vodstreamVodThumbnailHeight = 126.0;
+  static const double vodstreamVodThumbnailWidth = 224.0;
 }

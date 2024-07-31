@@ -4,7 +4,7 @@ import '../../../../common/constants/styles.dart';
 import '../../../../common/widgets/circle_avatar_profile_image.dart';
 import '../../../../common/widgets/rounded_container.dart';
 
-import '../../../../utils/marquee/marquee.dart';
+// import '../../../../utils/marquee/marquee.dart';
 import '../../../channel/model/channel.dart';
 import '../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
 
@@ -88,20 +88,29 @@ class LiveTitle extends StatelessWidget {
     // remove new line
     final newlineRemovedTitle = liveTitle.replaceAll('\n', ' ');
 
-    return Marquee(
-      behavior: MarqueeBehavior.scroll,
-      hasFocus: hasFocus,
-      items: [
-        Text(
-          newlineRemovedTitle,
-          style: const TextStyle(
-            fontSize: 13.0,
-            // overflow: TextOverflow.ellipsis,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
+    // return Marquee(
+    //   behavior: MarqueeBehavior.scroll,
+    //   hasFocus: hasFocus,
+    //   items: [
+    //     Text(
+    //       newlineRemovedTitle,
+    //       style: const TextStyle(
+    //         fontSize: 13.0,
+    //         // overflow: TextOverflow.ellipsis,
+    //         color: AppColors.whiteColor,
+    //         fontWeight: FontWeight.w600,
+    //       ),
+    //     ),
+    //   ],
+    // );
+    return Text(
+      newlineRemovedTitle,
+      style: const TextStyle(
+        fontSize: 13.0,
+        overflow: TextOverflow.ellipsis,
+        color: AppColors.whiteColor,
+        fontWeight: FontWeight.w600,
+      ),
     );
   }
 }
@@ -127,10 +136,19 @@ class LiveCategoryWithTags extends StatelessWidget {
       if (tags != null && tags.isNotEmpty) LiveTags(tags: tags),
     ];
 
-    return Marquee(
-      behavior: MarqueeBehavior.alternate,
-      hasFocus: hasFocus,
-      items: items,
+    // return Marquee(
+    //   behavior: MarqueeBehavior.alternate,
+    //   velocity: 15,
+    //   hasFocus: hasFocus,
+    //   items: items,
+    // );
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: items,
+      ),
     );
   }
 }

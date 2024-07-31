@@ -21,10 +21,12 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   /// UID for chat service
-  String get userIdHash => throw _privateConstructorUsedError;
-  String get nickname => throw _privateConstructorUsedError;
+  String? get userIdHash => throw _privateConstructorUsedError;
+  String? get nickname => throw _privateConstructorUsedError;
   String? get profileImageUrl => throw _privateConstructorUsedError;
-  bool get hasProfile => throw _privateConstructorUsedError;
+  bool? get hasProfile =>
+      throw _privateConstructorUsedError; // required bool verifiedMark,
+  bool? get loggedIn => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,10 +39,11 @@ abstract class $UserCopyWith<$Res> {
       _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {String userIdHash,
-      String nickname,
+      {String? userIdHash,
+      String? nickname,
       String? profileImageUrl,
-      bool hasProfile});
+      bool? hasProfile,
+      bool? loggedIn});
 }
 
 /// @nodoc
@@ -56,28 +59,33 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userIdHash = null,
-    Object? nickname = null,
+    Object? userIdHash = freezed,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
-    Object? hasProfile = null,
+    Object? hasProfile = freezed,
+    Object? loggedIn = freezed,
   }) {
     return _then(_value.copyWith(
-      userIdHash: null == userIdHash
+      userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      nickname: null == nickname
+              as String?,
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      hasProfile: null == hasProfile
+      hasProfile: freezed == hasProfile
           ? _value.hasProfile
           : hasProfile // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
+      loggedIn: freezed == loggedIn
+          ? _value.loggedIn
+          : loggedIn // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -90,10 +98,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String userIdHash,
-      String nickname,
+      {String? userIdHash,
+      String? nickname,
       String? profileImageUrl,
-      bool hasProfile});
+      bool? hasProfile,
+      bool? loggedIn});
 }
 
 /// @nodoc
@@ -106,28 +115,33 @@ class __$$UserImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userIdHash = null,
-    Object? nickname = null,
+    Object? userIdHash = freezed,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
-    Object? hasProfile = null,
+    Object? hasProfile = freezed,
+    Object? loggedIn = freezed,
   }) {
     return _then(_$UserImpl(
-      userIdHash: null == userIdHash
+      userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      nickname: null == nickname
+              as String?,
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      hasProfile: null == hasProfile
+      hasProfile: freezed == hasProfile
           ? _value.hasProfile
           : hasProfile // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
+      loggedIn: freezed == loggedIn
+          ? _value.loggedIn
+          : loggedIn // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -139,24 +153,28 @@ class _$UserImpl implements _User {
       {required this.userIdHash,
       required this.nickname,
       required this.profileImageUrl,
-      required this.hasProfile});
+      required this.hasProfile,
+      required this.loggedIn});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
 
   /// UID for chat service
   @override
-  final String userIdHash;
+  final String? userIdHash;
   @override
-  final String nickname;
+  final String? nickname;
   @override
   final String? profileImageUrl;
   @override
-  final bool hasProfile;
+  final bool? hasProfile;
+// required bool verifiedMark,
+  @override
+  final bool? loggedIn;
 
   @override
   String toString() {
-    return 'User(userIdHash: $userIdHash, nickname: $nickname, profileImageUrl: $profileImageUrl, hasProfile: $hasProfile)';
+    return 'User(userIdHash: $userIdHash, nickname: $nickname, profileImageUrl: $profileImageUrl, hasProfile: $hasProfile, loggedIn: $loggedIn)';
   }
 
   @override
@@ -171,13 +189,15 @@ class _$UserImpl implements _User {
             (identical(other.profileImageUrl, profileImageUrl) ||
                 other.profileImageUrl == profileImageUrl) &&
             (identical(other.hasProfile, hasProfile) ||
-                other.hasProfile == hasProfile));
+                other.hasProfile == hasProfile) &&
+            (identical(other.loggedIn, loggedIn) ||
+                other.loggedIn == loggedIn));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, userIdHash, nickname, profileImageUrl, hasProfile);
+      runtimeType, userIdHash, nickname, profileImageUrl, hasProfile, loggedIn);
 
   @JsonKey(ignore: true)
   @override
@@ -195,23 +215,26 @@ class _$UserImpl implements _User {
 
 abstract class _User implements User {
   const factory _User(
-      {required final String userIdHash,
-      required final String nickname,
+      {required final String? userIdHash,
+      required final String? nickname,
       required final String? profileImageUrl,
-      required final bool hasProfile}) = _$UserImpl;
+      required final bool? hasProfile,
+      required final bool? loggedIn}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
 
   /// UID for chat service
-  String get userIdHash;
+  String? get userIdHash;
   @override
-  String get nickname;
+  String? get nickname;
   @override
   String? get profileImageUrl;
   @override
-  bool get hasProfile;
+  bool? get hasProfile;
+  @override // required bool verifiedMark,
+  bool? get loggedIn;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

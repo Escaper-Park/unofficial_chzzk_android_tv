@@ -3,21 +3,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../../common/constants/styles.dart';
-import '../../../../../common/widgets/rounded_container.dart';
-import '../../../../../utils/formatter/formatter.dart';
+import '../../../../../../common/constants/dimensions.dart';
+import '../../../../../../common/constants/styles.dart';
+import '../../../../../../common/widgets/rounded_container.dart';
+import '../../../../../../utils/formatter/formatter.dart';
 
-class VodTimeIndicator extends StatefulWidget {
+class VodPlaybackTimeIndicator extends StatefulWidget {
   /// Show the current playback time and total playback time of the VOD.
-  const VodTimeIndicator({super.key, required this.controller});
+  const VodPlaybackTimeIndicator({super.key, required this.controller});
 
   final VideoPlayerController controller;
 
   @override
-  State<VodTimeIndicator> createState() => _VodTimeIndicatorState();
+  State<VodPlaybackTimeIndicator> createState() =>
+      _VodPlaybackTimeIndicatorState();
 }
 
-class _VodTimeIndicatorState extends State<VodTimeIndicator> {
+class _VodPlaybackTimeIndicatorState extends State<VodPlaybackTimeIndicator> {
   Timer? timer;
   String _currentTimeIndicator = '';
 
@@ -53,13 +55,15 @@ class _VodTimeIndicatorState extends State<VodTimeIndicator> {
     final entireTimeIndicator = entireTime.paddedDuration();
 
     return RoundedContainer(
+      width: Dimensions.playbackTimeIndicatorWidth,
       backgroundColor: AppColors.greyContainerColor.withOpacity(0.85),
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
       child: Text(
         '$_currentTimeIndicator / $entireTimeIndicator',
+        textAlign: TextAlign.center,
         style: const TextStyle(
-          fontSize: 14.0,
+          fontSize: 12.0,
           color: AppColors.whiteColor,
         ),
       ),

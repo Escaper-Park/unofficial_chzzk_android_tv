@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../common/constants/styles.dart';
 import '../../../common/widgets/dpad_widgets.dart';
 
 class DpadSlider extends HookWidget {
@@ -13,14 +14,13 @@ class DpadSlider extends HookWidget {
     required this.controller,
     required this.sliderFSN,
     this.dpadKeyFocusScopeNodeMap,
-    required this.videoFocusNode,
     required this.minValue,
     required this.maxValue,
     required this.initialValue,
+    this.intervalScalingFactor = 0.01,
+    this.updateSliderEverySecond = false,
     required this.sliderMoveCallback,
     required this.resetTimerCallback,
-    required this.intervalScalingFactor,
-    this.updateSliderEverySecond = false,
   });
 
   final VideoPlayerController controller;
@@ -30,9 +30,6 @@ class DpadSlider extends HookWidget {
 
   /// Playback control's FocusScopeNode.
   final Map<DpadAction, FocusScopeNode?>? dpadKeyFocusScopeNodeMap;
-
-  /// Request focus to video when the controls over.
-  final FocusNode videoFocusNode;
 
   final double minValue;
   final double maxValue;
@@ -98,7 +95,7 @@ class DpadSlider extends HookWidget {
             resetTimerCallback();
           },
           DpadAction.arrowRight: () {
-            position.value + interval < minValue
+            position.value + interval < maxValue
                 ? position.value += interval
                 : position.value = maxValue;
 
@@ -108,7 +105,59 @@ class DpadSlider extends HookWidget {
         },
         child: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Container(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final lineLength = constraints.maxWidth;
+
+              final valuePosition =
+                  ((position.value - minValue) / (maxValue - minValue)) *
+                      lineLength;
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Slider Container
+                  Container(
+                    height: 5.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: AppColors.greyColor,
+                    ),
+                  ),
+                  // Filled
+                  Positioned(
+                    left: 0.0,
+                    top: 0.0,
+                    bottom: 0.0,
+                    right: lineLength - valuePosition,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: 5.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: AppColors.chzzkColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Current Position
+                  Align(
+                    alignment: Alignment(
+                      ((position.value - minValue) / (maxValue - minValue) * 2 -
+                          1),
+                      0.0,
+                    ),
+                    child: const Icon(
+                      Icons.circle,
+                      color: AppColors.chzzkColor,
+                      size: 20.0,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -33,10 +33,13 @@ class VodInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Vod title
-        VodTitle(
-          useMarquee: showChannelName,
-          hasFocus: hasFocus,
-          vodTitle: vod.videoTitle,
+        Expanded(
+          child: VodTitle(
+            // useMarquee: showChannelName,
+            hasFocus: hasFocus,
+            vodTitle: vod.videoTitle,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         const SizedBox(height: 3.0),
         // Channel name
@@ -48,6 +51,7 @@ class VodInfo extends StatelessWidget {
           style: const TextStyle(
             color: AppColors.greyColor,
             fontSize: 11.0,
+            // overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

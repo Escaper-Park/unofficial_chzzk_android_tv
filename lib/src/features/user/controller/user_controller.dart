@@ -22,8 +22,11 @@ class UserController extends _$UserController {
   Future<User?> fetchUser() async {
     final User? user = await _repository.getUser();
 
-    // If login cookies are expired delete all cookies.
-    if (user == null) ref.watch(authRepositoryProvider).deleteCookies();
+    // Error handling
+    if (user == null || user.loggedIn == false) {
+      await ref.watch(authRepositoryProvider).deleteCookies();
+      return null;
+    }
 
     return user;
   }

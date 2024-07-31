@@ -36,7 +36,7 @@ class LiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RoundedContainer(
-      width: Dimensions.videoThumbnailSize.width,
+      width: Dimensions.videoThumbnailWidth,
       backgroundColor: AppColors.greyContainerColor,
       child: Consumer(
         builder: (context, ref, child) {
@@ -80,8 +80,8 @@ class LiveContainer extends StatelessWidget {
                         children: [
                           // Top Side
                           SizedBox(
-                            width: Dimensions.videoThumbnailSize.width,
-                            height: Dimensions.videoThumbnailSize.height,
+                            width: Dimensions.videoThumbnailWidth,
+                            height: Dimensions.videoThumbnailHeight,
                             child: Stack(
                               children: [
                                 // Thumbnail image
