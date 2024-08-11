@@ -13,6 +13,8 @@
         android:label="비공식 Chzzk for Android TV"
         android:banner="@drawable/banner"
         android:name="${applicationName}"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
