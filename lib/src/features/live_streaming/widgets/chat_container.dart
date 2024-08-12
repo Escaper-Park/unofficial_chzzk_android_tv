@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gif/gif.dart';
 
 import '../../../common/constants/styles.dart';
 import '../../../common/widgets/optimized_image.dart';
 import '../../../common/widgets/rounded_container.dart';
 import '../../chat/model/chat.dart';
 
-class ChatContainer extends StatefulWidget {
+class ChatContainer extends StatelessWidget {
   const ChatContainer({
     super.key,
     required this.chat,
@@ -21,62 +20,42 @@ class ChatContainer extends StatefulWidget {
   final double opacity;
 
   @override
-  State<ChatContainer> createState() => _ChatContainerState();
-}
-
-class _ChatContainerState extends State<ChatContainer>
-    with TickerProviderStateMixin {
-  late final GifController controller;
-
-  @override
-  void initState() {
-    controller = GifController(vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final Color nicknameColor = getNicknameColor(widget.chat.nickname);
+    final Color nicknameColor = getNicknameColor(chat.nickname);
     List<InlineSpan> textSpans = [];
 
-    if (widget.chat.emojis == null) {
+    if (chat.emojis == null) {
       textSpans.add(
         TextSpan(
-          text: widget.chat.msg,
+          text: chat.msg,
           style: TextStyle(
-            fontSize: widget.fontSize,
+            fontSize: fontSize,
           ),
         ),
       );
     }
 
-    if (widget.chat.emojis != null) {
-      widget.chat.msg.splitMapJoin(
+    if (chat.emojis != null) {
+      chat.msg.splitMapJoin(
         RegExp(r'\{:([^}]+):\}'),
         onMatch: (match) {
           final String? emojiKey = match.group(1);
           // Emoji
-          if (widget.chat.emojis!.containsKey(emojiKey)) {
-            final imageUrl = widget.chat.emojis![emojiKey]!;
+          if (chat.emojis!.containsKey(emojiKey)) {
+            final imageUrl = chat.emojis![emojiKey]!;
 
             textSpans.add(WidgetSpan(
-              child: imageUrl.contains('.gif')
+              child: imageUrl.toLowerCase().contains('.gif')
                   ? OptimizedGifImage(
-                      controller: controller,
-                      imageWidth: widget.fontSize + 5.0,
-                      imageHeight: widget.fontSize + 5.0,
+                      imageWidth: fontSize + 5.0,
+                      imageHeight: fontSize + 5.0,
+                      useCache: true,
                       image: NetworkImage(imageUrl),
                     )
                   : OptimizedNetworkImage(
                       imageUrl: imageUrl,
-                      imageWidth: widget.fontSize + 5.0,
-                      imageHeight: widget.fontSize + 5.0,
+                      imageWidth: fontSize + 5.0,
+                      imageHeight: fontSize + 5.0,
                     ),
             ));
           } else {
@@ -84,7 +63,7 @@ class _ChatContainerState extends State<ChatContainer>
               TextSpan(
                 text: match.group(0),
                 style: TextStyle(
-                  fontSize: widget.fontSize,
+                  fontSize: fontSize,
                 ),
               ),
             );
@@ -97,7 +76,7 @@ class _ChatContainerState extends State<ChatContainer>
             TextSpan(
               text: nonMatch,
               style: TextStyle(
-                fontSize: widget.fontSize,
+                fontSize: fontSize,
               ),
             ),
           );
@@ -109,18 +88,18 @@ class _ChatContainerState extends State<ChatContainer>
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 5.0,
-        vertical: widget.verticalInterval / 2,
+        vertical: verticalInterval / 2,
       ),
       child: RoundedContainer(
-        backgroundColor: AppColors.blackColor.withOpacity(widget.opacity),
+        backgroundColor: AppColors.blackColor.withOpacity(opacity),
         padding: const EdgeInsets.all(5.0),
         child: RichText(
           text: TextSpan(
             children: [
               TextSpan(
-                text: widget.chat.nickname,
+                text: chat.nickname,
                 style: TextStyle(
-                  fontSize: widget.fontSize,
+                  fontSize: fontSize,
                   color: nicknameColor,
                   fontWeight: FontWeight.w600,
                 ),

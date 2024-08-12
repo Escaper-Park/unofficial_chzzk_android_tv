@@ -34,6 +34,10 @@ class LiveChatStream extends ConsumerWidget {
         AsyncData(:final value) => ListView.builder(
             reverse: true,
             shrinkWrap: false,
+            physics: const NeverScrollableScrollPhysics(),
+            addRepaintBoundaries: false,
+            addAutomaticKeepAlives: false,
+            addSemanticIndexes: false,
             itemCount: value.length,
             itemBuilder: (context, index) {
               final chat = value[index];
