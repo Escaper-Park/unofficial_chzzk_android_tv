@@ -10,10 +10,11 @@
 
 
 ## 업데이트
-전체적으로 기능이 추가된 v0.3.0 버전이 준비중입니다.
+v0.3.0 버전이 준비중입니다.
 
-### v0.2.6
+### v0.2.6+1
 - 멀티뷰 성능 향상: 화질 설정을 720p로 조정하였습니다. v0.3에서 상세 설정 가능하도록 업데이트 예정입니다.
+- 일부 VOD 재생 오류 수정 (Thanks to @[mero-jung](https://github.com/mero-jung))
 
 ### ~v0.2.5+2
 - 화질 개선을 위해 Low Latency HLS에서 HLS로 변경
@@ -65,7 +66,7 @@ APK 파일을 다운받아서 수동으로 설치합니다.
 ```
 
 ## 다운로드
-[**APK 파일 다운로드 (v0.2.6)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.6)
+[**APK 파일 다운로드 (v0.2.6+1)**](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.2.6+1)
 
 ### 설치 파일
 - 대부분 v7a로 설치 가능. 설치 불가시 통합버전 또는 사용하시는 CPU 타입에 따라 설치하시면 됩니다. (가능한 v7a로 설치)
