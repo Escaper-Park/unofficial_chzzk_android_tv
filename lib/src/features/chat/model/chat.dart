@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../utils/freezed/freezed_utils.dart';
+
 part 'chat.freezed.dart';
 part 'chat.g.dart';
-
-
 
 @freezed
 class Chat with _$Chat {
@@ -26,11 +26,11 @@ class ChatBdy with _$ChatBdy {
     required String cid,
     required int mbrCnt,
     required String uid,
-    required Profile? profile,
+    @JsonKey(fromJson: profileFromJson) required Profile? profile,
     required String msg,
     required int msgTypeCode,
     required String msgStatusType,
-    required Extras extras,
+    @JsonKey(fromJson: extrasFromJson) required Extras extras,
     required int ctime,
     required int utime,
     required Object? msgTid,
@@ -41,16 +41,22 @@ class ChatBdy with _$ChatBdy {
       _$ChatBdyFromJson(json);
 }
 
+Profile profileFromJson(String jsonString) =>
+    decodeAndFromJson<Profile>(jsonString, Profile.fromJson);
+
+Extras extrasFromJson(String jsonString) =>
+    decodeAndFromJson<Extras>(jsonString, Extras.fromJson);
+
 @freezed
 class Profile with _$Profile {
   const factory Profile({
     required String userIdHash,
     required String nickname,
     required String? profileImageUrl,
-    required String
+    required String?
         userRoleCode, // "common-user", "streaming_channel_manager", "streaming_chat_manager",
     required Badge? badge,
-    required ChatTitle? title, //
+    required ChatTitle? title,
     required bool verifiedMark,
     required List<ActivityBadge>? activityBadges,
     required StreamingProperty? streamingProperty,
@@ -63,23 +69,23 @@ class Profile with _$Profile {
 @freezed
 class Extras with _$Extras {
   const factory Extras({
-    required String chatType,
-    required String osType,
-    required String streamingChannelId,
-    required Map<String, String>? emojis,
-    required String extraToken,
+    required String? chatType,
+    required String? osType,
+    required String? streamingChannelId,
+    required dynamic emojis,
+    required String? extraToken,
     required int? durationTime,
     required int? month,
     required int? tierNo,
 
     /// Donation
-    required bool? isAnonymous,
-    required String? payType,
-    required int? payAmount,
-    required String? nickname,
-    required String? donationType,
-    required List<WeeklyRank>? weeklyRankList,
-    required WeeklyRank? donationUserWeeklyRank,
+    // required bool? isAnonymous,
+    // required String? payType,
+    // required int? payAmount,
+    // required String? nickname,
+    // required String? donationType,
+    // required List<WeeklyRank>? weeklyRankList,
+    // required WeeklyRank? donationUserWeeklyRank,
   }) = _Extras;
 
   factory Extras.fromJson(Map<String, dynamic> json) => _$ExtrasFromJson(json);
@@ -99,7 +105,7 @@ class ChatTitle with _$ChatTitle {
 @freezed
 class Badge with _$Badge {
   const factory Badge({
-    required String imageUrl,
+    required String? imageUrl,
   }) = _Badge;
 
   factory Badge.fromJson(Map<String, dynamic> json) => _$BadgeFromJson(json);
@@ -109,8 +115,8 @@ class Badge with _$Badge {
 class ActivityBadge with _$ActivityBadge {
   const factory ActivityBadge({
     required int badgeNo,
-    required String badgeId, // "donation_newbie", "subscrption_founder"
-    required String imageUrl,
+    required String? badgeId, // "donation_newbie", "subscrption_founder"
+    required String? imageUrl,
     required bool activated,
   }) = _ActivityBadge;
 
@@ -135,7 +141,7 @@ class Subscription with _$Subscription {
   const factory Subscription({
     required int accumulativeMonth,
     required int tier,
-    required Badge badge,
+    required Badge? badge,
   }) = _Subscription;
 
   factory Subscription.fromJson(Map<String, dynamic> json) =>

@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/styles.dart';
+import '../../../common/widgets/center_widgets.dart';
 import '../../../common/widgets/dpad_widgets.dart';
 import '../../../common/widgets/focused_widget.dart';
 import '../../../utils/router/app_router.dart';
@@ -63,9 +64,18 @@ class HomeScreenHeader extends HookConsumerWidget {
               .changeScreen(context, AppRoute.allVods);
         }
       ),
+      (
+        Icons.content_cut_rounded,
+        '인기클립',
+        () {
+          ref
+              .read(dashboardControllerProvider.notifier)
+              .changeScreen(context, AppRoute.popularClip);
+        }
+      ),
     ];
 
-    final focusNodes = List.generate(3, (_) => useFocusNode());
+    final focusNodes = List.generate(itemData.length, (_) => useFocusNode());
     final isFirstFocused = useState<bool>(true);
 
     // Create function buttons
@@ -110,6 +120,7 @@ class HomeScreenHeader extends HookConsumerWidget {
                 ),
                 _expandedFlex1(functionButtons[1]),
                 _expandedFlex1(functionButtons[2]),
+                _expandedFlex1(functionButtons[3]),
               ],
             ),
           ),
@@ -157,19 +168,19 @@ class HomeScreenHeaderButton extends StatelessWidget {
           focusNode: focusNode,
           onPressed: onPressed,
           padding: const EdgeInsets.all(10.0),
-          child: (_) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                iconData,
-                color: AppColors.whiteColor,
-              ),
-              const SizedBox(width: 10.0),
-              Text(
-                text,
-                style: const TextStyle(color: AppColors.whiteColor),
-              ),
-            ],
+          child: (_) => FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  iconData,
+                  color: AppColors.whiteColor,
+                ),
+                const SizedBox(width: 10.0),
+                CenteredText(text: text)
+              ],
+            ),
           ),
         ),
       ),

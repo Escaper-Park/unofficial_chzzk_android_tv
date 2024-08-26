@@ -11,6 +11,7 @@ import './controller/category_controller.dart';
 import './widgets/category_detail/category_header.dart';
 import './widgets/category_detail/category_live_list.dart';
 import './widgets/category_detail/category_vod_list.dart';
+import 'widgets/category_detail/category_clip_list.dart';
 
 class CategoryDetailScreen extends HookConsumerWidget {
   const CategoryDetailScreen({super.key, required this.category});
@@ -42,7 +43,52 @@ class CategoryDetailScreen extends HookConsumerWidget {
           }
         }
       ),
+      (
+        '클립 (최신순)',
+        () {
+          if (categorySortType.value != CategorySortType.recentClip) {
+            categorySortType.value = CategorySortType.recentClip;
+          }
+        }
+      ),
+      (
+        '클립 (인기순)',
+        () {
+          if (categorySortType.value != CategorySortType.popularClip) {
+            categorySortType.value = CategorySortType.popularClip;
+          }
+        }
+      ),
     ];
+
+    final Widget videoGridView = switch (categorySortType.value) {
+      CategorySortType.live => CategoryLiveList(
+          category: category,
+          sidebarFSN: sidebarFSN,
+          gridViewFSN: gridViewFSN,
+          followingButtonFSN: followingButtonFSN,
+        ),
+      CategorySortType.vod => CategoryVodList(
+          category: category,
+          sidebarFSN: sidebarFSN,
+          gridViewFSN: gridViewFSN,
+          followingButtonFSN: followingButtonFSN,
+        ),
+      CategorySortType.recentClip => CategoryClipList(
+          category: category,
+          sortType: categorySortType.value,
+          sidebarFSN: sidebarFSN,
+          gridViewFSN: gridViewFSN,
+          followingButtonFSN: followingButtonFSN,
+        ),
+      CategorySortType.popularClip => CategoryClipList(
+          category: category,
+          sortType: categorySortType.value,
+          sidebarFSN: sidebarFSN,
+          gridViewFSN: gridViewFSN,
+          followingButtonFSN: followingButtonFSN,
+        ),
+    };
 
     return VideoGridViewScreen(
       onPopInvoked: (_) {
@@ -64,19 +110,7 @@ class CategoryDetailScreen extends HookConsumerWidget {
       sidebarItems: sidebarItems,
       followingButtonFSN: followingButtonFSN,
       loadingStateProvider: categoryFetchMoreLoadingStateProvider,
-      videoGridView: categorySortType.value == CategorySortType.live
-          ? CategoryLiveList(
-              category: category,
-              sidebarFSN: sidebarFSN,
-              gridViewFSN: gridViewFSN,
-              followingButtonFSN: followingButtonFSN,
-            )
-          : CategoryVodList(
-              category: category,
-              sidebarFSN: sidebarFSN,
-              gridViewFSN: gridViewFSN,
-              followingButtonFSN: followingButtonFSN,
-            ),
+      videoGridView: videoGridView,
     );
   }
 }

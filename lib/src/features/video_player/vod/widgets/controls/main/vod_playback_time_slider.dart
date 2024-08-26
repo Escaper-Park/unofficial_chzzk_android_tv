@@ -33,7 +33,7 @@ class VodPlaybackTimeSlider extends ConsumerWidget {
         controller.seekTo(Duration(seconds: position.toInt()));
       },
       resetTimerCallback: () {
-        ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+        ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
               overlayType: VodOverlayType.main,
               videoFocusNode: videoFocusNode,
             );

@@ -38,3 +38,7 @@ export '../../features/streaming/vod_streaming_screen.dart';
 
 // LIVE Streaming
 export '../../features/streaming/live_streaming_screen.dart';
+
+// Clip
+export '../../features/clip/clip_screen.dart';
+export '../../features/clip/popular_clip_screen.dart';

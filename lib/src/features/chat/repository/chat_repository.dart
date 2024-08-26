@@ -74,36 +74,30 @@ class ChatRepository {
     wsChannel.sink.add(json.encode(object));
   }
 
-  Future<AccessToken?> _getAccessToken({required Options? options}) async {
+  Future<AccessToken?> _getAccessToken() async {
     const String apiUrl = ApiUrl.accessToken;
 
-    if (options != null) {
-      try {
-        final response = await dio.get(
-          apiUrl,
-          options: options,
-          queryParameters: {
-            'channelId': chatChannelId,
-            'chatType': 'STREAMING',
-          },
-        );
+    try {
+      final response = await dio.get(
+        apiUrl,
+        queryParameters: {
+          'channelId': chatChannelId,
+          'chatType': 'STREAMING',
+        },
+      );
 
-        return AccessToken.fromJson(response.data['content']);
-      } catch (_) {
-        return null;
-      }
+      return AccessToken.fromJson(response.data);
+    } catch (_) {
+      return null;
     }
-
-    return null;
   }
 
   Future<void> connect({
     /// user?.userHashId
     required String? uid,
-    required Options? options,
   }) async {
     // Get Access Token for watching adult restriction channel's chats
-    final AccessToken? accessToken = await _getAccessToken(options: options);
+    final AccessToken? accessToken = await _getAccessToken();
 
     send({
       'bdy': {

@@ -6,7 +6,7 @@ part of 'chat_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatControllerHash() => r'bc68994270f5739fa382d849dfe4014e191549a1';
+String _$chatControllerHash() => r'00b0ec4b5c26dc0e3fc8809038553705bc7b4861';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,26 +30,34 @@ class _SystemHash {
 }
 
 abstract class _$ChatController
-    extends BuildlessAutoDisposeStreamNotifier<dynamic> {
+    extends BuildlessAutoDisposeStreamNotifier<List<dynamic>> {
   late final String channelId;
   late final String chatChannelId;
 
-  Stream<dynamic> build({
+  Stream<List<dynamic>> build({
     required String channelId,
     required String chatChannelId,
   });
 }
 
-/// See also [ChatController].
+/// Chat stream controller
+///
+/// Copied from [ChatController].
 @ProviderFor(ChatController)
 const chatControllerProvider = ChatControllerFamily();
 
-/// See also [ChatController].
-class ChatControllerFamily extends Family<AsyncValue<dynamic>> {
-  /// See also [ChatController].
+/// Chat stream controller
+///
+/// Copied from [ChatController].
+class ChatControllerFamily extends Family<AsyncValue<List<dynamic>>> {
+  /// Chat stream controller
+  ///
+  /// Copied from [ChatController].
   const ChatControllerFamily();
 
-  /// See also [ChatController].
+  /// Chat stream controller
+  ///
+  /// Copied from [ChatController].
   ChatControllerProvider call({
     required String channelId,
     required String chatChannelId,
@@ -85,10 +93,14 @@ class ChatControllerFamily extends Family<AsyncValue<dynamic>> {
   String? get name => r'chatControllerProvider';
 }
 
-/// See also [ChatController].
-class ChatControllerProvider
-    extends AutoDisposeStreamNotifierProviderImpl<ChatController, dynamic> {
-  /// See also [ChatController].
+/// Chat stream controller
+///
+/// Copied from [ChatController].
+class ChatControllerProvider extends AutoDisposeStreamNotifierProviderImpl<
+    ChatController, List<dynamic>> {
+  /// Chat stream controller
+  ///
+  /// Copied from [ChatController].
   ChatControllerProvider({
     required String channelId,
     required String chatChannelId,
@@ -124,7 +136,7 @@ class ChatControllerProvider
   final String chatChannelId;
 
   @override
-  Stream<dynamic> runNotifierBuild(
+  Stream<List<dynamic>> runNotifierBuild(
     covariant ChatController notifier,
   ) {
     return notifier.build(
@@ -153,7 +165,7 @@ class ChatControllerProvider
   }
 
   @override
-  AutoDisposeStreamNotifierProviderElement<ChatController, dynamic>
+  AutoDisposeStreamNotifierProviderElement<ChatController, List<dynamic>>
       createElement() {
     return _ChatControllerProviderElement(this);
   }
@@ -175,7 +187,7 @@ class ChatControllerProvider
   }
 }
 
-mixin ChatControllerRef on AutoDisposeStreamNotifierProviderRef<dynamic> {
+mixin ChatControllerRef on AutoDisposeStreamNotifierProviderRef<List<dynamic>> {
   /// The parameter `channelId` of this provider.
   String get channelId;
 
@@ -184,8 +196,8 @@ mixin ChatControllerRef on AutoDisposeStreamNotifierProviderRef<dynamic> {
 }
 
 class _ChatControllerProviderElement
-    extends AutoDisposeStreamNotifierProviderElement<ChatController, dynamic>
-    with ChatControllerRef {
+    extends AutoDisposeStreamNotifierProviderElement<ChatController,
+        List<dynamic>> with ChatControllerRef {
   _ChatControllerProviderElement(super.provider);
 
   @override

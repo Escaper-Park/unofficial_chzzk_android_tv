@@ -9,7 +9,6 @@ import '../controller/dashboard_controller.dart';
 import './responsive_sidebar_menu.dart';
 import './responsive_user_button.dart';
 
-// TODO : CHECK
 import '../../auth/controller/auth_controller.dart';
 
 // typedef: SidebarItem to create menu items.

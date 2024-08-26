@@ -24,7 +24,7 @@ mixin _$RecentChat {
   RecentChatBdy get bdy => throw _privateConstructorUsedError;
   int get cmd => throw _privateConstructorUsedError;
   int get retCode => throw _privateConstructorUsedError;
-  int get retMsg => throw _privateConstructorUsedError;
+  String? get retMsg => throw _privateConstructorUsedError;
   String? get tid => throw _privateConstructorUsedError;
   String? get cid => throw _privateConstructorUsedError;
 
@@ -45,7 +45,7 @@ abstract class $RecentChatCopyWith<$Res> {
       RecentChatBdy bdy,
       int cmd,
       int retCode,
-      int retMsg,
+      String? retMsg,
       String? tid,
       String? cid});
 
@@ -69,7 +69,7 @@ class _$RecentChatCopyWithImpl<$Res, $Val extends RecentChat>
     Object? bdy = null,
     Object? cmd = null,
     Object? retCode = null,
-    Object? retMsg = null,
+    Object? retMsg = freezed,
     Object? tid = freezed,
     Object? cid = freezed,
   }) {
@@ -90,10 +90,10 @@ class _$RecentChatCopyWithImpl<$Res, $Val extends RecentChat>
           ? _value.retCode
           : retCode // ignore: cast_nullable_to_non_nullable
               as int,
-      retMsg: null == retMsg
+      retMsg: freezed == retMsg
           ? _value.retMsg
           : retMsg // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String?,
       tid: freezed == tid
           ? _value.tid
           : tid // ignore: cast_nullable_to_non_nullable
@@ -127,7 +127,7 @@ abstract class _$$RecentChatImplCopyWith<$Res>
       RecentChatBdy bdy,
       int cmd,
       int retCode,
-      int retMsg,
+      String? retMsg,
       String? tid,
       String? cid});
 
@@ -150,7 +150,7 @@ class __$$RecentChatImplCopyWithImpl<$Res>
     Object? bdy = null,
     Object? cmd = null,
     Object? retCode = null,
-    Object? retMsg = null,
+    Object? retMsg = freezed,
     Object? tid = freezed,
     Object? cid = freezed,
   }) {
@@ -171,10 +171,10 @@ class __$$RecentChatImplCopyWithImpl<$Res>
           ? _value.retCode
           : retCode // ignore: cast_nullable_to_non_nullable
               as int,
-      retMsg: null == retMsg
+      retMsg: freezed == retMsg
           ? _value.retMsg
           : retMsg // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String?,
       tid: freezed == tid
           ? _value.tid
           : tid // ignore: cast_nullable_to_non_nullable
@@ -211,7 +211,7 @@ class _$RecentChatImpl implements _RecentChat {
   @override
   final int retCode;
   @override
-  final int retMsg;
+  final String? retMsg;
   @override
   final String? tid;
   @override
@@ -261,7 +261,7 @@ abstract class _RecentChat implements RecentChat {
       required final RecentChatBdy bdy,
       required final int cmd,
       required final int retCode,
-      required final int retMsg,
+      required final String? retMsg,
       required final String? tid,
       required final String? cid}) = _$RecentChatImpl;
 
@@ -277,7 +277,7 @@ abstract class _RecentChat implements RecentChat {
   @override
   int get retCode;
   @override
-  int get retMsg;
+  String? get retMsg;
   @override
   String? get tid;
   @override
@@ -296,7 +296,6 @@ RecentChatBdy _$RecentChatBdyFromJson(Map<String, dynamic> json) {
 mixin _$RecentChatBdy {
   List<RecentChatMsg> get messageList => throw _privateConstructorUsedError;
   int? get userCount => throw _privateConstructorUsedError;
-  Notice? get notice => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -310,9 +309,7 @@ abstract class $RecentChatBdyCopyWith<$Res> {
           RecentChatBdy value, $Res Function(RecentChatBdy) then) =
       _$RecentChatBdyCopyWithImpl<$Res, RecentChatBdy>;
   @useResult
-  $Res call({List<RecentChatMsg> messageList, int? userCount, Notice? notice});
-
-  $NoticeCopyWith<$Res>? get notice;
+  $Res call({List<RecentChatMsg> messageList, int? userCount});
 }
 
 /// @nodoc
@@ -330,7 +327,6 @@ class _$RecentChatBdyCopyWithImpl<$Res, $Val extends RecentChatBdy>
   $Res call({
     Object? messageList = null,
     Object? userCount = freezed,
-    Object? notice = freezed,
   }) {
     return _then(_value.copyWith(
       messageList: null == messageList
@@ -341,23 +337,7 @@ class _$RecentChatBdyCopyWithImpl<$Res, $Val extends RecentChatBdy>
           ? _value.userCount
           : userCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      notice: freezed == notice
-          ? _value.notice
-          : notice // ignore: cast_nullable_to_non_nullable
-              as Notice?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $NoticeCopyWith<$Res>? get notice {
-    if (_value.notice == null) {
-      return null;
-    }
-
-    return $NoticeCopyWith<$Res>(_value.notice!, (value) {
-      return _then(_value.copyWith(notice: value) as $Val);
-    });
   }
 }
 
@@ -369,10 +349,7 @@ abstract class _$$RecentChatBdyImplCopyWith<$Res>
       __$$RecentChatBdyImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<RecentChatMsg> messageList, int? userCount, Notice? notice});
-
-  @override
-  $NoticeCopyWith<$Res>? get notice;
+  $Res call({List<RecentChatMsg> messageList, int? userCount});
 }
 
 /// @nodoc
@@ -388,7 +365,6 @@ class __$$RecentChatBdyImplCopyWithImpl<$Res>
   $Res call({
     Object? messageList = null,
     Object? userCount = freezed,
-    Object? notice = freezed,
   }) {
     return _then(_$RecentChatBdyImpl(
       messageList: null == messageList
@@ -399,10 +375,6 @@ class __$$RecentChatBdyImplCopyWithImpl<$Res>
           ? _value.userCount
           : userCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      notice: freezed == notice
-          ? _value.notice
-          : notice // ignore: cast_nullable_to_non_nullable
-              as Notice?,
     ));
   }
 }
@@ -411,9 +383,7 @@ class __$$RecentChatBdyImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RecentChatBdyImpl implements _RecentChatBdy {
   _$RecentChatBdyImpl(
-      {required final List<RecentChatMsg> messageList,
-      required this.userCount,
-      required this.notice})
+      {required final List<RecentChatMsg> messageList, required this.userCount})
       : _messageList = messageList;
 
   factory _$RecentChatBdyImpl.fromJson(Map<String, dynamic> json) =>
@@ -429,12 +399,10 @@ class _$RecentChatBdyImpl implements _RecentChatBdy {
 
   @override
   final int? userCount;
-  @override
-  final Notice? notice;
 
   @override
   String toString() {
-    return 'RecentChatBdy(messageList: $messageList, userCount: $userCount, notice: $notice)';
+    return 'RecentChatBdy(messageList: $messageList, userCount: $userCount)';
   }
 
   @override
@@ -445,14 +413,13 @@ class _$RecentChatBdyImpl implements _RecentChatBdy {
             const DeepCollectionEquality()
                 .equals(other._messageList, _messageList) &&
             (identical(other.userCount, userCount) ||
-                other.userCount == userCount) &&
-            (identical(other.notice, notice) || other.notice == notice));
+                other.userCount == userCount));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_messageList), userCount, notice);
+      const DeepCollectionEquality().hash(_messageList), userCount);
 
   @JsonKey(ignore: true)
   @override
@@ -471,8 +438,7 @@ class _$RecentChatBdyImpl implements _RecentChatBdy {
 abstract class _RecentChatBdy implements RecentChatBdy {
   factory _RecentChatBdy(
       {required final List<RecentChatMsg> messageList,
-      required final int? userCount,
-      required final Notice? notice}) = _$RecentChatBdyImpl;
+      required final int? userCount}) = _$RecentChatBdyImpl;
 
   factory _RecentChatBdy.fromJson(Map<String, dynamic> json) =
       _$RecentChatBdyImpl.fromJson;
@@ -481,8 +447,6 @@ abstract class _RecentChatBdy implements RecentChatBdy {
   List<RecentChatMsg> get messageList;
   @override
   int? get userCount;
-  @override
-  Notice? get notice;
   @override
   @JsonKey(ignore: true)
   _$$RecentChatBdyImplCopyWith<_$RecentChatBdyImpl> get copyWith =>
@@ -499,8 +463,10 @@ mixin _$RecentChatMsg {
   String get channelId => throw _privateConstructorUsedError;
   int get messageTime => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  Profile get profile => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: profileFromJson)
+  Profile? get profile => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: extrasFromJson)
   Extras get extras => throw _privateConstructorUsedError;
   int get memberCount => throw _privateConstructorUsedError;
   int get messageTypeCode => throw _privateConstructorUsedError;
@@ -526,9 +492,9 @@ abstract class $RecentChatMsgCopyWith<$Res> {
       String channelId,
       int messageTime,
       String userId,
-      Profile profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       String content,
-      Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras extras,
       int memberCount,
       int messageTypeCode,
       String messageStatusType,
@@ -536,7 +502,7 @@ abstract class $RecentChatMsgCopyWith<$Res> {
       int updateTime,
       Object? msgTid});
 
-  $ProfileCopyWith<$Res> get profile;
+  $ProfileCopyWith<$Res>? get profile;
   $ExtrasCopyWith<$Res> get extras;
 }
 
@@ -557,7 +523,7 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
     Object? channelId = null,
     Object? messageTime = null,
     Object? userId = null,
-    Object? profile = null,
+    Object? profile = freezed,
     Object? content = null,
     Object? extras = null,
     Object? memberCount = null,
@@ -584,10 +550,10 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      profile: null == profile
+      profile: freezed == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
-              as Profile,
+              as Profile?,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -622,8 +588,12 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
 
   @override
   @pragma('vm:prefer-inline')
-  $ProfileCopyWith<$Res> get profile {
-    return $ProfileCopyWith<$Res>(_value.profile, (value) {
+  $ProfileCopyWith<$Res>? get profile {
+    if (_value.profile == null) {
+      return null;
+    }
+
+    return $ProfileCopyWith<$Res>(_value.profile!, (value) {
       return _then(_value.copyWith(profile: value) as $Val);
     });
   }
@@ -650,9 +620,9 @@ abstract class _$$RecentChatMsgImplCopyWith<$Res>
       String channelId,
       int messageTime,
       String userId,
-      Profile profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       String content,
-      Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras extras,
       int memberCount,
       int messageTypeCode,
       String messageStatusType,
@@ -661,7 +631,7 @@ abstract class _$$RecentChatMsgImplCopyWith<$Res>
       Object? msgTid});
 
   @override
-  $ProfileCopyWith<$Res> get profile;
+  $ProfileCopyWith<$Res>? get profile;
   @override
   $ExtrasCopyWith<$Res> get extras;
 }
@@ -681,7 +651,7 @@ class __$$RecentChatMsgImplCopyWithImpl<$Res>
     Object? channelId = null,
     Object? messageTime = null,
     Object? userId = null,
-    Object? profile = null,
+    Object? profile = freezed,
     Object? content = null,
     Object? extras = null,
     Object? memberCount = null,
@@ -708,10 +678,10 @@ class __$$RecentChatMsgImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      profile: null == profile
+      profile: freezed == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
-              as Profile,
+              as Profile?,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -753,9 +723,9 @@ class _$RecentChatMsgImpl implements _RecentChatMsg {
       required this.channelId,
       required this.messageTime,
       required this.userId,
-      required this.profile,
+      @JsonKey(fromJson: profileFromJson) required this.profile,
       required this.content,
-      required this.extras,
+      @JsonKey(fromJson: extrasFromJson) required this.extras,
       required this.memberCount,
       required this.messageTypeCode,
       required this.messageStatusType,
@@ -775,10 +745,12 @@ class _$RecentChatMsgImpl implements _RecentChatMsg {
   @override
   final String userId;
   @override
-  final Profile profile;
+  @JsonKey(fromJson: profileFromJson)
+  final Profile? profile;
   @override
   final String content;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   final Extras extras;
   @override
   final int memberCount;
@@ -864,9 +836,9 @@ abstract class _RecentChatMsg implements RecentChatMsg {
       required final String channelId,
       required final int messageTime,
       required final String userId,
-      required final Profile profile,
+      @JsonKey(fromJson: profileFromJson) required final Profile? profile,
       required final String content,
-      required final Extras extras,
+      @JsonKey(fromJson: extrasFromJson) required final Extras extras,
       required final int memberCount,
       required final int messageTypeCode,
       required final String messageStatusType,
@@ -886,10 +858,12 @@ abstract class _RecentChatMsg implements RecentChatMsg {
   @override
   String get userId;
   @override
-  Profile get profile;
+  @JsonKey(fromJson: profileFromJson)
+  Profile? get profile;
   @override
   String get content;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   Extras get extras;
   @override
   int get memberCount;

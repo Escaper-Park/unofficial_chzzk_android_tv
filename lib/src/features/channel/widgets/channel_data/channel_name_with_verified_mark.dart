@@ -28,7 +28,9 @@ class ChannelNameWithVerifiedMark extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _channelName(),
+              IntrinsicWidth(
+                child: _channelName(),
+              ),
               const SizedBox(width: 3.0),
               OptimizedAssetImage(
                 imageWidth: fontSize,

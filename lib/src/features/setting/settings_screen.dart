@@ -30,10 +30,13 @@ class SettingsScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // setting menu
-                  SettingItems(
+                  SettingMenuList(
                     settingMenuFSN: settingMenuFSN,
                     sidebarFSN: sidebarFSN,
+                    contentScreenFSN: contentScreenFSN,
                   ),
+                  const SizedBox(width: 20.0),
+                  const SizedBox(width: 20.0),
                   // detail screen
                   Expanded(
                     child: SettingsDetailScreen(
@@ -45,6 +48,7 @@ class SettingsScreen extends HookConsumerWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 20.0),
             // App Info
             const AppInfo(),
           ],

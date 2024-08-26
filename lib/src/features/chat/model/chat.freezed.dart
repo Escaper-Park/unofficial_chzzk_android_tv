@@ -267,10 +267,12 @@ mixin _$ChatBdy {
   String get cid => throw _privateConstructorUsedError;
   int get mbrCnt => throw _privateConstructorUsedError;
   String get uid => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: profileFromJson)
   Profile? get profile => throw _privateConstructorUsedError;
   String get msg => throw _privateConstructorUsedError;
   int get msgTypeCode => throw _privateConstructorUsedError;
   String get msgStatusType => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: extrasFromJson)
   Extras get extras => throw _privateConstructorUsedError;
   int get ctime => throw _privateConstructorUsedError;
   int get utime => throw _privateConstructorUsedError;
@@ -292,11 +294,11 @@ abstract class $ChatBdyCopyWith<$Res> {
       String cid,
       int mbrCnt,
       String uid,
-      Profile? profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       String msg,
       int msgTypeCode,
       String msgStatusType,
-      Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras extras,
       int ctime,
       int utime,
       Object? msgTid,
@@ -419,11 +421,11 @@ abstract class _$$ChatBdyImplCopyWith<$Res> implements $ChatBdyCopyWith<$Res> {
       String cid,
       int mbrCnt,
       String uid,
-      Profile? profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       String msg,
       int msgTypeCode,
       String msgStatusType,
-      Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras extras,
       int ctime,
       int utime,
       Object? msgTid,
@@ -522,11 +524,11 @@ class _$ChatBdyImpl implements _ChatBdy {
       required this.cid,
       required this.mbrCnt,
       required this.uid,
-      required this.profile,
+      @JsonKey(fromJson: profileFromJson) required this.profile,
       required this.msg,
       required this.msgTypeCode,
       required this.msgStatusType,
-      required this.extras,
+      @JsonKey(fromJson: extrasFromJson) required this.extras,
       required this.ctime,
       required this.utime,
       required this.msgTid,
@@ -544,6 +546,7 @@ class _$ChatBdyImpl implements _ChatBdy {
   @override
   final String uid;
   @override
+  @JsonKey(fromJson: profileFromJson)
   final Profile? profile;
   @override
   final String msg;
@@ -552,6 +555,7 @@ class _$ChatBdyImpl implements _ChatBdy {
   @override
   final String msgStatusType;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   final Extras extras;
   @override
   final int ctime;
@@ -627,11 +631,11 @@ abstract class _ChatBdy implements ChatBdy {
       required final String cid,
       required final int mbrCnt,
       required final String uid,
-      required final Profile? profile,
+      @JsonKey(fromJson: profileFromJson) required final Profile? profile,
       required final String msg,
       required final int msgTypeCode,
       required final String msgStatusType,
-      required final Extras extras,
+      @JsonKey(fromJson: extrasFromJson) required final Extras extras,
       required final int ctime,
       required final int utime,
       required final Object? msgTid,
@@ -648,6 +652,7 @@ abstract class _ChatBdy implements ChatBdy {
   @override
   String get uid;
   @override
+  @JsonKey(fromJson: profileFromJson)
   Profile? get profile;
   @override
   String get msg;
@@ -656,6 +661,7 @@ abstract class _ChatBdy implements ChatBdy {
   @override
   String get msgStatusType;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   Extras get extras;
   @override
   int get ctime;
@@ -680,10 +686,10 @@ mixin _$Profile {
   String get userIdHash => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
   String? get profileImageUrl => throw _privateConstructorUsedError;
-  String get userRoleCode =>
+  String? get userRoleCode =>
       throw _privateConstructorUsedError; // "common-user", "streaming_channel_manager", "streaming_chat_manager",
   Badge? get badge => throw _privateConstructorUsedError;
-  ChatTitle? get title => throw _privateConstructorUsedError; //
+  ChatTitle? get title => throw _privateConstructorUsedError;
   bool get verifiedMark => throw _privateConstructorUsedError;
   List<ActivityBadge>? get activityBadges => throw _privateConstructorUsedError;
   StreamingProperty? get streamingProperty =>
@@ -703,7 +709,7 @@ abstract class $ProfileCopyWith<$Res> {
       {String userIdHash,
       String nickname,
       String? profileImageUrl,
-      String userRoleCode,
+      String? userRoleCode,
       Badge? badge,
       ChatTitle? title,
       bool verifiedMark,
@@ -731,7 +737,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? userIdHash = null,
     Object? nickname = null,
     Object? profileImageUrl = freezed,
-    Object? userRoleCode = null,
+    Object? userRoleCode = freezed,
     Object? badge = freezed,
     Object? title = freezed,
     Object? verifiedMark = null,
@@ -751,10 +757,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      userRoleCode: null == userRoleCode
+      userRoleCode: freezed == userRoleCode
           ? _value.userRoleCode
           : userRoleCode // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       badge: freezed == badge
           ? _value.badge
           : badge // ignore: cast_nullable_to_non_nullable
@@ -826,7 +832,7 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       {String userIdHash,
       String nickname,
       String? profileImageUrl,
-      String userRoleCode,
+      String? userRoleCode,
       Badge? badge,
       ChatTitle? title,
       bool verifiedMark,
@@ -855,7 +861,7 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? userIdHash = null,
     Object? nickname = null,
     Object? profileImageUrl = freezed,
-    Object? userRoleCode = null,
+    Object? userRoleCode = freezed,
     Object? badge = freezed,
     Object? title = freezed,
     Object? verifiedMark = null,
@@ -875,10 +881,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      userRoleCode: null == userRoleCode
+      userRoleCode: freezed == userRoleCode
           ? _value.userRoleCode
           : userRoleCode // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       badge: freezed == badge
           ? _value.badge
           : badge // ignore: cast_nullable_to_non_nullable
@@ -928,13 +934,12 @@ class _$ProfileImpl implements _Profile {
   @override
   final String? profileImageUrl;
   @override
-  final String userRoleCode;
+  final String? userRoleCode;
 // "common-user", "streaming_channel_manager", "streaming_chat_manager",
   @override
   final Badge? badge;
   @override
   final ChatTitle? title;
-//
   @override
   final bool verifiedMark;
   final List<ActivityBadge>? _activityBadges;
@@ -1011,7 +1016,7 @@ abstract class _Profile implements Profile {
       {required final String userIdHash,
       required final String nickname,
       required final String? profileImageUrl,
-      required final String userRoleCode,
+      required final String? userRoleCode,
       required final Badge? badge,
       required final ChatTitle? title,
       required final bool verifiedMark,
@@ -1027,12 +1032,12 @@ abstract class _Profile implements Profile {
   @override
   String? get profileImageUrl;
   @override
-  String get userRoleCode;
+  String? get userRoleCode;
   @override // "common-user", "streaming_channel_manager", "streaming_chat_manager",
   Badge? get badge;
   @override
   ChatTitle? get title;
-  @override //
+  @override
   bool get verifiedMark;
   @override
   List<ActivityBadge>? get activityBadges;
@@ -1050,23 +1055,14 @@ Extras _$ExtrasFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Extras {
-  String get chatType => throw _privateConstructorUsedError;
-  String get osType => throw _privateConstructorUsedError;
-  String get streamingChannelId => throw _privateConstructorUsedError;
-  Map<String, String>? get emojis => throw _privateConstructorUsedError;
-  String get extraToken => throw _privateConstructorUsedError;
+  String? get chatType => throw _privateConstructorUsedError;
+  String? get osType => throw _privateConstructorUsedError;
+  String? get streamingChannelId => throw _privateConstructorUsedError;
+  dynamic get emojis => throw _privateConstructorUsedError;
+  String? get extraToken => throw _privateConstructorUsedError;
   int? get durationTime => throw _privateConstructorUsedError;
   int? get month => throw _privateConstructorUsedError;
   int? get tierNo => throw _privateConstructorUsedError;
-
-  /// Donation
-  bool? get isAnonymous => throw _privateConstructorUsedError;
-  String? get payType => throw _privateConstructorUsedError;
-  int? get payAmount => throw _privateConstructorUsedError;
-  String? get nickname => throw _privateConstructorUsedError;
-  String? get donationType => throw _privateConstructorUsedError;
-  List<WeeklyRank>? get weeklyRankList => throw _privateConstructorUsedError;
-  WeeklyRank? get donationUserWeeklyRank => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1079,23 +1075,14 @@ abstract class $ExtrasCopyWith<$Res> {
       _$ExtrasCopyWithImpl<$Res, Extras>;
   @useResult
   $Res call(
-      {String chatType,
-      String osType,
-      String streamingChannelId,
-      Map<String, String>? emojis,
-      String extraToken,
+      {String? chatType,
+      String? osType,
+      String? streamingChannelId,
+      dynamic emojis,
+      String? extraToken,
       int? durationTime,
       int? month,
-      int? tierNo,
-      bool? isAnonymous,
-      String? payType,
-      int? payAmount,
-      String? nickname,
-      String? donationType,
-      List<WeeklyRank>? weeklyRankList,
-      WeeklyRank? donationUserWeeklyRank});
-
-  $WeeklyRankCopyWith<$Res>? get donationUserWeeklyRank;
+      int? tierNo});
 }
 
 /// @nodoc
@@ -1111,43 +1098,36 @@ class _$ExtrasCopyWithImpl<$Res, $Val extends Extras>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chatType = null,
-    Object? osType = null,
-    Object? streamingChannelId = null,
+    Object? chatType = freezed,
+    Object? osType = freezed,
+    Object? streamingChannelId = freezed,
     Object? emojis = freezed,
-    Object? extraToken = null,
+    Object? extraToken = freezed,
     Object? durationTime = freezed,
     Object? month = freezed,
     Object? tierNo = freezed,
-    Object? isAnonymous = freezed,
-    Object? payType = freezed,
-    Object? payAmount = freezed,
-    Object? nickname = freezed,
-    Object? donationType = freezed,
-    Object? weeklyRankList = freezed,
-    Object? donationUserWeeklyRank = freezed,
   }) {
     return _then(_value.copyWith(
-      chatType: null == chatType
+      chatType: freezed == chatType
           ? _value.chatType
           : chatType // ignore: cast_nullable_to_non_nullable
-              as String,
-      osType: null == osType
+              as String?,
+      osType: freezed == osType
           ? _value.osType
           : osType // ignore: cast_nullable_to_non_nullable
-              as String,
-      streamingChannelId: null == streamingChannelId
+              as String?,
+      streamingChannelId: freezed == streamingChannelId
           ? _value.streamingChannelId
           : streamingChannelId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       emojis: freezed == emojis
           ? _value.emojis
           : emojis // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>?,
-      extraToken: null == extraToken
+              as dynamic,
+      extraToken: freezed == extraToken
           ? _value.extraToken
           : extraToken // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       durationTime: freezed == durationTime
           ? _value.durationTime
           : durationTime // ignore: cast_nullable_to_non_nullable
@@ -1160,47 +1140,7 @@ class _$ExtrasCopyWithImpl<$Res, $Val extends Extras>
           ? _value.tierNo
           : tierNo // ignore: cast_nullable_to_non_nullable
               as int?,
-      isAnonymous: freezed == isAnonymous
-          ? _value.isAnonymous
-          : isAnonymous // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      payType: freezed == payType
-          ? _value.payType
-          : payType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      payAmount: freezed == payAmount
-          ? _value.payAmount
-          : payAmount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      nickname: freezed == nickname
-          ? _value.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
-              as String?,
-      donationType: freezed == donationType
-          ? _value.donationType
-          : donationType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      weeklyRankList: freezed == weeklyRankList
-          ? _value.weeklyRankList
-          : weeklyRankList // ignore: cast_nullable_to_non_nullable
-              as List<WeeklyRank>?,
-      donationUserWeeklyRank: freezed == donationUserWeeklyRank
-          ? _value.donationUserWeeklyRank
-          : donationUserWeeklyRank // ignore: cast_nullable_to_non_nullable
-              as WeeklyRank?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $WeeklyRankCopyWith<$Res>? get donationUserWeeklyRank {
-    if (_value.donationUserWeeklyRank == null) {
-      return null;
-    }
-
-    return $WeeklyRankCopyWith<$Res>(_value.donationUserWeeklyRank!, (value) {
-      return _then(_value.copyWith(donationUserWeeklyRank: value) as $Val);
-    });
   }
 }
 
@@ -1212,24 +1152,14 @@ abstract class _$$ExtrasImplCopyWith<$Res> implements $ExtrasCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String chatType,
-      String osType,
-      String streamingChannelId,
-      Map<String, String>? emojis,
-      String extraToken,
+      {String? chatType,
+      String? osType,
+      String? streamingChannelId,
+      dynamic emojis,
+      String? extraToken,
       int? durationTime,
       int? month,
-      int? tierNo,
-      bool? isAnonymous,
-      String? payType,
-      int? payAmount,
-      String? nickname,
-      String? donationType,
-      List<WeeklyRank>? weeklyRankList,
-      WeeklyRank? donationUserWeeklyRank});
-
-  @override
-  $WeeklyRankCopyWith<$Res>? get donationUserWeeklyRank;
+      int? tierNo});
 }
 
 /// @nodoc
@@ -1243,43 +1173,36 @@ class __$$ExtrasImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chatType = null,
-    Object? osType = null,
-    Object? streamingChannelId = null,
+    Object? chatType = freezed,
+    Object? osType = freezed,
+    Object? streamingChannelId = freezed,
     Object? emojis = freezed,
-    Object? extraToken = null,
+    Object? extraToken = freezed,
     Object? durationTime = freezed,
     Object? month = freezed,
     Object? tierNo = freezed,
-    Object? isAnonymous = freezed,
-    Object? payType = freezed,
-    Object? payAmount = freezed,
-    Object? nickname = freezed,
-    Object? donationType = freezed,
-    Object? weeklyRankList = freezed,
-    Object? donationUserWeeklyRank = freezed,
   }) {
     return _then(_$ExtrasImpl(
-      chatType: null == chatType
+      chatType: freezed == chatType
           ? _value.chatType
           : chatType // ignore: cast_nullable_to_non_nullable
-              as String,
-      osType: null == osType
+              as String?,
+      osType: freezed == osType
           ? _value.osType
           : osType // ignore: cast_nullable_to_non_nullable
-              as String,
-      streamingChannelId: null == streamingChannelId
+              as String?,
+      streamingChannelId: freezed == streamingChannelId
           ? _value.streamingChannelId
           : streamingChannelId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       emojis: freezed == emojis
-          ? _value._emojis
+          ? _value.emojis
           : emojis // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>?,
-      extraToken: null == extraToken
+              as dynamic,
+      extraToken: freezed == extraToken
           ? _value.extraToken
           : extraToken // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       durationTime: freezed == durationTime
           ? _value.durationTime
           : durationTime // ignore: cast_nullable_to_non_nullable
@@ -1292,34 +1215,6 @@ class __$$ExtrasImplCopyWithImpl<$Res>
           ? _value.tierNo
           : tierNo // ignore: cast_nullable_to_non_nullable
               as int?,
-      isAnonymous: freezed == isAnonymous
-          ? _value.isAnonymous
-          : isAnonymous // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      payType: freezed == payType
-          ? _value.payType
-          : payType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      payAmount: freezed == payAmount
-          ? _value.payAmount
-          : payAmount // ignore: cast_nullable_to_non_nullable
-              as int?,
-      nickname: freezed == nickname
-          ? _value.nickname
-          : nickname // ignore: cast_nullable_to_non_nullable
-              as String?,
-      donationType: freezed == donationType
-          ? _value.donationType
-          : donationType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      weeklyRankList: freezed == weeklyRankList
-          ? _value._weeklyRankList
-          : weeklyRankList // ignore: cast_nullable_to_non_nullable
-              as List<WeeklyRank>?,
-      donationUserWeeklyRank: freezed == donationUserWeeklyRank
-          ? _value.donationUserWeeklyRank
-          : donationUserWeeklyRank // ignore: cast_nullable_to_non_nullable
-              as WeeklyRank?,
     ));
   }
 }
@@ -1331,42 +1226,25 @@ class _$ExtrasImpl implements _Extras {
       {required this.chatType,
       required this.osType,
       required this.streamingChannelId,
-      required final Map<String, String>? emojis,
+      required this.emojis,
       required this.extraToken,
       required this.durationTime,
       required this.month,
-      required this.tierNo,
-      required this.isAnonymous,
-      required this.payType,
-      required this.payAmount,
-      required this.nickname,
-      required this.donationType,
-      required final List<WeeklyRank>? weeklyRankList,
-      required this.donationUserWeeklyRank})
-      : _emojis = emojis,
-        _weeklyRankList = weeklyRankList;
+      required this.tierNo});
 
   factory _$ExtrasImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExtrasImplFromJson(json);
 
   @override
-  final String chatType;
+  final String? chatType;
   @override
-  final String osType;
+  final String? osType;
   @override
-  final String streamingChannelId;
-  final Map<String, String>? _emojis;
+  final String? streamingChannelId;
   @override
-  Map<String, String>? get emojis {
-    final value = _emojis;
-    if (value == null) return null;
-    if (_emojis is EqualUnmodifiableMapView) return _emojis;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
+  final dynamic emojis;
   @override
-  final String extraToken;
+  final String? extraToken;
   @override
   final int? durationTime;
   @override
@@ -1374,33 +1252,9 @@ class _$ExtrasImpl implements _Extras {
   @override
   final int? tierNo;
 
-  /// Donation
-  @override
-  final bool? isAnonymous;
-  @override
-  final String? payType;
-  @override
-  final int? payAmount;
-  @override
-  final String? nickname;
-  @override
-  final String? donationType;
-  final List<WeeklyRank>? _weeklyRankList;
-  @override
-  List<WeeklyRank>? get weeklyRankList {
-    final value = _weeklyRankList;
-    if (value == null) return null;
-    if (_weeklyRankList is EqualUnmodifiableListView) return _weeklyRankList;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  final WeeklyRank? donationUserWeeklyRank;
-
   @override
   String toString() {
-    return 'Extras(chatType: $chatType, osType: $osType, streamingChannelId: $streamingChannelId, emojis: $emojis, extraToken: $extraToken, durationTime: $durationTime, month: $month, tierNo: $tierNo, isAnonymous: $isAnonymous, payType: $payType, payAmount: $payAmount, nickname: $nickname, donationType: $donationType, weeklyRankList: $weeklyRankList, donationUserWeeklyRank: $donationUserWeeklyRank)';
+    return 'Extras(chatType: $chatType, osType: $osType, streamingChannelId: $streamingChannelId, emojis: $emojis, extraToken: $extraToken, durationTime: $durationTime, month: $month, tierNo: $tierNo)';
   }
 
   @override
@@ -1413,26 +1267,13 @@ class _$ExtrasImpl implements _Extras {
             (identical(other.osType, osType) || other.osType == osType) &&
             (identical(other.streamingChannelId, streamingChannelId) ||
                 other.streamingChannelId == streamingChannelId) &&
-            const DeepCollectionEquality().equals(other._emojis, _emojis) &&
+            const DeepCollectionEquality().equals(other.emojis, emojis) &&
             (identical(other.extraToken, extraToken) ||
                 other.extraToken == extraToken) &&
             (identical(other.durationTime, durationTime) ||
                 other.durationTime == durationTime) &&
             (identical(other.month, month) || other.month == month) &&
-            (identical(other.tierNo, tierNo) || other.tierNo == tierNo) &&
-            (identical(other.isAnonymous, isAnonymous) ||
-                other.isAnonymous == isAnonymous) &&
-            (identical(other.payType, payType) || other.payType == payType) &&
-            (identical(other.payAmount, payAmount) ||
-                other.payAmount == payAmount) &&
-            (identical(other.nickname, nickname) ||
-                other.nickname == nickname) &&
-            (identical(other.donationType, donationType) ||
-                other.donationType == donationType) &&
-            const DeepCollectionEquality()
-                .equals(other._weeklyRankList, _weeklyRankList) &&
-            (identical(other.donationUserWeeklyRank, donationUserWeeklyRank) ||
-                other.donationUserWeeklyRank == donationUserWeeklyRank));
+            (identical(other.tierNo, tierNo) || other.tierNo == tierNo));
   }
 
   @JsonKey(ignore: true)
@@ -1442,18 +1283,11 @@ class _$ExtrasImpl implements _Extras {
       chatType,
       osType,
       streamingChannelId,
-      const DeepCollectionEquality().hash(_emojis),
+      const DeepCollectionEquality().hash(emojis),
       extraToken,
       durationTime,
       month,
-      tierNo,
-      isAnonymous,
-      payType,
-      payAmount,
-      nickname,
-      donationType,
-      const DeepCollectionEquality().hash(_weeklyRankList),
-      donationUserWeeklyRank);
+      tierNo);
 
   @JsonKey(ignore: true)
   @override
@@ -1471,56 +1305,33 @@ class _$ExtrasImpl implements _Extras {
 
 abstract class _Extras implements Extras {
   const factory _Extras(
-      {required final String chatType,
-      required final String osType,
-      required final String streamingChannelId,
-      required final Map<String, String>? emojis,
-      required final String extraToken,
+      {required final String? chatType,
+      required final String? osType,
+      required final String? streamingChannelId,
+      required final dynamic emojis,
+      required final String? extraToken,
       required final int? durationTime,
       required final int? month,
-      required final int? tierNo,
-      required final bool? isAnonymous,
-      required final String? payType,
-      required final int? payAmount,
-      required final String? nickname,
-      required final String? donationType,
-      required final List<WeeklyRank>? weeklyRankList,
-      required final WeeklyRank? donationUserWeeklyRank}) = _$ExtrasImpl;
+      required final int? tierNo}) = _$ExtrasImpl;
 
   factory _Extras.fromJson(Map<String, dynamic> json) = _$ExtrasImpl.fromJson;
 
   @override
-  String get chatType;
+  String? get chatType;
   @override
-  String get osType;
+  String? get osType;
   @override
-  String get streamingChannelId;
+  String? get streamingChannelId;
   @override
-  Map<String, String>? get emojis;
+  dynamic get emojis;
   @override
-  String get extraToken;
+  String? get extraToken;
   @override
   int? get durationTime;
   @override
   int? get month;
   @override
   int? get tierNo;
-  @override
-
-  /// Donation
-  bool? get isAnonymous;
-  @override
-  String? get payType;
-  @override
-  int? get payAmount;
-  @override
-  String? get nickname;
-  @override
-  String? get donationType;
-  @override
-  List<WeeklyRank>? get weeklyRankList;
-  @override
-  WeeklyRank? get donationUserWeeklyRank;
   @override
   @JsonKey(ignore: true)
   _$$ExtrasImplCopyWith<_$ExtrasImpl> get copyWith =>
@@ -1686,7 +1497,7 @@ Badge _$BadgeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Badge {
-  String get imageUrl => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1698,7 +1509,7 @@ abstract class $BadgeCopyWith<$Res> {
   factory $BadgeCopyWith(Badge value, $Res Function(Badge) then) =
       _$BadgeCopyWithImpl<$Res, Badge>;
   @useResult
-  $Res call({String imageUrl});
+  $Res call({String? imageUrl});
 }
 
 /// @nodoc
@@ -1714,13 +1525,13 @@ class _$BadgeCopyWithImpl<$Res, $Val extends Badge>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? imageUrl = null,
+    Object? imageUrl = freezed,
   }) {
     return _then(_value.copyWith(
-      imageUrl: null == imageUrl
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -1732,7 +1543,7 @@ abstract class _$$BadgeImplCopyWith<$Res> implements $BadgeCopyWith<$Res> {
       __$$BadgeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String imageUrl});
+  $Res call({String? imageUrl});
 }
 
 /// @nodoc
@@ -1746,13 +1557,13 @@ class __$$BadgeImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? imageUrl = null,
+    Object? imageUrl = freezed,
   }) {
     return _then(_$BadgeImpl(
-      imageUrl: null == imageUrl
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -1766,7 +1577,7 @@ class _$BadgeImpl implements _Badge {
       _$$BadgeImplFromJson(json);
 
   @override
-  final String imageUrl;
+  final String? imageUrl;
 
   @override
   String toString() {
@@ -1801,12 +1612,12 @@ class _$BadgeImpl implements _Badge {
 }
 
 abstract class _Badge implements Badge {
-  const factory _Badge({required final String imageUrl}) = _$BadgeImpl;
+  const factory _Badge({required final String? imageUrl}) = _$BadgeImpl;
 
   factory _Badge.fromJson(Map<String, dynamic> json) = _$BadgeImpl.fromJson;
 
   @override
-  String get imageUrl;
+  String? get imageUrl;
   @override
   @JsonKey(ignore: true)
   _$$BadgeImplCopyWith<_$BadgeImpl> get copyWith =>
@@ -1820,9 +1631,9 @@ ActivityBadge _$ActivityBadgeFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ActivityBadge {
   int get badgeNo => throw _privateConstructorUsedError;
-  String get badgeId =>
+  String? get badgeId =>
       throw _privateConstructorUsedError; // "donation_newbie", "subscrption_founder"
-  String get imageUrl => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
   bool get activated => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1837,7 +1648,7 @@ abstract class $ActivityBadgeCopyWith<$Res> {
           ActivityBadge value, $Res Function(ActivityBadge) then) =
       _$ActivityBadgeCopyWithImpl<$Res, ActivityBadge>;
   @useResult
-  $Res call({int badgeNo, String badgeId, String imageUrl, bool activated});
+  $Res call({int badgeNo, String? badgeId, String? imageUrl, bool activated});
 }
 
 /// @nodoc
@@ -1854,8 +1665,8 @@ class _$ActivityBadgeCopyWithImpl<$Res, $Val extends ActivityBadge>
   @override
   $Res call({
     Object? badgeNo = null,
-    Object? badgeId = null,
-    Object? imageUrl = null,
+    Object? badgeId = freezed,
+    Object? imageUrl = freezed,
     Object? activated = null,
   }) {
     return _then(_value.copyWith(
@@ -1863,14 +1674,14 @@ class _$ActivityBadgeCopyWithImpl<$Res, $Val extends ActivityBadge>
           ? _value.badgeNo
           : badgeNo // ignore: cast_nullable_to_non_nullable
               as int,
-      badgeId: null == badgeId
+      badgeId: freezed == badgeId
           ? _value.badgeId
           : badgeId // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageUrl: null == imageUrl
+              as String?,
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       activated: null == activated
           ? _value.activated
           : activated // ignore: cast_nullable_to_non_nullable
@@ -1887,7 +1698,7 @@ abstract class _$$ActivityBadgeImplCopyWith<$Res>
       __$$ActivityBadgeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int badgeNo, String badgeId, String imageUrl, bool activated});
+  $Res call({int badgeNo, String? badgeId, String? imageUrl, bool activated});
 }
 
 /// @nodoc
@@ -1902,8 +1713,8 @@ class __$$ActivityBadgeImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? badgeNo = null,
-    Object? badgeId = null,
-    Object? imageUrl = null,
+    Object? badgeId = freezed,
+    Object? imageUrl = freezed,
     Object? activated = null,
   }) {
     return _then(_$ActivityBadgeImpl(
@@ -1911,14 +1722,14 @@ class __$$ActivityBadgeImplCopyWithImpl<$Res>
           ? _value.badgeNo
           : badgeNo // ignore: cast_nullable_to_non_nullable
               as int,
-      badgeId: null == badgeId
+      badgeId: freezed == badgeId
           ? _value.badgeId
           : badgeId // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageUrl: null == imageUrl
+              as String?,
+      imageUrl: freezed == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       activated: null == activated
           ? _value.activated
           : activated // ignore: cast_nullable_to_non_nullable
@@ -1942,10 +1753,10 @@ class _$ActivityBadgeImpl implements _ActivityBadge {
   @override
   final int badgeNo;
   @override
-  final String badgeId;
+  final String? badgeId;
 // "donation_newbie", "subscrption_founder"
   @override
-  final String imageUrl;
+  final String? imageUrl;
   @override
   final bool activated;
 
@@ -1989,8 +1800,8 @@ class _$ActivityBadgeImpl implements _ActivityBadge {
 abstract class _ActivityBadge implements ActivityBadge {
   const factory _ActivityBadge(
       {required final int badgeNo,
-      required final String badgeId,
-      required final String imageUrl,
+      required final String? badgeId,
+      required final String? imageUrl,
       required final bool activated}) = _$ActivityBadgeImpl;
 
   factory _ActivityBadge.fromJson(Map<String, dynamic> json) =
@@ -1999,9 +1810,9 @@ abstract class _ActivityBadge implements ActivityBadge {
   @override
   int get badgeNo;
   @override
-  String get badgeId;
+  String? get badgeId;
   @override // "donation_newbie", "subscrption_founder"
-  String get imageUrl;
+  String? get imageUrl;
   @override
   bool get activated;
   @override
@@ -2250,7 +2061,7 @@ Subscription _$SubscriptionFromJson(Map<String, dynamic> json) {
 mixin _$Subscription {
   int get accumulativeMonth => throw _privateConstructorUsedError;
   int get tier => throw _privateConstructorUsedError;
-  Badge get badge => throw _privateConstructorUsedError;
+  Badge? get badge => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -2264,9 +2075,9 @@ abstract class $SubscriptionCopyWith<$Res> {
           Subscription value, $Res Function(Subscription) then) =
       _$SubscriptionCopyWithImpl<$Res, Subscription>;
   @useResult
-  $Res call({int accumulativeMonth, int tier, Badge badge});
+  $Res call({int accumulativeMonth, int tier, Badge? badge});
 
-  $BadgeCopyWith<$Res> get badge;
+  $BadgeCopyWith<$Res>? get badge;
 }
 
 /// @nodoc
@@ -2284,7 +2095,7 @@ class _$SubscriptionCopyWithImpl<$Res, $Val extends Subscription>
   $Res call({
     Object? accumulativeMonth = null,
     Object? tier = null,
-    Object? badge = null,
+    Object? badge = freezed,
   }) {
     return _then(_value.copyWith(
       accumulativeMonth: null == accumulativeMonth
@@ -2295,17 +2106,21 @@ class _$SubscriptionCopyWithImpl<$Res, $Val extends Subscription>
           ? _value.tier
           : tier // ignore: cast_nullable_to_non_nullable
               as int,
-      badge: null == badge
+      badge: freezed == badge
           ? _value.badge
           : badge // ignore: cast_nullable_to_non_nullable
-              as Badge,
+              as Badge?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $BadgeCopyWith<$Res> get badge {
-    return $BadgeCopyWith<$Res>(_value.badge, (value) {
+  $BadgeCopyWith<$Res>? get badge {
+    if (_value.badge == null) {
+      return null;
+    }
+
+    return $BadgeCopyWith<$Res>(_value.badge!, (value) {
       return _then(_value.copyWith(badge: value) as $Val);
     });
   }
@@ -2319,10 +2134,10 @@ abstract class _$$SubscriptionImplCopyWith<$Res>
       __$$SubscriptionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int accumulativeMonth, int tier, Badge badge});
+  $Res call({int accumulativeMonth, int tier, Badge? badge});
 
   @override
-  $BadgeCopyWith<$Res> get badge;
+  $BadgeCopyWith<$Res>? get badge;
 }
 
 /// @nodoc
@@ -2338,7 +2153,7 @@ class __$$SubscriptionImplCopyWithImpl<$Res>
   $Res call({
     Object? accumulativeMonth = null,
     Object? tier = null,
-    Object? badge = null,
+    Object? badge = freezed,
   }) {
     return _then(_$SubscriptionImpl(
       accumulativeMonth: null == accumulativeMonth
@@ -2349,10 +2164,10 @@ class __$$SubscriptionImplCopyWithImpl<$Res>
           ? _value.tier
           : tier // ignore: cast_nullable_to_non_nullable
               as int,
-      badge: null == badge
+      badge: freezed == badge
           ? _value.badge
           : badge // ignore: cast_nullable_to_non_nullable
-              as Badge,
+              as Badge?,
     ));
   }
 }
@@ -2373,7 +2188,7 @@ class _$SubscriptionImpl implements _Subscription {
   @override
   final int tier;
   @override
-  final Badge badge;
+  final Badge? badge;
 
   @override
   String toString() {
@@ -2413,7 +2228,7 @@ abstract class _Subscription implements Subscription {
   const factory _Subscription(
       {required final int accumulativeMonth,
       required final int tier,
-      required final Badge badge}) = _$SubscriptionImpl;
+      required final Badge? badge}) = _$SubscriptionImpl;
 
   factory _Subscription.fromJson(Map<String, dynamic> json) =
       _$SubscriptionImpl.fromJson;
@@ -2423,7 +2238,7 @@ abstract class _Subscription implements Subscription {
   @override
   int get tier;
   @override
-  Badge get badge;
+  Badge? get badge;
   @override
   @JsonKey(ignore: true)
   _$$SubscriptionImplCopyWith<_$SubscriptionImpl> get copyWith =>

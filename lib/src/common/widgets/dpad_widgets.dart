@@ -198,7 +198,10 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
     this.belowFSN,
     this.useExceptionFallbackWidget = true,
     this.fallback,
+    this.horizontalPadding = 10.0,
     this.scrollPadding = 20.0,
+    this.useFetchMore = false,
+    this.fetchMore,
     required this.itemBuilder,
   }) : assert(
           !(useExceptionFallbackWidget && fallback == null),
@@ -234,8 +237,17 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
   /// Fallback actions for exception handling
   final VoidCallback? fallback;
 
+  /// Horizontal seperate padding
+  final double horizontalPadding;
+
   /// Scroll Padding to show a former item.
   final double scrollPadding;
+
+  /// Set this true if you want infinite scrolling,
+  final bool useFetchMore;
+
+  /// A fetchMore function.
+  final Future<void> Function()? fetchMore;
 
   /// ItemBuilder that has own focusNode.
   final Widget Function(int index, FocusNode focusNode, T object) itemBuilder;
@@ -244,6 +256,24 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
   Widget build(BuildContext context) {
     final isFirstFocused = useState<bool>(true);
     final scrollController = useScrollController();
+    final isFetching = useState<bool>(false);
+
+    if (useFetchMore && fetchMore != null) {
+      useEffect(() {
+        scrollController.addListener(() async {
+          // -scrollPadding : damping
+          if (scrollController.offset >=
+                  scrollController.position.maxScrollExtent - scrollPadding &&
+              !scrollController.position.outOfRange &&
+              isFetching.value == false) {
+            isFetching.value = true;
+            await fetchMore!();
+            isFetching.value = false;
+          }
+        });
+        return null;
+      }, [scrollController]);
+    }
 
     return SizedBox(
       height: containerHeight,
@@ -271,8 +301,8 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
             final focusNode = focusNodes[i];
             focusNode.addListener(() {
               if (focusNode.hasPrimaryFocus) {
-                final movePosition = i * (containerWidth + 10.0) -
-                    scrollPadding; // -20.0 padding.
+                final movePosition = i * (containerWidth + horizontalPadding) -
+                    scrollPadding; // damping.
 
                 final maxScrollExtent =
                     scrollController.position.maxScrollExtent;
@@ -322,11 +352,14 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
                       )
                     : itemBuilder(index, focusNodes[index], object);
               },
-              separatorBuilder: (context, index) => const SizedBox(width: 10.0),
+              separatorBuilder: (context, index) =>
+                  SizedBox(width: horizontalPadding),
             ),
           );
         },
-        error: (_, __) => CenteredText(text: errorText),
+        error: (_, __) => useExceptionFallbackWidget
+            ? _exceptionFallbackWidget(errorText, () {})
+            : CenteredText(text: errorText),
         loading: () {
           isFirstFocused.value = true;
           return const SizedBox.shrink();
@@ -363,7 +396,7 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
               autofocus: true,
               focusNode: focusNode,
               onPressed: fallback,
-              child: (hasFocus) => CenteredText(text: emptyText),
+              child: (hasFocus) => CenteredText(text: exceptionText),
             ),
           ),
         ),

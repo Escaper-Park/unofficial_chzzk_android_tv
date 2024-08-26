@@ -9,7 +9,9 @@ part 'vod_repository.g.dart';
 enum VodSortType {
   latest('LATEST'),
   popular('POPULAR'),
-  following('Following');
+  following('Following'),
+  popularClip('POPULAR'),
+  recentClip('RECENT');
 
   final String value;
 

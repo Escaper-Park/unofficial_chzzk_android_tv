@@ -41,12 +41,16 @@ class CategoryController extends _$CategoryController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final categoryReponse = await _repository.getCategories(
+        final categoryReponse = await _repository
+            .getCategories(
           size: 20,
           categoryId: _next!.categoryId,
           concurrentUserCount: _next!.concurrentUserCount,
           openLiveCount: _next!.openLiveCount,
-        );
+        )
+            .catchError((_) {
+          return null;
+        });
 
         _next = categoryReponse?.next;
 
@@ -93,13 +97,20 @@ class CategoryLivesController extends _$CategoryLivesController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final liveRespnse = await _repository.getCategoryLives(
+        final liveRespnse = await _repository
+            .getCategoryLives(
           categoryType: category.categoryType,
           categoryId: category.categoryId,
           size: 18,
           concurrentUserCount: _next!.concurrentUserCount,
           liveId: _next!.liveId,
-        );
+        )
+            .catchError((_) {
+          ref
+              .read(categoryFetchMoreLoadingStateProvider.notifier)
+              .setState(false);
+          return null;
+        });
 
         _next = liveRespnse?.next;
 
@@ -149,13 +160,20 @@ class CategoryVodsController extends _$CategoryVodsController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final categoryVodResponse = await _repository.getCategoryVods(
+        final categoryVodResponse = await _repository
+            .getCategoryVods(
           categoryType: category.categoryType,
           categoryId: category.categoryId,
           size: 18,
           publishDateAt: _next!.publishDateAt,
           readCount: _next!.readCount,
-        );
+        )
+            .catchError((_) {
+          ref
+              .read(categoryFetchMoreLoadingStateProvider.notifier)
+              .setState(false);
+          return null;
+        });
 
         _next = categoryVodResponse?.next;
 

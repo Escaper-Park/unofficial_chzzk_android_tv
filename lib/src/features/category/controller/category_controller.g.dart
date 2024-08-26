@@ -7,7 +7,7 @@ part of 'category_controller.dart';
 // **************************************************************************
 
 String _$categoryControllerHash() =>
-    r'5f3cf67e575398471d6a224fd218c9d8b454fa9e';
+    r'cfe9c682eed1feba53333f0c84d4cd5366270635';
 
 /// See also [CategoryController].
 @ProviderFor(CategoryController)
@@ -24,7 +24,7 @@ final categoryControllerProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$CategoryController = AutoDisposeAsyncNotifier<List<Category>?>;
 String _$categoryLivesControllerHash() =>
-    r'f4e25494173b2d9f360dc8973208ad6c42198ad2';
+    r'458f60e343bb2bd4104cd25fc47a7a00a1d2d257';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -194,7 +194,7 @@ class _CategoryLivesControllerProviderElement
 }
 
 String _$categoryVodsControllerHash() =>
-    r'44e36678b9655a00014eba7cec8674ca5aa4f96a';
+    r'cf5b3a2eea3e2091fc0a672c1cbaac93c02f9be0';
 
 abstract class _$CategoryVodsController
     extends BuildlessAutoDisposeAsyncNotifier<List<Vod>?> {

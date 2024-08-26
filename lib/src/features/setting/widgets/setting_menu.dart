@@ -6,18 +6,22 @@ import '../../../common/widgets/dpad_widgets.dart';
 import '../../../common/widgets/focused_widget.dart';
 import '../controller/setting_screen_controller.dart';
 
-class SettingItems extends ConsumerWidget {
-  const SettingItems({
+class SettingMenuList extends ConsumerWidget {
+  const SettingMenuList({
     super.key,
-    required this.settingMenuFSN,
     required this.sidebarFSN,
+    required this.settingMenuFSN,
+    required this.contentScreenFSN,
   });
 
-  final FocusScopeNode settingMenuFSN;
   final FocusScopeNode sidebarFSN;
+  final FocusScopeNode settingMenuFSN;
+  final FocusScopeNode contentScreenFSN;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentIndex = ref.watch(settingScreenControllerProvider);
+
     final List<String> itemData = [
       '스트리밍 설정',
       '채팅 설정',
@@ -25,11 +29,13 @@ class SettingItems extends ConsumerWidget {
       '오픈소스 라이선스',
     ];
 
-    final List<SettingItem> items = List.generate(
+    final List<SettingMenu> items = List.generate(
       itemData.length,
-      (index) => SettingItem(
+      (index) => SettingMenu(
         autofocus: index == 0 ? true : false,
         menuText: itemData[index],
+        currentIndex: currentIndex,
+        itemIndex: index,
         onPressed: () {
           ref.read(settingScreenControllerProvider.notifier).setState(index);
         },
@@ -38,7 +44,10 @@ class SettingItems extends ConsumerWidget {
 
     return DpadFocusScopeNavigator(
       node: settingMenuFSN,
-      dpadKeyFocusScopeNodeMap: {DpadAction.arrowLeft: sidebarFSN},
+      dpadKeyFocusScopeNodeMap: {
+        DpadAction.arrowLeft: sidebarFSN,
+        DpadAction.arrowRight: contentScreenFSN,
+      },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,15 +57,19 @@ class SettingItems extends ConsumerWidget {
   }
 }
 
-class SettingItem extends StatelessWidget {
-  const SettingItem({
+class SettingMenu extends StatelessWidget {
+  const SettingMenu({
     super.key,
     this.autofocus = false,
     required this.menuText,
+    required this.currentIndex,
+    required this.itemIndex,
     required this.onPressed,
   });
 
   final bool autofocus;
+  final int currentIndex;
+  final int itemIndex;
   final String menuText;
   final VoidCallback onPressed;
 
@@ -68,9 +81,11 @@ class SettingItem extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: (_) => Text(
         menuText,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14.0,
-          color: AppColors.whiteColor,
+          color: currentIndex == itemIndex
+              ? AppColors.chzzkColor
+              : AppColors.whiteColor,
         ),
       ),
     );

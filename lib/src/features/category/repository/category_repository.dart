@@ -11,8 +11,14 @@ import '../model/category.dart';
 part 'category_repository.g.dart';
 
 enum CategorySortType {
-  live,
-  vod,
+  live('POPULAR'),
+  vod('VOD'),
+  popularClip('POPULAR'),
+  recentClip('RECENT');
+
+  final String value;
+
+  const CategorySortType(this.value);
 }
 
 @RestApi(baseUrl: ApiUrl.chzzkService)

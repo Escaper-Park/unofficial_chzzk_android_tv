@@ -1,2 +1,2 @@
 export 'app_info.dart';
-export 'setting_items.dart';
+export 'setting_menu.dart';

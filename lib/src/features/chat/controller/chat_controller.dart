@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../common/constants/api.dart';
 import '../../../utils/dio/dio_client.dart';
-import '../../auth/controller/auth_controller.dart';
 import '../../user/controller/user_controller.dart';
 
 import '../repository/chat_repository.dart';
@@ -17,17 +15,19 @@ import '../model/recent_chat.dart';
 
 part 'chat_controller.g.dart';
 
+/// Chat stream controller
 @riverpod
 class ChatController extends _$ChatController {
-  Options? _options;
+  // Options? _options;
   String? _uid;
   String? _sid;
 
   late ChatRepository _chatRepository;
   late WebSocketChannel _wsChannel;
+  late List<String> _privateUserBlocks;
 
   @override
-  Stream<dynamic> build({
+  Stream<List<dynamic>> build({
     required String channelId,
     required String chatChannelId,
   }) async* {
@@ -35,22 +35,20 @@ class ChatController extends _$ChatController {
     await init();
 
     // connect to chat server
-    await connect();
+    await _connect();
 
-    requestRecentChat();
+    yield* handleMsg();
 
     // disconnect chat ready
-    onDispose();
+    _onDispose();
 
     return;
   }
 
   Future<void> init() async {
-    final auth = await ref.watch(authControllerProvider.future);
     final user = await ref.watch(userControllerProvider.future);
     final dio = ref.watch(dioClientProvider);
 
-    _options = auth?.getOptions();
     _uid = user?.userIdHash;
 
     Random random = Random();
@@ -59,6 +57,9 @@ class ChatController extends _$ChatController {
     _wsChannel =
         WebSocketChannel.connect(Uri.parse(ApiUrl.chatServer(serverNo)));
 
+    _privateUserBlocks =
+        await ref.watch(privateUserBlocksControllerProvider.future);
+
     _chatRepository = ref.read(chatRepositoryProvider(
       wsChannel: _wsChannel,
       chatChannelId: chatChannelId,
@@ -66,19 +67,25 @@ class ChatController extends _$ChatController {
     ));
   }
 
-  Future<void> connect() async {
-    _chatRepository.connect(uid: _uid, options: _options);
+  Future<void> _connect() async {
+    _chatRepository.connect(uid: _uid);
   }
 
-  void requestRecentChat() {
+  void _requestRecentChat() {
     _chatRepository.requestRecentChat(sid: _sid);
   }
 
-  void onDispose() {
+  void _onDispose() {
     ref.onDispose(_chatRepository.disconnect);
   }
 
-  Stream<dynamic> handleMsg() async* {
+  Future<void> disconnect() async {
+    await _chatRepository.disconnect();
+  }
+
+  Stream<List<dynamic>> handleMsg() async* {
+    List<dynamic> allMessages = [];
+
     await for (final msg in _wsChannel.stream) {
       Map<String, dynamic> response = json.decode(msg);
 
@@ -90,17 +97,60 @@ class ChatController extends _$ChatController {
         // connected
         case 10100:
           _sid = response['bdy']['sid'];
+          // request recent chat.
+          _requestRecentChat();
           break;
 
         // recent chat
         case 15101:
-          // TODO : recentChat['bdy']['messageList].reverse();
-          yield RecentChat.fromJson(response);
+          try {
+            // Only chat (not donation, system msg, etc...)
+            final Map<String, dynamic> filteredResponse = {
+              'svcid': response['svcid'],
+              'cmd': response['cmd'],
+              'retCode': response['retCode'],
+              'tid': response['tid'],
+              'cid': response['cid'],
+              // Filter
+              'bdy': {
+                'messageList':
+                    (response['bdy']['messageList'] as List<dynamic>).where(
+                  (element) {
+                    return element['messageTypeCode'] == 1; // Chat
+                  },
+                ).toList(),
+                'userCount': response['bdy']['userCount'],
+              },
+            };
+
+            final RecentChat recentChat = RecentChat.fromJson(filteredResponse);
+
+            final List<RecentChatMsg> msgList = recentChat.bdy.messageList
+                .where((msg) => !_privateUserBlocks
+                    .contains(msg.userId)) // Filter blocked user
+                .toList()
+                .reversed
+                .toList();
+
+            allMessages = [...msgList];
+          } catch (_) {}
+
+          yield allMessages;
 
         // chat
         case 93101:
-          // TODO : chat['bdy'].reverse();
-          yield Chat.fromJson(response);
+          try {
+            final Chat chat = Chat.fromJson(response);
+            final List<ChatBdy> bdy = chat.bdy
+                .where((chatBdy) => !_privateUserBlocks
+                    .contains(chatBdy.uid)) // Filter blocked user
+                .toList()
+                .reversed
+                .toList();
+            allMessages = [...bdy, ...allMessages];
+          } catch (_) {}
+
+          yield allMessages;
 
         // donation
         case 93102:

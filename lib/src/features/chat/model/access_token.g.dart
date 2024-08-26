@@ -11,8 +11,6 @@ _$AccessTokenImpl _$$AccessTokenImplFromJson(Map<String, dynamic> json) =>
       accessToken: json['accessToken'] as String,
       realNameAuth: json['realNameAuth'] as bool,
       extraToken: json['extraToken'] as String,
-      temporaryRestrict: TemporaryRestrict.fromJson(
-          json['temporaryRestrict'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AccessTokenImplToJson(_$AccessTokenImpl instance) =>
@@ -20,7 +18,6 @@ Map<String, dynamic> _$$AccessTokenImplToJson(_$AccessTokenImpl instance) =>
       'accessToken': instance.accessToken,
       'realNameAuth': instance.realNameAuth,
       'extraToken': instance.extraToken,
-      'temporaryRestrict': instance.temporaryRestrict,
     };
 
 _$TemporaryRestrictImpl _$$TemporaryRestrictImplFromJson(
@@ -29,7 +26,7 @@ _$TemporaryRestrictImpl _$$TemporaryRestrictImplFromJson(
       temporaryRestrict: json['temporaryRestrict'] as bool,
       times: (json['times'] as num).toInt(),
       duration: (json['duration'] as num?)?.toInt(),
-      createdTime: (json['createdTime'] as num?)?.toInt(),
+      createdTime: json['createdTime'] as String?,
     );
 
 Map<String, dynamic> _$$TemporaryRestrictImplToJson(

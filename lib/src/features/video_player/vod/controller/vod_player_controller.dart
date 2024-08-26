@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../setting/controller/stream_settings_controller.dart';
+
 part 'vod_player_controller.g.dart';
 
 enum VodOverlayType {
@@ -18,9 +20,15 @@ enum PlaybackDirection {
 }
 
 @riverpod
-class VodPlayerController extends _$VodPlayerController {
+class VodOverlayController extends _$VodOverlayController {
+  late int _overlayControlsDisplayTime;
+
   @override
   VodOverlayType build() {
+    final streamSettings = ref.read(streamSettingsControllerProvider);
+
+    _overlayControlsDisplayTime = streamSettings.overlayControlsDisplayTime;
+
     return VodOverlayType.none;
   }
 
@@ -29,11 +37,14 @@ class VodPlayerController extends _$VodPlayerController {
   }
 
   void changeOverlay({
-    int seconds = 10, // TODO : Change
+    /// Vod overlay type
     required VodOverlayType overlayType,
 
     /// Request focus to video when the timer ends.
     required FocusNode videoFocusNode,
+
+    /// overlay display time
+    int? seconds,
   }) {
     // Hide overlay
     if (overlayType == VodOverlayType.none) {
@@ -44,7 +55,7 @@ class VodPlayerController extends _$VodPlayerController {
     // Show overlay
     else {
       ref.read(vodPlayerOverlayTimerProvider.notifier).startTimer(
-            seconds: seconds,
+            seconds: seconds ?? _overlayControlsDisplayTime,
             startCallback: () {
               videoFocusNode.unfocus();
               setState(overlayType);
@@ -58,29 +69,8 @@ class VodPlayerController extends _$VodPlayerController {
     }
   }
 
-  /// Everytime the button is clicked, the timer is reset to keep the overlay persistent.
-  void seekTo({
-    required FocusNode videoFocusNode,
-    required VideoPlayerController controller,
-    required PlaybackDirection direction,
-    int interval = 10,
-  }) {
-    // TODO : Setting interval?
-    final currentPos = controller.value.position;
-
-    switch (direction) {
-      case PlaybackDirection.forward:
-        final newPos = currentPos + Duration(seconds: interval);
-        if (newPos <= controller.value.duration) {
-          controller.seekTo(newPos);
-        }
-        break;
-      case PlaybackDirection.backword:
-        final newPos = currentPos - Duration(seconds: interval);
-        controller.seekTo(newPos);
-        break;
-    }
-
+  /// Each time the button is clicked, the timer resets to keep the overlay active.
+  void resetOverlayTimer({required FocusNode videoFocusNode}) {
     ref.read(vodPlayerOverlayTimerProvider.notifier).startTimer(
           startCallback: null, // maintain the previous state.
           endCallback: () {
@@ -90,26 +80,68 @@ class VodPlayerController extends _$VodPlayerController {
           },
         );
   }
+}
 
-  void channel() {}
-  void follow() {}
-  void unfollow() {}
+@riverpod
+class VodPlayerController extends _$VodPlayerController {
+  late int _playbackInterval;
+
+  @override
+  void build() {
+    final streamSettings = ref.read(streamSettingsControllerProvider);
+
+    _playbackInterval = switch (streamSettings.vodPlaybackIntervalIndex) {
+      0 => 5,
+      1 => 10,
+      2 => 30,
+      _ => 10,
+    };
+
+    return;
+  }
+
+  void seekTo({
+    required VideoPlayerController controller,
+    required FocusNode videoFocusNode,
+    required PlaybackDirection direction,
+  }) {
+    final currentPos = controller.value.position;
+
+    switch (direction) {
+      case PlaybackDirection.forward:
+        final newPos = currentPos + Duration(seconds: _playbackInterval);
+        if (newPos <= controller.value.duration) {
+          controller.seekTo(newPos);
+        }
+        break;
+      case PlaybackDirection.backword:
+        final newPos = currentPos - Duration(seconds: _playbackInterval);
+        controller.seekTo(newPos);
+        break;
+    }
+
+    // keep overlay state
+    ref
+        .read(vodOverlayControllerProvider.notifier)
+        .resetOverlayTimer(videoFocusNode: videoFocusNode);
+  }
 }
 
 /// Set this true to ensure that the existing state is maintained wherever this timer is called.
 @Riverpod(keepAlive: true)
 class VodPlayerOverlayTimer extends _$VodPlayerOverlayTimer {
+  late int _overlayControlsDisplayTime;
+
   @override
   Timer? build() {
-    // TODO : Timer seconds settings
+    final streamSettings = ref.read(streamSettingsControllerProvider);
+    _overlayControlsDisplayTime = streamSettings.overlayControlsDisplayTime;
+
     return null;
   }
 
   /// Start timer with start callback and stop timer with end callback.
   void startTimer({
-    /// The period(or time) when the overlay is displayed.
-    int seconds = 10,
-
     /// Call this when the timer starts.
     ///
     /// Nullable to reset only timer period.
@@ -117,6 +149,9 @@ class VodPlayerOverlayTimer extends _$VodPlayerOverlayTimer {
 
     /// Call this when the timer ends.
     required VoidCallback? endCallback,
+
+    /// The period(or time) when the overlay is displayed.
+    int? seconds,
   }) {
     // reset before start.
     cancelTimer();
@@ -124,7 +159,7 @@ class VodPlayerOverlayTimer extends _$VodPlayerOverlayTimer {
     if (startCallback != null) startCallback();
 
     state = Timer(
-      Duration(seconds: seconds),
+      Duration(seconds: seconds ?? _overlayControlsDisplayTime),
       () {
         // timer ends
         if (endCallback != null) endCallback();

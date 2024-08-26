@@ -4,9 +4,12 @@ import 'package:flutter/services.dart' show LogicalKeyboardKey;
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './src/common/constants/styles.dart';
 import './src/utils/router/app_router.dart';
+import './src/utils/shared_preferences/shared_prefs.dart';
+import './src/features/auth/controller/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,11 +19,15 @@ void main() async {
   }
 
   // Check memory leaks in images for debugging
-  debugInvertOversizedImages = true;
+  // debugInvertOversizedImages = true;
+
+  // Get local database
+  final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
 
   runApp(
-    const ProviderScope(
-      child: ChzzkTV(),
+    ProviderScope(
+      overrides: [sharedPrefsProvider.overrideWithValue(sharedPrefs)],
+      child: const ChzzkTV(),
     ),
   );
 }
@@ -31,6 +38,8 @@ class ChzzkTV extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appRouter = ref.watch(appRouterProvider);
+    // Eager Initialization auth controller to use saved cookies.
+    ref.watch(authControllerProvider);
 
     // Add shortcuts for global activation of select button in a remote control.
     return Shortcuts(

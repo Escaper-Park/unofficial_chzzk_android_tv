@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/category/model/category.dart';
 import '../../features/channel/model/channel.dart';
-import '../../features/live/model/live.dart';
 import '../../features/vod/model/vod.dart';
 import './screen_index.dart';
 
@@ -27,24 +26,25 @@ enum AppRoute {
   // Home Headers
   allLives('allLives', 'allLives', 7),
   allVods('allVods', 'allVods', 8),
+  popularClip('popularClip', 'popularClip', 9),
 
   // Channel vod
-  channelVods('channelVods', 'channelVods', 9),
+  channelVods('channelVods', 'channelVods', 10),
 
   // Live Streaming
-  liveStreaming('liveStreaming', 'liveStreaming', 10),
+  liveStreaming('liveStreaming', 'liveStreaming', 11),
 
   // Vod Streaming
-  vodStreaming('vodStreaming', 'vodStreaming', 11),
+  vodStreaming('vodStreaming', 'vodStreaming', 12),
 
   // Search results
-  searchResults('searchResults', 'searchResults', 12),
+  searchResults('searchResults', 'searchResults', 13),
 
   // Category details
-  categoryDetail('categoryDetail', 'categoryDetail', 13),
+  categoryDetail('categoryDetail', 'categoryDetail', 14),
 
-  // TODO: Remove
-  temp('temp', 'temp', 100);
+  // Clip
+  clip('clip', 'clip', 15);
 
   final String routePath;
   final String routeName;
@@ -146,7 +146,15 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               child: AllVodsScreen(key: state.pageKey),
             ),
           ),
-          // Channel Vods: 9
+          // Popular Clips: 9
+          GoRoute(
+            path: AppRoute.popularClip.routePath,
+            name: AppRoute.popularClip.routeName,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: PopularClipScreen(key: state.pageKey),
+            ),
+          ),
+          // Channel Vods: 10
           GoRoute(
             path: AppRoute.channelVods.routePath,
             name: AppRoute.channelVods.routeName,
@@ -161,22 +169,17 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               );
             },
           ),
-          // Live Streaming: 10
+          // Live Streaming: 11
           GoRoute(
             path: AppRoute.liveStreaming.routePath,
             name: AppRoute.liveStreaming.routeName,
             pageBuilder: (context, state) {
-              final fields = state.extra as Map<String, dynamic>;
-
               return NoTransitionPage(
-                child: LiveStreamingScreen(
-                  key: state.pageKey,
-                  liveDetail: fields['liveDetail'] as LiveDetail,
-                ),
+                child: LiveStreamingScreen(key: state.pageKey),
               );
             },
           ),
-          // Vod Streaming: 11
+          // Vod Streaming: 12
           GoRoute(
             path: AppRoute.vodStreaming.routePath,
             name: AppRoute.vodStreaming.routeName,
@@ -192,7 +195,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               );
             },
           ),
-          // Search Results: 12
+          // Search Results: 13
           GoRoute(
             path: AppRoute.searchResults.routePath,
             name: AppRoute.searchResults.routeName,
@@ -207,7 +210,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               );
             },
           ),
-          // Category details: 13
+          // Category details: 14
           GoRoute(
             path: AppRoute.categoryDetail.routePath,
             name: AppRoute.categoryDetail.routeName,
@@ -218,6 +221,21 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
                 child: CategoryDetailScreen(
                   key: state.pageKey,
                   category: fields['category'] as Category,
+                ),
+              );
+            },
+          ),
+          // Clip : 15
+          GoRoute(
+            path: AppRoute.clip.routePath,
+            name: AppRoute.clip.routeName,
+            pageBuilder: (context, state) {
+              final fields = state.extra as Map<String, dynamic>;
+
+              return NoTransitionPage(
+                child: ClipScreen(
+                  key: state.pageKey,
+                  url: fields['url'] as String,
                 ),
               );
             },

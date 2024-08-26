@@ -6,13 +6,30 @@ part of 'vod_player_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$vodOverlayControllerHash() =>
+    r'1ef99c17df024c145705c5ed914c51722bff053b';
+
+/// See also [VodOverlayController].
+@ProviderFor(VodOverlayController)
+final vodOverlayControllerProvider =
+    AutoDisposeNotifierProvider<VodOverlayController, VodOverlayType>.internal(
+  VodOverlayController.new,
+  name: r'vodOverlayControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$vodOverlayControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$VodOverlayController = AutoDisposeNotifier<VodOverlayType>;
 String _$vodPlayerControllerHash() =>
-    r'8d127d31ed6ee83da290ec5030bf0597b0b263bf';
+    r'bcd8601219eccd503e237080c6544335247317dc';
 
 /// See also [VodPlayerController].
 @ProviderFor(VodPlayerController)
 final vodPlayerControllerProvider =
-    AutoDisposeNotifierProvider<VodPlayerController, VodOverlayType>.internal(
+    AutoDisposeNotifierProvider<VodPlayerController, void>.internal(
   VodPlayerController.new,
   name: r'vodPlayerControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,9 +39,9 @@ final vodPlayerControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$VodPlayerController = AutoDisposeNotifier<VodOverlayType>;
+typedef _$VodPlayerController = AutoDisposeNotifier<void>;
 String _$vodPlayerOverlayTimerHash() =>
-    r'55e7349d5384267a0da20b9cdf80caae36741df5';
+    r'9d35118a925b3d42aae30f5fd73a1d96d128bc44';
 
 /// Set this true to ensure that the existing state is maintained wherever this timer is called.
 ///

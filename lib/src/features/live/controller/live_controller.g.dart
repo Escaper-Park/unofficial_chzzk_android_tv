@@ -23,7 +23,7 @@ final liveControllerProvider =
 
 typedef _$LiveController = AutoDisposeNotifier<void>;
 String _$allLivesControllerHash() =>
-    r'077eb6981bf91fd68a92bc5578db24fc571e0490';
+    r'aea3b1533125ef05cb3dd17981261e4f11f11db7';
 
 /// Copied from Dart SDK
 class _SystemHash {

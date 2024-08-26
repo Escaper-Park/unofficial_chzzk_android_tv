@@ -13,8 +13,7 @@ class _UserRepository implements UserRepository {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??=
-        'https://comm-api.game.naver.com/nng_main/v1/user/getUserStatus';
+    baseUrl ??= 'https://comm-api.game.naver.com/nng_main';
   }
 
   final Dio _dio;
@@ -35,7 +34,7 @@ class _UserRepository implements UserRepository {
     )
             .compose(
               _dio.options,
-              '',
+              '/v1/user/getUserStatus',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,6 +44,33 @@ class _UserRepository implements UserRepository {
               baseUrl,
             ))));
     final _value = _result.data == null ? null : User.fromJson(_result.data!);
+    return _value;
+  }
+
+  @override
+  Future<List<String>> getPrivateUserBlocks() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<String>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/privateUserBlocks/allUserIdHash',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final _value = _result.data!.cast<String>();
     return _value;
   }
 

@@ -43,21 +43,24 @@ class HomeCategoryContainer extends StatelessWidget {
           // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
-            child: category.posterImageUrl == null
-                ? OptimizedAssetImage(
-                    imagePath: AssetsPath.categoryBaseThumbnail,
-                    imageWidth: containerSize.width,
-                    imageHeight: containerSize.height,
-                  )
-                : OptimizedNetworkImage(
-                    imageUrl: category.posterImageUrl!,
-                    imageWidth: containerSize.width,
-                    imageHeight: containerSize.height,
-                  ),
+            child: SizedBox(
+              width: containerSize.width,
+              child: category.posterImageUrl == null
+                  ? OptimizedAssetImage(
+                      imagePath: AssetsPath.categoryBaseThumbnail,
+                      imageWidth: containerSize.width,
+                      imageHeight: containerSize.height,
+                    )
+                  : OptimizedNetworkImage(
+                      imageUrl: category.posterImageUrl!,
+                      imageWidth: containerSize.width,
+                      imageHeight: containerSize.height,
+                    ),
+            ),
           ),
           // Category
           SizedBox(
-            width: containerSize.width - 10.0,
+            width: containerSize.width,
             child: TagBadge(
               margin: const EdgeInsets.all(5.0),
               alignment: Alignment.topLeft,
@@ -67,7 +70,7 @@ class HomeCategoryContainer extends StatelessWidget {
           ),
           // Status
           SizedBox(
-            width: containerSize.width - 10.0,
+            width: containerSize.width,
             child: TagBadge(
               margin: const EdgeInsets.all(5.0),
               alignment: Alignment.bottomRight,

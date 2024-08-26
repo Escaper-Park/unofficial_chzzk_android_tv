@@ -40,7 +40,7 @@ class VodTitle extends StatelessWidget {
     return Text(
       vodTitle.replaceAll('\n', ' '),
       style: TextStyle(
-        fontSize: 12.0,
+        fontSize: 13.0,
         color: AppColors.whiteColor,
         overflow: overflow,
       ),

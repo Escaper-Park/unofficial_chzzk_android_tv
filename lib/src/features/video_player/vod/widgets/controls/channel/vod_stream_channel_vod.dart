@@ -36,12 +36,21 @@ class VodStreamChannelVod extends ConsumerWidget {
       channelVodControllerProvider(
           channelId: channel.channelId, sortType: VodSortType.latest),
     );
+
     return DpadHorizontalListViewContainer<Vod>(
       containerHeight: Dimensions.vodStreamVodContainerHeight,
       containerWidth: Dimensions.vodstreamVodThumbnailWidth,
       aboveFSN: followingButtonFSN,
       useExceptionFallbackWidget: false,
-      scrollPadding: 10.0,
+      useFetchMore: true,
+      horizontalPadding: 10.0,
+      fetchMore: () async {
+        await ref
+            .read(channelVodControllerProvider(
+                    channelId: channel.channelId, sortType: VodSortType.latest)
+                .notifier)
+            .fetchMore();
+      },
       asyncValue: asyncChannelVods,
       emptyText: '채널에 동영상이 없습니다',
       errorText: '채널 동영상을 불러올 수 없습니다',
@@ -78,49 +87,49 @@ class VodStreamChannelVodContainer extends ConsumerWidget {
     // yyyy-MM-dd
     final String publishDate = vod.publishDate.split(' ')[0];
 
-    return DpadActionWidget(
-      autofocus: autofocus,
-      focusNode: focusNode,
-      useFocusedBorder: true,
-      useKeyRepeatEvent: false,
-      dpadActionCallbacks: {
-        DpadAction.arrowRight: () {
-          // Reset overlay timer
-          ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
-                overlayType: VodOverlayType.channelData,
-                videoFocusNode: videoFocusNode,
-              );
-        },
-        DpadAction.arrowLeft: () {
-          // Reset overlay timer
-          ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
-                overlayType: VodOverlayType.channelData,
-                videoFocusNode: videoFocusNode,
-              );
-        },
-        DpadAction.select: () async {
-          if (vod.channel.personalData?.privateUserBlock == true) {
-            return;
-          }
+    return SizedBox(
+      height: Dimensions.vodStreamVodContainerHeight,
+      width: Dimensions.vodstreamVodThumbnailWidth,
+      child: DpadActionWidget(
+        autofocus: autofocus,
+        focusNode: focusNode,
+        useFocusedBorder: true,
+        useKeyRepeatEvent: false,
+        dpadActionCallbacks: {
+          DpadAction.arrowRight: () {
+            // Reset overlay timer
+            ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
+                  overlayType: VodOverlayType.channelData,
+                  videoFocusNode: videoFocusNode,
+                );
+          },
+          DpadAction.arrowLeft: () {
+            // Reset overlay timer
+            ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
+                  overlayType: VodOverlayType.channelData,
+                  videoFocusNode: videoFocusNode,
+                );
+          },
+          DpadAction.select: () async {
+            if (vod.channel.personalData?.privateUserBlock == true) {
+              return;
+            }
 
-          final vodResponse = await ref
-              .read(vodControllerProvider.notifier)
-              .getVodPlayback(videoNo: vod.videoNo);
+            final vodResponse = await ref
+                .read(vodControllerProvider.notifier)
+                .getVodPlayback(videoNo: vod.videoNo);
 
-          if (context.mounted) {
-            if (vodResponse != null) {
-              context.pushReplacementNamed(AppRoute.vodStreaming.routeName,
-                  extra: {
-                    'vodPath': vodResponse,
-                    'vod': vod,
-                  });
+            if (context.mounted) {
+              if (vodResponse != null) {
+                context.pushReplacementNamed(AppRoute.vodStreaming.routeName,
+                    extra: {
+                      'vodPath': vodResponse,
+                      'vod': vod,
+                    });
+              }
             }
           }
-        }
-      },
-      child: SizedBox(
-        height: Dimensions.vodStreamVodContainerHeight,
-        width: Dimensions.vodstreamVodThumbnailWidth,
+        },
         child: Stack(
           children: [
             // Thumbnail
@@ -142,7 +151,7 @@ class VodStreamChannelVodContainer extends ConsumerWidget {
               alignment: Alignment.bottomCenter,
               backgroundColor: AppColors.blackColor,
               borderRadius: 12.0,
-              backgroundOpacity: 0.75,
+              backgroundOpacity: 0.5,
               useTopBorder: false,
               useBottomBorder: true,
               padding: const EdgeInsets.symmetric(horizontal: 10.0),

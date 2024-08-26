@@ -23,7 +23,6 @@ mixin _$AccessToken {
   String get accessToken => throw _privateConstructorUsedError;
   bool get realNameAuth => throw _privateConstructorUsedError;
   String get extraToken => throw _privateConstructorUsedError;
-  TemporaryRestrict get temporaryRestrict => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,13 +36,7 @@ abstract class $AccessTokenCopyWith<$Res> {
           AccessToken value, $Res Function(AccessToken) then) =
       _$AccessTokenCopyWithImpl<$Res, AccessToken>;
   @useResult
-  $Res call(
-      {String accessToken,
-      bool realNameAuth,
-      String extraToken,
-      TemporaryRestrict temporaryRestrict});
-
-  $TemporaryRestrictCopyWith<$Res> get temporaryRestrict;
+  $Res call({String accessToken, bool realNameAuth, String extraToken});
 }
 
 /// @nodoc
@@ -62,7 +55,6 @@ class _$AccessTokenCopyWithImpl<$Res, $Val extends AccessToken>
     Object? accessToken = null,
     Object? realNameAuth = null,
     Object? extraToken = null,
-    Object? temporaryRestrict = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -77,19 +69,7 @@ class _$AccessTokenCopyWithImpl<$Res, $Val extends AccessToken>
           ? _value.extraToken
           : extraToken // ignore: cast_nullable_to_non_nullable
               as String,
-      temporaryRestrict: null == temporaryRestrict
-          ? _value.temporaryRestrict
-          : temporaryRestrict // ignore: cast_nullable_to_non_nullable
-              as TemporaryRestrict,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $TemporaryRestrictCopyWith<$Res> get temporaryRestrict {
-    return $TemporaryRestrictCopyWith<$Res>(_value.temporaryRestrict, (value) {
-      return _then(_value.copyWith(temporaryRestrict: value) as $Val);
-    });
   }
 }
 
@@ -101,14 +81,7 @@ abstract class _$$AccessTokenImplCopyWith<$Res>
       __$$AccessTokenImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String accessToken,
-      bool realNameAuth,
-      String extraToken,
-      TemporaryRestrict temporaryRestrict});
-
-  @override
-  $TemporaryRestrictCopyWith<$Res> get temporaryRestrict;
+  $Res call({String accessToken, bool realNameAuth, String extraToken});
 }
 
 /// @nodoc
@@ -125,7 +98,6 @@ class __$$AccessTokenImplCopyWithImpl<$Res>
     Object? accessToken = null,
     Object? realNameAuth = null,
     Object? extraToken = null,
-    Object? temporaryRestrict = null,
   }) {
     return _then(_$AccessTokenImpl(
       accessToken: null == accessToken
@@ -140,10 +112,6 @@ class __$$AccessTokenImplCopyWithImpl<$Res>
           ? _value.extraToken
           : extraToken // ignore: cast_nullable_to_non_nullable
               as String,
-      temporaryRestrict: null == temporaryRestrict
-          ? _value.temporaryRestrict
-          : temporaryRestrict // ignore: cast_nullable_to_non_nullable
-              as TemporaryRestrict,
     ));
   }
 }
@@ -154,8 +122,7 @@ class _$AccessTokenImpl implements _AccessToken {
   const _$AccessTokenImpl(
       {required this.accessToken,
       required this.realNameAuth,
-      required this.extraToken,
-      required this.temporaryRestrict});
+      required this.extraToken});
 
   factory _$AccessTokenImpl.fromJson(Map<String, dynamic> json) =>
       _$$AccessTokenImplFromJson(json);
@@ -166,12 +133,10 @@ class _$AccessTokenImpl implements _AccessToken {
   final bool realNameAuth;
   @override
   final String extraToken;
-  @override
-  final TemporaryRestrict temporaryRestrict;
 
   @override
   String toString() {
-    return 'AccessToken(accessToken: $accessToken, realNameAuth: $realNameAuth, extraToken: $extraToken, temporaryRestrict: $temporaryRestrict)';
+    return 'AccessToken(accessToken: $accessToken, realNameAuth: $realNameAuth, extraToken: $extraToken)';
   }
 
   @override
@@ -184,15 +149,13 @@ class _$AccessTokenImpl implements _AccessToken {
             (identical(other.realNameAuth, realNameAuth) ||
                 other.realNameAuth == realNameAuth) &&
             (identical(other.extraToken, extraToken) ||
-                other.extraToken == extraToken) &&
-            (identical(other.temporaryRestrict, temporaryRestrict) ||
-                other.temporaryRestrict == temporaryRestrict));
+                other.extraToken == extraToken));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, accessToken, realNameAuth, extraToken, temporaryRestrict);
+  int get hashCode =>
+      Object.hash(runtimeType, accessToken, realNameAuth, extraToken);
 
   @JsonKey(ignore: true)
   @override
@@ -212,8 +175,7 @@ abstract class _AccessToken implements AccessToken {
   const factory _AccessToken(
       {required final String accessToken,
       required final bool realNameAuth,
-      required final String extraToken,
-      required final TemporaryRestrict temporaryRestrict}) = _$AccessTokenImpl;
+      required final String extraToken}) = _$AccessTokenImpl;
 
   factory _AccessToken.fromJson(Map<String, dynamic> json) =
       _$AccessTokenImpl.fromJson;
@@ -224,8 +186,6 @@ abstract class _AccessToken implements AccessToken {
   bool get realNameAuth;
   @override
   String get extraToken;
-  @override
-  TemporaryRestrict get temporaryRestrict;
   @override
   @JsonKey(ignore: true)
   _$$AccessTokenImplCopyWith<_$AccessTokenImpl> get copyWith =>
@@ -241,7 +201,7 @@ mixin _$TemporaryRestrict {
   bool get temporaryRestrict => throw _privateConstructorUsedError;
   int get times => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
-  int? get createdTime => throw _privateConstructorUsedError;
+  String? get createdTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -256,7 +216,7 @@ abstract class $TemporaryRestrictCopyWith<$Res> {
       _$TemporaryRestrictCopyWithImpl<$Res, TemporaryRestrict>;
   @useResult
   $Res call(
-      {bool temporaryRestrict, int times, int? duration, int? createdTime});
+      {bool temporaryRestrict, int times, int? duration, String? createdTime});
 }
 
 /// @nodoc
@@ -293,7 +253,7 @@ class _$TemporaryRestrictCopyWithImpl<$Res, $Val extends TemporaryRestrict>
       createdTime: freezed == createdTime
           ? _value.createdTime
           : createdTime // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
     ) as $Val);
   }
 }
@@ -307,7 +267,7 @@ abstract class _$$TemporaryRestrictImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool temporaryRestrict, int times, int? duration, int? createdTime});
+      {bool temporaryRestrict, int times, int? duration, String? createdTime});
 }
 
 /// @nodoc
@@ -342,7 +302,7 @@ class __$$TemporaryRestrictImplCopyWithImpl<$Res>
       createdTime: freezed == createdTime
           ? _value.createdTime
           : createdTime // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
     ));
   }
 }
@@ -366,7 +326,7 @@ class _$TemporaryRestrictImpl implements _TemporaryRestrict {
   @override
   final int? duration;
   @override
-  final int? createdTime;
+  final String? createdTime;
 
   @override
   String toString() {
@@ -412,7 +372,7 @@ abstract class _TemporaryRestrict implements TemporaryRestrict {
       {required final bool temporaryRestrict,
       required final int times,
       required final int? duration,
-      required final int? createdTime}) = _$TemporaryRestrictImpl;
+      required final String? createdTime}) = _$TemporaryRestrictImpl;
 
   factory _TemporaryRestrict.fromJson(Map<String, dynamic> json) =
       _$TemporaryRestrictImpl.fromJson;
@@ -424,7 +384,7 @@ abstract class _TemporaryRestrict implements TemporaryRestrict {
   @override
   int? get duration;
   @override
-  int? get createdTime;
+  String? get createdTime;
   @override
   @JsonKey(ignore: true)
   _$$TemporaryRestrictImplCopyWith<_$TemporaryRestrictImpl> get copyWith =>

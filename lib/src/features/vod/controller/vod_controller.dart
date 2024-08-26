@@ -90,10 +90,15 @@ class FollowingVodController extends _$FollowingVodController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final followingVodResponse = await _repository.getFollowingVods(
+        final followingVodResponse = await _repository
+            .getFollowingVods(
           size: 18,
           nextNo: _next,
-        );
+        )
+            .catchError((_) {
+          ref.read(followingVodFetchMoreStateProvider.notifier).setState(false);
+          return null;
+        });
 
         _next = followingVodResponse?.next;
 

@@ -64,12 +64,17 @@ class AllLivesController extends _$AllLivesController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final liveRespnse = await _repository.getLiveResponse(
+        final liveRespnse = await _repository
+            .getLiveResponse(
           size: 18,
           sortType: sortType.value,
           concurrentUserCount: _next!.concurrentUserCount,
           liveId: _next!.liveId,
-        );
+        )
+            .catchError((_) {
+          ref.read(liveFetchMoreLoadingStateProvider.notifier).setState(false);
+          return null;
+        });
 
         _next = liveRespnse?.next;
 

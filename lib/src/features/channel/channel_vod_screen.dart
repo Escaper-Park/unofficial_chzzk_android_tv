@@ -8,6 +8,7 @@ import '../vod/repository/vod_repository.dart';
 import './controller/channel_controller.dart';
 import './model/channel.dart';
 import './widgets/channel_all_vod/channel_all_vod_list.dart';
+import 'widgets/channel_all_vod/channel_clip_list.dart';
 
 class ChannelVodsScreen extends HookWidget {
   const ChannelVodsScreen({super.key, required this.channel});
@@ -38,7 +39,51 @@ class ChannelVodsScreen extends HookWidget {
           }
         }
       ),
+      (
+        '클립 (최신순)',
+        () {
+          if (vodSortType.value != VodSortType.recentClip) {
+            vodSortType.value = VodSortType.recentClip;
+          }
+        }
+      ),
+      (
+        '클립 (인기순)',
+        () {
+          if (vodSortType.value != VodSortType.popularClip) {
+            vodSortType.value = VodSortType.popularClip;
+          }
+        }
+      ),
     ];
+
+    final Widget videoGridView = switch (vodSortType.value) {
+      VodSortType.latest => ChannelAllVodList(
+          channelId: channel.channelId,
+          sortType: vodSortType.value,
+          gridViewFSN: gridViewFSN,
+          sidebarFSN: sidebarFSN,
+        ),
+      VodSortType.popular => ChannelAllVodList(
+          channelId: channel.channelId,
+          sortType: vodSortType.value,
+          gridViewFSN: gridViewFSN,
+          sidebarFSN: sidebarFSN,
+        ),
+      VodSortType.popularClip => ChannelClipList(
+          channelId: channel.channelId,
+          sortType: vodSortType.value,
+          gridViewFSN: gridViewFSN,
+          sidebarFSN: sidebarFSN,
+        ),
+      VodSortType.recentClip => ChannelClipList(
+          channelId: channel.channelId,
+          sortType: vodSortType.value,
+          gridViewFSN: gridViewFSN,
+          sidebarFSN: sidebarFSN,
+        ),
+      _ => Container(),
+    };
 
     return VideoGridViewScreen(
       onPopInvoked: (_) {
@@ -57,12 +102,7 @@ class ChannelVodsScreen extends HookWidget {
       gridViewFSN: gridViewFSN,
       sidebarItems: sidebarItems,
       loadingStateProvider: channelFetchMoreLoadingStateProvider,
-      videoGridView: ChannelAllVodList(
-        channelId: channel.channelId,
-        sortType: vodSortType.value,
-        gridViewFSN: gridViewFSN,
-        sidebarFSN: sidebarFSN,
-      ),
+      videoGridView: videoGridView,
     );
   }
 }

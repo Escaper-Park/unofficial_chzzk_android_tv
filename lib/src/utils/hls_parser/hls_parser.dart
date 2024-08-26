@@ -9,7 +9,7 @@ class HlsParser {
 
   final Dio _dio = DioClient().getBaseDio();
 
-  Future<String?> getContents() async {
+  Future<String?> _getContents() async {
     try {
       final response = await _dio.get(hlsUrl);
 
@@ -22,7 +22,7 @@ class HlsParser {
   }
 
   Future<List<Uri?>?> getMediaPlaylistUrls() async {
-    final String? contents = await getContents();
+    final String? contents = await _getContents();
 
     if (contents != null) {
       final playList = await HlsPlaylistParser.create()

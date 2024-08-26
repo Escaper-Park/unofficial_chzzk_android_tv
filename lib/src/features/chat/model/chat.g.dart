@@ -33,13 +33,11 @@ _$ChatBdyImpl _$$ChatBdyImplFromJson(Map<String, dynamic> json) =>
       cid: json['cid'] as String,
       mbrCnt: (json['mbrCnt'] as num).toInt(),
       uid: json['uid'] as String,
-      profile: json['profile'] == null
-          ? null
-          : Profile.fromJson(json['profile'] as Map<String, dynamic>),
+      profile: profileFromJson(json['profile'] as String),
       msg: json['msg'] as String,
       msgTypeCode: (json['msgTypeCode'] as num).toInt(),
       msgStatusType: json['msgStatusType'] as String,
-      extras: Extras.fromJson(json['extras'] as Map<String, dynamic>),
+      extras: extrasFromJson(json['extras'] as String),
       ctime: (json['ctime'] as num).toInt(),
       utime: (json['utime'] as num).toInt(),
       msgTid: json['msgTid'],
@@ -68,7 +66,7 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       userIdHash: json['userIdHash'] as String,
       nickname: json['nickname'] as String,
       profileImageUrl: json['profileImageUrl'] as String?,
-      userRoleCode: json['userRoleCode'] as String,
+      userRoleCode: json['userRoleCode'] as String?,
       badge: json['badge'] == null
           ? null
           : Badge.fromJson(json['badge'] as Map<String, dynamic>),
@@ -99,28 +97,14 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
     };
 
 _$ExtrasImpl _$$ExtrasImplFromJson(Map<String, dynamic> json) => _$ExtrasImpl(
-      chatType: json['chatType'] as String,
-      osType: json['osType'] as String,
-      streamingChannelId: json['streamingChannelId'] as String,
-      emojis: (json['emojis'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
-      ),
-      extraToken: json['extraToken'] as String,
+      chatType: json['chatType'] as String?,
+      osType: json['osType'] as String?,
+      streamingChannelId: json['streamingChannelId'] as String?,
+      emojis: json['emojis'],
+      extraToken: json['extraToken'] as String?,
       durationTime: (json['durationTime'] as num?)?.toInt(),
       month: (json['month'] as num?)?.toInt(),
       tierNo: (json['tierNo'] as num?)?.toInt(),
-      isAnonymous: json['isAnonymous'] as bool?,
-      payType: json['payType'] as String?,
-      payAmount: (json['payAmount'] as num?)?.toInt(),
-      nickname: json['nickname'] as String?,
-      donationType: json['donationType'] as String?,
-      weeklyRankList: (json['weeklyRankList'] as List<dynamic>?)
-          ?.map((e) => WeeklyRank.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      donationUserWeeklyRank: json['donationUserWeeklyRank'] == null
-          ? null
-          : WeeklyRank.fromJson(
-              json['donationUserWeeklyRank'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$ExtrasImplToJson(_$ExtrasImpl instance) =>
@@ -133,13 +117,6 @@ Map<String, dynamic> _$$ExtrasImplToJson(_$ExtrasImpl instance) =>
       'durationTime': instance.durationTime,
       'month': instance.month,
       'tierNo': instance.tierNo,
-      'isAnonymous': instance.isAnonymous,
-      'payType': instance.payType,
-      'payAmount': instance.payAmount,
-      'nickname': instance.nickname,
-      'donationType': instance.donationType,
-      'weeklyRankList': instance.weeklyRankList,
-      'donationUserWeeklyRank': instance.donationUserWeeklyRank,
     };
 
 _$ChatTitleImpl _$$ChatTitleImplFromJson(Map<String, dynamic> json) =>
@@ -155,7 +132,7 @@ Map<String, dynamic> _$$ChatTitleImplToJson(_$ChatTitleImpl instance) =>
     };
 
 _$BadgeImpl _$$BadgeImplFromJson(Map<String, dynamic> json) => _$BadgeImpl(
-      imageUrl: json['imageUrl'] as String,
+      imageUrl: json['imageUrl'] as String?,
     );
 
 Map<String, dynamic> _$$BadgeImplToJson(_$BadgeImpl instance) =>
@@ -166,8 +143,8 @@ Map<String, dynamic> _$$BadgeImplToJson(_$BadgeImpl instance) =>
 _$ActivityBadgeImpl _$$ActivityBadgeImplFromJson(Map<String, dynamic> json) =>
     _$ActivityBadgeImpl(
       badgeNo: (json['badgeNo'] as num).toInt(),
-      badgeId: json['badgeId'] as String,
-      imageUrl: json['imageUrl'] as String,
+      badgeId: json['badgeId'] as String?,
+      imageUrl: json['imageUrl'] as String?,
       activated: json['activated'] as bool,
     );
 
@@ -205,7 +182,9 @@ _$SubscriptionImpl _$$SubscriptionImplFromJson(Map<String, dynamic> json) =>
     _$SubscriptionImpl(
       accumulativeMonth: (json['accumulativeMonth'] as num).toInt(),
       tier: (json['tier'] as num).toInt(),
-      badge: Badge.fromJson(json['badge'] as Map<String, dynamic>),
+      badge: json['badge'] == null
+          ? null
+          : Badge.fromJson(json['badge'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$SubscriptionImplToJson(_$SubscriptionImpl instance) =>

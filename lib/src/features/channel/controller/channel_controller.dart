@@ -122,13 +122,20 @@ class ChannelVodController extends _$ChannelVodController {
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
-        final channelVodResponse = await _repository.getChannelVods(
+        final channelVodResponse = await _repository
+            .getChannelVods(
           channelId: channelId,
           sortType: sortType.value,
           pagingType: 'PAGE',
           page: _next,
           size: 18,
-        );
+        )
+            .catchError((_) {
+          ref
+              .read(channelFetchMoreLoadingStateProvider.notifier)
+              .setState(false);
+          return null;
+        });
 
         _next += 1;
 

@@ -16,7 +16,10 @@ class VodStreamingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: VodPlayer(vodPath: vodPath, vod: vod),
+      body: VodPlayer(
+        vodPath: vodPath,
+        vod: vod,
+      ),
     );
   }
 }

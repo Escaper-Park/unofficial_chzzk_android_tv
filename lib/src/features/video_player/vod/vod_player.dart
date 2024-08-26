@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../common/widgets/center_widgets.dart';
 import '../../vod/model/vod.dart';
 import 'vod_controls_overlay.dart';
 
-class VodPlayer extends ConsumerStatefulWidget {
+class VodPlayer extends StatefulWidget {
   const VodPlayer({
     super.key,
     required this.vodPath,
@@ -18,11 +17,10 @@ class VodPlayer extends ConsumerStatefulWidget {
   final Vod vod;
 
   @override
-  ConsumerState<VodPlayer> createState() => _VodPlayerState();
+  State<VodPlayer> createState() => _VodPlayerState();
 }
 
-class _VodPlayerState extends ConsumerState<VodPlayer>
-    with WidgetsBindingObserver {
+class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
   VideoPlayerController? _videoPlayerController;
 
   // Show current state.
@@ -88,6 +86,7 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
       _videoPlayerController!.removeListener(_checkVideoEnds);
       _videoPlayerController!.dispose();
     }
+
     super.dispose();
   }
 
@@ -134,7 +133,7 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
               VodControlsOverlay(
                 controller: _videoPlayerController!,
                 vod: widget.vod,
-              )
+              ),
             ],
           )
         : CenteredText(text: msg);

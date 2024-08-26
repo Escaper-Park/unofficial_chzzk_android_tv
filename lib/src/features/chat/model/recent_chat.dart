@@ -12,7 +12,7 @@ class RecentChat with _$RecentChat {
     required RecentChatBdy bdy,
     required int cmd,
     required int retCode,
-    required int retMsg,
+    required String? retMsg,
     required String? tid,
     required String? cid,
   }) = _RecentChat;
@@ -26,7 +26,7 @@ class RecentChatBdy with _$RecentChatBdy {
   factory RecentChatBdy({
     required List<RecentChatMsg> messageList,
     required int? userCount,
-    required Notice? notice,
+    // required Notice? notice,
   }) = _RecentChatBdy;
 
   factory RecentChatBdy.fromJson(Map<String, dynamic> json) =>
@@ -40,9 +40,9 @@ class RecentChatMsg with _$RecentChatMsg {
     required String channelId,
     required int messageTime,
     required String userId,
-    required Profile profile,
+    @JsonKey(fromJson: profileFromJson) required Profile? profile,
     required String content,
-    required Extras extras,
+    @JsonKey(fromJson: extrasFromJson) required Extras extras,
     required int memberCount,
     required int messageTypeCode,
     required String messageStatusType,

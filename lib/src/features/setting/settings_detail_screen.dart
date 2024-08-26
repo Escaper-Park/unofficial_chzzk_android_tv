@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import './controller/setting_screen_controller.dart';
-import 'widgets/licenses_screen.dart';
+import 'widgets/chat/chat_settings_screen.dart';
+import 'widgets/licences/licenses.dart';
+import 'widgets/streaming/stream_settings_screen.dart';
+import 'widgets/update/update_screen.dart';
 
 class SettingsDetailScreen extends ConsumerWidget {
   const SettingsDetailScreen({
@@ -21,9 +24,9 @@ class SettingsDetailScreen extends ConsumerWidget {
     final settingScreenIndex = ref.watch(settingScreenControllerProvider);
 
     final List<Widget> screens = [
-      Container(),
-      Container(),
-      Container(),
+      StreamSettingsScreen(settingMenuFSN: settingMenuFSN),
+      ChatSettingsScreen(settingMenuFSN: settingMenuFSN),
+      const UpdateScreen(),
       OpenSourceLicencesScreen(settingMenuFSN: settingMenuFSN),
     ];
 

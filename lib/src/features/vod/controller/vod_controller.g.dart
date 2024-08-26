@@ -23,7 +23,7 @@ final vodControllerProvider =
 
 typedef _$VodController = AutoDisposeNotifier<void>;
 String _$followingVodControllerHash() =>
-    r'2f11f9792d26ca6cd050f27070454768793dc85c';
+    r'99dd7a3cb75c83d190dd82e4b71e0daa564c5fca';
 
 /// See also [FollowingVodController].
 @ProviderFor(FollowingVodController)

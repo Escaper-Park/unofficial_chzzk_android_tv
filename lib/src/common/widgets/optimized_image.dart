@@ -59,6 +59,12 @@ class OptimizedNetworkImage extends StatelessWidget {
         ? '${imageUrl}_${DateTime.now().minute ~/ updateCacheIntervalMin}'
         : imageUrl;
 
+    if (useDynamicCacheKey) {
+      // Remove old cache data.
+      CachedNetworkImage.evictFromCache(
+          '${imageUrl}_${(DateTime.now().minute ~/ updateCacheIntervalMin) - 1}');
+    }
+
     return CachedNetworkImage(
       imageUrl: imageUrl,
       imageBuilder: imageBuilder,
@@ -222,7 +228,7 @@ class _ImageErrorPlaceholder extends StatelessWidget {
       child: const FittedBox(
         fit: BoxFit.scaleDown,
         child: CenteredText(
-          text: '오류',
+          text: '이미지 로딩 오류',
           fontSize: 11.0,
           fontColor: AppColors.redColor,
         ),

@@ -56,7 +56,7 @@ class LiveInfoCard extends StatelessWidget {
                 // Channel name
                 ChannelNameWithVerifiedMark(
                   channel: channel,
-                  fontSize: 13.0,
+                  fontSize: 12.0,
                 ),
                 // Category
                 const SizedBox(height: 3.0),
@@ -106,7 +106,7 @@ class LiveTitle extends StatelessWidget {
     return Text(
       newlineRemovedTitle,
       style: const TextStyle(
-        fontSize: 13.0,
+        fontSize: 12.0,
         overflow: TextOverflow.ellipsis,
         color: AppColors.whiteColor,
         fontWeight: FontWeight.w600,

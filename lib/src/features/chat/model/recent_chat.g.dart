@@ -12,7 +12,7 @@ _$RecentChatImpl _$$RecentChatImplFromJson(Map<String, dynamic> json) =>
       bdy: RecentChatBdy.fromJson(json['bdy'] as Map<String, dynamic>),
       cmd: (json['cmd'] as num).toInt(),
       retCode: (json['retCode'] as num).toInt(),
-      retMsg: (json['retMsg'] as num).toInt(),
+      retMsg: json['retMsg'] as String?,
       tid: json['tid'] as String?,
       cid: json['cid'] as String?,
     );
@@ -34,16 +34,12 @@ _$RecentChatBdyImpl _$$RecentChatBdyImplFromJson(Map<String, dynamic> json) =>
           .map((e) => RecentChatMsg.fromJson(e as Map<String, dynamic>))
           .toList(),
       userCount: (json['userCount'] as num?)?.toInt(),
-      notice: json['notice'] == null
-          ? null
-          : Notice.fromJson(json['notice'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$RecentChatBdyImplToJson(_$RecentChatBdyImpl instance) =>
     <String, dynamic>{
       'messageList': instance.messageList,
       'userCount': instance.userCount,
-      'notice': instance.notice,
     };
 
 _$RecentChatMsgImpl _$$RecentChatMsgImplFromJson(Map<String, dynamic> json) =>
@@ -52,9 +48,9 @@ _$RecentChatMsgImpl _$$RecentChatMsgImplFromJson(Map<String, dynamic> json) =>
       channelId: json['channelId'] as String,
       messageTime: (json['messageTime'] as num).toInt(),
       userId: json['userId'] as String,
-      profile: Profile.fromJson(json['profile'] as Map<String, dynamic>),
+      profile: profileFromJson(json['profile'] as String),
       content: json['content'] as String,
-      extras: Extras.fromJson(json['extras'] as Map<String, dynamic>),
+      extras: extrasFromJson(json['extras'] as String),
       memberCount: (json['memberCount'] as num).toInt(),
       messageTypeCode: (json['messageTypeCode'] as num).toInt(),
       messageStatusType: json['messageStatusType'] as String,

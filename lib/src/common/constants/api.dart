@@ -14,9 +14,14 @@ class ApiUrl {
 
   /// [naverGame] Login 'Cookie' in WebView must be used as a http Options.
   ///
+  /// [Path]
+  ///
   /// Options(headers : {'cookie': 'NID_AUT=$nidAuth; NID_SES=$nidSession'})
-  static const String userStatus = '$naverGame/v1/user/getUserStatus';
+  static const String userStatus = '/v1/user/getUserStatus';
 
+  /// [naverGame] Private user blocks
+  static const String privateUserBlocks = '/v1/privateUserBlocks/allUserIdHash';
+  
   /// [chzzkService][path] /$channelId
   static const String channel = '$chzzkService/v1/channels';
 
@@ -85,7 +90,7 @@ class ApiUrl {
   static const String followingCategories = '$category/following';
 
   /// [chzzkService] Lives in a specific category.
-  /// [path] /$CategoryType}/$categoryId/lives
+  /// [path] /$CategoryType/$categoryId/lives
   ///
   /// [queryparamters] int liveId, int size, int concurrentUserCount
   static const String categoryLives = '/v2/categories';
@@ -103,4 +108,36 @@ class ApiUrl {
   /// [baseUrl] ServerNo are randomly assigned from 1 to 5.
   static String chatServer(int serverNo) =>
       'wss://kr-ss$serverNo.chat.naver.com/chat';
+
+  /// [chzzkService] Channel Clips
+  ///
+  /// [path]  /$channelId/clips
+  ///
+  /// initial [queryParamters] String fliterType = 'ALL', String orderType = 'POPULAR' || 'RECENT' , int size = 15
+  ///
+  /// next [queryParameters] String clipUID, int readCount
+  static const String channelClips = '/v1/channels';
+
+  /// [chzzkService] Catagory Clips
+  ///
+  /// [path] /$CategoryType/$categoryId/clips
+  ///
+  /// initial [queryParamters] String filterType = 'ALL', String orderType = 'POPULAR' || 'RECENT', int size = 10
+  ///
+  /// next [queryParamters] String clipUID, int readCount
+  static const String categoryClips = '/v1/categories';
+
+  /// [chzzkService] Popular clips
+  ///
+  /// [queryParameters] String next
+  static const String popularClips = '/v1/home/recommended/clips';
+
+  /// [BaseUrl] A specific clip
+  ///
+  /// [path] /$clipUID
+  static const String naverClipEmbed = 'https://chzzk.naver.com/embed/clip';
+
+  /// [BaseUrl] Github repos for checking update
+  static const String githubLatestRelease =
+      'https://api.github.com/repos/Escaper-Park/unofficial_chzzk_android_tv/releases/latest';
 }

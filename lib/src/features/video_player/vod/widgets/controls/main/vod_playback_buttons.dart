@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../../../common/widgets/dpad_widgets.dart';
+import '../../../../../setting/controller/stream_settings_controller.dart';
 import '../../../../common/control_icon.dart';
 import '../../../controller/vod_player_controller.dart';
 
@@ -24,25 +25,35 @@ class VodPlaybackButtons extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const int interval = 10;
     final isPlaying = useState<bool>(controller.value.isPlaying);
+    final streamSettings = ref.watch(streamSettingsControllerProvider);
 
-    final List<ControlIcon> items = [
+    // (replay, forward) icons
+    final (IconData, IconData) playbackIconData =
+        switch (streamSettings.vodPlaybackIntervalIndex) {
+      0 => (Icons.replay_5_rounded, Icons.forward_5_rounded),
+      1 => (Icons.replay_10_rounded, Icons.forward_10_rounded),
+      2 => (Icons.replay_30_rounded, Icons.forward_30_rounded),
+      _ => (Icons.replay_rounded, Icons.fast_forward_rounded),
+    };
+
+    final List<ControlIconButton> items = [
       // rewind
-      ControlIcon(
-        iconData: Icons.replay_10_rounded,
+      _controlIconButton(
+        ref: ref,
+        iconData: playbackIconData.$1,
         onPressed: () {
           ref.read(vodPlayerControllerProvider.notifier).seekTo(
                 videoFocusNode: videoFocusNode,
                 controller: controller,
                 direction: PlaybackDirection.backword,
-                interval: interval,
               );
         },
       ),
       // play, pause
-      ControlIcon(
+      _controlIconButton(
         autofocus: true,
+        ref: ref,
         iconData:
             isPlaying.value ? Icons.pause_rounded : Icons.play_arrow_rounded,
         onPressed: () {
@@ -51,14 +62,14 @@ class VodPlaybackButtons extends HookConsumerWidget {
         },
       ),
       // fast forward
-      ControlIcon(
-        iconData: Icons.forward_10_rounded,
+      _controlIconButton(
+        ref: ref,
+        iconData: playbackIconData.$2,
         onPressed: () {
           ref.read(vodPlayerControllerProvider.notifier).seekTo(
                 videoFocusNode: videoFocusNode,
                 controller: controller,
                 direction: PlaybackDirection.forward,
-                interval: interval,
               );
         },
       ),
@@ -68,6 +79,25 @@ class VodPlaybackButtons extends HookConsumerWidget {
       node: playbackButtonsFSN,
       dpadKeyFocusScopeNodeMap: {DpadAction.arrowDown: playbackSliderFSN},
       items: items,
+    );
+  }
+
+  ControlIconButton _controlIconButton({
+    required WidgetRef ref,
+    required IconData iconData,
+    required VoidCallback onPressed,
+    bool autofocus = false,
+  }) {
+    return ControlIconButton(
+      autofocus: autofocus,
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      iconData: iconData,
+      resetOverlayTimer: () {
+        ref.read(vodOverlayControllerProvider.notifier).resetOverlayTimer(
+              videoFocusNode: videoFocusNode,
+            );
+      },
+      onPressed: onPressed,
     );
   }
 }

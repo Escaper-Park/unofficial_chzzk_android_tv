@@ -23,7 +23,6 @@ class AuthController extends _$AuthController {
       // Add global dio settings to use login cookie options.
       ref.read(dioClientProvider.notifier).addCookies(auth.getCookie());
     }
-
     return auth;
   }
 

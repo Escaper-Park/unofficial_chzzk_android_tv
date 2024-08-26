@@ -13,27 +13,3 @@ class SettingScreenController extends _$SettingScreenController {
     state = index;
   }
 }
-
-// @riverpod
-// class ChatSettingsController extends _$ChatSettingsController {
-//   @override
-//   void build() {
-//     return;
-//   }
-// }
-
-// @riverpod
-// class LiveSettingsController extends _$LiveSettingsController {
-//   @override
-//   build() {
-//     return;
-//   }
-// }
-
-// @riverpod
-// class VodSettingsController extends _$VodSettingsController {
-//   @override
-//   build() {
-//     return;
-//   }
-// }

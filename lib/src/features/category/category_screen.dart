@@ -21,25 +21,23 @@ class CategoryScreen extends ConsumerWidget {
             .read(dashboardControllerProvider.notifier)
             .changeScreen(context, AppRoute.home);
       },
-      body: const Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: verticalPadding,
-            horizontal: horizontalPadding,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HeaderText(text: '카테고리', fontSize: 24.0, horizontalPadding: 5.0),
-              Expanded(
-                child: CategoryList(
-                  horizontalPadding: horizontalPadding,
-                  verticalPadding: verticalPadding,
-                ),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPadding,
+          horizontal: horizontalPadding,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HeaderText(text: '카테고리', fontSize: 24.0, horizontalPadding: 5.0),
+            Expanded(
+              child: CategoryList(
+                horizontalPadding: horizontalPadding,
+                verticalPadding: verticalPadding,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

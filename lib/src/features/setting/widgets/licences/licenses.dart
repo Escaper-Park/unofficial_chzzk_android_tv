@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/constants/app_version.dart';
+import '../../../../common/constants/app_version.dart';
 
 class OpenSourceLicencesScreen extends StatelessWidget {
   const OpenSourceLicencesScreen({super.key, required this.settingMenuFSN});

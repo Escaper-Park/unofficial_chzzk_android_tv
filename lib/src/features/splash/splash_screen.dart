@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/features/auth/controller/auth_controller.dart';
 
 import '../../utils/router/app_router.dart';
 import './widgets/splash_widgets.dart';
@@ -20,8 +19,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     // Show the splash icon in a sec and go to home screen.
     Future.delayed(const Duration(seconds: 1), () {
-      // Init auth controller to use saved cookies.
-      ref.read(authControllerProvider);
 
       if (context.mounted) context.goNamed(AppRoute.home.routeName);
     });

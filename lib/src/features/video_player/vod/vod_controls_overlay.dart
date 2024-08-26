@@ -10,7 +10,7 @@ import '../../vod/model/vod.dart';
 import './controller/vod_player_controller.dart';
 import './widgets/controls/main/vod_stream_main_controls.dart';
 import './widgets/status/vod_stream_info.dart';
-import 'widgets/controls/channel/vod_stream_channel_data_controls.dart';
+import './widgets/controls/channel/vod_stream_channel_data_controls.dart';
 
 class VodControlsOverlay extends HookConsumerWidget {
   const VodControlsOverlay({
@@ -28,9 +28,9 @@ class VodControlsOverlay extends HookConsumerWidget {
     final mainControlsFSN = useFocusScopeNode();
     final channelDataControlsFSN = useFocusScopeNode();
 
-    final vodPlayerController = ref.watch(vodPlayerControllerProvider);
+    final vodOverlayType = ref.watch(vodOverlayControllerProvider);
 
-    final Widget currentControls = switch (vodPlayerController) {
+    final Widget currentControls = switch (vodOverlayType) {
       VodOverlayType.none => const SizedBox.shrink(),
       VodOverlayType.main => FocusScope(
           node: mainControlsFSN,
@@ -58,12 +58,12 @@ class VodControlsOverlay extends HookConsumerWidget {
       canPop: false,
       onPopInvoked: (_) {
         // if overlay is hidden, pop
-        if (vodPlayerController == VodOverlayType.none) {
+        if (vodOverlayType == VodOverlayType.none) {
           context.pop();
         }
         // hide overlay
         else {
-          ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+          ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
                 overlayType: VodOverlayType.none,
                 videoFocusNode: videoFocusNode,
               );
@@ -83,14 +83,16 @@ class VodControlsOverlay extends HookConsumerWidget {
                 videoFocusNode.unfocus();
                 mainControlsFSN.requestFocus();
 
-                ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+                ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
                       overlayType: VodOverlayType.main,
                       videoFocusNode: videoFocusNode,
                     );
               },
               DpadAction.arrowUp: () {
                 videoFocusNode.unfocus();
-                ref.read(vodPlayerControllerProvider.notifier).changeOverlay(
+                channelDataControlsFSN.requestFocus();
+
+                ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
                       overlayType: VodOverlayType.channelData,
                       videoFocusNode: videoFocusNode,
                     );

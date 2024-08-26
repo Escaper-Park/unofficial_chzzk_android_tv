@@ -27,7 +27,7 @@ class VodStreamChannelDataControls extends HookWidget {
       height: Dimensions.vodStreamChannelDataControlsHeight,
       borderRadius: 12.0,
       useTopBorder: true,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         children: [
           SizedBox(

@@ -24,7 +24,7 @@ class PopupUtils {
     VoidCallback? confirmCallback,
     VoidCallback? cancelFallback,
   }) async {
-    showDialog(
+    await showDialog(
       context: context,
       useRootNavigator: false,
       // Set the value of 'barrierDismissible' to 'false'

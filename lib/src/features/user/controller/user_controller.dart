@@ -35,3 +35,25 @@ class UserController extends _$UserController {
     state = const AsyncData(null);
   }
 }
+
+@riverpod
+class PrivateUserBlocksController extends _$PrivateUserBlocksController {
+  late UserRepository _repository;
+
+  @override
+  FutureOr<List<String>> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = UserRepository(dio);
+
+    return await fetchPrivateUserBlocks();
+  }
+
+  Future<List<String>> fetchPrivateUserBlocks() async {
+    final List<String> response =
+        await _repository.getPrivateUserBlocks().catchError((_) {
+      return [''];
+    });
+
+    return response;
+  }
+}

@@ -12,6 +12,7 @@ class FocusedOutlinedButton extends HookWidget {
     this.borderWidth = 1.5,
     this.padding = EdgeInsets.zero,
     this.focusedBorderColor = AppColors.chzzkColor,
+    this.focusedBackgroundColor,
     this.unFocusedBorderColor = Colors.transparent,
     this.focusNode,
     this.onPressed,
@@ -33,6 +34,9 @@ class FocusedOutlinedButton extends HookWidget {
 
   /// Color when this button has focus.
   final Color focusedBorderColor;
+
+  /// Background Color when the button has focus
+  final Color? focusedBackgroundColor;
 
   /// Color when this button doens't have focus.
   final Color unFocusedBorderColor;
@@ -58,6 +62,8 @@ class FocusedOutlinedButton extends HookWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
+        backgroundColor: focusedBackgroundColor,
+        overlayColor: focusedBackgroundColor,
         side: BorderSide(
           width: borderWidth,
           color: focusState.value == true

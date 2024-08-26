@@ -14,7 +14,7 @@ class Dimensions {
   // Home
   static const double homeChzzkTextLogoWidth = 150.0;
   static const Size followingCategoryContainerSize = Size(120.0, 150.0);
-  static const Size exceptionFallbackWidgetSize = Size(300.0, 50.0);
+  static const Size exceptionFallbackWidgetSize = Size(350.0, 50.0);
 
   // Following
   static const double followingListWidth = 220.0;
@@ -36,7 +36,7 @@ class Dimensions {
   static const Size categoryInfoSize = Size(200.0, 120.0);
 
   // Vod streaming
-  static const double vodStreamInfoContainerHeight = 95.0;
+  static const double vodStreamInfoContainerHeight = 100.0;
   static const double vodStreamMainControlsHeight = 120.0;
   static const double playbackTimeIndicatorWidth = 140.0;
 
@@ -46,4 +46,19 @@ class Dimensions {
 
   static const double vodstreamVodThumbnailHeight = 126.0;
   static const double vodstreamVodThumbnailWidth = 224.0;
+
+  // Live Streaming
+  static const double liveStreamMainControlsHeight = 100.0;
+  static const double liveStreamMainControlsPerStream = 50.0;
+  static const double streamVideoNavigatorOverlay = 170.0;
+  static const double streamVideoNavigatorHeader = 30.0;
+
+  static const double liveStreamContentsContainerHeight = 130.0;
+  static const double liveStreamThumbnailHeight = 126.0;
+  static const double liveStreamThumbnailWidth = 224.0;
+
+  // Settings
+  static const double settingHeaderTextWidth = 120.0;
+  static const double settingDisplayValueWidth = 100.0;
+  static const double liveStreamInfoContainerHeight = 100.0;
 }

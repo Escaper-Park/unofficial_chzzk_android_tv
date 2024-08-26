@@ -21,6 +21,14 @@ class CustomFormatter {
 
     return '$hours:$mins:$secs';
   }
+
+  /// Timestamp to HH:mm
+  static String formatTimeStampToHoursAndMins(int timestamp) {
+    final DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String formattedTime = DateFormat('HH:mm').format(date);
+
+    return formattedTime;
+  }
 }
 
 extension DurationX on Duration {
@@ -29,4 +37,5 @@ extension DurationX on Duration {
 
 extension IntX on int? {
   String commaFormat() => CustomFormatter.formatNumToCommaString(this);
+  String hhmm() => CustomFormatter.formatTimeStampToHoursAndMins(this!);
 }
