@@ -31,7 +31,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
     return await init();
   }
 
-  Future<VideoPlayerController> init() async {
+  Future<VideoPlayerController> init({bool changeResolution = false}) async {
     try {
       final mediaList = await HlsParser(
               _liveDetail.livePlaybackJson.media[_latencyIndex].path)
@@ -48,7 +48,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
         final controller = _getVideoPlayerController(mediaTrackUri!);
 
         await controller.initialize();
-        if (index != 0) controller.setVolume(0.0);
+        if (index != 0 && !changeResolution) controller.setVolume(0.0);
 
         return controller;
       }
@@ -67,7 +67,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
       () async {
         _resolutionIndex = resolutionIndex;
 
-        return await init();
+        return await init(changeResolution: true);
       },
     );
   }

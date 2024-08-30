@@ -358,7 +358,7 @@ class LiveControlsOverlay extends HookConsumerWidget {
       context,
       msg,
       milliseconds: 1000,
-      bottomMargin: screenHeight - 50.0,
+      bottomMargin: screenHeight - 45.0,
     );
   }
 }
