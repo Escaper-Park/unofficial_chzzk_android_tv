@@ -11,7 +11,7 @@ class OpenSourceLicencesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (_, __) {
+      onPopInvoked: (_) {
         settingMenuFSN.requestFocus();
       },
       child: const LicensePage(

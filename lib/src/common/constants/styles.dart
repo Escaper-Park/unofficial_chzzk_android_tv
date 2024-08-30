@@ -81,8 +81,8 @@ class AppColors {
     errorContainer: Color(0xFF93000A),
     onError: Color(0xFF690005),
     onErrorContainer: Color(0xFFFFDAD6),
-    // background: Color(0xFF191C1A), // Deprecated
-    // onBackground: Color(0xFFE1E3DE), // Deprecated
+    background: Color(0xFF191C1A), // Deprecated
+    onBackground: Color(0xFFE1E3DE), // Deprecated
     surface: Color(0xFF191C1A),
     onSurface: Color(0xFFE1E3DE),
     onSurfaceVariant: Color(0xFFC0C9C0),

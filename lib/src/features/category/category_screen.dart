@@ -16,7 +16,7 @@ class CategoryScreen extends ConsumerWidget {
     const double verticalPadding = 24.0;
 
     return PopScopeScreen(
-      onPopInvokedWithResult: (_, __) {
+      onPopInvoked: (_) {
         ref
             .read(dashboardControllerProvider.notifier)
             .changeScreen(context, AppRoute.home);

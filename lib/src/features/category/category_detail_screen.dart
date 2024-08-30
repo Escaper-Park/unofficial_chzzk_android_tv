@@ -91,7 +91,7 @@ class CategoryDetailScreen extends HookConsumerWidget {
     };
 
     return VideoGridViewScreen(
-      onPopInvoked: (_, __) {
+      onPopInvoked: (_) {
         if (sidebarFSN.hasFocus) {
           context.pop();
         } else {

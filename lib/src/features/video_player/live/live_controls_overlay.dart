@@ -84,7 +84,7 @@ class LiveControlsOverlay extends HookConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, _) async {
+      onPopInvoked: (didPop) async {
         // add !didpop to prevent context.pop from working twice.
         if (!didPop) {
           // pop if overlay is hidden

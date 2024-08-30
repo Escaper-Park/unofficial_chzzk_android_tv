@@ -63,7 +63,8 @@ class FocusedOutlinedButton extends HookWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         backgroundColor: focusedBackgroundColor,
-        overlayColor: focusedBackgroundColor,
+        
+        // overlayColor: focusedBackgroundColor,
         side: BorderSide(
           width: borderWidth,
           color: focusState.value == true

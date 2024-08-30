@@ -41,7 +41,7 @@ class AllLivesScreen extends HookConsumerWidget {
     ];
 
     return VideoGridViewScreen(
-      onPopInvoked: (_, __) {
+      onPopInvoked: (_) {
         if (sidebarFSN.hasFocus) {
           ref
               .read(dashboardControllerProvider.notifier)

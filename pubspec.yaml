@@ -5,7 +5,7 @@ publish_to: "none"
 version: 0.3.0
 
 environment:
-  sdk: ">=3.4.3 <4.0.0"
+  sdk: ">=3.2.6 <4.0.0"
 
 dependencies:
   flutter:
@@ -34,13 +34,13 @@ dependencies:
   # router
   go_router: ^14.2.1
   # websocket
-  web_socket_channel: ^3.0.1
+  web_socket_channel: ^2.4.5
   # utils
   intl: ^0.19.0
   hangul: ^0.6.0
   html: ^0.15.4
   # local database
-  shared_preferences: ^2.3.1
+  shared_preferences: ^2.2.2
   flutter_markdown: ^0.7.3+1
 
 dev_dependencies:
@@ -58,7 +58,7 @@ dev_dependencies:
   retrofit_generator: ^8.1.2
   # common
   json_serializable: ^6.8.0
-  build_runner: ^2.4.11
+  build_runner: ^2.4.8
   # database
 
 flutter:

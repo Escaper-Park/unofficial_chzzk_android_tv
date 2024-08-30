@@ -24,6 +24,14 @@ void main() async {
   // Get local database
   final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
 
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    return true;
+  };
+
   runApp(
     ProviderScope(
       overrides: [sharedPrefsProvider.overrideWithValue(sharedPrefs)],

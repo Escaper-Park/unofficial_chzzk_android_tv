@@ -21,6 +21,7 @@ class HomeListViewContainer<T> extends StatelessWidget {
     required this.sidebarFSN,
     this.aboveFSN,
     this.belowFSN,
+    this.exceptionWidgetAutofocus = true,
     required this.fallback,
     required this.itemBuilder,
   });
@@ -41,6 +42,8 @@ class HomeListViewContainer<T> extends StatelessWidget {
   final FocusScopeNode sidebarFSN;
   final FocusScopeNode? aboveFSN;
   final FocusScopeNode? belowFSN;
+
+  final bool exceptionWidgetAutofocus;
 
   final VoidCallback fallback;
 
@@ -64,6 +67,7 @@ class HomeListViewContainer<T> extends StatelessWidget {
             containerWidth: containerWidth,
             emptyText: emptyText,
             errorText: errorText,
+            exceptionWidgetAutofocus: exceptionWidgetAutofocus,
             listFSN: listFSN,
             sidebarFSN: sidebarFSN,
             aboveFSN: aboveFSN,

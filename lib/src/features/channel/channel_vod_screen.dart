@@ -86,7 +86,7 @@ class ChannelVodsScreen extends HookWidget {
     };
 
     return VideoGridViewScreen(
-      onPopInvoked: (_, __) {
+      onPopInvoked: (_) {
         if (sidebarFSN.hasFocus) {
           context.pop();
         } else {

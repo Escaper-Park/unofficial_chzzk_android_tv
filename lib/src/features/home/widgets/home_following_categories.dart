@@ -33,6 +33,7 @@ class HomeFollowingCategories extends ConsumerWidget {
       asyncValue: asyncFollowingCategories,
       emptyText: '팔로잉 카테고리가 없습니다',
       errorText: '팔로잉 카테고리를 불러올 수 없습니다',
+      exceptionWidgetAutofocus: false,
       listFSN: listFSN,
       sidebarFSN: sidebarFSN,
       aboveFSN: aboveFSN,

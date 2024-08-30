@@ -197,6 +197,7 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
     this.aboveFSN,
     this.belowFSN,
     this.useExceptionFallbackWidget = true,
+    this.exceptionWidgetAutofocus = true,
     this.fallback,
     this.horizontalPadding = 10.0,
     this.scrollPadding = 20.0,
@@ -233,6 +234,8 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
   /// If data is null or empty, use this fallback widget at the home screen
   /// to avoid focus stucks.
   final bool useExceptionFallbackWidget;
+
+  final bool exceptionWidgetAutofocus;
 
   /// Fallback actions for exception handling
   final VoidCallback? fallback;
@@ -281,13 +284,15 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
         data: (data) {
           if (data == null) {
             return useExceptionFallbackWidget
-                ? _exceptionFallbackWidget(errorText, fallback ?? () {})
+                ? _exceptionFallbackWidget(
+                    errorText, fallback ?? () {}, exceptionWidgetAutofocus)
                 : CenteredText(text: errorText);
           }
 
           if (data.isEmpty) {
             return useExceptionFallbackWidget
-                ? _exceptionFallbackWidget(emptyText, fallback ?? () {})
+                ? _exceptionFallbackWidget(
+                    emptyText, fallback ?? () {}, exceptionWidgetAutofocus)
                 : CenteredText(text: emptyText);
           }
 
@@ -358,7 +363,11 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
           );
         },
         error: (_, __) => useExceptionFallbackWidget
-            ? _exceptionFallbackWidget(errorText, () {})
+            ? _exceptionFallbackWidget(
+                errorText,
+                () {},
+                exceptionWidgetAutofocus,
+              )
             : CenteredText(text: errorText),
         loading: () {
           isFirstFocused.value = true;
@@ -368,36 +377,25 @@ class DpadHorizontalListViewContainer<T> extends HookWidget {
     );
   }
 
-  Widget _exceptionFallbackWidget(String exceptionText, VoidCallback fallback) {
+  Widget _exceptionFallbackWidget(
+      String exceptionText, VoidCallback fallback, bool autofocus) {
     final focusNode = useFocusNode();
 
-    return Center(
-      child: SizedBox(
-        width: Dimensions.exceptionFallbackWidgetSize.width,
-        height: Dimensions.exceptionFallbackWidgetSize.height,
-        child: CallbackShortcuts(
-          bindings: {
-            const SingleActivator(LogicalKeyboardKey.arrowUp): () {
-              if (aboveFSN != null) aboveFSN!.requestFocus();
-            },
-            const SingleActivator(LogicalKeyboardKey.arrowDown): () {
-              if (belowFSN != null) belowFSN!.requestFocus();
-            },
-            const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
-              if (sidebarFSN != null) sidebarFSN!.requestFocus();
-            }
-          },
-          child: FocusScope(
-            node: listFSN,
-            onFocusChange: (value) {
-              if (value) focusNode.requestFocus();
-            },
-            child: FocusedOutlinedButton(
-              autofocus: true,
-              focusNode: focusNode,
-              onPressed: fallback,
-              child: (hasFocus) => CenteredText(text: exceptionText),
-            ),
+    return DpadFocusScopeNavigator(
+      node: listFSN,
+      dpadKeyFocusScopeNodeMap: {
+        DpadAction.arrowUp: aboveFSN,
+        DpadAction.arrowDown: belowFSN,
+      },
+      child: Center(
+        child: SizedBox(
+          width: Dimensions.exceptionFallbackWidgetSize.width,
+          height: Dimensions.exceptionFallbackWidgetSize.height,
+          child: FocusedOutlinedButton(
+            autofocus: autofocus,
+            focusNode: focusNode,
+            onPressed: fallback,
+            child: (hasFocus) => CenteredText(text: exceptionText),
           ),
         ),
       ),

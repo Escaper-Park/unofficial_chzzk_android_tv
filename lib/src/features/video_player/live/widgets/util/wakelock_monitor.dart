@@ -15,22 +15,12 @@ class WakelockMonitor extends ConsumerWidget {
     final List<bool> wakelockMontiorList =
         ref.watch(wakelockMonitorControllerProvider);
 
-    print('test monitor list $wakelockMontiorList');
-
     final bool allFalse = wakelockMontiorList.every((e) => e == false);
 
     if (allFalse) {
-      WakelockPlus.disable().then((value) {
-        WakelockPlus.enabled.then(
-          (value) => print('test wakelock state $value'),
-        );
-      });
+      WakelockPlus.disable();
     } else {
-      WakelockPlus.enable().then((value) {
-        WakelockPlus.enabled.then(
-          (value) => print('test2 wakelock state $value'),
-        );
-      });
+      WakelockPlus.enable();
     }
 
     return const SizedBox.shrink();

@@ -30,7 +30,7 @@ class VideoGridViewScreen extends StatelessWidget {
     this.containerWidth = Dimensions.videoContainerWidth,
   });
 
-  final void Function(bool _, dynamic __) onPopInvoked;
+  final void Function(bool _) onPopInvoked;
 
   /// Top side of screen.
   final Widget headerWidget;
@@ -63,7 +63,7 @@ class VideoGridViewScreen extends StatelessWidget {
         screenWidth - totalHPadding - totalSpacing - totalContainerWidth;
 
     return PopScopeScreen(
-      onPopInvokedWithResult: onPopInvoked,
+      onPopInvoked: onPopInvoked,
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: horizontalPadding,
