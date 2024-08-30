@@ -42,7 +42,7 @@ class AllVodsScreen extends HookConsumerWidget {
     ];
 
     return VideoGridViewScreen(
-      onPopInvoked: (_) {
+      onPopInvoked: (_, __) {
         if (sidebarFSN.hasFocus) {
           ref
               .read(dashboardControllerProvider.notifier)

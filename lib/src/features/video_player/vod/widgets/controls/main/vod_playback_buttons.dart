@@ -92,6 +92,7 @@ class VodPlaybackButtons extends HookConsumerWidget {
       autofocus: autofocus,
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       iconData: iconData,
+      useKeyRepeatEvent: true,
       resetOverlayTimer: () {
         ref.read(vodOverlayControllerProvider.notifier).resetOverlayTimer(
               videoFocusNode: videoFocusNode,

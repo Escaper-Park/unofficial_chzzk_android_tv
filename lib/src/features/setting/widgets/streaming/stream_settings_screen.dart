@@ -51,16 +51,16 @@ class StreamSettingsScreen extends ConsumerWidget {
         ),
         SettingItem(
           settingMenuFSN: settingMenuFSN,
-          headerText: '화면 모드',
+          headerText: '채팅창 모드',
           itemType: SettingItemType.limited,
-          displayTextList: const ['크게보기', '오버레이 채팅', '채팅'],
-          currentValue: streamSettings.screenModeIndex,
+          displayTextList: const ['끄기', '오버레이', '크게보기'],
+          currentValue: streamSettings.chatWindowStateIndex,
           minValue: 0,
           maxValue: 2,
           onUpdate: (value) {
             ref
                 .read(streamSettingsControllerProvider.notifier)
-                .setScreenModeIndex(value);
+                .setChatWindowStateIndex(value);
           },
         ),
         SettingItem(

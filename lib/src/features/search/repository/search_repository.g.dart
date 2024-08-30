@@ -12,6 +12,7 @@ class _SearchRepository implements SearchRepository {
   _SearchRepository(
     this._dio, {
     this.baseUrl,
+    this.errorLogger,
   }) {
     baseUrl ??= 'https://api.chzzk.naver.com/service';
   }
@@ -19,6 +20,8 @@ class _SearchRepository implements SearchRepository {
   final Dio _dio;
 
   String? baseUrl;
+
+  final ParseErrorLogger? errorLogger;
 
   @override
   Future<SearchResponse?> getSearchChannelResults({
@@ -36,25 +39,31 @@ class _SearchRepository implements SearchRepository {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>?>(_setStreamType<SearchResponse>(Options(
+    final _options = _setStreamType<SearchResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/v1/search/channels',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final _value =
-        _result.data == null ? null : SearchResponse.fromJson(_result.data!);
+        .compose(
+          _dio.options,
+          '/v1/search/channels',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
+    late SearchResponse? _value;
+    try {
+      _value =
+          _result.data == null ? null : SearchResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 

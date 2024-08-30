@@ -94,24 +94,56 @@ class PopupUtils {
   static void showSnackbar(
     BuildContext context,
     String content, {
-    int seconds = 2, // Display duration
+    int milliseconds = 2000, // Display duration
+    double bottomMargin = 0.0, // Position
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: bottomMargin),
         elevation: 0.0,
-        backgroundColor: AppColors.greyContainerColor.withOpacity(0.5),
-        duration: Duration(seconds: seconds),
-        shape: const RoundedRectangleBorder(
+        backgroundColor: AppColors.blackColor.withOpacity(0.7),
+        duration: Duration(milliseconds: milliseconds),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12.0),
-            topRight: Radius.circular(12.0),
+            topLeft: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
+            topRight: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
           ),
         ),
         content: CenteredText(
           text: content,
           fontColor: AppColors.whiteColor,
+          fontWeight: FontWeight.w700,
         ),
       ),
+    );
+  }
+
+  static Future<void> showWidgetDialog({
+    required BuildContext context,
+    required String titleText,
+    required Widget Function(BuildContext dialogContext) content,
+    double titleFontSize = 16.0,
+  }) async {
+    await showDialog(
+      context: context,
+      useRootNavigator: false,
+      barrierDismissible: false,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: AppColors.greyContainerColor,
+          title: Text(
+            titleText,
+            style: TextStyle(
+              fontSize: titleFontSize,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: content(dialogContext),
+        );
+      },
     );
   }
 }

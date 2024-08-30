@@ -28,12 +28,8 @@ class StreamSettingsController extends _$StreamSettingsController {
     await _updateInt(value, 0, 3, settings);
   }
 
-  Future<void> setScreenModeIndex(int value) async {
-    final settings = state.copyWith(screenModeIndex: value);
-    // Don't save multiview mode index in local DB storage.
-    if (value == 3) {
-      state = settings;
-    }
+  Future<void> setChatWindowStateIndex(int value) async {
+    final settings = state.copyWith(chatWindowStateIndex: value);
     await _updateInt(value, 0, 2, settings);
   }
 
@@ -51,7 +47,6 @@ class StreamSettingsController extends _$StreamSettingsController {
     final settings = state.copyWith(vodPlaybackIntervalIndex: value);
     await _updateInt(value, 0, 2, settings);
   }
-
 
   /// Update int fields
   Future<void> _updateInt(

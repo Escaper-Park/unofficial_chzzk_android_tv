@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../utils/formatter/formatter.dart';
-import '../../../../../common/constants/styles.dart';
+import '../../../../../../../utils/formatter/formatter.dart';
+import '../../../../../../../common/constants/styles.dart';
 
 class LiveStreamConcurrentUserCount extends StatelessWidget {
   const LiveStreamConcurrentUserCount({

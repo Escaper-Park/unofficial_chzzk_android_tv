@@ -76,9 +76,6 @@ class LiveStreamCategoryLivesController
 
   Future<void> fetchMore() async {
     if (_next != null) {
-      ref
-          .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-          .setState(true);
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
@@ -91,9 +88,6 @@ class LiveStreamCategoryLivesController
           liveId: _next!.liveId,
         )
             .catchError((_) {
-          ref
-              .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-              .setState(false);
           return null;
         });
 
@@ -103,9 +97,6 @@ class LiveStreamCategoryLivesController
           return [...prev!];
         }
 
-        ref
-            .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-            .setState(false);
         return [...prev!, ...liveRespnse!.data];
       });
     }
@@ -144,9 +135,6 @@ class LiveStreamPopularLivesController
 
   Future<void> fetchMore() async {
     if (_next != null) {
-      ref
-          .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-          .setState(true);
       final prev = state.value;
 
       state = await AsyncValue.guard(() async {
@@ -158,9 +146,6 @@ class LiveStreamPopularLivesController
           liveId: _next!.liveId,
         )
             .catchError((_) {
-          ref
-              .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-              .setState(false);
           return null;
         });
 
@@ -170,25 +155,8 @@ class LiveStreamPopularLivesController
           return [...prev!];
         }
 
-        ref
-            .read(liveStreamNavigatorFetchMoreStateProvider.notifier)
-            .setState(false);
         return [...prev!, ...liveRespnse!.data];
       });
     }
-  }
-}
-
-@riverpod
-class LiveStreamNavigatorFetchMoreState
-    extends _$LiveStreamNavigatorFetchMoreState {
-  /// To show 'Loading...' msg in live stream navigator.
-  @override
-  bool build() {
-    return false;
-  }
-
-  void setState(bool value) {
-    state = value;
   }
 }

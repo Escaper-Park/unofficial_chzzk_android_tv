@@ -6,24 +6,23 @@ import '../../../../../../common/constants/styles.dart';
 import '../../../../../../common/widgets/center_widgets.dart';
 import '../../../../../live/model/live.dart';
 import '../../../../common/controls_overlay_container.dart';
-import '../../../controller/live_player_controller.dart';
-import '../../status/live_stream_uptime.dart';
+import '../../../controller/live_playlist_controller.dart';
+import '../../../controller/live_stream_status_controller.dart';
+import '../main/status/live_stream_uptime.dart';
 
-class MultiviewPlayInfo extends StatelessWidget {
+class MultiviewPlayInfo extends ConsumerWidget {
   const MultiviewPlayInfo({
     super.key,
     required this.videoFocusNode,
     required this.controlsFSN,
-    required this.liveDetails,
   });
 
   final FocusNode videoFocusNode;
   final FocusScopeNode controlsFSN;
-  final List<LiveDetail> liveDetails;
 
   @override
-  Widget build(BuildContext context) {
-    final liveCount = liveDetails.length;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final livePlaylist = ref.watch(livePlaylistControllerProvider);
 
     return FocusScope(
       node: controlsFSN,
@@ -37,7 +36,7 @@ class MultiviewPlayInfo extends StatelessWidget {
           horizontal: 20.0,
         ),
         child: GridView.builder(
-          itemCount: liveCount,
+          itemCount: livePlaylist.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisExtent: 35.0,
@@ -45,7 +44,7 @@ class MultiviewPlayInfo extends StatelessWidget {
             mainAxisSpacing: 5.0,
           ),
           itemBuilder: (context, index) {
-            return SimplePlayInfo(liveDetail: liveDetails[index]);
+            return SimplePlayInfo(liveDetail: livePlaylist[index]);
           },
         ),
       ),
@@ -54,14 +53,18 @@ class MultiviewPlayInfo extends StatelessWidget {
 }
 
 class SimplePlayInfo extends ConsumerWidget {
-  const SimplePlayInfo({super.key, required this.liveDetail});
+  const SimplePlayInfo({
+    super.key,
+    required this.liveDetail,
+  });
 
   final LiveDetail liveDetail;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncLiveStatus = ref.watch(
-        liveStatusControllerProvider(channelId: liveDetail.channel.channelId));
+    final asyncLiveStatus = ref.watch(liveStreamStatusControllerProvider(
+      channelId: liveDetail.channel.channelId,
+    ));
 
     return switch (asyncLiveStatus) {
       AsyncData(:final value) => value == null

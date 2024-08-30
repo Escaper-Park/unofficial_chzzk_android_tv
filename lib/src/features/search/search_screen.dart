@@ -12,7 +12,7 @@ class SearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopScopeScreen(
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (_, __) {
         ref
             .read(dashboardControllerProvider.notifier)
             .changeScreen(context, AppRoute.home);

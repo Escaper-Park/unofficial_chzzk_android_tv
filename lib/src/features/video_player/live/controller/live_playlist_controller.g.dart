@@ -7,12 +7,12 @@ part of 'live_playlist_controller.dart';
 // **************************************************************************
 
 String _$livePlaylistControllerHash() =>
-    r'3b2d5c3b65989a66f9f0e74b64b87fcdd7e0f7a5';
+    r'c5e7311b4914cc840237286e399518538bdca7c6';
 
 /// See also [LivePlaylistController].
 @ProviderFor(LivePlaylistController)
 final livePlaylistControllerProvider =
-    NotifierProvider<LivePlaylistController, List<LiveStream>>.internal(
+    NotifierProvider<LivePlaylistController, List<LiveDetail>>.internal(
   LivePlaylistController.new,
   name: r'livePlaylistControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,25 +22,40 @@ final livePlaylistControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$LivePlaylistController = Notifier<List<LiveStream>>;
-String _$currentSelectedLiveStreamHash() =>
-    r'1336c8b4d1e17ef3ec8d643beb4ca5e7f33bd35f';
+typedef _$LivePlaylistController = Notifier<List<LiveDetail>>;
+String _$currentActivatedLiveIndexHash() =>
+    r'ebeaa5afe7a94ac8d72ef6dd4a550c7b3bab8382';
 
-/// To controll screen size
-///
-/// Copied from [CurrentSelectedLiveStream].
-@ProviderFor(CurrentSelectedLiveStream)
-final currentSelectedLiveStreamProvider =
-    AutoDisposeNotifierProvider<CurrentSelectedLiveStream, int?>.internal(
-  CurrentSelectedLiveStream.new,
-  name: r'currentSelectedLiveStreamProvider',
+/// See also [CurrentActivatedLiveIndex].
+@ProviderFor(CurrentActivatedLiveIndex)
+final currentActivatedLiveIndexProvider =
+    AutoDisposeNotifierProvider<CurrentActivatedLiveIndex, int?>.internal(
+  CurrentActivatedLiveIndex.new,
+  name: r'currentActivatedLiveIndexProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$currentSelectedLiveStreamHash,
+      : _$currentActivatedLiveIndexHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CurrentSelectedLiveStream = AutoDisposeNotifier<int?>;
+typedef _$CurrentActivatedLiveIndex = AutoDisposeNotifier<int?>;
+String _$currentActivatedAudioSourceIndexHash() =>
+    r'e2c9acc823d8c8a44a5bafc2a8126a795a0ff2d1';
+
+/// See also [CurrentActivatedAudioSourceIndex].
+@ProviderFor(CurrentActivatedAudioSourceIndex)
+final currentActivatedAudioSourceIndexProvider =
+    AutoDisposeNotifierProvider<CurrentActivatedAudioSourceIndex, int>.internal(
+  CurrentActivatedAudioSourceIndex.new,
+  name: r'currentActivatedAudioSourceIndexProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentActivatedAudioSourceIndexHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentActivatedAudioSourceIndex = AutoDisposeNotifier<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

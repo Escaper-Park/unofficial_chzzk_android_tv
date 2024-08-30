@@ -1,73 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../common/widgets/center_widgets.dart';
+import 'controller/live_player_controller.dart';
+import 'widgets/util/wakelock_monitor_controller.dart';
 
-class SingleLivePlayer extends StatefulWidget {
-  const SingleLivePlayer({super.key, required this.controller});
+class SingleLivePlayer extends HookConsumerWidget {
+  const SingleLivePlayer({
+    super.key,
+    required this.index,
+  });
 
-  final VideoPlayerController controller;
-
-  @override
-  State<SingleLivePlayer> createState() => _SingleLivePlayerState();
-}
-
-class _SingleLivePlayerState extends State<SingleLivePlayer> {
-  // Show current state.
-  String msg = '라이브 로딩 중...';
+  final int index;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncController =
+        ref.watch(singleLivePlayerControllerProvider(index: index));
 
-    initialize();
-  }
+    final msg = useState<String>('라이브 로딩중...');
 
-  Future<void> initialize() async {
-    print('dispose init');
-    widget.controller.addListener(_checkVideoEnds);
-    widget.controller.initialize().then((_) => setState(() {}));
+    return asyncController.when(
+      data: (controller) {
+        if (!controller.value.isPlaying) controller.play();
 
-    widget.controller.play();
-  }
+        useEffect(
+          () {
+            void checkVideoEnds() {
+              final value = controller.value;
 
-  void _checkVideoEnds() {
-    final value = widget.controller.value;
+              final bool checkEnds = value.hasError == true ||
+                  (value.isInitialized && value.position >= value.duration) &&
+                      !value.isPlaying;
 
-    // Sometimes this package detects the end of video as an error situation.
-    final bool checkEnds = value.hasError == true || // Error
-        // Ends
-        (value.isInitialized &&
-            (value.position >= value.duration) &&
-            !value.isPlaying);
+              if (checkEnds) {
+                msg.value = '라이브가 종료되었습니다';
+                controller.pause();
 
-    if (checkEnds) {
-      setState(() {
-        msg = '방송이 종료되었습니다.';
-      });
-    }
-  }
+                ref
+                    .read(wakelockMonitorControllerProvider.notifier)
+                    .setFalse(index);
+              }
+            }
 
-  @override
-  void dispose() {
-    widget.controller.pause(); // To avoid android errors.
-    widget.controller.removeListener(_checkVideoEnds);
-    widget.controller.dispose();
+            controller.addListener(checkVideoEnds);
+            return () => controller.removeListener(checkVideoEnds);
+          },
+          [controller],
+        );
 
-    print('dispose');
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.controller.value.isInitialized
-        ? Center(
-            child: AspectRatio(
-              aspectRatio: widget.controller.value.aspectRatio,
-              child: VideoPlayer(widget.controller),
-            ),
-          )
-        : CenteredText(text: msg);
+        return controller.value.isPlaying
+            ? Center(
+                child: AspectRatio(
+                  aspectRatio: controller.value.aspectRatio,
+                  child: VideoPlayer(
+                    controller,
+                  ),
+                ),
+              )
+            : CenteredText(text: msg.value);
+      },
+      error: (error, stackTrace) => CenteredText(text: error.toString()),
+      loading: () => const CenteredText(text: '라이브 로딩중...'),
+    );
   }
 }

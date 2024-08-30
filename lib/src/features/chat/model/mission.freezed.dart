@@ -36,8 +36,12 @@ mixin _$Mission {
   bool get anonymous => throw _privateConstructorUsedError;
   Object? get createdBadge => throw _privateConstructorUsedError;
 
+  /// Serializes this Mission to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MissionCopyWith<Mission> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -76,6 +80,8 @@ class _$MissionCopyWithImpl<$Res, $Val extends Mission>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -157,6 +163,8 @@ class _$MissionCopyWithImpl<$Res, $Val extends Mission>
     ) as $Val);
   }
 
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UserCopyWith<$Res>? get user {
@@ -206,6 +214,8 @@ class __$$MissionImplCopyWithImpl<$Res>
       _$MissionImpl _value, $Res Function(_$MissionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -380,7 +390,7 @@ class _$MissionImpl implements _Mission {
                 .equals(other.createdBadge, createdBadge));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -400,7 +410,9 @@ class _$MissionImpl implements _Mission {
       anonymous,
       const DeepCollectionEquality().hash(createdBadge));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MissionImplCopyWith<_$MissionImpl> get copyWith =>
@@ -464,8 +476,11 @@ abstract class _Mission implements Mission {
   bool get anonymous;
   @override
   Object? get createdBadge;
+
+  /// Create a copy of Mission
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MissionImplCopyWith<_$MissionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

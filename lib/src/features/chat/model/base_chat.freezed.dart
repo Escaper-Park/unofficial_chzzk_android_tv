@@ -27,8 +27,12 @@ mixin _$BaseChat {
   /// chat created time
   int get ctime => throw _privateConstructorUsedError;
 
+  /// Serializes this BaseChat to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BaseChatCopyWith<BaseChat> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$BaseChatCopyWithImpl<$Res, $Val extends BaseChat>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -82,6 +88,8 @@ class _$BaseChatCopyWithImpl<$Res, $Val extends BaseChat>
     ) as $Val);
   }
 
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ProfileCopyWith<$Res>? get profile {
@@ -94,6 +102,8 @@ class _$BaseChatCopyWithImpl<$Res, $Val extends BaseChat>
     });
   }
 
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ExtrasCopyWith<$Res>? get extras {
@@ -131,6 +141,8 @@ class __$$BaseChatImplCopyWithImpl<$Res>
       _$BaseChatImpl _value, $Res Function(_$BaseChatImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -199,11 +211,13 @@ class _$BaseChatImpl implements _BaseChat {
             (identical(other.ctime, ctime) || other.ctime == ctime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, msg, profile, extras, ctime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BaseChatImplCopyWith<_$BaseChatImpl> get copyWith =>
@@ -233,12 +247,15 @@ abstract class _BaseChat implements BaseChat {
   Profile? get profile;
   @override
   Extras? get extras;
-  @override
 
   /// chat created time
-  int get ctime;
   @override
-  @JsonKey(ignore: true)
+  int get ctime;
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BaseChatImplCopyWith<_$BaseChatImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

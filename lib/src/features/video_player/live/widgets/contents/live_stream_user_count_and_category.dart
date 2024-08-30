@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:unofficial_chzzk_android_tv/src/utils/formatter/formatter.dart';
 
-import '../../../../../../utils/formatter/formatter.dart';
-import '../../../../../../common/constants/styles.dart';
-import '../../../../../../common/widgets/rounded_container.dart';
+import '../../../../../common/constants/styles.dart';
+import '../../../../../common/widgets/rounded_container.dart';
 
 class LiveStreamUserCountAndCategory extends StatelessWidget {
   const LiveStreamUserCountAndCategory({

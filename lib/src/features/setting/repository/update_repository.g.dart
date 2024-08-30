@@ -12,6 +12,7 @@ class _UpdateRepository implements UpdateRepository {
   _UpdateRepository(
     this._dio, {
     this.baseUrl,
+    this.errorLogger,
   }) {
     baseUrl ??=
         'https://api.github.com/repos/Escaper-Park/unofficial_chzzk_android_tv/releases/latest';
@@ -21,13 +22,15 @@ class _UpdateRepository implements UpdateRepository {
 
   String? baseUrl;
 
+  final ParseErrorLogger? errorLogger;
+
   @override
   Future<dynamic> getLatestVersion() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -42,7 +45,8 @@ class _UpdateRepository implements UpdateRepository {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }

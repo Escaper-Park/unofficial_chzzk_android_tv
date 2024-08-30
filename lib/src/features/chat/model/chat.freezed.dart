@@ -27,8 +27,12 @@ mixin _$Chat {
   String? get tid => throw _privateConstructorUsedError;
   String? get cid => throw _privateConstructorUsedError;
 
+  /// Serializes this Chat to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Chat
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatCopyWith<Chat> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -56,6 +60,8 @@ class _$ChatCopyWithImpl<$Res, $Val extends Chat>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Chat
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -118,6 +124,8 @@ class __$$ChatImplCopyWithImpl<$Res>
   __$$ChatImplCopyWithImpl(_$ChatImpl _value, $Res Function(_$ChatImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Chat
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -209,12 +217,14 @@ class _$ChatImpl implements _Chat {
             (identical(other.cid, cid) || other.cid == cid));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, svcid, ver,
       const DeepCollectionEquality().hash(_bdy), cmd, tid, cid);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Chat
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatImplCopyWith<_$ChatImpl> get copyWith =>
@@ -251,8 +261,11 @@ abstract class _Chat implements Chat {
   String? get tid;
   @override
   String? get cid;
+
+  /// Create a copy of Chat
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatImplCopyWith<_$ChatImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -279,8 +292,12 @@ mixin _$ChatBdy {
   Object? get msgTid => throw _privateConstructorUsedError;
   int get msgTime => throw _privateConstructorUsedError;
 
+  /// Serializes this ChatBdy to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatBdyCopyWith<ChatBdy> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -318,6 +335,8 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -388,6 +407,8 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
     ) as $Val);
   }
 
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ProfileCopyWith<$Res>? get profile {
@@ -400,6 +421,8 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
     });
   }
 
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ExtrasCopyWith<$Res> get extras {
@@ -445,6 +468,8 @@ class __$$ChatBdyImplCopyWithImpl<$Res>
       _$ChatBdyImpl _value, $Res Function(_$ChatBdyImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -593,7 +618,7 @@ class _$ChatBdyImpl implements _ChatBdy {
             (identical(other.msgTime, msgTime) || other.msgTime == msgTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -611,7 +636,9 @@ class _$ChatBdyImpl implements _ChatBdy {
       const DeepCollectionEquality().hash(msgTid),
       msgTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatBdyImplCopyWith<_$ChatBdyImpl> get copyWith =>
@@ -671,8 +698,11 @@ abstract class _ChatBdy implements ChatBdy {
   Object? get msgTid;
   @override
   int get msgTime;
+
+  /// Create a copy of ChatBdy
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatBdyImplCopyWith<_$ChatBdyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -695,8 +725,12 @@ mixin _$Profile {
   StreamingProperty? get streamingProperty =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this Profile to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ProfileCopyWith<Profile> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -731,6 +765,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -784,6 +820,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     ) as $Val);
   }
 
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $BadgeCopyWith<$Res>? get badge {
@@ -796,6 +834,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     });
   }
 
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChatTitleCopyWith<$Res>? get title {
@@ -808,6 +848,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     });
   }
 
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StreamingPropertyCopyWith<$Res>? get streamingProperty {
@@ -855,6 +897,8 @@ class __$$ProfileImplCopyWithImpl<$Res>
       _$ProfileImpl _value, $Res Function(_$ProfileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -983,7 +1027,7 @@ class _$ProfileImpl implements _Profile {
                 other.streamingProperty == streamingProperty));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -997,7 +1041,9 @@ class _$ProfileImpl implements _Profile {
       const DeepCollectionEquality().hash(_activityBadges),
       streamingProperty);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
@@ -1032,8 +1078,9 @@ abstract class _Profile implements Profile {
   @override
   String? get profileImageUrl;
   @override
-  String? get userRoleCode;
-  @override // "common-user", "streaming_channel_manager", "streaming_chat_manager",
+  String?
+      get userRoleCode; // "common-user", "streaming_channel_manager", "streaming_chat_manager",
+  @override
   Badge? get badge;
   @override
   ChatTitle? get title;
@@ -1043,8 +1090,11 @@ abstract class _Profile implements Profile {
   List<ActivityBadge>? get activityBadges;
   @override
   StreamingProperty? get streamingProperty;
+
+  /// Create a copy of Profile
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1064,8 +1114,12 @@ mixin _$Extras {
   int? get month => throw _privateConstructorUsedError;
   int? get tierNo => throw _privateConstructorUsedError;
 
+  /// Serializes this Extras to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Extras
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExtrasCopyWith<Extras> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1095,6 +1149,8 @@ class _$ExtrasCopyWithImpl<$Res, $Val extends Extras>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Extras
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1170,6 +1226,8 @@ class __$$ExtrasImplCopyWithImpl<$Res>
       _$ExtrasImpl _value, $Res Function(_$ExtrasImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Extras
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1276,7 +1334,7 @@ class _$ExtrasImpl implements _Extras {
             (identical(other.tierNo, tierNo) || other.tierNo == tierNo));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1289,7 +1347,9 @@ class _$ExtrasImpl implements _Extras {
       month,
       tierNo);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Extras
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExtrasImplCopyWith<_$ExtrasImpl> get copyWith =>
@@ -1332,8 +1392,11 @@ abstract class _Extras implements Extras {
   int? get month;
   @override
   int? get tierNo;
+
+  /// Create a copy of Extras
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExtrasImplCopyWith<_$ExtrasImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1347,8 +1410,12 @@ mixin _$ChatTitle {
   String get name => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
 
+  /// Serializes this ChatTitle to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChatTitle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChatTitleCopyWith<ChatTitle> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1371,6 +1438,8 @@ class _$ChatTitleCopyWithImpl<$Res, $Val extends ChatTitle>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChatTitle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1409,6 +1478,8 @@ class __$$ChatTitleImplCopyWithImpl<$Res>
       _$ChatTitleImpl _value, $Res Function(_$ChatTitleImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ChatTitle
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1455,11 +1526,13 @@ class _$ChatTitleImpl implements _ChatTitle {
             (identical(other.color, color) || other.color == color));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, color);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChatTitle
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatTitleImplCopyWith<_$ChatTitleImpl> get copyWith =>
@@ -1485,8 +1558,11 @@ abstract class _ChatTitle implements ChatTitle {
   String get name;
   @override
   String get color;
+
+  /// Create a copy of ChatTitle
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChatTitleImplCopyWith<_$ChatTitleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1499,8 +1575,12 @@ Badge _$BadgeFromJson(Map<String, dynamic> json) {
 mixin _$Badge {
   String? get imageUrl => throw _privateConstructorUsedError;
 
+  /// Serializes this Badge to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Badge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BadgeCopyWith<Badge> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1522,6 +1602,8 @@ class _$BadgeCopyWithImpl<$Res, $Val extends Badge>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Badge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1554,6 +1636,8 @@ class __$$BadgeImplCopyWithImpl<$Res>
       _$BadgeImpl _value, $Res Function(_$BadgeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Badge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1593,11 +1677,13 @@ class _$BadgeImpl implements _Badge {
                 other.imageUrl == imageUrl));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, imageUrl);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Badge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BadgeImplCopyWith<_$BadgeImpl> get copyWith =>
@@ -1618,8 +1704,11 @@ abstract class _Badge implements Badge {
 
   @override
   String? get imageUrl;
+
+  /// Create a copy of Badge
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BadgeImplCopyWith<_$BadgeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1636,8 +1725,12 @@ mixin _$ActivityBadge {
   String? get imageUrl => throw _privateConstructorUsedError;
   bool get activated => throw _privateConstructorUsedError;
 
+  /// Serializes this ActivityBadge to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ActivityBadge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ActivityBadgeCopyWith<ActivityBadge> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1661,6 +1754,8 @@ class _$ActivityBadgeCopyWithImpl<$Res, $Val extends ActivityBadge>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ActivityBadge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1709,6 +1804,8 @@ class __$$ActivityBadgeImplCopyWithImpl<$Res>
       _$ActivityBadgeImpl _value, $Res Function(_$ActivityBadgeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ActivityBadge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1778,12 +1875,14 @@ class _$ActivityBadgeImpl implements _ActivityBadge {
                 other.activated == activated));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, badgeNo, badgeId, imageUrl, activated);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ActivityBadge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ActivityBadgeImplCopyWith<_$ActivityBadgeImpl> get copyWith =>
@@ -1810,13 +1909,16 @@ abstract class _ActivityBadge implements ActivityBadge {
   @override
   int get badgeNo;
   @override
-  String? get badgeId;
-  @override // "donation_newbie", "subscrption_founder"
+  String? get badgeId; // "donation_newbie", "subscrption_founder"
+  @override
   String? get imageUrl;
   @override
   bool get activated;
+
+  /// Create a copy of ActivityBadge
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ActivityBadgeImplCopyWith<_$ActivityBadgeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1832,8 +1934,12 @@ mixin _$StreamingProperty {
   RealTimeDonationRanking? get realTimeDonationRanking =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this StreamingProperty to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StreamingPropertyCopyWith<StreamingProperty> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1864,6 +1970,8 @@ class _$StreamingPropertyCopyWithImpl<$Res, $Val extends StreamingProperty>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1887,6 +1995,8 @@ class _$StreamingPropertyCopyWithImpl<$Res, $Val extends StreamingProperty>
     ) as $Val);
   }
 
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SubscriptionCopyWith<$Res>? get subscription {
@@ -1899,6 +2009,8 @@ class _$StreamingPropertyCopyWithImpl<$Res, $Val extends StreamingProperty>
     });
   }
 
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $NicknameColorCopyWith<$Res> get nicknameColor {
@@ -1907,6 +2019,8 @@ class _$StreamingPropertyCopyWithImpl<$Res, $Val extends StreamingProperty>
     });
   }
 
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RealTimeDonationRankingCopyWith<$Res>? get realTimeDonationRanking {
@@ -1950,6 +2064,8 @@ class __$$StreamingPropertyImplCopyWithImpl<$Res>
       $Res Function(_$StreamingPropertyImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2011,12 +2127,14 @@ class _$StreamingPropertyImpl implements _StreamingProperty {
                 other.realTimeDonationRanking == realTimeDonationRanking));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, subscription, nicknameColor, realTimeDonationRanking);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StreamingPropertyImplCopyWith<_$StreamingPropertyImpl> get copyWith =>
@@ -2047,8 +2165,11 @@ abstract class _StreamingProperty implements StreamingProperty {
   NicknameColor get nicknameColor;
   @override
   RealTimeDonationRanking? get realTimeDonationRanking;
+
+  /// Create a copy of StreamingProperty
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StreamingPropertyImplCopyWith<_$StreamingPropertyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2063,8 +2184,12 @@ mixin _$Subscription {
   int get tier => throw _privateConstructorUsedError;
   Badge? get badge => throw _privateConstructorUsedError;
 
+  /// Serializes this Subscription to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SubscriptionCopyWith<Subscription> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2090,6 +2215,8 @@ class _$SubscriptionCopyWithImpl<$Res, $Val extends Subscription>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2113,6 +2240,8 @@ class _$SubscriptionCopyWithImpl<$Res, $Val extends Subscription>
     ) as $Val);
   }
 
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $BadgeCopyWith<$Res>? get badge {
@@ -2148,6 +2277,8 @@ class __$$SubscriptionImplCopyWithImpl<$Res>
       _$SubscriptionImpl _value, $Res Function(_$SubscriptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2206,11 +2337,13 @@ class _$SubscriptionImpl implements _Subscription {
             (identical(other.badge, badge) || other.badge == badge));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, accumulativeMonth, tier, badge);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SubscriptionImplCopyWith<_$SubscriptionImpl> get copyWith =>
@@ -2239,8 +2372,11 @@ abstract class _Subscription implements Subscription {
   int get tier;
   @override
   Badge? get badge;
+
+  /// Create a copy of Subscription
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SubscriptionImplCopyWith<_$SubscriptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2253,8 +2389,12 @@ NicknameColor _$NicknameColorFromJson(Map<String, dynamic> json) {
 mixin _$NicknameColor {
   String get colorCode => throw _privateConstructorUsedError;
 
+  /// Serializes this NicknameColor to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NicknameColor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NicknameColorCopyWith<NicknameColor> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2278,6 +2418,8 @@ class _$NicknameColorCopyWithImpl<$Res, $Val extends NicknameColor>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NicknameColor
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2311,6 +2453,8 @@ class __$$NicknameColorImplCopyWithImpl<$Res>
       _$NicknameColorImpl _value, $Res Function(_$NicknameColorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NicknameColor
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2350,11 +2494,13 @@ class _$NicknameColorImpl implements _NicknameColor {
                 other.colorCode == colorCode));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, colorCode);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NicknameColor
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NicknameColorImplCopyWith<_$NicknameColorImpl> get copyWith =>
@@ -2377,8 +2523,11 @@ abstract class _NicknameColor implements NicknameColor {
 
   @override
   String get colorCode;
+
+  /// Create a copy of NicknameColor
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NicknameColorImplCopyWith<_$NicknameColorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2392,8 +2541,12 @@ RealTimeDonationRanking _$RealTimeDonationRankingFromJson(
 mixin _$RealTimeDonationRanking {
   Badge get badge => throw _privateConstructorUsedError;
 
+  /// Serializes this RealTimeDonationRanking to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RealTimeDonationRankingCopyWith<RealTimeDonationRanking> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2420,6 +2573,8 @@ class _$RealTimeDonationRankingCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2433,6 +2588,8 @@ class _$RealTimeDonationRankingCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $BadgeCopyWith<$Res> get badge {
@@ -2467,6 +2624,8 @@ class __$$RealTimeDonationRankingImplCopyWithImpl<$Res>
       $Res Function(_$RealTimeDonationRankingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2505,11 +2664,13 @@ class _$RealTimeDonationRankingImpl implements _RealTimeDonationRanking {
             (identical(other.badge, badge) || other.badge == badge));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, badge);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RealTimeDonationRankingImplCopyWith<_$RealTimeDonationRankingImpl>
@@ -2533,8 +2694,11 @@ abstract class _RealTimeDonationRanking implements RealTimeDonationRanking {
 
   @override
   Badge get badge;
+
+  /// Create a copy of RealTimeDonationRanking
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RealTimeDonationRankingImplCopyWith<_$RealTimeDonationRankingImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -2551,8 +2715,12 @@ mixin _$WeeklyRank {
   int get donationAmount => throw _privateConstructorUsedError;
   int get ranking => throw _privateConstructorUsedError;
 
+  /// Serializes this WeeklyRank to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of WeeklyRank
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WeeklyRankCopyWith<WeeklyRank> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -2581,6 +2749,8 @@ class _$WeeklyRankCopyWithImpl<$Res, $Val extends WeeklyRank>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WeeklyRank
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2639,6 +2809,8 @@ class __$$WeeklyRankImplCopyWithImpl<$Res>
       _$WeeklyRankImpl _value, $Res Function(_$WeeklyRankImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of WeeklyRank
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2718,12 +2890,14 @@ class _$WeeklyRankImpl implements _WeeklyRank {
             (identical(other.ranking, ranking) || other.ranking == ranking));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, userIdHash, nickName, verifiedMark, donationAmount, ranking);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WeeklyRank
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WeeklyRankImplCopyWith<_$WeeklyRankImpl> get copyWith =>
@@ -2758,8 +2932,11 @@ abstract class _WeeklyRank implements WeeklyRank {
   int get donationAmount;
   @override
   int get ranking;
+
+  /// Create a copy of WeeklyRank
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WeeklyRankImplCopyWith<_$WeeklyRankImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

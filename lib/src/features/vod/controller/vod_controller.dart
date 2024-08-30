@@ -47,8 +47,19 @@ class VodController extends _$VodController {
           },
         );
 
-        final vodPath = response.data?['period'][0]['adaptationSet'][0]
-            ['representation'][0]['baseURL'][0]['value'];
+        final vodRepresentations =
+            response.data?['period'][0]['adaptationSet'][0]['representation'];
+
+        int maxQualityIndex = 0;
+        for (int i = 1; i < vodRepresentations.length; i++) {
+          if (vodRepresentations[i]['width'] >
+              vodRepresentations[maxQualityIndex]['width']) {
+            maxQualityIndex = i;
+          }
+        }
+
+        final vodPath =
+            vodRepresentations[maxQualityIndex]['baseURL'][0]['value'];
 
         return vodPath;
       } catch (_) {

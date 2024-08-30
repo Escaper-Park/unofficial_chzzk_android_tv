@@ -18,10 +18,8 @@ class StreamSettings with _$StreamSettings {
 
     /// The index of default screen mode of single view live streaming.
     ///
-    /// 0: full, 1: singleview overlay chat, 2: single view full chat
-    ///
-    /// 3: multiview -> don't save
-    required int screenModeIndex,
+    /// 0: off, 1: overlay, 2: side
+    required int chatWindowStateIndex,
 
     /// 0: HLS, 1:LLHLS
     required int latencyIndex,

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../common/constants/dimensions.dart';
-import '../../../../../common/constants/styles.dart';
-import '../../../../../common/widgets/center_widgets.dart';
-import '../../../../../common/widgets/circle_avatar_profile_image.dart';
-import '../../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
-import '../../../../live/model/live.dart';
-import '../../../../live/widgets/live_container/live_info_card.dart';
-import '../../../common/controls_overlay_container.dart';
-import '../../controller/live_player_controller.dart';
+import '../../../../../../../common/constants/dimensions.dart';
+import '../../../../../../../common/constants/styles.dart';
+import '../../../../../../../common/widgets/center_widgets.dart';
+import '../../../../../../../common/widgets/circle_avatar_profile_image.dart';
+import '../../../../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
+import '../../../../../../live/widgets/live_container/live_info_card.dart';
+import '../../../../../common/controls_overlay_container.dart';
+import '../../../../controller/live_playlist_controller.dart';
+import '../../../../controller/live_stream_status_controller.dart';
 import 'live_stream_status.dart';
 import 'live_stream_uptime.dart';
 
 class LiveStreamInfo extends ConsumerWidget {
   const LiveStreamInfo({
     super.key,
-    required this.liveDetail,
   });
-
-  final LiveDetail liveDetail;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncLiveStatus = ref.watch(
-        liveStatusControllerProvider(channelId: liveDetail.channel.channelId));
+    final liveDetail = ref.watch(livePlaylistControllerProvider).first;
+
+    final asyncLiveStatus = ref.watch(liveStreamStatusControllerProvider(
+      channelId: liveDetail.channel.channelId,
+    ));
 
     return ControlsOverlayContainer(
       alignment: Alignment.topLeft,

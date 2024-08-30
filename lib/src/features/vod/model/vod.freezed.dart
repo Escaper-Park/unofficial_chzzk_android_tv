@@ -44,8 +44,12 @@ mixin _$Vod {
   String? get vodStatus => throw _privateConstructorUsedError;
   String? get userAdultStatus => throw _privateConstructorUsedError;
 
+  /// Serializes this Vod to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $VodCopyWith<Vod> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -91,6 +95,8 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -211,6 +217,8 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
     ) as $Val);
   }
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res> get channel {
@@ -261,6 +269,8 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
   __$$VodImplCopyWithImpl(_$VodImpl _value, $Res Function(_$VodImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -513,7 +523,7 @@ class _$VodImpl implements _Vod {
                 other.userAdultStatus == userAdultStatus));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -542,7 +552,9 @@ class _$VodImpl implements _Vod {
         userAdultStatus
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$VodImplCopyWith<_$VodImpl> get copyWith =>
@@ -619,8 +631,8 @@ abstract class _Vod implements Vod {
   @override
   Channel get channel;
   @override
-  Object? get blindType;
-  @override // Detailed
+  Object? get blindType; // Detailed
+  @override
   bool? get paidPromotion;
   @override
   String? get inKey;
@@ -630,8 +642,11 @@ abstract class _Vod implements Vod {
   String? get vodStatus;
   @override
   String? get userAdultStatus;
+
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$VodImplCopyWith<_$VodImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -648,8 +663,12 @@ mixin _$ChannelVodResponse {
   int get totalPages => throw _privateConstructorUsedError;
   List<Vod> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this ChannelVodResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChannelVodResponseCopyWith<ChannelVodResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -674,6 +693,8 @@ class _$ChannelVodResponseCopyWithImpl<$Res, $Val extends ChannelVodResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -728,6 +749,8 @@ class __$$ChannelVodResponseImplCopyWithImpl<$Res>
       $Res Function(_$ChannelVodResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -811,12 +834,14 @@ class _$ChannelVodResponseImpl implements _ChannelVodResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, page, size, totalCount,
       totalPages, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChannelVodResponseImplCopyWith<_$ChannelVodResponseImpl> get copyWith =>
@@ -852,8 +877,11 @@ abstract class _ChannelVodResponse implements ChannelVodResponse {
   int get totalPages;
   @override
   List<Vod> get data;
+
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChannelVodResponseImplCopyWith<_$ChannelVodResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -868,8 +896,12 @@ mixin _$FollowingVod {
   @JsonKey(name: 'content')
   Vod get vod => throw _privateConstructorUsedError;
 
+  /// Serializes this FollowingVod to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowingVodCopyWith<FollowingVod> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -895,6 +927,8 @@ class _$FollowingVodCopyWithImpl<$Res, $Val extends FollowingVod>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -913,6 +947,8 @@ class _$FollowingVodCopyWithImpl<$Res, $Val extends FollowingVod>
     ) as $Val);
   }
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $VodCopyWith<$Res> get vod {
@@ -944,6 +980,8 @@ class __$$FollowingVodImplCopyWithImpl<$Res>
       _$FollowingVodImpl _value, $Res Function(_$FollowingVodImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -992,11 +1030,13 @@ class _$FollowingVodImpl implements _FollowingVod {
             (identical(other.vod, vod) || other.vod == vod));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, type, vod);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowingVodImplCopyWith<_$FollowingVodImpl> get copyWith =>
@@ -1023,8 +1063,11 @@ abstract class _FollowingVod implements FollowingVod {
   @override
   @JsonKey(name: 'content')
   Vod get vod;
+
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowingVodImplCopyWith<_$FollowingVodImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1040,8 +1083,12 @@ mixin _$FollowingVodResponse {
   int get next => throw _privateConstructorUsedError;
   List<FollowingVod> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this FollowingVodResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowingVodResponseCopyWith<FollowingVodResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1069,6 +1116,8 @@ class _$FollowingVodResponseCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1115,6 +1164,8 @@ class __$$FollowingVodResponseImplCopyWithImpl<$Res>
       $Res Function(_$FollowingVodResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1180,12 +1231,14 @@ class _$FollowingVodResponseImpl implements _FollowingVodResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowingVodResponseImplCopyWith<_$FollowingVodResponseImpl>
@@ -1218,8 +1271,11 @@ abstract class _FollowingVodResponse implements FollowingVodResponse {
   int get next;
   @override
   List<FollowingVod> get data;
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowingVodResponseImplCopyWith<_$FollowingVodResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1232,8 +1288,12 @@ PopularVodResponse _$PopularVodResponseFromJson(Map<String, dynamic> json) {
 mixin _$PopularVodResponse {
   List<Vod> get videos => throw _privateConstructorUsedError;
 
+  /// Serializes this PopularVodResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PopularVodResponseCopyWith<PopularVodResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1257,6 +1317,8 @@ class _$PopularVodResponseCopyWithImpl<$Res, $Val extends PopularVodResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1290,6 +1352,8 @@ class __$$PopularVodResponseImplCopyWithImpl<$Res>
       $Res Function(_$PopularVodResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1334,12 +1398,14 @@ class _$PopularVodResponseImpl implements _PopularVodResponse {
             const DeepCollectionEquality().equals(other._videos, _videos));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_videos));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PopularVodResponseImplCopyWith<_$PopularVodResponseImpl> get copyWith =>
@@ -1363,8 +1429,11 @@ abstract class _PopularVodResponse implements PopularVodResponse {
 
   @override
   List<Vod> get videos;
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PopularVodResponseImplCopyWith<_$PopularVodResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1380,8 +1449,12 @@ mixin _$CategoryVodResponse {
   CategoryVodPage? get next => throw _privateConstructorUsedError;
   List<Vod> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this CategoryVodResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryVodResponseCopyWith<CategoryVodResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1411,6 +1484,8 @@ class _$CategoryVodResponseCopyWithImpl<$Res, $Val extends CategoryVodResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1434,6 +1509,8 @@ class _$CategoryVodResponseCopyWithImpl<$Res, $Val extends CategoryVodResponse>
     ) as $Val);
   }
 
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryVodPageCopyWith<$Res>? get next {
@@ -1473,6 +1550,8 @@ class __$$CategoryVodResponseImplCopyWithImpl<$Res>
       $Res Function(_$CategoryVodResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1538,12 +1617,14 @@ class _$CategoryVodResponseImpl implements _CategoryVodResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryVodResponseImplCopyWith<_$CategoryVodResponseImpl> get copyWith =>
@@ -1575,8 +1656,11 @@ abstract class _CategoryVodResponse implements CategoryVodResponse {
   CategoryVodPage? get next;
   @override
   List<Vod> get data;
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryVodResponseImplCopyWith<_$CategoryVodResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1590,8 +1674,12 @@ mixin _$CategoryVodPage {
   int get publishDateAt => throw _privateConstructorUsedError;
   int get readCount => throw _privateConstructorUsedError;
 
+  /// Serializes this CategoryVodPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryVodPageCopyWith<CategoryVodPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1615,6 +1703,8 @@ class _$CategoryVodPageCopyWithImpl<$Res, $Val extends CategoryVodPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1653,6 +1743,8 @@ class __$$CategoryVodPageImplCopyWithImpl<$Res>
       _$CategoryVodPageImpl _value, $Res Function(_$CategoryVodPageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1702,11 +1794,13 @@ class _$CategoryVodPageImpl implements _CategoryVodPage {
                 other.readCount == readCount));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, publishDateAt, readCount);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryVodPageImplCopyWith<_$CategoryVodPageImpl> get copyWith =>
@@ -1733,8 +1827,11 @@ abstract class _CategoryVodPage implements CategoryVodPage {
   int get publishDateAt;
   @override
   int get readCount;
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryVodPageImplCopyWith<_$CategoryVodPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

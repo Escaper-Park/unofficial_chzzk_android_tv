@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../../../common/constants/dimensions.dart';
 import '../../../../../../common/constants/styles.dart';
 import '../../../../../../common/widgets/center_widgets.dart';
-import '../../../../../live/model/live.dart';
 import '../../../../common/control_icon.dart';
 import '../../../../common/controls_overlay_container.dart';
+import '../../../controller/live_mode_controller.dart';
+import '../../../controller/live_overlay_controller.dart';
 import '../../../controller/live_player_controller.dart';
 import '../../../controller/live_playlist_controller.dart';
 
@@ -15,21 +15,22 @@ class MultiStreamMainControls extends StatelessWidget {
   const MultiStreamMainControls({
     super.key,
     required this.videoFocusNode,
-    required this.mainControlsFSN,
-    required this.liveDetails,
-    required this.controllers,
+    required this.controlsFSN,
   });
 
   final FocusNode videoFocusNode;
-  final FocusScopeNode mainControlsFSN;
-  final List<LiveDetail> liveDetails;
-  final List<VideoPlayerController> controllers;
+  final FocusScopeNode controlsFSN;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Indicator
+        // controls
+        MultiStreamSettingsControls(
+          videoFocusNode: videoFocusNode,
+          controlsFSN: controlsFSN,
+        ),
+        // multiview indicator
         const ControlsOverlayContainer(
           alignment: Alignment.topLeft,
           height: 50.0,
@@ -46,13 +47,6 @@ class MultiStreamMainControls extends StatelessWidget {
             fontSize: 16.0,
           ),
         ),
-        // controls
-        MultiStreamSettingsControls(
-          videoFocusNode: videoFocusNode,
-          mainControlsFSN: mainControlsFSN,
-          liveDetails: liveDetails,
-          controllers: controllers,
-        ),
       ],
     );
   }
@@ -62,19 +56,17 @@ class MultiStreamSettingsControls extends ConsumerWidget {
   const MultiStreamSettingsControls({
     super.key,
     required this.videoFocusNode,
-    required this.mainControlsFSN,
-    required this.liveDetails,
-    required this.controllers,
+    required this.controlsFSN,
   });
 
   final FocusNode videoFocusNode;
-  final FocusScopeNode mainControlsFSN;
-  final List<LiveDetail> liveDetails;
-  final List<VideoPlayerController> controllers;
+  final FocusScopeNode controlsFSN;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final IconData filterIcon = switch (liveDetails.length) {
+    final liveCount = ref.watch(livePlaylistControllerProvider).length;
+
+    final IconData filterIcon = switch (liveCount) {
       1 => Icons.filter_1_rounded,
       2 => Icons.filter_2_rounded,
       3 => Icons.filter_3_rounded,
@@ -83,7 +75,7 @@ class MultiStreamSettingsControls extends ConsumerWidget {
     };
 
     return FocusScope(
-      node: mainControlsFSN,
+      node: controlsFSN,
       child: ControlsOverlayContainer(
         width: double.infinity,
         height: Dimensions.liveStreamMainControlsHeight,
@@ -100,32 +92,44 @@ class MultiStreamSettingsControls extends ConsumerWidget {
               iconData: Icons.fullscreen_rounded,
               label: '화면설정',
               onPressed: () {
-                ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
-                      overlayType: LiveOverlayType.multiviewScreenSettings,
-                      videoFocusNode: videoFocusNode,
-                    );
+                _changeOverlay(ref, LiveOverlayType.multiviewScreenSettings);
               },
             ),
             _controlIconButton(
               ref: ref,
               iconData: filterIcon,
-              label: '재생설정',
+              label: '방송끄기',
               onPressed: () {
-                ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
-                      overlayType: LiveOverlayType.multiviewPlaySetting,
-                      videoFocusNode: videoFocusNode,
-                    );
+                final audioSourceIndex =
+                    ref.read(currentActivatedAudioSourceIndexProvider);
+
+                final liveCount = ref
+                    .read(livePlaylistControllerProvider.notifier)
+                    .getLiveCount();
+
+                ref
+                    .read(currentActivatedAudioSourceIndexProvider.notifier)
+                    .reset();
+
+                // if activated audio source is last one,
+                if (audioSourceIndex == liveCount - 1) {
+                  ref
+                      .read(
+                          singleLivePlayerControllerProvider(index: 0).notifier)
+                      .setMute(false);
+                }
+
+                ref.read(currentActivatedLiveIndexProvider.notifier).reset();
+                ref.read(livePlaylistControllerProvider.notifier).removeLast();
               },
             ),
+            // show chat settings
             _controlIconButton(
               ref: ref,
-              iconData: Icons.display_settings_rounded,
-              label: '화질설정',
+              iconData: Icons.mark_chat_read_rounded,
+              label: '채팅설정',
               onPressed: () {
-                ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
-                      overlayType: LiveOverlayType.resolutionSetting,
-                      videoFocusNode: videoFocusNode,
-                    );
+                _changeOverlay(ref, LiveOverlayType.chatSettings);
               },
             ),
             _controlIconButton(
@@ -133,10 +137,15 @@ class MultiStreamSettingsControls extends ConsumerWidget {
               iconData: Icons.volume_up_rounded,
               label: '소리설정',
               onPressed: () {
-                ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
-                      overlayType: LiveOverlayType.soundSetting,
-                      videoFocusNode: videoFocusNode,
-                    );
+                _changeOverlay(ref, LiveOverlayType.soundSettings);
+              },
+            ),
+            _controlIconButton(
+              ref: ref,
+              iconData: Icons.display_settings_rounded,
+              label: '화질설정',
+              onPressed: () {
+                _changeOverlay(ref, LiveOverlayType.resolutionSettings);
               },
             ),
             _controlIconButton(
@@ -144,10 +153,7 @@ class MultiStreamSettingsControls extends ConsumerWidget {
               iconData: Icons.info_outline_rounded,
               label: '재생정보',
               onPressed: () {
-                ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
-                      overlayType: LiveOverlayType.multiviewPlayInfo,
-                      videoFocusNode: videoFocusNode,
-                    );
+                _changeOverlay(ref, LiveOverlayType.multiviewPlayInfo);
               },
             ),
             _controlIconButton(
@@ -160,9 +166,13 @@ class MultiStreamSettingsControls extends ConsumerWidget {
                     .read(livePlaylistControllerProvider.notifier)
                     .changeToSingleView();
 
+                ref.read(currentActivatedLiveIndexProvider.notifier).reset();
+
                 ref
-                    .read(livePlayerScreenModeControllerProvider.notifier)
-                    .toggleViewMode();
+                    .read(chatWindowModeControllerProvider.notifier)
+                    .toggleLiveMode(LiveMode.singleView);
+
+                ref.read(liveModeControllerProvider.notifier).changeMode();
               },
             ),
           ],
@@ -189,5 +199,12 @@ class MultiStreamSettingsControls extends ConsumerWidget {
       },
       onPressed: onPressed,
     );
+  }
+
+  void _changeOverlay(WidgetRef ref, LiveOverlayType overlayType) {
+    ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
+          overlayType: overlayType,
+          videoFocusNode: videoFocusNode,
+        );
   }
 }

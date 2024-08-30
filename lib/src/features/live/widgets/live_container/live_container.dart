@@ -6,16 +6,15 @@ import '../../../../common/constants/styles.dart';
 import '../../../../common/widgets/center_widgets.dart';
 import '../../../../common/widgets/rounded_container.dart';
 import '../../../../common/widgets/focused_widget.dart';
-import '../../../../utils/hls_parser/hls_parser.dart';
 import '../../../../utils/popup/popup_utils.dart';
 import '../../../../utils/router/app_router.dart';
 import '../../../channel/model/channel.dart';
-import '../../../setting/controller/stream_settings_controller.dart';
+import '../../../video_player/live/controller/live_mode_controller.dart';
 import '../../../video_player/live/controller/live_playlist_controller.dart';
+import '../../../video_player/live/widgets/util/wakelock_monitor_controller.dart';
 import '../../controller/live_controller.dart';
 import '../../model/live.dart';
 
-import '../../model/live_stream.dart';
 import './live_container_widgets.dart';
 
 class LiveContainer extends ConsumerWidget {
@@ -69,25 +68,24 @@ class LiveContainer extends ConsumerWidget {
                 .getLiveDetail(channelId: channel.channelId);
 
             if (liveDetail != null && context.mounted) {
-              final streamSettings = ref.read(streamSettingsControllerProvider);
-              final mediaList = await HlsParser(liveDetail
-                      .livePlaybackJson.media[streamSettings.latencyIndex].path)
-                  .getMediaPlaylistUrls();
+              if (liveDetail.livePlaybackJson.media.isEmpty) {
+                await PopupUtils.showButtonDialog(
+                  context: context,
+                  titleText: '종료된 방송',
+                  contentText: '종료된 방송입니다. 방송 목록을 새로고침 해주세요.',
+                );
+                return;
+              }
 
-              final List<Uri?> mediaTrackUri = mediaList!;
-
-              final LiveStream liveStream = LiveStream(
-                liveDetail: liveDetail,
-                uris: mediaTrackUri,
-              );
-
-              // reset
+              // reset playlist and live mode
               ref.read(livePlaylistControllerProvider.notifier).reset();
+              ref.read(liveModeControllerProvider.notifier).reset();
+              ref.read(wakelockMonitorControllerProvider.notifier).reset();
 
               // add playlist
               ref
                   .read(livePlaylistControllerProvider.notifier)
-                  .addLive(liveStream: liveStream);
+                  .addLive(liveDetail: liveDetail);
 
               if (context.mounted) {
                 context.pushNamed(AppRoute.liveStreaming.routeName);

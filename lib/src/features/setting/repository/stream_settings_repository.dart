@@ -12,7 +12,7 @@ class StreamSettingsRepository extends SettingsRepository<StreamSettings> {
   StreamSettings initSettings() {
     const StreamSettings settings = StreamSettings(
       resolutionIndex: 3, // 1080p
-      screenModeIndex: 0, // Full
+      chatWindowStateIndex: 0, // Full
       overlayControlsDisplayTime: 10,
       multiviewResolutionIndex: 2, // 720p
       latencyIndex: 1, // LLHLS

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../../common/constants/dimensions.dart';
-import '../../../../../../common/widgets/dpad_widgets.dart';
-import '../../../../../../common/widgets/header_text.dart';
-import '../../../../common/controls_overlay_container.dart';
-import '../../../controller/live_player_controller.dart';
+import '../../../../../common/constants/dimensions.dart';
+import '../../../../../common/widgets/dpad_widgets.dart';
+import '../../../../../common/widgets/header_text.dart';
+import '../../../common/controls_overlay_container.dart';
+import '../../controller/live_overlay_controller.dart';
 
 class VideoNavigatorOverlay extends ConsumerWidget {
   /// Navigator overlay to explore other vods or live stream channels

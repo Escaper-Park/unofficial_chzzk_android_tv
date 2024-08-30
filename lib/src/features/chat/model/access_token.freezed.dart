@@ -24,8 +24,12 @@ mixin _$AccessToken {
   bool get realNameAuth => throw _privateConstructorUsedError;
   String get extraToken => throw _privateConstructorUsedError;
 
+  /// Serializes this AccessToken to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AccessToken
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccessTokenCopyWith<AccessToken> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$AccessTokenCopyWithImpl<$Res, $Val extends AccessToken>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AccessToken
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$AccessTokenImplCopyWithImpl<$Res>
       _$AccessTokenImpl _value, $Res Function(_$AccessTokenImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccessToken
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -152,12 +160,14 @@ class _$AccessTokenImpl implements _AccessToken {
                 other.extraToken == extraToken));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, accessToken, realNameAuth, extraToken);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccessToken
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AccessTokenImplCopyWith<_$AccessTokenImpl> get copyWith =>
@@ -186,8 +196,11 @@ abstract class _AccessToken implements AccessToken {
   bool get realNameAuth;
   @override
   String get extraToken;
+
+  /// Create a copy of AccessToken
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AccessTokenImplCopyWith<_$AccessTokenImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -203,8 +216,12 @@ mixin _$TemporaryRestrict {
   int? get duration => throw _privateConstructorUsedError;
   String? get createdTime => throw _privateConstructorUsedError;
 
+  /// Serializes this TemporaryRestrict to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TemporaryRestrict
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TemporaryRestrictCopyWith<TemporaryRestrict> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -229,6 +246,8 @@ class _$TemporaryRestrictCopyWithImpl<$Res, $Val extends TemporaryRestrict>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TemporaryRestrict
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -278,6 +297,8 @@ class __$$TemporaryRestrictImplCopyWithImpl<$Res>
       $Res Function(_$TemporaryRestrictImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TemporaryRestrict
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -347,12 +368,14 @@ class _$TemporaryRestrictImpl implements _TemporaryRestrict {
                 other.createdTime == createdTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, temporaryRestrict, times, duration, createdTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TemporaryRestrict
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TemporaryRestrictImplCopyWith<_$TemporaryRestrictImpl> get copyWith =>
@@ -385,8 +408,11 @@ abstract class _TemporaryRestrict implements TemporaryRestrict {
   int? get duration;
   @override
   String? get createdTime;
+
+  /// Create a copy of TemporaryRestrict
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TemporaryRestrictImplCopyWith<_$TemporaryRestrictImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

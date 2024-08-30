@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/dimensions.dart';
 import '../../../common/widgets/dpad_widgets.dart';
+import '../../../utils/popup/popup_utils.dart';
 import '../../../utils/router/app_router.dart';
 import '../controller/dashboard_controller.dart';
 import './responsive_sidebar_menu.dart';
@@ -88,11 +89,18 @@ class ResponsiveSidebar extends HookConsumerWidget {
             .read(dashboardControllerProvider.notifier)
             .changeScreen(context, AppRoute.auth);
       },
-      onPressedUserProfile: () {
-        ref.read(authControllerProvider.notifier).signOut();
-        // ref
-        //     .read(dashboardControllerProvider.notifier)
-        //     .changeScreen(context, AppRoute.user);
+      onPressedUserProfile: () async {
+        await PopupUtils.showButtonDialog(
+          context: context,
+          buttonType: DialogButtonType.doubleButton,
+          titleText: '로그아웃',
+          contentText: '로그아웃 하시겠습니까?',
+          cancelText: '취소',
+          confirmText: '로그아웃',
+          confirmCallback: () {
+            ref.read(authControllerProvider.notifier).signOut();
+          },
+        );
       },
     );
 

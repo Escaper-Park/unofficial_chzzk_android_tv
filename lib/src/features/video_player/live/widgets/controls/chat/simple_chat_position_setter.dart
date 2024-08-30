@@ -5,23 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../../common/constants/styles.dart';
 import '../../../../../../common/widgets/dpad_widgets.dart';
 import '../../../../../setting/controller/chat_settings_controller.dart';
-import '../../../controller/live_player_controller.dart';
-
-class ChatPosition {
-  final IconData iconData;
-  final bool isFlipX;
-  final bool isFlipY;
-  final int posX;
-  final int posY;
-
-  ChatPosition({
-    required this.iconData,
-    required this.isFlipX,
-    required this.isFlipY,
-    required this.posX,
-    required this.posY,
-  });
-}
+import '../../../../../setting/widgets/chat/chat_settings_data.dart';
+import '../../../controller/live_overlay_controller.dart';
 
 class SimpleChatPositionSetter extends HookConsumerWidget {
   const SimpleChatPositionSetter({super.key, required this.videoFocusNode});
@@ -32,73 +17,9 @@ class SimpleChatPositionSetter extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final chatSettings = ref.watch(chatSettingsControllerProvider);
 
-    final List<ChatPosition> itemData = [
-      ChatPosition(
-        iconData: Icons.arrow_outward_rounded,
-        isFlipX: true,
-        isFlipY: false,
-        posX: 0,
-        posY: 0,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_upward_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 50,
-        posY: 0,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_outward_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 100,
-        posY: 0,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_back_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 0,
-        posY: 50,
-      ),
-      ChatPosition(
-        iconData: Icons.add_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 50,
-        posY: 50,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_forward_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 100,
-        posY: 50,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_outward_rounded,
-        isFlipX: true,
-        isFlipY: true,
-        posX: 0,
-        posY: 100,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_downward_rounded,
-        isFlipX: false,
-        isFlipY: false,
-        posX: 50,
-        posY: 100,
-      ),
-      ChatPosition(
-        iconData: Icons.arrow_outward_rounded,
-        isFlipX: false,
-        isFlipY: true,
-        posX: 100,
-        posY: 100,
-      ),
-    ];
+    final itemData = ChatSettingsData.chatPositionData;
 
-    final int initialPositionIndex = _getPositionIndex(
+    final int initialPositionIndex = ChatSettingsData.getPositionIndex(
       chatSettings.chatPositionX,
       chatSettings.chatPositionY,
     );
@@ -107,7 +28,7 @@ class SimpleChatPositionSetter extends HookConsumerWidget {
 
     // Update Icon
     useEffect(() {
-      final newPositionIndex = _getPositionIndex(
+      final newPositionIndex = ChatSettingsData.getPositionIndex(
         chatSettings.chatPositionX,
         chatSettings.chatPositionY,
       );
@@ -185,15 +106,6 @@ class SimpleChatPositionSetter extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// 0, 1, 2
-  /// 3, 4, 5
-  /// 6, 7, 8
-  int _getPositionIndex(int chatPositionX, int chatPositionY) {
-    int column = chatPositionX ~/ 34;
-    int row = chatPositionY ~/ 34;
-    return row * 3 + column;
   }
 
   void _setChatPositions(WidgetRef ref, int x, int y) {

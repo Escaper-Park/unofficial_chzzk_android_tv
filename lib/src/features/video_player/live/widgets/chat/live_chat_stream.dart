@@ -8,16 +8,16 @@ import '../../../../chat/widgets/chat_list.dart';
 import '../../../../live/model/live.dart';
 import '../../../../setting/controller/chat_settings_controller.dart';
 import '../../../../setting/model/chat_settings.dart';
-import '../../controller/live_player_controller.dart';
+import '../../controller/live_mode_controller.dart';
 
 class LiveChatStream extends ConsumerStatefulWidget {
   const LiveChatStream({
     super.key,
-    required this.screenMode,
+    required this.chatWindowMode,
     required this.liveDetail,
   });
 
-  final LivePlayerScreenMode screenMode;
+  final ChatWindowMode chatWindowMode;
   final LiveDetail liveDetail;
 
   @override
@@ -36,7 +36,6 @@ class _LiveChatStreamState extends ConsumerState<LiveChatStream>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    print('dispose chatstream');
     super.dispose();
   }
 
@@ -78,7 +77,7 @@ class _LiveChatStreamState extends ConsumerState<LiveChatStream>
 
     ChatSettings chatSettings = ref.watch(chatSettingsControllerProvider);
 
-    if (widget.screenMode == LivePlayerScreenMode.singleChat) {
+    if (widget.chatWindowMode == ChatWindowMode.side) {
       chatSettings = chatSettings.copyWith(
         entireChatContainerTransparency: 100,
         singleChatContainerTransparency: 100,
@@ -101,7 +100,7 @@ class _LiveChatStreamState extends ConsumerState<LiveChatStream>
             chatSettings.chatPositionY *
             0.01;
 
-    return widget.screenMode == LivePlayerScreenMode.singleChat
+    return widget.chatWindowMode == ChatWindowMode.side
         ? Padding(
             padding: const EdgeInsets.all(10.0),
             child: _chatStream(chatStream, chatSettings),
@@ -140,7 +139,7 @@ class _LiveChatStreamState extends ConsumerState<LiveChatStream>
                 ),
               ),
             if (chatSettings.useBadgeCollector == 1 &&
-                widget.screenMode == LivePlayerScreenMode.singleChat)
+                widget.chatWindowMode == ChatWindowMode.side)
               const Divider(),
             if (chatSettings.useBadgeCollector == 1)
               // Badge Collector

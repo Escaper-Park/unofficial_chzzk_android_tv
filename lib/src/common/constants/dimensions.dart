@@ -61,4 +61,8 @@ class Dimensions {
   static const double settingHeaderTextWidth = 120.0;
   static const double settingDisplayValueWidth = 100.0;
   static const double liveStreamInfoContainerHeight = 100.0;
+
+  // Detailed Settings
+  static const double settingsControlItemWidth = 120.0;
+  static const Size multiviewLimitPopupDialogSize = Size(500, 210);
 }

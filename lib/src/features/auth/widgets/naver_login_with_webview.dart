@@ -53,6 +53,7 @@ class _NaverLoginWithWebviewState extends ConsumerState<NaverLoginWithWebview> {
   @override
   void dispose() {
     super.dispose();
+    _controller?.dispose();
   }
 
   @override

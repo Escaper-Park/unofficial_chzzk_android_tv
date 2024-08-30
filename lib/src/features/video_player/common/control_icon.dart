@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../common/constants/styles.dart';
 import '../../../common/widgets/dpad_widgets.dart';
 import '../../setting/widgets/common/setting_item.dart';
-import '../live/controller/live_player_controller.dart';
+import '../live/controller/live_overlay_controller.dart';
 
 class ControlsNavigator extends StatelessWidget {
   /// A list of controls with dpad navigator
@@ -45,6 +45,7 @@ class ControlIconButton extends StatelessWidget {
     this.labelFontSize = 11.0,
     this.padding = const EdgeInsets.all(5.0),
     required this.iconData,
+    this.useKeyRepeatEvent = false,
     required this.resetOverlayTimer,
     required this.onPressed,
   });
@@ -62,6 +63,8 @@ class ControlIconButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final IconData iconData;
 
+  final bool useKeyRepeatEvent;
+
   /// Reset overlay timer to keep overlay state.
   final VoidCallback resetOverlayTimer;
   final VoidCallback onPressed;
@@ -74,7 +77,7 @@ class ControlIconButton extends StatelessWidget {
         autofocus: autofocus,
         focusNode: focusNode,
         useFocusedBorder: true,
-        useKeyRepeatEvent: false,
+        useKeyRepeatEvent: useKeyRepeatEvent,
         dpadActionCallbacks: {
           DpadAction.arrowLeft: () {
             resetOverlayTimer();
@@ -206,27 +209,19 @@ class DpadControlIconButton extends ConsumerWidget {
         useKeyRepeatEvent: true,
         dpadActionCallbacks: {
           DpadAction.arrowLeft: () {
-            ref
-                .read(liveOverlayControllerProvider.notifier)
-                .resetOverlayTimer(videoFocusNode: videoFocusNode);
+            _resetOverlayTimer(ref);
           },
           DpadAction.arrowRight: () {
-            ref
-                .read(liveOverlayControllerProvider.notifier)
-                .resetOverlayTimer(videoFocusNode: videoFocusNode);
+            _resetOverlayTimer(ref);
           },
           DpadAction.arrowUp: () {
             final updatedValue = currentValue + 1;
-            ref
-                .read(liveOverlayControllerProvider.notifier)
-                .resetOverlayTimer(videoFocusNode: videoFocusNode);
+            _resetOverlayTimer(ref);
             if (updatedValue <= maxValue) onUpdate(updatedValue);
           },
           DpadAction.arrowDown: () {
             final updatedValue = currentValue - 1;
-            ref
-                .read(liveOverlayControllerProvider.notifier)
-                .resetOverlayTimer(videoFocusNode: videoFocusNode);
+            _resetOverlayTimer(ref);
             if (updatedValue >= minValue) onUpdate(updatedValue);
           },
           DpadAction.select: () {
@@ -268,5 +263,11 @@ class DpadControlIconButton extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _resetOverlayTimer(WidgetRef ref) {
+    ref
+        .read(liveOverlayControllerProvider.notifier)
+        .resetOverlayTimer(videoFocusNode: videoFocusNode);
   }
 }

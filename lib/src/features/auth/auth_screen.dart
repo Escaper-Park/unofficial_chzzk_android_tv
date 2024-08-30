@@ -13,7 +13,7 @@ class AuthScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopScopeScreen(
-      onPopInvoked: (_) {
+      onPopInvokedWithResult: (_, __) {
         ref.invalidate(authControllerProvider);
 
         ref

@@ -131,7 +131,7 @@ class DpadActionWidget extends HookWidget {
       autofocus: autofocus,
       focusNode: widgetFocusNode,
       onKeyEvent: (event) {
-        if (event is KeyUpEvent) {
+        if (event is KeyDownEvent) {
           _onKeyEvent(event);
         }
 

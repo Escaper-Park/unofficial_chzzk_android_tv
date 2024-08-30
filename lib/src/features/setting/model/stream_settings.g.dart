@@ -11,7 +11,7 @@ _$StreamSettingsImpl _$$StreamSettingsImplFromJson(Map<String, dynamic> json) =>
       resolutionIndex: (json['resolutionIndex'] as num).toInt(),
       multiviewResolutionIndex:
           (json['multiviewResolutionIndex'] as num).toInt(),
-      screenModeIndex: (json['screenModeIndex'] as num).toInt(),
+      chatWindowStateIndex: (json['chatWindowStateIndex'] as num).toInt(),
       latencyIndex: (json['latencyIndex'] as num).toInt(),
       overlayControlsDisplayTime:
           (json['overlayControlsDisplayTime'] as num).toInt(),
@@ -24,7 +24,7 @@ Map<String, dynamic> _$$StreamSettingsImplToJson(
     <String, dynamic>{
       'resolutionIndex': instance.resolutionIndex,
       'multiviewResolutionIndex': instance.multiviewResolutionIndex,
-      'screenModeIndex': instance.screenModeIndex,
+      'chatWindowStateIndex': instance.chatWindowStateIndex,
       'latencyIndex': instance.latencyIndex,
       'overlayControlsDisplayTime': instance.overlayControlsDisplayTime,
       'vodPlaybackIntervalIndex': instance.vodPlaybackIntervalIndex,

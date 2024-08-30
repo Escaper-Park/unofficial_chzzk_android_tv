@@ -30,7 +30,7 @@ class DashboardScreen extends HookWidget {
     DateTime? lastPressedBackButtonAt;
 
     return PopScopeScreen(
-      onPopInvoked: (_) async {
+      onPopInvokedWithResult: (_, __) async {
         if (sidebarFSN.hasFocus) {
           final currentTime = DateTime.now();
 

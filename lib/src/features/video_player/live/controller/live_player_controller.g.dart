@@ -6,79 +6,8 @@ part of 'live_player_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$liveOverlayControllerHash() =>
-    r'eb9527c93acef7dd30b24d38120dafd594220939';
-
-/// See also [LiveOverlayController].
-@ProviderFor(LiveOverlayController)
-final liveOverlayControllerProvider = AutoDisposeNotifierProvider<
-    LiveOverlayController, LiveOverlayType>.internal(
-  LiveOverlayController.new,
-  name: r'liveOverlayControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$liveOverlayControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LiveOverlayController = AutoDisposeNotifier<LiveOverlayType>;
-String _$livePlayerControllerHash() =>
-    r'de4eb60d0efc6a7f64b082e3c74d8fd5ffe435fc';
-
-/// See also [LivePlayerController].
-@ProviderFor(LivePlayerController)
-final livePlayerControllerProvider =
-    AutoDisposeNotifierProvider<LivePlayerController, void>.internal(
-  LivePlayerController.new,
-  name: r'livePlayerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$livePlayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LivePlayerController = AutoDisposeNotifier<void>;
-String _$livePlayerOverlayTimerHash() =>
-    r'fc60fe28900692c223d9b13288a2e18ed6898ce2';
-
-/// Set this true to ensure that the existing state is maintained wherever this timer is called.
-///
-/// Copied from [LivePlayerOverlayTimer].
-@ProviderFor(LivePlayerOverlayTimer)
-final livePlayerOverlayTimerProvider =
-    NotifierProvider<LivePlayerOverlayTimer, Timer?>.internal(
-  LivePlayerOverlayTimer.new,
-  name: r'livePlayerOverlayTimerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$livePlayerOverlayTimerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LivePlayerOverlayTimer = Notifier<Timer?>;
-String _$livePlayerScreenModeControllerHash() =>
-    r'f391ec1dfa593c9255a993fba1073815cb2c0d74';
-
-/// See also [LivePlayerScreenModeController].
-@ProviderFor(LivePlayerScreenModeController)
-final livePlayerScreenModeControllerProvider = AutoDisposeNotifierProvider<
-    LivePlayerScreenModeController, LivePlayerScreenMode>.internal(
-  LivePlayerScreenModeController.new,
-  name: r'livePlayerScreenModeControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$livePlayerScreenModeControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LivePlayerScreenModeController
-    = AutoDisposeNotifier<LivePlayerScreenMode>;
-String _$liveStatusControllerHash() =>
-    r'948fdc156a39f1af64af01de6ca0a2a6b5fa0bda';
+String _$singleLivePlayerControllerHash() =>
+    r'9a2070b883046744b25368584e56f1ab58dadac0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -101,47 +30,40 @@ class _SystemHash {
   }
 }
 
-abstract class _$LiveStatusController
-    extends BuildlessAutoDisposeAsyncNotifier<LiveStatus?> {
-  late final String channelId;
+abstract class _$SingleLivePlayerController
+    extends BuildlessAutoDisposeAsyncNotifier<Raw<VideoPlayerController>> {
+  late final int index;
 
-  FutureOr<LiveStatus?> build({
-    required String channelId,
+  FutureOr<Raw<VideoPlayerController>> build({
+    required int index,
   });
 }
 
-/// Show current live status with the main controls
-///
-/// Copied from [LiveStatusController].
-@ProviderFor(LiveStatusController)
-const liveStatusControllerProvider = LiveStatusControllerFamily();
+/// See also [SingleLivePlayerController].
+@ProviderFor(SingleLivePlayerController)
+const singleLivePlayerControllerProvider = SingleLivePlayerControllerFamily();
 
-/// Show current live status with the main controls
-///
-/// Copied from [LiveStatusController].
-class LiveStatusControllerFamily extends Family<AsyncValue<LiveStatus?>> {
-  /// Show current live status with the main controls
-  ///
-  /// Copied from [LiveStatusController].
-  const LiveStatusControllerFamily();
+/// See also [SingleLivePlayerController].
+class SingleLivePlayerControllerFamily
+    extends Family<AsyncValue<Raw<VideoPlayerController>>> {
+  /// See also [SingleLivePlayerController].
+  const SingleLivePlayerControllerFamily();
 
-  /// Show current live status with the main controls
-  ///
-  /// Copied from [LiveStatusController].
-  LiveStatusControllerProvider call({
-    required String channelId,
+  /// See also [SingleLivePlayerController].
+  SingleLivePlayerControllerProvider call({
+    required int index,
   }) {
-    return LiveStatusControllerProvider(
-      channelId: channelId,
+    return SingleLivePlayerControllerProvider(
+      index: index,
     );
   }
 
   @override
-  LiveStatusControllerProvider getProviderOverride(
-    covariant LiveStatusControllerProvider provider,
+  SingleLivePlayerControllerProvider getProviderOverride(
+    covariant SingleLivePlayerControllerProvider provider,
   ) {
     return call(
-      channelId: provider.channelId,
+      index: provider.index,
     );
   }
 
@@ -157,104 +79,100 @@ class LiveStatusControllerFamily extends Family<AsyncValue<LiveStatus?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'liveStatusControllerProvider';
+  String? get name => r'singleLivePlayerControllerProvider';
 }
 
-/// Show current live status with the main controls
-///
-/// Copied from [LiveStatusController].
-class LiveStatusControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    LiveStatusController, LiveStatus?> {
-  /// Show current live status with the main controls
-  ///
-  /// Copied from [LiveStatusController].
-  LiveStatusControllerProvider({
-    required String channelId,
+/// See also [SingleLivePlayerController].
+class SingleLivePlayerControllerProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<SingleLivePlayerController,
+        Raw<VideoPlayerController>> {
+  /// See also [SingleLivePlayerController].
+  SingleLivePlayerControllerProvider({
+    required int index,
   }) : this._internal(
-          () => LiveStatusController()..channelId = channelId,
-          from: liveStatusControllerProvider,
-          name: r'liveStatusControllerProvider',
+          () => SingleLivePlayerController()..index = index,
+          from: singleLivePlayerControllerProvider,
+          name: r'singleLivePlayerControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$liveStatusControllerHash,
-          dependencies: LiveStatusControllerFamily._dependencies,
+                  : _$singleLivePlayerControllerHash,
+          dependencies: SingleLivePlayerControllerFamily._dependencies,
           allTransitiveDependencies:
-              LiveStatusControllerFamily._allTransitiveDependencies,
-          channelId: channelId,
+              SingleLivePlayerControllerFamily._allTransitiveDependencies,
+          index: index,
         );
 
-  LiveStatusControllerProvider._internal(
+  SingleLivePlayerControllerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.channelId,
+    required this.index,
   }) : super.internal();
 
-  final String channelId;
+  final int index;
 
   @override
-  FutureOr<LiveStatus?> runNotifierBuild(
-    covariant LiveStatusController notifier,
+  FutureOr<Raw<VideoPlayerController>> runNotifierBuild(
+    covariant SingleLivePlayerController notifier,
   ) {
     return notifier.build(
-      channelId: channelId,
+      index: index,
     );
   }
 
   @override
-  Override overrideWith(LiveStatusController Function() create) {
+  Override overrideWith(SingleLivePlayerController Function() create) {
     return ProviderOverride(
       origin: this,
-      override: LiveStatusControllerProvider._internal(
-        () => create()..channelId = channelId,
+      override: SingleLivePlayerControllerProvider._internal(
+        () => create()..index = index,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        channelId: channelId,
+        index: index,
       ),
     );
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<LiveStatusController, LiveStatus?>
-      createElement() {
-    return _LiveStatusControllerProviderElement(this);
+  AutoDisposeAsyncNotifierProviderElement<SingleLivePlayerController,
+      Raw<VideoPlayerController>> createElement() {
+    return _SingleLivePlayerControllerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is LiveStatusControllerProvider &&
-        other.channelId == channelId;
+    return other is SingleLivePlayerControllerProvider && other.index == index;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, channelId.hashCode);
+    hash = _SystemHash.combine(hash, index.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin LiveStatusControllerRef
-    on AutoDisposeAsyncNotifierProviderRef<LiveStatus?> {
-  /// The parameter `channelId` of this provider.
-  String get channelId;
+mixin SingleLivePlayerControllerRef
+    on AutoDisposeAsyncNotifierProviderRef<Raw<VideoPlayerController>> {
+  /// The parameter `index` of this provider.
+  int get index;
 }
 
-class _LiveStatusControllerProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<LiveStatusController,
-        LiveStatus?> with LiveStatusControllerRef {
-  _LiveStatusControllerProviderElement(super.provider);
+class _SingleLivePlayerControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<SingleLivePlayerController,
+        Raw<VideoPlayerController>> with SingleLivePlayerControllerRef {
+  _SingleLivePlayerControllerProviderElement(super.provider);
 
   @override
-  String get channelId => (origin as LiveStatusControllerProvider).channelId;
+  int get index => (origin as SingleLivePlayerControllerProvider).index;
 }
 
 String _$pauseTimerHash() => r'92bb2db0a3c2bf94e401a078879835d21ccd5046';
@@ -271,22 +189,5 @@ final pauseTimerProvider = NotifierProvider<PauseTimer, Timer?>.internal(
 );
 
 typedef _$PauseTimer = Notifier<Timer?>;
-String _$multiviewMainScreenIndexHash() =>
-    r'b635cec08842a099f524d6a8062b7a832bc45649';
-
-/// See also [MultiviewMainScreenIndex].
-@ProviderFor(MultiviewMainScreenIndex)
-final multiviewMainScreenIndexProvider =
-    AutoDisposeNotifierProvider<MultiviewMainScreenIndex, int?>.internal(
-  MultiviewMainScreenIndex.new,
-  name: r'multiviewMainScreenIndexProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$multiviewMainScreenIndexHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$MultiviewMainScreenIndex = AutoDisposeNotifier<int?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

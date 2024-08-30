@@ -32,10 +32,8 @@ mixin _$StreamSettings {
 
   /// The index of default screen mode of single view live streaming.
   ///
-  /// 0: full, 1: singleview overlay chat, 2: single view full chat
-  ///
-  /// 3: multiview -> don't save
-  int get screenModeIndex => throw _privateConstructorUsedError;
+  /// 0: off, 1: overlay, 2: side
+  int get chatWindowStateIndex => throw _privateConstructorUsedError;
 
   /// 0: HLS, 1:LLHLS
   int get latencyIndex => throw _privateConstructorUsedError;
@@ -48,8 +46,12 @@ mixin _$StreamSettings {
   /// 0: 5s, 1: 10s, 2: 30s
   int get vodPlaybackIntervalIndex => throw _privateConstructorUsedError;
 
+  /// Serializes this StreamSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StreamSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StreamSettingsCopyWith<StreamSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -63,7 +65,7 @@ abstract class $StreamSettingsCopyWith<$Res> {
   $Res call(
       {int resolutionIndex,
       int multiviewResolutionIndex,
-      int screenModeIndex,
+      int chatWindowStateIndex,
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex});
@@ -79,12 +81,14 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StreamSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? resolutionIndex = null,
     Object? multiviewResolutionIndex = null,
-    Object? screenModeIndex = null,
+    Object? chatWindowStateIndex = null,
     Object? latencyIndex = null,
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
@@ -98,9 +102,9 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
           ? _value.multiviewResolutionIndex
           : multiviewResolutionIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      screenModeIndex: null == screenModeIndex
-          ? _value.screenModeIndex
-          : screenModeIndex // ignore: cast_nullable_to_non_nullable
+      chatWindowStateIndex: null == chatWindowStateIndex
+          ? _value.chatWindowStateIndex
+          : chatWindowStateIndex // ignore: cast_nullable_to_non_nullable
               as int,
       latencyIndex: null == latencyIndex
           ? _value.latencyIndex
@@ -129,7 +133,7 @@ abstract class _$$StreamSettingsImplCopyWith<$Res>
   $Res call(
       {int resolutionIndex,
       int multiviewResolutionIndex,
-      int screenModeIndex,
+      int chatWindowStateIndex,
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex});
@@ -143,12 +147,14 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
       _$StreamSettingsImpl _value, $Res Function(_$StreamSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StreamSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? resolutionIndex = null,
     Object? multiviewResolutionIndex = null,
-    Object? screenModeIndex = null,
+    Object? chatWindowStateIndex = null,
     Object? latencyIndex = null,
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
@@ -162,9 +168,9 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
           ? _value.multiviewResolutionIndex
           : multiviewResolutionIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      screenModeIndex: null == screenModeIndex
-          ? _value.screenModeIndex
-          : screenModeIndex // ignore: cast_nullable_to_non_nullable
+      chatWindowStateIndex: null == chatWindowStateIndex
+          ? _value.chatWindowStateIndex
+          : chatWindowStateIndex // ignore: cast_nullable_to_non_nullable
               as int,
       latencyIndex: null == latencyIndex
           ? _value.latencyIndex
@@ -188,7 +194,7 @@ class _$StreamSettingsImpl implements _StreamSettings {
   const _$StreamSettingsImpl(
       {required this.resolutionIndex,
       required this.multiviewResolutionIndex,
-      required this.screenModeIndex,
+      required this.chatWindowStateIndex,
       required this.latencyIndex,
       required this.overlayControlsDisplayTime,
       required this.vodPlaybackIntervalIndex});
@@ -210,11 +216,9 @@ class _$StreamSettingsImpl implements _StreamSettings {
 
   /// The index of default screen mode of single view live streaming.
   ///
-  /// 0: full, 1: singleview overlay chat, 2: single view full chat
-  ///
-  /// 3: multiview -> don't save
+  /// 0: off, 1: overlay, 2: side
   @override
-  final int screenModeIndex;
+  final int chatWindowStateIndex;
 
   /// 0: HLS, 1:LLHLS
   @override
@@ -232,7 +236,7 @@ class _$StreamSettingsImpl implements _StreamSettings {
 
   @override
   String toString() {
-    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, screenModeIndex: $screenModeIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex)';
+    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, chatWindowStateIndex: $chatWindowStateIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex)';
   }
 
   @override
@@ -245,8 +249,8 @@ class _$StreamSettingsImpl implements _StreamSettings {
             (identical(
                     other.multiviewResolutionIndex, multiviewResolutionIndex) ||
                 other.multiviewResolutionIndex == multiviewResolutionIndex) &&
-            (identical(other.screenModeIndex, screenModeIndex) ||
-                other.screenModeIndex == screenModeIndex) &&
+            (identical(other.chatWindowStateIndex, chatWindowStateIndex) ||
+                other.chatWindowStateIndex == chatWindowStateIndex) &&
             (identical(other.latencyIndex, latencyIndex) ||
                 other.latencyIndex == latencyIndex) &&
             (identical(other.overlayControlsDisplayTime,
@@ -258,18 +262,20 @@ class _$StreamSettingsImpl implements _StreamSettings {
                 other.vodPlaybackIntervalIndex == vodPlaybackIntervalIndex));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       resolutionIndex,
       multiviewResolutionIndex,
-      screenModeIndex,
+      chatWindowStateIndex,
       latencyIndex,
       overlayControlsDisplayTime,
       vodPlaybackIntervalIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StreamSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StreamSettingsImplCopyWith<_$StreamSettingsImpl> get copyWith =>
@@ -288,7 +294,7 @@ abstract class _StreamSettings implements StreamSettings {
   const factory _StreamSettings(
       {required final int resolutionIndex,
       required final int multiviewResolutionIndex,
-      required final int screenModeIndex,
+      required final int chatWindowStateIndex,
       required final int latencyIndex,
       required final int overlayControlsDisplayTime,
       required final int vodPlaybackIntervalIndex}) = _$StreamSettingsImpl;
@@ -296,42 +302,42 @@ abstract class _StreamSettings implements StreamSettings {
   factory _StreamSettings.fromJson(Map<String, dynamic> json) =
       _$StreamSettingsImpl.fromJson;
 
-  @override
-
   /// The index of default resolution of single view live streaming.
   ///
   /// 0: 360p, 1: 480p, 2:720p, 3:1080p
-  int get resolutionIndex;
   @override
+  int get resolutionIndex;
 
   /// The index of default resolution of multi view live streaming.
   ///
   /// 0: 360p, 1: 480p, 2:720p, 3:1080p
-  int get multiviewResolutionIndex;
   @override
+  int get multiviewResolutionIndex;
 
   /// The index of default screen mode of single view live streaming.
   ///
-  /// 0: full, 1: singleview overlay chat, 2: single view full chat
-  ///
-  /// 3: multiview -> don't save
-  int get screenModeIndex;
+  /// 0: off, 1: overlay, 2: side
   @override
+  int get chatWindowStateIndex;
 
   /// 0: HLS, 1:LLHLS
-  int get latencyIndex;
   @override
+  int get latencyIndex;
 
   /// The time(in seconds) that the overlay controls are displayed.
-  int get overlayControlsDisplayTime;
   @override
+  int get overlayControlsDisplayTime;
 
   /// Interval of vod playback controls.
   ///
   /// 0: 5s, 1: 10s, 2: 30s
-  int get vodPlaybackIntervalIndex;
   @override
-  @JsonKey(ignore: true)
+  int get vodPlaybackIntervalIndex;
+
+  /// Create a copy of StreamSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StreamSettingsImplCopyWith<_$StreamSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -25,8 +25,12 @@ mixin _$Following {
   Streamer get streamer => throw _privateConstructorUsedError;
   LiveInfo get liveInfo => throw _privateConstructorUsedError;
 
+  /// Serializes this Following to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowingCopyWith<Following> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$FollowingCopyWithImpl<$Res, $Val extends Following>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,6 +91,8 @@ class _$FollowingCopyWithImpl<$Res, $Val extends Following>
     ) as $Val);
   }
 
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res> get channel {
@@ -93,6 +101,8 @@ class _$FollowingCopyWithImpl<$Res, $Val extends Following>
     });
   }
 
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StreamerCopyWith<$Res> get streamer {
@@ -101,6 +111,8 @@ class _$FollowingCopyWithImpl<$Res, $Val extends Following>
     });
   }
 
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LiveInfoCopyWith<$Res> get liveInfo {
@@ -140,6 +152,8 @@ class __$$FollowingImplCopyWithImpl<$Res>
       _$FollowingImpl _value, $Res Function(_$FollowingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -209,12 +223,14 @@ class _$FollowingImpl implements _Following {
                 other.liveInfo == liveInfo));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, channelId, channel, streamer, liveInfo);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowingImplCopyWith<_$FollowingImpl> get copyWith =>
@@ -246,8 +262,11 @@ abstract class _Following implements Following {
   Streamer get streamer;
   @override
   LiveInfo get liveInfo;
+
+  /// Create a copy of Following
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowingImplCopyWith<_$FollowingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -260,8 +279,12 @@ Streamer _$StreamerFromJson(Map<String, dynamic> json) {
 mixin _$Streamer {
   bool get openLive => throw _privateConstructorUsedError;
 
+  /// Serializes this Streamer to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Streamer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StreamerCopyWith<Streamer> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -284,6 +307,8 @@ class _$StreamerCopyWithImpl<$Res, $Val extends Streamer>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Streamer
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -317,6 +342,8 @@ class __$$StreamerImplCopyWithImpl<$Res>
       _$StreamerImpl _value, $Res Function(_$StreamerImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Streamer
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -356,11 +383,13 @@ class _$StreamerImpl implements _Streamer {
                 other.openLive == openLive));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, openLive);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Streamer
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StreamerImplCopyWith<_$StreamerImpl> get copyWith =>
@@ -382,8 +411,11 @@ abstract class _Streamer implements Streamer {
 
   @override
   bool get openLive;
+
+  /// Create a copy of Streamer
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StreamerImplCopyWith<_$StreamerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -398,8 +430,12 @@ mixin _$FollowingResponse {
   int? get totalPage => throw _privateConstructorUsedError;
   List<Following> get followingList => throw _privateConstructorUsedError;
 
+  /// Serializes this FollowingResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FollowingResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowingResponseCopyWith<FollowingResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -423,6 +459,8 @@ class _$FollowingResponseCopyWithImpl<$Res, $Val extends FollowingResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowingResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -466,6 +504,8 @@ class __$$FollowingResponseImplCopyWithImpl<$Res>
       $Res Function(_$FollowingResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FollowingResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -532,12 +572,14 @@ class _$FollowingResponseImpl implements _FollowingResponse {
                 .equals(other._followingList, _followingList));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, totalCount, totalPage,
       const DeepCollectionEquality().hash(_followingList));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FollowingResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowingResponseImplCopyWith<_$FollowingResponseImpl> get copyWith =>
@@ -567,8 +609,11 @@ abstract class _FollowingResponse implements FollowingResponse {
   int? get totalPage;
   @override
   List<Following> get followingList;
+
+  /// Create a copy of FollowingResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowingResponseImplCopyWith<_$FollowingResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -582,8 +627,12 @@ FollowingCategoryResponse _$FollowingCategoryResponseFromJson(
 mixin _$FollowingCategoryResponse {
   List<Category>? get followingList => throw _privateConstructorUsedError;
 
+  /// Serializes this FollowingCategoryResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FollowingCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowingCategoryResponseCopyWith<FollowingCategoryResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -608,6 +657,8 @@ class _$FollowingCategoryResponseCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowingCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -644,6 +695,8 @@ class __$$FollowingCategoryResponseImplCopyWithImpl<$Res>
       $Res Function(_$FollowingCategoryResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FollowingCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -692,12 +745,14 @@ class _$FollowingCategoryResponseImpl implements _FollowingCategoryResponse {
                 .equals(other._followingList, _followingList));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_followingList));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FollowingCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowingCategoryResponseImplCopyWith<_$FollowingCategoryResponseImpl>
@@ -722,8 +777,11 @@ abstract class _FollowingCategoryResponse implements FollowingCategoryResponse {
 
   @override
   List<Category>? get followingList;
+
+  /// Create a copy of FollowingCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowingCategoryResponseImplCopyWith<_$FollowingCategoryResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

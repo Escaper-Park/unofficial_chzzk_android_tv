@@ -26,7 +26,7 @@ final liveStreamFollowingLivesControllerProvider =
 typedef _$LiveStreamFollowingLivesController
     = AutoDisposeAsyncNotifier<List<Following>?>;
 String _$liveStreamCategoryLivesControllerHash() =>
-    r'49d072be927fd57678919ad09751f7b9f0d5ab51';
+    r'eaa3678557c1393033b7aa56a1e388d5c5766f7a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -199,7 +199,7 @@ class _LiveStreamCategoryLivesControllerProviderElement
 }
 
 String _$liveStreamPopularLivesControllerHash() =>
-    r'f82ef201e774fb41d2a830e31336f97ecf5e68a4';
+    r'b3e988a41df8051539ccf47425637a9b59e8eaea';
 
 /// See also [LiveStreamPopularLivesController].
 @ProviderFor(LiveStreamPopularLivesController)
@@ -217,22 +217,5 @@ final liveStreamPopularLivesControllerProvider =
 
 typedef _$LiveStreamPopularLivesController
     = AutoDisposeAsyncNotifier<List<LiveInfo>?>;
-String _$liveStreamNavigatorFetchMoreStateHash() =>
-    r'a1080b9a35113cde4217ec2c3f2df6aae0d22fd9';
-
-/// See also [LiveStreamNavigatorFetchMoreState].
-@ProviderFor(LiveStreamNavigatorFetchMoreState)
-final liveStreamNavigatorFetchMoreStateProvider = AutoDisposeNotifierProvider<
-    LiveStreamNavigatorFetchMoreState, bool>.internal(
-  LiveStreamNavigatorFetchMoreState.new,
-  name: r'liveStreamNavigatorFetchMoreStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$liveStreamNavigatorFetchMoreStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$LiveStreamNavigatorFetchMoreState = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

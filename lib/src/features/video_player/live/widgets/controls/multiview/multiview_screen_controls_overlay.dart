@@ -4,36 +4,36 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../../../common/constants/dimensions.dart';
 import '../../../../../../common/constants/styles.dart';
 import '../../../../../../common/widgets/header_text.dart';
-import '../../../../../live/model/live.dart';
 import '../../../../common/control_icon.dart';
 import '../../../../common/controls_overlay_container.dart';
-import '../../../controller/live_player_controller.dart';
+import '../../../controller/live_overlay_controller.dart';
+import '../../../controller/live_playlist_controller.dart';
 
-class MultiviewScreenSettings extends ConsumerWidget {
-  const MultiviewScreenSettings({
+class MultiviewScreenControlsOverlay extends ConsumerWidget {
+  const MultiviewScreenControlsOverlay({
     super.key,
     required this.videoFocusNode,
     required this.controlsFSN,
-    required this.liveDetails,
   });
 
   final FocusNode videoFocusNode;
   final FocusScopeNode controlsFSN;
-  final List<LiveDetail> liveDetails;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final multiviewMainScreenIndex =
-        ref.watch(multiviewMainScreenIndexProvider);
+    final livePlaylist = ref.watch(livePlaylistControllerProvider);
+
+    final currentActivatedLiveIndex =
+        ref.watch(currentActivatedLiveIndexProvider);
 
     final items = List.generate(
-      liveDetails.length,
+      livePlaylist.length,
       (index) => MultiviewScreenModeItem(
         autofocus: index == 0,
         videoFocusNode: videoFocusNode,
-        currentIndex: multiviewMainScreenIndex,
+        currentIndex: currentActivatedLiveIndex,
         itemIndex: index,
-        headerText: liveDetails[index].channel.channelName,
+        channelName: livePlaylist[index].channel.channelName,
       ),
     );
 
@@ -49,32 +49,37 @@ class MultiviewScreenSettings extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              width: 150.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: HeaderText(
-                      text: '화면설정',
-                      verticalPadding: 0.0,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                  SizedBox(height: 3.0),
-                  Center(
-                    child: Text(
-                      '클릭: 크게보기 / 같이보기',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _headerWithComments(),
+            const SizedBox(width: 10.0),
             ...items,
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _headerWithComments() {
+    return const SizedBox(
+      width: Dimensions.settingHeaderTextWidth,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: HeaderText(
+              text: '화면설정',
+              verticalPadding: 0.0,
+              fontSize: 14.0,
+            ),
+          ),
+          SizedBox(height: 3.0),
+          Center(
+            child: Text(
+              '클릭: 크게/같이 보기',
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -87,14 +92,14 @@ class MultiviewScreenModeItem extends ConsumerWidget {
     required this.videoFocusNode,
     required this.currentIndex,
     required this.itemIndex,
-    required this.headerText,
+    required this.channelName,
   });
 
   final int? currentIndex;
   final int itemIndex;
   final bool autofocus;
   final FocusNode videoFocusNode;
-  final String headerText;
+  final String channelName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +111,7 @@ class MultiviewScreenModeItem extends ConsumerWidget {
       iconColor: currentIndex == itemIndex
           ? AppColors.chzzkColor
           : AppColors.whiteColor,
-      label: headerText,
+      label: channelName,
       resetOverlayTimer: () {
         ref
             .read(liveOverlayControllerProvider.notifier)
@@ -114,8 +119,8 @@ class MultiviewScreenModeItem extends ConsumerWidget {
       },
       onPressed: () {
         ref
-            .read(multiviewMainScreenIndexProvider.notifier)
-            .setFocusMode(itemIndex);
+            .read(currentActivatedLiveIndexProvider.notifier)
+            .setFocusScreenIndex(itemIndex);
       },
     );
   }

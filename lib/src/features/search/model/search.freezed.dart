@@ -23,8 +23,12 @@ mixin _$SearchResponse {
   int get size => throw _privateConstructorUsedError;
   List<SearchChannelData> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this SearchResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchResponseCopyWith<SearchResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$SearchResponseCopyWithImpl<$Res, $Val extends SearchResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$SearchResponseImplCopyWithImpl<$Res>
       _$SearchResponseImpl _value, $Res Function(_$SearchResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,12 +147,14 @@ class _$SearchResponseImpl implements _SearchResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchResponseImplCopyWith<_$SearchResponseImpl> get copyWith =>
@@ -171,8 +181,11 @@ abstract class _SearchResponse implements SearchResponse {
   int get size;
   @override
   List<SearchChannelData> get data;
+
+  /// Create a copy of SearchResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchResponseImplCopyWith<_$SearchResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -185,8 +198,12 @@ SearchChannelData _$SearchChannelDataFromJson(Map<String, dynamic> json) {
 mixin _$SearchChannelData {
   Channel get channel => throw _privateConstructorUsedError;
 
+  /// Serializes this SearchChannelData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchChannelDataCopyWith<SearchChannelData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -212,6 +229,8 @@ class _$SearchChannelDataCopyWithImpl<$Res, $Val extends SearchChannelData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -225,6 +244,8 @@ class _$SearchChannelDataCopyWithImpl<$Res, $Val extends SearchChannelData>
     ) as $Val);
   }
 
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res> get channel {
@@ -256,6 +277,8 @@ class __$$SearchChannelDataImplCopyWithImpl<$Res>
       $Res Function(_$SearchChannelDataImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -294,11 +317,13 @@ class _$SearchChannelDataImpl implements _SearchChannelData {
             (identical(other.channel, channel) || other.channel == channel));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, channel);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchChannelDataImplCopyWith<_$SearchChannelDataImpl> get copyWith =>
@@ -322,8 +347,11 @@ abstract class _SearchChannelData implements SearchChannelData {
 
   @override
   Channel get channel;
+
+  /// Create a copy of SearchChannelData
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchChannelDataImplCopyWith<_$SearchChannelDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

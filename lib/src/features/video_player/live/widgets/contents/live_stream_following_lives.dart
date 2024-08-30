@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../../common/constants/dimensions.dart';
-import '../../../../../../common/widgets/dpad_widgets.dart';
-import '../../../../../following/model/following.dart';
-import '../../../controller/live_player_controller.dart';
-import '../../../controller/live_stream_navigator_controller.dart';
+import '../../../../../common/constants/dimensions.dart';
+import '../../../../../common/widgets/dpad_widgets.dart';
+import '../../../../following/model/following.dart';
+import '../../controller/live_overlay_controller.dart';
+import '../../controller/live_stream_navigator_controller.dart';
 import 'live_stream_container.dart';
 import 'video_navigator_overlay.dart';
 

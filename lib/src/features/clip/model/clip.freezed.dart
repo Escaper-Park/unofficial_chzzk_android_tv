@@ -34,8 +34,12 @@ mixin _$NaverClip {
       throw _privateConstructorUsedError; // required Object? blindType,
   bool? get privateUserBlock => throw _privateConstructorUsedError;
 
+  /// Serializes this NaverClip to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NaverClip
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NaverClipCopyWith<NaverClip> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,6 +74,8 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NaverClip
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -170,6 +176,8 @@ class __$$NaverClipImplCopyWithImpl<$Res>
       _$NaverClipImpl _value, $Res Function(_$NaverClipImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NaverClip
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -336,7 +344,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
                 other.privateUserBlock == privateUserBlock));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -353,7 +361,9 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       recId,
       privateUserBlock);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NaverClip
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NaverClipImplCopyWith<_$NaverClipImpl> get copyWith =>
@@ -406,11 +416,14 @@ abstract class _NaverClip implements NaverClip {
   @override
   String get createdDate;
   @override
-  String get recId;
-  @override // required Object? blindType,
-  bool? get privateUserBlock;
+  String get recId; // required Object? blindType,
   @override
-  @JsonKey(ignore: true)
+  bool? get privateUserBlock;
+
+  /// Create a copy of NaverClip
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NaverClipImplCopyWith<_$NaverClipImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -426,8 +439,12 @@ mixin _$ClipResponse {
   ClipPage? get next => throw _privateConstructorUsedError;
   List<NaverClip> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this ClipResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ClipResponseCopyWith<ClipResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -456,6 +473,8 @@ class _$ClipResponseCopyWithImpl<$Res, $Val extends ClipResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -479,6 +498,8 @@ class _$ClipResponseCopyWithImpl<$Res, $Val extends ClipResponse>
     ) as $Val);
   }
 
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ClipPageCopyWith<$Res>? get next {
@@ -517,6 +538,8 @@ class __$$ClipResponseImplCopyWithImpl<$Res>
       _$ClipResponseImpl _value, $Res Function(_$ClipResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -591,12 +614,14 @@ class _$ClipResponseImpl with DiagnosticableTreeMixin implements _ClipResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ClipResponseImplCopyWith<_$ClipResponseImpl> get copyWith =>
@@ -627,8 +652,11 @@ abstract class _ClipResponse implements ClipResponse {
   ClipPage? get next;
   @override
   List<NaverClip> get data;
+
+  /// Create a copy of ClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ClipResponseImplCopyWith<_$ClipResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -642,8 +670,12 @@ mixin _$ClipPage {
   String? get clipUID => throw _privateConstructorUsedError;
   int? get readCount => throw _privateConstructorUsedError;
 
+  /// Serializes this ClipPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ClipPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ClipPageCopyWith<ClipPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -666,6 +698,8 @@ class _$ClipPageCopyWithImpl<$Res, $Val extends ClipPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -704,6 +738,8 @@ class __$$ClipPageImplCopyWithImpl<$Res>
       _$ClipPageImpl _value, $Res Function(_$ClipPageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -760,11 +796,13 @@ class _$ClipPageImpl with DiagnosticableTreeMixin implements _ClipPage {
                 other.readCount == readCount));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, clipUID, readCount);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ClipPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ClipPageImplCopyWith<_$ClipPageImpl> get copyWith =>
@@ -790,8 +828,11 @@ abstract class _ClipPage implements ClipPage {
   String? get clipUID;
   @override
   int? get readCount;
+
+  /// Create a copy of ClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ClipPageImplCopyWith<_$ClipPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -807,8 +848,12 @@ mixin _$PopularClipResponse {
   PopularClipPage? get next => throw _privateConstructorUsedError;
   List<NaverClip> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this PopularClipResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PopularClipResponseCopyWith<PopularClipResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -838,6 +883,8 @@ class _$PopularClipResponseCopyWithImpl<$Res, $Val extends PopularClipResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -861,6 +908,8 @@ class _$PopularClipResponseCopyWithImpl<$Res, $Val extends PopularClipResponse>
     ) as $Val);
   }
 
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PopularClipPageCopyWith<$Res>? get next {
@@ -900,6 +949,8 @@ class __$$PopularClipResponseImplCopyWithImpl<$Res>
       $Res Function(_$PopularClipResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -977,12 +1028,14 @@ class _$PopularClipResponseImpl
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PopularClipResponseImplCopyWith<_$PopularClipResponseImpl> get copyWith =>
@@ -1014,8 +1067,11 @@ abstract class _PopularClipResponse implements PopularClipResponse {
   PopularClipPage? get next;
   @override
   List<NaverClip> get data;
+
+  /// Create a copy of PopularClipResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PopularClipResponseImplCopyWith<_$PopularClipResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1028,8 +1084,12 @@ PopularClipPage _$PopularClipPageFromJson(Map<String, dynamic> json) {
 mixin _$PopularClipPage {
   String? get next => throw _privateConstructorUsedError;
 
+  /// Serializes this PopularClipPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PopularClipPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PopularClipPageCopyWith<PopularClipPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1053,6 +1113,8 @@ class _$PopularClipPageCopyWithImpl<$Res, $Val extends PopularClipPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PopularClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1086,6 +1148,8 @@ class __$$PopularClipPageImplCopyWithImpl<$Res>
       _$PopularClipPageImpl _value, $Res Function(_$PopularClipPageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PopularClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1134,11 +1198,13 @@ class _$PopularClipPageImpl
             (identical(other.next, next) || other.next == next));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, next);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PopularClipPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PopularClipPageImplCopyWith<_$PopularClipPageImpl> get copyWith =>
@@ -1162,8 +1228,11 @@ abstract class _PopularClipPage implements PopularClipPage {
 
   @override
   String? get next;
+
+  /// Create a copy of PopularClipPage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PopularClipPageImplCopyWith<_$PopularClipPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

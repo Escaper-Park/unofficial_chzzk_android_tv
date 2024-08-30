@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../../common/constants/styles.dart';
-import '../../../../../utils/formatter/formatter.dart';
+import '../../../../../../../common/constants/styles.dart';
+import '../../../../../../../utils/formatter/formatter.dart';
 
 class LiveStreamUptime extends StatefulWidget {
   const LiveStreamUptime({super.key, required this.strOpenDate});

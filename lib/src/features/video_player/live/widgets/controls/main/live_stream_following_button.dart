@@ -1,22 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../../common/constants/styles.dart';
 import '../../../../../../common/widgets/focused_widget.dart';
+import '../../../../../channel/model/channel.dart';
+import '../../../../common/stream_channel_following_button.dart';
+import '../../../controller/live_overlay_controller.dart';
 
-class LiveStreamFollowingButton extends StatelessWidget {
+class LiveStreamFollowingButton extends ConsumerWidget {
   const LiveStreamFollowingButton({
     super.key,
-    required this.focusNode,
-    required this.isFollowing,
-    required this.onPressed,
+    required this.channel,
+    required this.followingButtonFocusNode,
+    required this.videoFocusNode,
+    required this.controlsFSN,
   });
 
-  final FocusNode? focusNode;
-  final bool isFollowing;
-  final VoidCallback onPressed;
+  final Channel channel;
+  final FocusNode followingButtonFocusNode;
+  final FocusNode videoFocusNode;
+  final FocusScopeNode controlsFSN;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    return StreamChannelFollowingButton(
+      channel: channel,
+      pauseTimer: () {
+        ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
+              seconds: 600, // Keep focus 10m
+              overlayType: LiveOverlayType.main,
+              videoFocusNode: controlsFSN,
+            );
+      },
+      restartTimer: () {
+        ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
+              overlayType: LiveOverlayType.main,
+              videoFocusNode: followingButtonFocusNode,
+            );
+
+        followingButtonFocusNode.requestFocus();
+      },
+      cancelTimer: () {
+        ref.read(liveOverlayControllerProvider.notifier).changeOverlay(
+              seconds: 0,
+              overlayType: LiveOverlayType.none,
+              videoFocusNode: videoFocusNode,
+            );
+      },
+      placeHolder: _followingButtonFrame(
+        focusNode: null,
+        isFollowing: false,
+        onPressed: () {},
+      ),
+      childBuilder: (context, onPressed, isFollowing) {
+        return _followingButtonFrame(
+          focusNode: followingButtonFocusNode,
+          isFollowing: isFollowing,
+          onPressed: onPressed,
+        );
+      },
+    );
+  }
+
+  Widget _followingButtonFrame({
+    required FocusNode? focusNode,
+    required bool isFollowing,
+    required VoidCallback onPressed,
+  }) {
     return FocusedOutlinedButton(
       focusNode: focusNode,
       onPressed: onPressed,

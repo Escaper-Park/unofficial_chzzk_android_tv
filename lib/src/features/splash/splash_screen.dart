@@ -19,8 +19,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     // Show the splash icon in a sec and go to home screen.
     Future.delayed(const Duration(seconds: 1), () {
-
-      if (context.mounted) context.goNamed(AppRoute.home.routeName);
+      if (mounted) {
+        context.goNamed(AppRoute.home.routeName);
+      }
     });
   }
 
