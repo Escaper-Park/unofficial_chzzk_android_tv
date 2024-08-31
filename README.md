@@ -49,7 +49,7 @@ APK 파일 [다운로드] (v0.3.0)
 
 ## 앱 사용 방법
 
-리모컨 6개 (:arrow_up: 위, :arrow_down: 아래, :arrow_left: 좌, :arrow_right: 우, :ok: 확인, :leftwards_arrow_with_hook: 뒤로가기) 버튼을 사용하여 조작합니다.
+리모컨 6개 ( :arrow_up: 위, :arrow_down: 아래, :arrow_left: 좌, :arrow_right: 우, :ok: 확인, :leftwards_arrow_with_hook: 뒤로가기 ) 버튼을 사용하여 조작합니다.
 
 - [홈 화면](docs/USAGE_HOME.md)
 - [로그인](docs/USAGE_LOGIN.md)
