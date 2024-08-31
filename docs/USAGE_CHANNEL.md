@@ -11,8 +11,8 @@
 
 ## 팔로우
 <p float="left">
-    <img src="../images/usage/channel/01.png" width="400" >
-    <img src="../images/usage/channel/02.png" width="400" >
+    <img src="../images/usage/channel/channel_01_resize.png" width="400" >
+    <img src="../images/usage/channel/channel_02_resize.png" width="400" >
 </p> 
 
 상단의 팔로우 버튼을 누르면 팔로우 할 수 있습니다. 이미 팔로우 되어있는 채널이라면 언팔로우 알림 메시지가 뜨게 됩니다.
@@ -22,7 +22,7 @@
 
 ## 동영상
 <p float="left">
-    <img src="../images/usage/channel/03.png" width="400" >
-    <img src="../images/usage/channel/04.png" width="400" >
+    <img src="../images/usage/channel/channel_03_resize.png" width="400" >
+    <img src="../images/usage/channel/channel_04_resize.png" width="400" >
 </p>
 채널 정보에서 채널의 동영상을 최신순으로 볼 수 있습니다. 전체 영상을 확인하려면 동영상 옆의 > 버튼을 클릭합니다.

@@ -5,7 +5,7 @@
 
 ## 스트리밍 설정
 <p align="left">
-    <img src="../images/usage/settings/01.png" width="800" >
+    <img src="../images/usage/settings/st_01_resize.png" width="800" >
 </p>
 
 기본 스트리밍 설정입니다.
@@ -30,7 +30,7 @@ VOD 기본 컨트롤러에서 뒤로감기 | 빨리감기 버튼을 한 번 클�
 
 ## 채팅 설정
 <p align="left">
-    <img src="../images/usage/settings/02.png" width="800" >
+    <img src="../images/usage/settings/st_02_resize.png" width="800" >
 </p>
 
 채팅 세부 설정입니다. 라이브 화면에서도 설정할 수 있습니다.

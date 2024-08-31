@@ -1,7 +1,7 @@
 # 카테고리
 <p float="left">
-    <img src="../images/usage/category/01.png" width="400" >
-    <img src="../images/usage/category/02.png" width="400" >
+    <img src="../images/usage/category/ct_01_resize.png" width="400" >
+    <img src="../images/usage/category/ct_02_resize.png" width="400" >
 </p>
 
 카테고리 목록을 시청자 순으로 볼 수 있습니다.

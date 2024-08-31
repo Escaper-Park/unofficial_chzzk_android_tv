@@ -1,6 +1,6 @@
 # 홈 화면
 <p align="left">
-    <img src="../images/home/01.png" width="800" >
+    <img src="../images/home/01_resize.png" width="800" >
 </p>
 
 홈 화면 기능에 대해 소개합니다.
@@ -20,8 +20,8 @@
 
 # 컨텐츠
 <p float="left">
-    <img src="../images/usage/home/03.png" width="400" >
-    <img src="../images/usage/home/04.png" width="400" >
+    <img src="../images/usage/home/home_03_resize.png" width="400" >
+    <img src="../images/usage/home/home_04_resize.png" width="400" >
 </p>
 
 인기 채널 라이브, 팔로잉 채널 라이브, 팔로잉 카테고리를 볼 수 있습니다. 
@@ -29,8 +29,8 @@
 
 # 사이드바
 <p float="left">
-    <img src="../images/usage/home/01.png" width="400" >
-    <img src="../images/usage/home/02.png" width="400" >
+    <img src="../images/usage/home/home_01_resize.png" width="400" >
+    <img src="../images/usage/home/home_02_resize.png" width="400" >
 </p>
 
 ## 활성화

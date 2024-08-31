@@ -1,7 +1,7 @@
 # 검색
 <p float="left">
-    <img src="../images/usage/search/01.png" width="400" >
-    <img src="../images/usage/search/02.png" width="400" >
+    <img src="../images/usage/search/search_01_resize.png" width="400" >
+    <img src="../images/usage/search/search_02_resize.png" width="400" >
 </p>
 
 채널을 검색한 후 ENTER 버튼을 누르면 검색 결과가 나타납니다.
