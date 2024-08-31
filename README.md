@@ -1,5 +1,5 @@
 <p align="left">
-    <img src="./images/home/01.png" width="800">
+    <img src="./images/home/01_resize.png" width="800">
 </p>
 
 **비공식** [치지직] 안드로이드 스마트 TV 어플리케이션입니다.
