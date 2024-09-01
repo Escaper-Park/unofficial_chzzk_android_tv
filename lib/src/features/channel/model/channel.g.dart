@@ -12,12 +12,13 @@ _$ChannelImpl _$$ChannelImplFromJson(Map<String, dynamic> json) =>
       channelName: json['channelName'] as String,
       channelImageUrl: json['channelImageUrl'] as String?,
       verifiedMark: json['verifiedMark'] as bool,
-      followerCount: json['followerCount'] as int?,
-      channelDescription: json['channelDescription'] as String?,
-      openLive: json['openLive'] as bool?,
       personalData: json['personalData'] == null
           ? null
           : PersonalData.fromJson(json['personalData'] as Map<String, dynamic>),
+      followerCount: (json['followerCount'] as num?)?.toInt(),
+      openLive: json['openLive'] as bool?,
+      channelType: json['channelType'] as String?,
+      channelDescription: json['channelDescription'] as String?,
     );
 
 Map<String, dynamic> _$$ChannelImplToJson(_$ChannelImpl instance) =>
@@ -26,18 +27,42 @@ Map<String, dynamic> _$$ChannelImplToJson(_$ChannelImpl instance) =>
       'channelName': instance.channelName,
       'channelImageUrl': instance.channelImageUrl,
       'verifiedMark': instance.verifiedMark,
-      'followerCount': instance.followerCount,
-      'channelDescription': instance.channelDescription,
-      'openLive': instance.openLive,
       'personalData': instance.personalData,
+      'followerCount': instance.followerCount,
+      'openLive': instance.openLive,
+      'channelType': instance.channelType,
+      'channelDescription': instance.channelDescription,
     };
 
 _$PersonalDataImpl _$$PersonalDataImplFromJson(Map<String, dynamic> json) =>
     _$PersonalDataImpl(
+      following: json['following'] == null
+          ? null
+          : PersonalFollowing.fromJson(
+              json['following'] as Map<String, dynamic>),
       privateUserBlock: json['privateUserBlock'] as bool,
+      subscription: json['subscription'] as bool?,
     );
 
 Map<String, dynamic> _$$PersonalDataImplToJson(_$PersonalDataImpl instance) =>
     <String, dynamic>{
+      'following': instance.following,
       'privateUserBlock': instance.privateUserBlock,
+      'subscription': instance.subscription,
+    };
+
+_$PersonalFollowingImpl _$$PersonalFollowingImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PersonalFollowingImpl(
+      following: json['following'] as bool,
+      notification: json['notification'] as bool,
+      followDate: json['followDate'] as String?,
+    );
+
+Map<String, dynamic> _$$PersonalFollowingImplToJson(
+        _$PersonalFollowingImpl instance) =>
+    <String, dynamic>{
+      'following': instance.following,
+      'notification': instance.notification,
+      'followDate': instance.followDate,
     };

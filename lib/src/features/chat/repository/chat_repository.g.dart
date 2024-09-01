@@ -6,7 +6,7 @@ part of 'chat_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatRepositoryHash() => r'8c99a7e929fe2eeadc54cba86e7c375ccfa57361';
+String _$chatRepositoryHash() => r'2c0b5dd326021fb661fb4bcb422bee085338da3a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -40,12 +40,14 @@ class ChatRepositoryFamily extends Family<ChatRepository> {
 
   /// See also [chatRepository].
   ChatRepositoryProvider call({
-    required WebSocketChannel channel,
+    required WebSocketChannel wsChannel,
     required String chatChannelId,
+    required Dio dio,
   }) {
     return ChatRepositoryProvider(
-      channel: channel,
+      wsChannel: wsChannel,
       chatChannelId: chatChannelId,
+      dio: dio,
     );
   }
 
@@ -54,8 +56,9 @@ class ChatRepositoryFamily extends Family<ChatRepository> {
     covariant ChatRepositoryProvider provider,
   ) {
     return call(
-      channel: provider.channel,
+      wsChannel: provider.wsChannel,
       chatChannelId: provider.chatChannelId,
+      dio: provider.dio,
     );
   }
 
@@ -78,13 +81,15 @@ class ChatRepositoryFamily extends Family<ChatRepository> {
 class ChatRepositoryProvider extends AutoDisposeProvider<ChatRepository> {
   /// See also [chatRepository].
   ChatRepositoryProvider({
-    required WebSocketChannel channel,
+    required WebSocketChannel wsChannel,
     required String chatChannelId,
+    required Dio dio,
   }) : this._internal(
           (ref) => chatRepository(
             ref as ChatRepositoryRef,
-            channel: channel,
+            wsChannel: wsChannel,
             chatChannelId: chatChannelId,
+            dio: dio,
           ),
           from: chatRepositoryProvider,
           name: r'chatRepositoryProvider',
@@ -95,8 +100,9 @@ class ChatRepositoryProvider extends AutoDisposeProvider<ChatRepository> {
           dependencies: ChatRepositoryFamily._dependencies,
           allTransitiveDependencies:
               ChatRepositoryFamily._allTransitiveDependencies,
-          channel: channel,
+          wsChannel: wsChannel,
           chatChannelId: chatChannelId,
+          dio: dio,
         );
 
   ChatRepositoryProvider._internal(
@@ -106,12 +112,14 @@ class ChatRepositoryProvider extends AutoDisposeProvider<ChatRepository> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.channel,
+    required this.wsChannel,
     required this.chatChannelId,
+    required this.dio,
   }) : super.internal();
 
-  final WebSocketChannel channel;
+  final WebSocketChannel wsChannel;
   final String chatChannelId;
+  final Dio dio;
 
   @override
   Override overrideWith(
@@ -126,8 +134,9 @@ class ChatRepositoryProvider extends AutoDisposeProvider<ChatRepository> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        channel: channel,
+        wsChannel: wsChannel,
         chatChannelId: chatChannelId,
+        dio: dio,
       ),
     );
   }
@@ -140,26 +149,31 @@ class ChatRepositoryProvider extends AutoDisposeProvider<ChatRepository> {
   @override
   bool operator ==(Object other) {
     return other is ChatRepositoryProvider &&
-        other.channel == channel &&
-        other.chatChannelId == chatChannelId;
+        other.wsChannel == wsChannel &&
+        other.chatChannelId == chatChannelId &&
+        other.dio == dio;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, channel.hashCode);
+    hash = _SystemHash.combine(hash, wsChannel.hashCode);
     hash = _SystemHash.combine(hash, chatChannelId.hashCode);
+    hash = _SystemHash.combine(hash, dio.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin ChatRepositoryRef on AutoDisposeProviderRef<ChatRepository> {
-  /// The parameter `channel` of this provider.
-  WebSocketChannel get channel;
+  /// The parameter `wsChannel` of this provider.
+  WebSocketChannel get wsChannel;
 
   /// The parameter `chatChannelId` of this provider.
   String get chatChannelId;
+
+  /// The parameter `dio` of this provider.
+  Dio get dio;
 }
 
 class _ChatRepositoryProviderElement
@@ -167,9 +181,12 @@ class _ChatRepositoryProviderElement
   _ChatRepositoryProviderElement(super.provider);
 
   @override
-  WebSocketChannel get channel => (origin as ChatRepositoryProvider).channel;
+  WebSocketChannel get wsChannel =>
+      (origin as ChatRepositoryProvider).wsChannel;
   @override
   String get chatChannelId => (origin as ChatRepositoryProvider).chatChannelId;
+  @override
+  Dio get dio => (origin as ChatRepositoryProvider).dio;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

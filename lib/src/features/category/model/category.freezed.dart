@@ -26,9 +26,17 @@ mixin _$Category {
   String? get posterImageUrl => throw _privateConstructorUsedError;
   int get openLiveCount => throw _privateConstructorUsedError;
   int get concurrentUserCount => throw _privateConstructorUsedError;
+  bool? get existLounge => throw _privateConstructorUsedError;
+  bool? get following => throw _privateConstructorUsedError;
+  bool? get newCategory => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
 
+  /// Serializes this Category to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryCopyWith<Category> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,7 +52,11 @@ abstract class $CategoryCopyWith<$Res> {
       String categoryValue,
       String? posterImageUrl,
       int openLiveCount,
-      int concurrentUserCount});
+      int concurrentUserCount,
+      bool? existLounge,
+      bool? following,
+      bool? newCategory,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -57,6 +69,8 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -66,6 +80,10 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
     Object? posterImageUrl = freezed,
     Object? openLiveCount = null,
     Object? concurrentUserCount = null,
+    Object? existLounge = freezed,
+    Object? following = freezed,
+    Object? newCategory = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_value.copyWith(
       categoryType: null == categoryType
@@ -92,6 +110,22 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
           ? _value.concurrentUserCount
           : concurrentUserCount // ignore: cast_nullable_to_non_nullable
               as int,
+      existLounge: freezed == existLounge
+          ? _value.existLounge
+          : existLounge // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      following: freezed == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      newCategory: freezed == newCategory
+          ? _value.newCategory
+          : newCategory // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      tags: freezed == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -110,7 +144,11 @@ abstract class _$$CategoryImplCopyWith<$Res>
       String categoryValue,
       String? posterImageUrl,
       int openLiveCount,
-      int concurrentUserCount});
+      int concurrentUserCount,
+      bool? existLounge,
+      bool? following,
+      bool? newCategory,
+      List<String>? tags});
 }
 
 /// @nodoc
@@ -121,6 +159,8 @@ class __$$CategoryImplCopyWithImpl<$Res>
       _$CategoryImpl _value, $Res Function(_$CategoryImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,6 +170,10 @@ class __$$CategoryImplCopyWithImpl<$Res>
     Object? posterImageUrl = freezed,
     Object? openLiveCount = null,
     Object? concurrentUserCount = null,
+    Object? existLounge = freezed,
+    Object? following = freezed,
+    Object? newCategory = freezed,
+    Object? tags = freezed,
   }) {
     return _then(_$CategoryImpl(
       categoryType: null == categoryType
@@ -156,6 +200,22 @@ class __$$CategoryImplCopyWithImpl<$Res>
           ? _value.concurrentUserCount
           : concurrentUserCount // ignore: cast_nullable_to_non_nullable
               as int,
+      existLounge: freezed == existLounge
+          ? _value.existLounge
+          : existLounge // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      following: freezed == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      newCategory: freezed == newCategory
+          ? _value.newCategory
+          : newCategory // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      tags: freezed == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -169,7 +229,12 @@ class _$CategoryImpl implements _Category {
       required this.categoryValue,
       required this.posterImageUrl,
       required this.openLiveCount,
-      required this.concurrentUserCount});
+      required this.concurrentUserCount,
+      required this.existLounge,
+      required this.following,
+      required this.newCategory,
+      required final List<String>? tags})
+      : _tags = tags;
 
   factory _$CategoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryImplFromJson(json);
@@ -186,10 +251,25 @@ class _$CategoryImpl implements _Category {
   final int openLiveCount;
   @override
   final int concurrentUserCount;
+  @override
+  final bool? existLounge;
+  @override
+  final bool? following;
+  @override
+  final bool? newCategory;
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Category(categoryType: $categoryType, categoryId: $categoryId, categoryValue: $categoryValue, posterImageUrl: $posterImageUrl, openLiveCount: $openLiveCount, concurrentUserCount: $concurrentUserCount)';
+    return 'Category(categoryType: $categoryType, categoryId: $categoryId, categoryValue: $categoryValue, posterImageUrl: $posterImageUrl, openLiveCount: $openLiveCount, concurrentUserCount: $concurrentUserCount, existLounge: $existLounge, following: $following, newCategory: $newCategory, tags: $tags)';
   }
 
   @override
@@ -208,15 +288,34 @@ class _$CategoryImpl implements _Category {
             (identical(other.openLiveCount, openLiveCount) ||
                 other.openLiveCount == openLiveCount) &&
             (identical(other.concurrentUserCount, concurrentUserCount) ||
-                other.concurrentUserCount == concurrentUserCount));
+                other.concurrentUserCount == concurrentUserCount) &&
+            (identical(other.existLounge, existLounge) ||
+                other.existLounge == existLounge) &&
+            (identical(other.following, following) ||
+                other.following == following) &&
+            (identical(other.newCategory, newCategory) ||
+                other.newCategory == newCategory) &&
+            const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, categoryType, categoryId,
-      categoryValue, posterImageUrl, openLiveCount, concurrentUserCount);
+  int get hashCode => Object.hash(
+      runtimeType,
+      categoryType,
+      categoryId,
+      categoryValue,
+      posterImageUrl,
+      openLiveCount,
+      concurrentUserCount,
+      existLounge,
+      following,
+      newCategory,
+      const DeepCollectionEquality().hash(_tags));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
@@ -237,7 +336,11 @@ abstract class _Category implements Category {
       required final String categoryValue,
       required final String? posterImageUrl,
       required final int openLiveCount,
-      required final int concurrentUserCount}) = _$CategoryImpl;
+      required final int concurrentUserCount,
+      required final bool? existLounge,
+      required final bool? following,
+      required final bool? newCategory,
+      required final List<String>? tags}) = _$CategoryImpl;
 
   factory _Category.fromJson(Map<String, dynamic> json) =
       _$CategoryImpl.fromJson;
@@ -255,7 +358,18 @@ abstract class _Category implements Category {
   @override
   int get concurrentUserCount;
   @override
-  @JsonKey(ignore: true)
+  bool? get existLounge;
+  @override
+  bool? get following;
+  @override
+  bool? get newCategory;
+  @override
+  List<String>? get tags;
+
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -270,8 +384,12 @@ mixin _$CategoryPage {
   int get openLiveCount => throw _privateConstructorUsedError;
   String get categoryId => throw _privateConstructorUsedError;
 
+  /// Serializes this CategoryPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CategoryPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryPageCopyWith<CategoryPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -295,6 +413,8 @@ class _$CategoryPageCopyWithImpl<$Res, $Val extends CategoryPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -338,6 +458,8 @@ class __$$CategoryPageImplCopyWithImpl<$Res>
       _$CategoryPageImpl _value, $Res Function(_$CategoryPageImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoryPage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -398,12 +520,14 @@ class _$CategoryPageImpl implements _CategoryPage {
                 other.categoryId == categoryId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, concurrentUserCount, openLiveCount, categoryId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryPageImplCopyWith<_$CategoryPageImpl> get copyWith =>
@@ -432,18 +556,32 @@ abstract class _CategoryPage implements CategoryPage {
   int get openLiveCount;
   @override
   String get categoryId;
+
+  /// Create a copy of CategoryPage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryPageImplCopyWith<_$CategoryPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
+CategoryResponse _$CategoryResponseFromJson(Map<String, dynamic> json) {
+  return _CategoryResponse.fromJson(json);
+}
+
 /// @nodoc
 mixin _$CategoryResponse {
-  List<Category>? get categories => throw _privateConstructorUsedError;
-  CategoryPage? get page => throw _privateConstructorUsedError;
+  int get size => throw _privateConstructorUsedError;
+  @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+  CategoryPage? get next => throw _privateConstructorUsedError;
+  List<Category> get data => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Serializes this CategoryResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryResponseCopyWith<CategoryResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -454,9 +592,13 @@ abstract class $CategoryResponseCopyWith<$Res> {
           CategoryResponse value, $Res Function(CategoryResponse) then) =
       _$CategoryResponseCopyWithImpl<$Res, CategoryResponse>;
   @useResult
-  $Res call({List<Category>? categories, CategoryPage? page});
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+      CategoryPage? next,
+      List<Category> data});
 
-  $CategoryPageCopyWith<$Res>? get page;
+  $CategoryPageCopyWith<$Res>? get next;
 }
 
 /// @nodoc
@@ -469,33 +611,42 @@ class _$CategoryResponseCopyWithImpl<$Res, $Val extends CategoryResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? categories = freezed,
-    Object? page = freezed,
+    Object? size = null,
+    Object? next = freezed,
+    Object? data = null,
   }) {
     return _then(_value.copyWith(
-      categories: freezed == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>?,
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: freezed == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
               as CategoryPage?,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
     ) as $Val);
   }
 
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CategoryPageCopyWith<$Res>? get page {
-    if (_value.page == null) {
+  $CategoryPageCopyWith<$Res>? get next {
+    if (_value.next == null) {
       return null;
     }
 
-    return $CategoryPageCopyWith<$Res>(_value.page!, (value) {
-      return _then(_value.copyWith(page: value) as $Val);
+    return $CategoryPageCopyWith<$Res>(_value.next!, (value) {
+      return _then(_value.copyWith(next: value) as $Val);
     });
   }
 }
@@ -508,10 +659,14 @@ abstract class _$$CategoryResponseImplCopyWith<$Res>
       __$$CategoryResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Category>? categories, CategoryPage? page});
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+      CategoryPage? next,
+      List<Category> data});
 
   @override
-  $CategoryPageCopyWith<$Res>? get page;
+  $CategoryPageCopyWith<$Res>? get next;
 }
 
 /// @nodoc
@@ -522,48 +677,61 @@ class __$$CategoryResponseImplCopyWithImpl<$Res>
       $Res Function(_$CategoryResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? categories = freezed,
-    Object? page = freezed,
+    Object? size = null,
+    Object? next = freezed,
+    Object? data = null,
   }) {
     return _then(_$CategoryResponseImpl(
-      categories: freezed == categories
-          ? _value._categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>?,
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: freezed == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
               as CategoryPage?,
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$CategoryResponseImpl implements _CategoryResponse {
   const _$CategoryResponseImpl(
-      {required final List<Category>? categories, required this.page})
-      : _categories = categories;
+      {required this.size,
+      @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+      required this.next,
+      required final List<Category> data})
+      : _data = data;
 
-  final List<Category>? _categories;
+  factory _$CategoryResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CategoryResponseImplFromJson(json);
+
   @override
-  List<Category>? get categories {
-    final value = _categories;
-    if (value == null) return null;
-    if (_categories is EqualUnmodifiableListView) return _categories;
+  final int size;
+  @override
+  @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+  final CategoryPage? next;
+  final List<Category> _data;
+  @override
+  List<Category> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_data);
   }
 
   @override
-  final CategoryPage? page;
-
-  @override
   String toString() {
-    return 'CategoryResponse(categories: $categories, page: $page)';
+    return 'CategoryResponse(size: $size, next: $next, data: $data)';
   }
 
   @override
@@ -571,34 +739,55 @@ class _$CategoryResponseImpl implements _CategoryResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CategoryResponseImpl &&
-            const DeepCollectionEquality()
-                .equals(other._categories, _categories) &&
-            (identical(other.page, page) || other.page == page));
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.next, next) || other.next == next) &&
+            const DeepCollectionEquality().equals(other._data, _data));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_categories), page);
+      runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryResponseImplCopyWith<_$CategoryResponseImpl> get copyWith =>
       __$$CategoryResponseImplCopyWithImpl<_$CategoryResponseImpl>(
           this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CategoryResponseImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _CategoryResponse implements CategoryResponse {
   const factory _CategoryResponse(
-      {required final List<Category>? categories,
-      required final CategoryPage? page}) = _$CategoryResponseImpl;
+      {required final int size,
+      @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+      required final CategoryPage? next,
+      required final List<Category> data}) = _$CategoryResponseImpl;
+
+  factory _CategoryResponse.fromJson(Map<String, dynamic> json) =
+      _$CategoryResponseImpl.fromJson;
 
   @override
-  List<Category>? get categories;
+  int get size;
   @override
-  CategoryPage? get page;
+  @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+  CategoryPage? get next;
   @override
-  @JsonKey(ignore: true)
+  List<Category> get data;
+
+  /// Create a copy of CategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryResponseImplCopyWith<_$CategoryResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,7 +1,8 @@
 name: unofficial_chzzk_android_tv
-description: "A Chzzk TV for Android TV"
+description: "UnOfficial Chzzk for Android TV"
 publish_to: "none"
-version: 0.2.6+1
+
+version: 0.3.0
 
 environment:
   sdk: ">=3.2.6 <4.0.0"
@@ -10,38 +11,55 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
-  go_router: ^13.2.0
+  # riverpod
   flutter_hooks: ^0.20.5
-  hooks_riverpod: ^2.4.10
-  riverpod_annotation: ^2.3.4
-  json_annotation: ^4.8.1
-  freezed_annotation: ^2.4.1
-  wakelock_plus: ^1.1.4
-  dio: ^5.4.0
-  flutter_inappwebview: ^6.0.0
-  intl: ^0.19.0
-  web_socket_channel: ^2.4.0
-  shared_preferences: ^2.2.2
-  cached_network_image: ^3.3.1
-  flutter_hls_parser: ^2.0.1
+  hooks_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  # freezed
+  freezed_annotation: ^2.4.4
+  # CRUD
+  retrofit: ^4.1.0
+  json_annotation: ^4.9.0
+  dio: ^5.5.0+1
+  logger: ^2.4.0
+  # video
   video_player: ^2.8.3
-  chewie: ^1.7.5
-  hangul: ^0.6.0
+  wakelock_plus: ^1.2.7
+  flutter_hls_parser: ^2.0.1
+  # webview for login
+  flutter_inappwebview: ^6.0.0
+  # image
   gif: ^2.3.0
-  path_provider: ^2.1.2
-  device_info_plus: ^10.0.1
+  cached_network_image: ^3.3.1
+  # router
+  go_router: ^14.2.1
+  # websocket
+  web_socket_channel: ^2.4.5
+  # utils
+  intl: ^0.19.0
+  hangul: ^0.6.0
+  html: ^0.15.4
+  # local database
+  shared_preferences: ^2.2.2
+  flutter_markdown: ^0.7.3+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+
+  flutter_lints: ^4.0.0
+  # riverpod
+  riverpod_generator: ^2.4.0
+  riverpod_lint: ^2.3.10
+  custom_lint: ^0.6.4
+  # freezed
+  freezed: ^2.5.2
+  # retrofit
+  retrofit_generator: ^8.1.2
+  # common
+  json_serializable: ^6.8.0
   build_runner: ^2.4.8
-  freezed: ^2.4.7
-  json_serializable: ^6.7.1
-  riverpod_generator: ^2.3.11
-  riverpod_lint: ^2.3.9
-  custom_lint: ^0.6.0
+  # database
 
 flutter:
   uses-material-design: true

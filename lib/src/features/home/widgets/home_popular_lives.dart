@@ -1,44 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../common/widgets/center_text.dart';
+import '../../../utils/router/app_router.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
 import '../../live/controller/live_controller.dart';
-import '../../live/widgets/live_container.dart';
-import './home_base_container.dart';
+import '../../live/model/live.dart';
+import '../../live/widgets/live_container/live_container.dart';
+import './home_list_view_container.dart';
 
-class HomePopularLives extends HookConsumerWidget {
-  const HomePopularLives({super.key});
+class HomePopularLives extends ConsumerWidget {
+  const HomePopularLives({
+    super.key,
+    required this.autofocus,
+    required this.listFSN,
+    required this.sidebarFSN,
+    required this.aboveFSN,
+    required this.belowFSN,
+  });
+
+  final bool autofocus;
+  final FocusScopeNode listFSN;
+  final FocusScopeNode sidebarFSN;
+  final FocusScopeNode aboveFSN;
+  final FocusScopeNode belowFSN;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncPopularLives = ref.watch(popularLivesControllerProvider);
-    final scrollController = useScrollController();
+    final asyncHomePopularLives = ref.watch(homePopularLivesControllerProvider);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: HomeBaseContainer(
-        child: switch (asyncPopularLives) {
-          AsyncData(:final value) => value == null
-              ? const CenterText(text: '인기 채널을 불러오는데 실패했습니다')
-              : ListView.builder(
-                  key: UniqueKey(),
-                  controller: scrollController,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    final liveDetail = value[index];
-
-                    return LiveContainer(
-                      liveDetail: liveDetail,
-                    );
-                  },
-                ),
-          AsyncError() => const CenterText(text: '인기 채널을 불러오는데 실패했습니다'),
-          _ => const CenterText(text: '인기 채널 불러오는 중...'),
-        },
-      ),
+    return HomeListViewContainer<LiveInfo>(
+      headerText: '인기 채널 라이브',
+      asyncValue: asyncHomePopularLives,
+      emptyText: '인기 채널을 불러올 수 없습니다',
+      errorText: '인기 채널을 불러올 수 없습니다',
+      listFSN: listFSN,
+      sidebarFSN: sidebarFSN,
+      aboveFSN: aboveFSN,
+      belowFSN: belowFSN,
+      fallback: () {
+        ref
+            .read(dashboardControllerProvider.notifier)
+            .changeScreen(context, AppRoute.allLives);
+      },
+      itemBuilder: (index, focusNode, object) {
+        return LiveContainer(
+          autofocus: index == 0 ? autofocus : false,
+          focusNode: focusNode,
+          liveInfo: object,
+          channel: object.channel!,
+        );
+      },
     );
   }
 }

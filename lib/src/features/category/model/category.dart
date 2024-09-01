@@ -12,6 +12,10 @@ class Category with _$Category {
     required String? posterImageUrl,
     required int openLiveCount,
     required int concurrentUserCount,
+    required bool? existLounge,
+    required bool? following,
+    required bool? newCategory,
+    required List<String>? tags,
   }) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>
@@ -33,7 +37,15 @@ class CategoryPage with _$CategoryPage {
 @freezed
 class CategoryResponse with _$CategoryResponse {
   const factory CategoryResponse({
-    required List<Category>? categories,
-    required CategoryPage? page,
+    required int size,
+    @JsonKey(name: 'page', fromJson: _categoryPageFromJson)
+    required CategoryPage? next,
+    required List<Category> data,
   }) = _CategoryResponse;
+
+  factory CategoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$CategoryResponseFromJson(json);
 }
+
+CategoryPage _categoryPageFromJson(Map<String, dynamic> json) =>
+    CategoryPage.fromJson(json['next']);

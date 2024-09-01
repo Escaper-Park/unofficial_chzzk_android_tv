@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 
 class RoundedContainer extends StatelessWidget {
+  /// Container that has rounded corners.
   const RoundedContainer({
     super.key,
-    this.height,
     this.width,
-    this.borderRadius = 8.0,
+    this.height,
+    this.borderRadius = 12.0,
+    this.borderColor = Colors.transparent,
     this.backgroundColor,
     this.margin,
     this.padding,
     required this.child,
   });
 
-  final double? height;
-  final double? width;
-  final double borderRadius;
-  final Color? backgroundColor;
-
   /// Empty space outside the container.
   final EdgeInsetsGeometry? margin;
 
   /// Empty space inside the container
   final EdgeInsetsGeometry? padding;
+
+  final double? width;
+  final double? height;
+  final double borderRadius;
+  final Color borderColor;
+  final Color? backgroundColor;
+
   final Widget child;
 
   @override
@@ -33,6 +37,7 @@ class RoundedContainer extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(color: borderColor),
         color: backgroundColor,
       ),
       child: child,

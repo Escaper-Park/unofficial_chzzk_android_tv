@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../utils/dio/dio_client.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../model/following.dart';
 import '../repository/following_repository.dart';
@@ -9,34 +9,69 @@ part 'following_controller.g.dart';
 
 @riverpod
 class FollowingController extends _$FollowingController {
-  Options? _options;
+  late FollowingRepository _repository;
 
+  /// Get List of following channels.
   @override
-  FutureOr<List<Following>?> build() async {
+  Future<List<Following>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = FollowingRepository(dio);
+
     final auth = await ref.watch(authControllerProvider.future);
 
-    _options = auth?.getOptions();
-
-    return _options == null ? null : await fetchFollowingChannels();
+    return auth == null ? null : await fetchFollowings();
   }
 
-  Future<List<Following>?> fetchFollowingChannels() async {
-    if (_options != null) {
-      List<Following>? followings = await ref
-          .watch(followingRepositoryProvider)
-          .getFollowingChannels(options: _options);
+  Future<List<Following>?> fetchFollowings({
+    int size = 505,
+    int page = 0,
+  }) async {
+    final FollowingResponse? response =
+        await _repository.getFollowingResponse(size: size, page: page);
 
-      if (followings != null && followings.isNotEmpty) {
-        followings.shuffle();
+    if (response != null && response.followingList.isNotEmpty) {
+      // copyWith
+      List<Following>? followingList = List.from(response.followingList);
 
-        // Sort by concurrentUserCount
-        followings.sort((a, b) => b.liveInfo.concurrentUserCount
-            .compareTo(a.liveInfo.concurrentUserCount));
+      // sort by concurrentUserCount
+      followingList.sort((a, b) => b.liveInfo.concurrentUserCount
+          .compareTo(a.liveInfo.concurrentUserCount));
 
-        return followings;
-      }
+      return followingList;
     }
 
     return null;
+  }
+}
+
+@riverpod
+class FollowingLivesController extends _$FollowingLivesController {
+  late FollowingRepository _repository;
+
+  /// Get List of following channel's live streams.
+  ///
+  /// [Following] has [LiveInfo].
+  @override
+  FutureOr<List<Following>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = FollowingRepository(dio);
+
+    return await fetchFollowingLives();
+  }
+
+  Future<List<Following>?> fetchFollowingLives() async {
+    final followingResponse = await _repository.getFollowingLives();
+
+    return followingResponse?.followingList;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        return await fetchFollowingLives();
+      },
+    );
   }
 }

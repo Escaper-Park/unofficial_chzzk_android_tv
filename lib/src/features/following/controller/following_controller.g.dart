@@ -7,7 +7,7 @@ part of 'following_controller.dart';
 // **************************************************************************
 
 String _$followingControllerHash() =>
-    r'85ed332aeef6b52b57d492006c622a79e304ea20';
+    r'3043945f5f434880ff2bb050c19495d31e26150d';
 
 /// See also [FollowingController].
 @ProviderFor(FollowingController)
@@ -23,5 +23,22 @@ final followingControllerProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$FollowingController = AutoDisposeAsyncNotifier<List<Following>?>;
+String _$followingLivesControllerHash() =>
+    r'0b1e06b106ed8ed6ab9e27864d3fe16c00a7c26d';
+
+/// See also [FollowingLivesController].
+@ProviderFor(FollowingLivesController)
+final followingLivesControllerProvider = AutoDisposeAsyncNotifierProvider<
+    FollowingLivesController, List<Following>?>.internal(
+  FollowingLivesController.new,
+  name: r'followingLivesControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$followingLivesControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FollowingLivesController = AutoDisposeAsyncNotifier<List<Following>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

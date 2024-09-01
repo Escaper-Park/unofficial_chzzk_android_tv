@@ -1,16 +1,14 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../common/constants/api.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../model/access_token.dart';
 
 part 'chat_repository.g.dart';
 
-// Future works
 enum ChatCmd {
   ping(0),
   pong(10000),
@@ -28,83 +26,117 @@ enum ChatCmd {
   penalty(94015),
   sendChat(3101);
 
-  final int cmdNumber;
+  final int value;
 
-  int get value => cmdNumber;
+  const ChatCmd(this.value);
+}
 
-  const ChatCmd(this.cmdNumber);
+enum MsgTypeCode {
+  text(1),
+  image(2),
+  sticker(3),
+  video(4),
+  rich(5),
+  donation(10),
+  subscription(11),
+  systemMsg(30);
+
+  final int value;
+
+  const MsgTypeCode(this.value);
 }
 
 @riverpod
 ChatRepository chatRepository(
   ChatRepositoryRef ref, {
-  required WebSocketChannel channel,
+  required WebSocketChannel wsChannel,
   required String chatChannelId,
+  required Dio dio,
 }) =>
     ChatRepository(
-      channel: channel,
+      wsChannel: wsChannel,
       chatChannelId: chatChannelId,
+      dio: dio,
     );
 
 class ChatRepository {
-  final WebSocketChannel channel;
-  String chatChannelId;
-
-  final Dio _dio = Dio(
-    BaseOptions(
-      headers: {
-        'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-      },
-    ),
-  );
+  final WebSocketChannel wsChannel;
+  final String chatChannelId;
+  final Dio dio;
 
   ChatRepository({
-    required this.channel,
+    required this.wsChannel,
     required this.chatChannelId,
+    required this.dio,
   });
 
-  Future<void> connect({
-    required String? uid,
-    required Options? options,
-  }) async {
-    final accTknUrl = APIUrl.accessToken(chatChannelId);
+  void send(Map<String, dynamic> object) {
+    wsChannel.sink.add(json.encode(object));
+  }
 
-    AccessToken? accessToken;
+  Future<AccessToken?> _getAccessToken() async {
+    const String apiUrl = ApiUrl.accessToken;
 
-    if (options != null) {
-      try {
-        final response = await _dio.get(accTknUrl, options: options);
-        final content = response.data['content'];
+    try {
+      final response = await dio.get(
+        apiUrl,
+        queryParameters: {
+          'channelId': chatChannelId,
+          'chatType': 'STREAMING',
+        },
+      );
 
-        accessToken = AccessToken.fromJson(content);
-      } catch (e) {
-        accessToken = null;
-      }
+      return AccessToken.fromJson(response.data);
+    } catch (_) {
+      return null;
     }
+  }
 
-    channel.sink.add(json.encode({
+  Future<void> connect({
+    /// user?.userHashId
+    required String? uid,
+  }) async {
+    // Get Access Token for watching adult restriction channel's chats
+    final AccessToken? accessToken = await _getAccessToken();
+
+    send({
       'bdy': {
         'accTkn': accessToken?.accessToken,
         'auth': uid == null ? 'READ' : 'SEND',
+        'devType': 2001,
+        'locale': 'ko',
+        'timezone': 'Asia/Seoul',
         'uid': uid,
       },
-      'cmd': ChatCmd.connect.cmdNumber,
-      'tid': 1,
       'cid': chatChannelId,
       'svcid': 'game',
-      'ver': '2'
-    }));
+      'cmd': ChatCmd.connect.value,
+      'tid': 1,
+      'ver': "3",
+    });
+  }
+
+  /// After connect, get sid from connect response and use in.
+  void requestRecentChat({required String? sid}) {
+    send({
+      'bdy': {"recentMessageCount": 50},
+      'cid': chatChannelId,
+      'cmd': ChatCmd.requestRecentChat.value,
+      'sid': sid,
+      'svcid': 'game',
+      'tid': 2,
+      'ver': "3",
+    });
   }
 
   void pong() {
-    channel.sink.add(json.encode({
-      'cmd': ChatCmd.pong.cmdNumber,
-      'ver': '2',
+    wsChannel.sink.add(json.encode({
+      'cmd': ChatCmd.pong.value,
+      'ver': "3",
     }));
   }
 
   Future<void> disconnect() async {
-    channel.sink.close();
+    await wsChannel.sink.close();
   }
 }

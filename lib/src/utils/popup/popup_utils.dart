@@ -1,110 +1,147 @@
 import 'package:flutter/material.dart';
 
 import '../../common/constants/styles.dart';
+import '../../common/widgets/center_widgets.dart';
+import '../../common/widgets/focused_widget.dart';
+
+enum DialogButtonType {
+  singleButton,
+  doubleButton,
+}
 
 class PopupUtils {
-  static Future<void> showSingleDialog({
+  /// Show popup dialog with a single button.
+  static Future<void> showButtonDialog({
+    /// Choose number of buttons(single or double).
+    DialogButtonType buttonType = DialogButtonType.singleButton,
     required BuildContext context,
     required String titleText,
     required String contentText,
-    double contentHeight = 30.0,
+    double titleFontSize = 20.0,
+    double fontSize = 16.0,
+    String confirmText = '확인',
+    String cancelText = '취소',
+    VoidCallback? confirmCallback,
+    VoidCallback? cancelFallback,
   }) async {
-    showDialog(
+    await showDialog(
       context: context,
       useRootNavigator: false,
+      // Set the value of 'barrierDismissible' to 'false'
+      // to escape from the popup dialog when you click on an outside empty space.
       barrierDismissible: false,
-      traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.greyContainerColor,
           title: Text(
             titleText,
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w700,
+            style: TextStyle(
+              fontSize: titleFontSize,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          content: SizedBox(
-            height: contentHeight,
-            child: Center(
-              child: Text(
-                contentText,
-                style: const TextStyle(
-                  fontSize: 14.0,
-                  color: AppColors.greyColor,
-                  fontWeight: FontWeight.w600,
+          content: IntrinsicHeight(
+            child: CenteredText(
+              text: contentText,
+              fontSize: fontSize,
+              fontColor: AppColors.whiteColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: switch (buttonType) {
+            DialogButtonType.singleButton => [
+                PopupActionButton(
+                  actionText: confirmText,
+                  onPressed: () {
+                    // Escape from popup dialog
+                    if (dialogContext.mounted) Navigator.pop(dialogContext);
+                  },
                 ),
-              ),
-            ),
-          ),
-          actions: [
-            PopupActionButton(
-              autoFocus: true,
-              actionText: '확인',
-              onPressed: () {
-                if (dialogContext.mounted) Navigator.pop(dialogContext);
-              },
-            ),
-          ],
+              ],
+            DialogButtonType.doubleButton => [
+                // Cancel
+                PopupActionButton(
+                  autofocus: true,
+                  actionText: cancelText,
+                  onPressed: () {
+                    if (cancelFallback != null) cancelFallback();
+                    // Escape from popup dialog
+                    if (dialogContext.mounted) Navigator.pop(dialogContext);
+                  },
+                ),
+                // Confirm
+                PopupActionButton(
+                  autofocus: false,
+                  actionText: confirmText,
+                  onPressed: () {
+                    // Do action
+                    if (confirmCallback != null) confirmCallback();
+
+                    // Escape from popup dialog
+                    if (dialogContext.mounted) Navigator.pop(dialogContext);
+                  },
+                ),
+              ],
+          },
         );
       },
     );
   }
 
-  static Future<void> showDoubleButtonDialog({
+  /// Show snackbar
+  static void showSnackbar(
+    BuildContext context,
+    String content, {
+    int milliseconds = 2000, // Display duration
+    double bottomMargin = 0.0, // Position
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(bottom: bottomMargin),
+        elevation: 0.0,
+        backgroundColor: AppColors.blackColor.withOpacity(0.7),
+        duration: Duration(milliseconds: milliseconds),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
+            topRight: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
+          ),
+        ),
+        content: CenteredText(
+          text: content,
+          fontColor: AppColors.whiteColor,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  static Future<void> showWidgetDialog({
     required BuildContext context,
     required String titleText,
-    required Widget content,
-    String cancelText = '취소',
-    String confirmText = '확인',
-    VoidCallback? callback,
-    // Use focusNode to auto-focus after submitting id and password.
-    FocusNode? cancelFocusNode,
-    FocusNode? confirmFocusNode,
-    double contentHeight = 150.0,
+    required Widget Function(BuildContext dialogContext) content,
+    double titleFontSize = 16.0,
   }) async {
-    showDialog(
-      // Set the value of 'barrierDismissible' to 'false'
-      // to escape from the popup dialog when you click on an outside empty space.
+    await showDialog(
+      context: context,
       useRootNavigator: false,
       barrierDismissible: false,
-      traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
-      context: context,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.greyContainerColor,
           title: Text(
             titleText,
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w700,
+            style: TextStyle(
+              fontSize: titleFontSize,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          content: SizedBox(
-            height: contentHeight,
-            child: Center(child: content),
-          ),
-          actions: [
-            PopupActionButton(
-              focusNode: cancelFocusNode,
-              actionText: cancelText,
-              onPressed: () {
-                if (dialogContext.mounted) Navigator.pop(dialogContext);
-              },
-            ),
-            PopupActionButton(
-              autoFocus: true,
-              focusNode: confirmFocusNode,
-              actionText: confirmText,
-              onPressed: () {
-                if (callback != null) {
-                  callback();
-                }
-
-                Navigator.pop(dialogContext);
-              },
-            ),
-          ],
+          content: content(dialogContext),
         );
       },
     );
@@ -114,24 +151,40 @@ class PopupUtils {
 class PopupActionButton extends StatelessWidget {
   const PopupActionButton({
     super.key,
+    this.autofocus = true,
+    this.fontSize = 14.0,
     required this.actionText,
     required this.onPressed,
-    this.focusNode,
-    this.autoFocus = false,
   });
 
+  /// If you use this in [DoubleButtonDialog],
+  /// use this as true for either of them.
+  final bool autofocus;
+
+  final double fontSize;
+
+  /// Show user what this button do.
   final String actionText;
   final VoidCallback onPressed;
-  final FocusNode? focusNode;
-  final bool autoFocus;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      autofocus: autoFocus,
-      focusNode: focusNode,
+    return FocusedOutlinedButton(
+      autofocus: autofocus,
+      padding: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 16.0,
+      ),
       onPressed: onPressed,
-      child: Text(actionText),
+      unFocusedBorderColor: AppColors.greyColor,
+      child: (_) => Text(
+        actionText,
+        style: TextStyle(
+          color: AppColors.whiteColor,
+          fontWeight: FontWeight.w600,
+          fontSize: fontSize,
+        ),
+      ),
     );
   }
 }

@@ -6,24 +6,7 @@ part of 'search_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchControllerHash() => r'5e83bda7d11f68577c3e6cfb2368b6abfbe7dd62';
-
-/// See also [SearchController].
-@ProviderFor(SearchController)
-final searchControllerProvider =
-    AutoDisposeNotifierProvider<SearchController, Channel?>.internal(
-  SearchController.new,
-  name: r'searchControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$searchControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SearchController = AutoDisposeNotifier<Channel?>;
-String _$searchResultsControllerHash() =>
-    r'd44e18a4647b1494d2803f526763183e9a2d70b5';
+String _$searchControllerHash() => r'4dbf1137c356bfbdf43f0709d01f936e193fbf05';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,7 +29,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$SearchResultsController
+abstract class _$SearchController
     extends BuildlessAutoDisposeAsyncNotifier<List<Channel>?> {
   late final String keyword;
 
@@ -55,27 +38,27 @@ abstract class _$SearchResultsController
   });
 }
 
-/// See also [SearchResultsController].
-@ProviderFor(SearchResultsController)
-const searchResultsControllerProvider = SearchResultsControllerFamily();
+/// See also [SearchController].
+@ProviderFor(SearchController)
+const searchControllerProvider = SearchControllerFamily();
 
-/// See also [SearchResultsController].
-class SearchResultsControllerFamily extends Family<AsyncValue<List<Channel>?>> {
-  /// See also [SearchResultsController].
-  const SearchResultsControllerFamily();
+/// See also [SearchController].
+class SearchControllerFamily extends Family<AsyncValue<List<Channel>?>> {
+  /// See also [SearchController].
+  const SearchControllerFamily();
 
-  /// See also [SearchResultsController].
-  SearchResultsControllerProvider call({
+  /// See also [SearchController].
+  SearchControllerProvider call({
     required String keyword,
   }) {
-    return SearchResultsControllerProvider(
+    return SearchControllerProvider(
       keyword: keyword,
     );
   }
 
   @override
-  SearchResultsControllerProvider getProviderOverride(
-    covariant SearchResultsControllerProvider provider,
+  SearchControllerProvider getProviderOverride(
+    covariant SearchControllerProvider provider,
   ) {
     return call(
       keyword: provider.keyword,
@@ -94,31 +77,30 @@ class SearchResultsControllerFamily extends Family<AsyncValue<List<Channel>?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'searchResultsControllerProvider';
+  String? get name => r'searchControllerProvider';
 }
 
-/// See also [SearchResultsController].
-class SearchResultsControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<SearchResultsController,
-        List<Channel>?> {
-  /// See also [SearchResultsController].
-  SearchResultsControllerProvider({
+/// See also [SearchController].
+class SearchControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    SearchController, List<Channel>?> {
+  /// See also [SearchController].
+  SearchControllerProvider({
     required String keyword,
   }) : this._internal(
-          () => SearchResultsController()..keyword = keyword,
-          from: searchResultsControllerProvider,
-          name: r'searchResultsControllerProvider',
+          () => SearchController()..keyword = keyword,
+          from: searchControllerProvider,
+          name: r'searchControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$searchResultsControllerHash,
-          dependencies: SearchResultsControllerFamily._dependencies,
+                  : _$searchControllerHash,
+          dependencies: SearchControllerFamily._dependencies,
           allTransitiveDependencies:
-              SearchResultsControllerFamily._allTransitiveDependencies,
+              SearchControllerFamily._allTransitiveDependencies,
           keyword: keyword,
         );
 
-  SearchResultsControllerProvider._internal(
+  SearchControllerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -132,7 +114,7 @@ class SearchResultsControllerProvider
 
   @override
   FutureOr<List<Channel>?> runNotifierBuild(
-    covariant SearchResultsController notifier,
+    covariant SearchController notifier,
   ) {
     return notifier.build(
       keyword: keyword,
@@ -140,10 +122,10 @@ class SearchResultsControllerProvider
   }
 
   @override
-  Override overrideWith(SearchResultsController Function() create) {
+  Override overrideWith(SearchController Function() create) {
     return ProviderOverride(
       origin: this,
-      override: SearchResultsControllerProvider._internal(
+      override: SearchControllerProvider._internal(
         () => create()..keyword = keyword,
         from: from,
         name: null,
@@ -156,14 +138,14 @@ class SearchResultsControllerProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<SearchResultsController,
-      List<Channel>?> createElement() {
-    return _SearchResultsControllerProviderElement(this);
+  AutoDisposeAsyncNotifierProviderElement<SearchController, List<Channel>?>
+      createElement() {
+    return _SearchControllerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SearchResultsControllerProvider && other.keyword == keyword;
+    return other is SearchControllerProvider && other.keyword == keyword;
   }
 
   @override
@@ -175,19 +157,37 @@ class SearchResultsControllerProvider
   }
 }
 
-mixin SearchResultsControllerRef
+mixin SearchControllerRef
     on AutoDisposeAsyncNotifierProviderRef<List<Channel>?> {
   /// The parameter `keyword` of this provider.
   String get keyword;
 }
 
-class _SearchResultsControllerProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<SearchResultsController,
-        List<Channel>?> with SearchResultsControllerRef {
-  _SearchResultsControllerProviderElement(super.provider);
+class _SearchControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<SearchController,
+        List<Channel>?> with SearchControllerRef {
+  _SearchControllerProviderElement(super.provider);
 
   @override
-  String get keyword => (origin as SearchResultsControllerProvider).keyword;
+  String get keyword => (origin as SearchControllerProvider).keyword;
 }
+
+String _$searchChannelControllerHash() =>
+    r'c583d201a04ba9cb2868bef078d83c9f6fc1a179';
+
+/// See also [SearchChannelController].
+@ProviderFor(SearchChannelController)
+final searchChannelControllerProvider =
+    AutoDisposeNotifierProvider<SearchChannelController, Channel?>.internal(
+  SearchChannelController.new,
+  name: r'searchChannelControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$searchChannelControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SearchChannelController = AutoDisposeNotifier<Channel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/utils/router/app_router.dart';
 
-import '../../../../common/widgets/center_text.dart';
+import '../../../../common/constants/dimensions.dart';
+import '../../../../common/widgets/center_widgets.dart';
+import '../../../../utils/image/image_utils.dart';
+import '../../../../utils/router/app_router.dart';
 import '../../controller/category_controller.dart';
-import 'category_container.dart';
+import './category_container.dart';
 
 class CategoryList extends HookConsumerWidget {
   const CategoryList({
     super.key,
-    required this.crossAxisCount,
-    required this.crossAxisSpacing,
-    required this.imageWidth,
-    required this.imageHeight,
+    required this.horizontalPadding,
+    required this.verticalPadding,
   });
 
-  final int crossAxisCount;
-  final double crossAxisSpacing;
-  final double imageWidth;
-  final double imageHeight;
+  /// For calculate dynamic size of category container.
+  final double horizontalPadding;
+
+  /// Damping for infinite scrolls.
+  final double verticalPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,9 +29,9 @@ class CategoryList extends HookConsumerWidget {
 
     useEffect(() {
       scrollController.addListener(() async {
-        // -5.0: damping
+        // damping: -verticalPadding
         if (scrollController.offset >=
-                scrollController.position.maxScrollExtent - 24.0 &&
+                scrollController.position.maxScrollExtent - verticalPadding &&
             !scrollController.position.outOfRange) {
           await ref.read(categoryControllerProvider.notifier).fetchMore();
         }
@@ -38,40 +39,56 @@ class CategoryList extends HookConsumerWidget {
       return null;
     }, [scrollController]);
 
+    const int crossAxisCount = 5;
+    const double crossAxisSpacing = 10.0;
+
+    // Calculate image size
+    final imageWidth = ImageUtils.imageWidthByCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      context: context,
+    );
+
+    final imageHeight = ImageUtils.imageHeightByRatio(
+      w: 3,
+      h: 4,
+      imageWidth: imageWidth,
+    );
+
     return switch (asyncCategories) {
       AsyncData(:final value) => value == null
-          ? const CenterText(text: '카테고리를 불러올 수 없습니다')
+          ? const CenteredText(text: '카테고리를 불러올 수 없습니다')
           : GridView.builder(
+              controller: scrollController,
               padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: crossAxisSpacing,
                 mainAxisSpacing: 10.0,
-                mainAxisExtent: imageHeight + 100.0,
+                mainAxisExtent: imageHeight + Dimensions.categoryInfoCardHeight,
               ),
-              controller: scrollController,
               itemCount: value.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 final category = value[index];
 
                 return CategoryContainer(
+                  autofocus: index == 0 ? true : false,
                   imageWidth: imageWidth,
                   imageHeight: imageHeight,
-                  autofocus: index == 0 ? true : false,
+                  infoCardHeight: Dimensions.categoryInfoCardHeight,
                   category: category,
                   onPressed: () {
-                    context.pushNamed(
-                      AppRoute.categoryStreaming.routeName,
-                      extra: {
-                        'category': category,
-                        'fromHome': false,
-                      },
-                    );
+                    if (context.mounted) {
+                      context.pushNamed(
+                        AppRoute.categoryDetail.routeName,
+                        extra: {'category': category},
+                      );
+                    }
                   },
                 );
               },
             ),
-      AsyncError() => const CenterText(text: '카테고리를 불러올 수 없습니다'),
+      AsyncError() => const CenteredText(text: '카테고리를 불러올 수 없습니다'),
       _ => const SizedBox.shrink(),
     };
   }

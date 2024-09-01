@@ -23,21 +23,33 @@ mixin _$Vod {
   int get videoNo => throw _privateConstructorUsedError;
   String? get videoId => throw _privateConstructorUsedError;
   String get videoTitle => throw _privateConstructorUsedError;
-  String? get videoType => throw _privateConstructorUsedError;
+  String get videoType => throw _privateConstructorUsedError;
   String get publishDate => throw _privateConstructorUsedError;
   String? get thumbnailImageUrl => throw _privateConstructorUsedError;
   String? get trailerUrl => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
+  int get readCount => throw _privateConstructorUsedError;
   int get publishDateAt => throw _privateConstructorUsedError;
+  String? get categoryType => throw _privateConstructorUsedError;
+  String? get videoCategory => throw _privateConstructorUsedError;
   String? get videoCategoryValue => throw _privateConstructorUsedError;
+  bool get exposure => throw _privateConstructorUsedError;
   bool get adult => throw _privateConstructorUsedError;
+  bool get clipActive => throw _privateConstructorUsedError;
   Channel get channel => throw _privateConstructorUsedError;
+  Object? get blindType => throw _privateConstructorUsedError; // Detailed
+  bool? get paidPromotion => throw _privateConstructorUsedError;
   String? get inKey => throw _privateConstructorUsedError;
   String? get liveOpenDate => throw _privateConstructorUsedError;
-  int? get readCount => throw _privateConstructorUsedError;
+  String? get vodStatus => throw _privateConstructorUsedError;
+  String? get userAdultStatus => throw _privateConstructorUsedError;
 
+  /// Serializes this Vod to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $VodCopyWith<Vod> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -50,18 +62,26 @@ abstract class $VodCopyWith<$Res> {
       {int videoNo,
       String? videoId,
       String videoTitle,
-      String? videoType,
+      String videoType,
       String publishDate,
       String? thumbnailImageUrl,
       String? trailerUrl,
       int duration,
+      int readCount,
       int publishDateAt,
+      String? categoryType,
+      String? videoCategory,
       String? videoCategoryValue,
+      bool exposure,
       bool adult,
+      bool clipActive,
       Channel channel,
+      Object? blindType,
+      bool? paidPromotion,
       String? inKey,
       String? liveOpenDate,
-      int? readCount});
+      String? vodStatus,
+      String? userAdultStatus});
 
   $ChannelCopyWith<$Res> get channel;
 }
@@ -75,24 +95,34 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? videoNo = null,
     Object? videoId = freezed,
     Object? videoTitle = null,
-    Object? videoType = freezed,
+    Object? videoType = null,
     Object? publishDate = null,
     Object? thumbnailImageUrl = freezed,
     Object? trailerUrl = freezed,
     Object? duration = null,
+    Object? readCount = null,
     Object? publishDateAt = null,
+    Object? categoryType = freezed,
+    Object? videoCategory = freezed,
     Object? videoCategoryValue = freezed,
+    Object? exposure = null,
     Object? adult = null,
+    Object? clipActive = null,
     Object? channel = null,
+    Object? blindType = freezed,
+    Object? paidPromotion = freezed,
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
-    Object? readCount = freezed,
+    Object? vodStatus = freezed,
+    Object? userAdultStatus = freezed,
   }) {
     return _then(_value.copyWith(
       videoNo: null == videoNo
@@ -107,10 +137,10 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
           ? _value.videoTitle
           : videoTitle // ignore: cast_nullable_to_non_nullable
               as String,
-      videoType: freezed == videoType
+      videoType: null == videoType
           ? _value.videoType
           : videoType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       publishDate: null == publishDate
           ? _value.publishDate
           : publishDate // ignore: cast_nullable_to_non_nullable
@@ -127,22 +157,47 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as int,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
       publishDateAt: null == publishDateAt
           ? _value.publishDateAt
           : publishDateAt // ignore: cast_nullable_to_non_nullable
               as int,
+      categoryType: freezed == categoryType
+          ? _value.categoryType
+          : categoryType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      videoCategory: freezed == videoCategory
+          ? _value.videoCategory
+          : videoCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       videoCategoryValue: freezed == videoCategoryValue
           ? _value.videoCategoryValue
           : videoCategoryValue // ignore: cast_nullable_to_non_nullable
               as String?,
+      exposure: null == exposure
+          ? _value.exposure
+          : exposure // ignore: cast_nullable_to_non_nullable
+              as bool,
       adult: null == adult
           ? _value.adult
           : adult // ignore: cast_nullable_to_non_nullable
+              as bool,
+      clipActive: null == clipActive
+          ? _value.clipActive
+          : clipActive // ignore: cast_nullable_to_non_nullable
               as bool,
       channel: null == channel
           ? _value.channel
           : channel // ignore: cast_nullable_to_non_nullable
               as Channel,
+      blindType: freezed == blindType ? _value.blindType : blindType,
+      paidPromotion: freezed == paidPromotion
+          ? _value.paidPromotion
+          : paidPromotion // ignore: cast_nullable_to_non_nullable
+              as bool?,
       inKey: freezed == inKey
           ? _value.inKey
           : inKey // ignore: cast_nullable_to_non_nullable
@@ -151,13 +206,19 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
           ? _value.liveOpenDate
           : liveOpenDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      readCount: freezed == readCount
-          ? _value.readCount
-          : readCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+      vodStatus: freezed == vodStatus
+          ? _value.vodStatus
+          : vodStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userAdultStatus: freezed == userAdultStatus
+          ? _value.userAdultStatus
+          : userAdultStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res> get channel {
@@ -177,18 +238,26 @@ abstract class _$$VodImplCopyWith<$Res> implements $VodCopyWith<$Res> {
       {int videoNo,
       String? videoId,
       String videoTitle,
-      String? videoType,
+      String videoType,
       String publishDate,
       String? thumbnailImageUrl,
       String? trailerUrl,
       int duration,
+      int readCount,
       int publishDateAt,
+      String? categoryType,
+      String? videoCategory,
       String? videoCategoryValue,
+      bool exposure,
       bool adult,
+      bool clipActive,
       Channel channel,
+      Object? blindType,
+      bool? paidPromotion,
       String? inKey,
       String? liveOpenDate,
-      int? readCount});
+      String? vodStatus,
+      String? userAdultStatus});
 
   @override
   $ChannelCopyWith<$Res> get channel;
@@ -200,24 +269,34 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
   __$$VodImplCopyWithImpl(_$VodImpl _value, $Res Function(_$VodImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? videoNo = null,
     Object? videoId = freezed,
     Object? videoTitle = null,
-    Object? videoType = freezed,
+    Object? videoType = null,
     Object? publishDate = null,
     Object? thumbnailImageUrl = freezed,
     Object? trailerUrl = freezed,
     Object? duration = null,
+    Object? readCount = null,
     Object? publishDateAt = null,
+    Object? categoryType = freezed,
+    Object? videoCategory = freezed,
     Object? videoCategoryValue = freezed,
+    Object? exposure = null,
     Object? adult = null,
+    Object? clipActive = null,
     Object? channel = null,
+    Object? blindType = freezed,
+    Object? paidPromotion = freezed,
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
-    Object? readCount = freezed,
+    Object? vodStatus = freezed,
+    Object? userAdultStatus = freezed,
   }) {
     return _then(_$VodImpl(
       videoNo: null == videoNo
@@ -232,10 +311,10 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
           ? _value.videoTitle
           : videoTitle // ignore: cast_nullable_to_non_nullable
               as String,
-      videoType: freezed == videoType
+      videoType: null == videoType
           ? _value.videoType
           : videoType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       publishDate: null == publishDate
           ? _value.publishDate
           : publishDate // ignore: cast_nullable_to_non_nullable
@@ -252,22 +331,47 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as int,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
       publishDateAt: null == publishDateAt
           ? _value.publishDateAt
           : publishDateAt // ignore: cast_nullable_to_non_nullable
               as int,
+      categoryType: freezed == categoryType
+          ? _value.categoryType
+          : categoryType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      videoCategory: freezed == videoCategory
+          ? _value.videoCategory
+          : videoCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       videoCategoryValue: freezed == videoCategoryValue
           ? _value.videoCategoryValue
           : videoCategoryValue // ignore: cast_nullable_to_non_nullable
               as String?,
+      exposure: null == exposure
+          ? _value.exposure
+          : exposure // ignore: cast_nullable_to_non_nullable
+              as bool,
       adult: null == adult
           ? _value.adult
           : adult // ignore: cast_nullable_to_non_nullable
+              as bool,
+      clipActive: null == clipActive
+          ? _value.clipActive
+          : clipActive // ignore: cast_nullable_to_non_nullable
               as bool,
       channel: null == channel
           ? _value.channel
           : channel // ignore: cast_nullable_to_non_nullable
               as Channel,
+      blindType: freezed == blindType ? _value.blindType : blindType,
+      paidPromotion: freezed == paidPromotion
+          ? _value.paidPromotion
+          : paidPromotion // ignore: cast_nullable_to_non_nullable
+              as bool?,
       inKey: freezed == inKey
           ? _value.inKey
           : inKey // ignore: cast_nullable_to_non_nullable
@@ -276,10 +380,14 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
           ? _value.liveOpenDate
           : liveOpenDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      readCount: freezed == readCount
-          ? _value.readCount
-          : readCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+      vodStatus: freezed == vodStatus
+          ? _value.vodStatus
+          : vodStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      userAdultStatus: freezed == userAdultStatus
+          ? _value.userAdultStatus
+          : userAdultStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -287,7 +395,7 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
 /// @nodoc
 @JsonSerializable()
 class _$VodImpl implements _Vod {
-  const _$VodImpl(
+  _$VodImpl(
       {required this.videoNo,
       required this.videoId,
       required this.videoTitle,
@@ -296,13 +404,21 @@ class _$VodImpl implements _Vod {
       required this.thumbnailImageUrl,
       required this.trailerUrl,
       required this.duration,
+      required this.readCount,
       required this.publishDateAt,
+      required this.categoryType,
+      required this.videoCategory,
       required this.videoCategoryValue,
+      required this.exposure,
       required this.adult,
+      required this.clipActive,
       required this.channel,
+      required this.blindType,
+      required this.paidPromotion,
       required this.inKey,
       required this.liveOpenDate,
-      required this.readCount});
+      required this.vodStatus,
+      required this.userAdultStatus});
 
   factory _$VodImpl.fromJson(Map<String, dynamic> json) =>
       _$$VodImplFromJson(json);
@@ -314,7 +430,7 @@ class _$VodImpl implements _Vod {
   @override
   final String videoTitle;
   @override
-  final String? videoType;
+  final String videoType;
   @override
   final String publishDate;
   @override
@@ -324,23 +440,40 @@ class _$VodImpl implements _Vod {
   @override
   final int duration;
   @override
+  final int readCount;
+  @override
   final int publishDateAt;
+  @override
+  final String? categoryType;
+  @override
+  final String? videoCategory;
   @override
   final String? videoCategoryValue;
   @override
+  final bool exposure;
+  @override
   final bool adult;
   @override
+  final bool clipActive;
+  @override
   final Channel channel;
+  @override
+  final Object? blindType;
+// Detailed
+  @override
+  final bool? paidPromotion;
   @override
   final String? inKey;
   @override
   final String? liveOpenDate;
   @override
-  final int? readCount;
+  final String? vodStatus;
+  @override
+  final String? userAdultStatus;
 
   @override
   String toString() {
-    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, publishDateAt: $publishDateAt, videoCategoryValue: $videoCategoryValue, adult: $adult, channel: $channel, inKey: $inKey, liveOpenDate: $liveOpenDate, readCount: $readCount)';
+    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, readCount: $readCount, publishDateAt: $publishDateAt, categoryType: $categoryType, videoCategory: $videoCategory, videoCategoryValue: $videoCategoryValue, exposure: $exposure, adult: $adult, clipActive: $clipActive, channel: $channel, blindType: $blindType, paidPromotion: $paidPromotion, inKey: $inKey, liveOpenDate: $liveOpenDate, vodStatus: $vodStatus, userAdultStatus: $userAdultStatus)';
   }
 
   @override
@@ -362,40 +495,66 @@ class _$VodImpl implements _Vod {
                 other.trailerUrl == trailerUrl) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
+            (identical(other.readCount, readCount) ||
+                other.readCount == readCount) &&
             (identical(other.publishDateAt, publishDateAt) ||
                 other.publishDateAt == publishDateAt) &&
+            (identical(other.categoryType, categoryType) ||
+                other.categoryType == categoryType) &&
+            (identical(other.videoCategory, videoCategory) ||
+                other.videoCategory == videoCategory) &&
             (identical(other.videoCategoryValue, videoCategoryValue) ||
                 other.videoCategoryValue == videoCategoryValue) &&
+            (identical(other.exposure, exposure) ||
+                other.exposure == exposure) &&
             (identical(other.adult, adult) || other.adult == adult) &&
+            (identical(other.clipActive, clipActive) ||
+                other.clipActive == clipActive) &&
             (identical(other.channel, channel) || other.channel == channel) &&
+            const DeepCollectionEquality().equals(other.blindType, blindType) &&
+            (identical(other.paidPromotion, paidPromotion) ||
+                other.paidPromotion == paidPromotion) &&
             (identical(other.inKey, inKey) || other.inKey == inKey) &&
             (identical(other.liveOpenDate, liveOpenDate) ||
                 other.liveOpenDate == liveOpenDate) &&
-            (identical(other.readCount, readCount) ||
-                other.readCount == readCount));
+            (identical(other.vodStatus, vodStatus) ||
+                other.vodStatus == vodStatus) &&
+            (identical(other.userAdultStatus, userAdultStatus) ||
+                other.userAdultStatus == userAdultStatus));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      videoNo,
-      videoId,
-      videoTitle,
-      videoType,
-      publishDate,
-      thumbnailImageUrl,
-      trailerUrl,
-      duration,
-      publishDateAt,
-      videoCategoryValue,
-      adult,
-      channel,
-      inKey,
-      liveOpenDate,
-      readCount);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        videoNo,
+        videoId,
+        videoTitle,
+        videoType,
+        publishDate,
+        thumbnailImageUrl,
+        trailerUrl,
+        duration,
+        readCount,
+        publishDateAt,
+        categoryType,
+        videoCategory,
+        videoCategoryValue,
+        exposure,
+        adult,
+        clipActive,
+        channel,
+        const DeepCollectionEquality().hash(blindType),
+        paidPromotion,
+        inKey,
+        liveOpenDate,
+        vodStatus,
+        userAdultStatus
+      ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$VodImplCopyWith<_$VodImpl> get copyWith =>
@@ -410,22 +569,30 @@ class _$VodImpl implements _Vod {
 }
 
 abstract class _Vod implements Vod {
-  const factory _Vod(
+  factory _Vod(
       {required final int videoNo,
       required final String? videoId,
       required final String videoTitle,
-      required final String? videoType,
+      required final String videoType,
       required final String publishDate,
       required final String? thumbnailImageUrl,
       required final String? trailerUrl,
       required final int duration,
+      required final int readCount,
       required final int publishDateAt,
+      required final String? categoryType,
+      required final String? videoCategory,
       required final String? videoCategoryValue,
+      required final bool exposure,
       required final bool adult,
+      required final bool clipActive,
       required final Channel channel,
+      required final Object? blindType,
+      required final bool? paidPromotion,
       required final String? inKey,
       required final String? liveOpenDate,
-      required final int? readCount}) = _$VodImpl;
+      required final String? vodStatus,
+      required final String? userAdultStatus}) = _$VodImpl;
 
   factory _Vod.fromJson(Map<String, dynamic> json) = _$VodImpl.fromJson;
 
@@ -436,7 +603,7 @@ abstract class _Vod implements Vod {
   @override
   String get videoTitle;
   @override
-  String? get videoType;
+  String get videoType;
   @override
   String get publishDate;
   @override
@@ -446,335 +613,1225 @@ abstract class _Vod implements Vod {
   @override
   int get duration;
   @override
+  int get readCount;
+  @override
   int get publishDateAt;
+  @override
+  String? get categoryType;
+  @override
+  String? get videoCategory;
   @override
   String? get videoCategoryValue;
   @override
+  bool get exposure;
+  @override
   bool get adult;
   @override
+  bool get clipActive;
+  @override
   Channel get channel;
+  @override
+  Object? get blindType; // Detailed
+  @override
+  bool? get paidPromotion;
   @override
   String? get inKey;
   @override
   String? get liveOpenDate;
   @override
-  int? get readCount;
+  String? get vodStatus;
   @override
-  @JsonKey(ignore: true)
+  String? get userAdultStatus;
+
+  /// Create a copy of Vod
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$VodImplCopyWith<_$VodImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-VodPage _$VodPageFromJson(Map<String, dynamic> json) {
-  return _VodPage.fromJson(json);
+ChannelVodResponse _$ChannelVodResponseFromJson(Map<String, dynamic> json) {
+  return _ChannelVodResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$VodPage {
-  int? get publishDateAt => throw _privateConstructorUsedError;
-  int? get readCount => throw _privateConstructorUsedError;
+mixin _$ChannelVodResponse {
+  int get page => throw _privateConstructorUsedError;
+  int get size => throw _privateConstructorUsedError;
+  int get totalCount => throw _privateConstructorUsedError;
+  int get totalPages => throw _privateConstructorUsedError;
+  List<Vod> get data => throw _privateConstructorUsedError;
 
+  /// Serializes this ChannelVodResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $VodPageCopyWith<VodPage> get copyWith => throw _privateConstructorUsedError;
+
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ChannelVodResponseCopyWith<ChannelVodResponse> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $VodPageCopyWith<$Res> {
-  factory $VodPageCopyWith(VodPage value, $Res Function(VodPage) then) =
-      _$VodPageCopyWithImpl<$Res, VodPage>;
+abstract class $ChannelVodResponseCopyWith<$Res> {
+  factory $ChannelVodResponseCopyWith(
+          ChannelVodResponse value, $Res Function(ChannelVodResponse) then) =
+      _$ChannelVodResponseCopyWithImpl<$Res, ChannelVodResponse>;
   @useResult
-  $Res call({int? publishDateAt, int? readCount});
+  $Res call(
+      {int page, int size, int totalCount, int totalPages, List<Vod> data});
 }
 
 /// @nodoc
-class _$VodPageCopyWithImpl<$Res, $Val extends VodPage>
-    implements $VodPageCopyWith<$Res> {
-  _$VodPageCopyWithImpl(this._value, this._then);
+class _$ChannelVodResponseCopyWithImpl<$Res, $Val extends ChannelVodResponse>
+    implements $ChannelVodResponseCopyWith<$Res> {
+  _$ChannelVodResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? publishDateAt = freezed,
-    Object? readCount = freezed,
+    Object? page = null,
+    Object? size = null,
+    Object? totalCount = null,
+    Object? totalPages = null,
+    Object? data = null,
   }) {
     return _then(_value.copyWith(
-      publishDateAt: freezed == publishDateAt
-          ? _value.publishDateAt
-          : publishDateAt // ignore: cast_nullable_to_non_nullable
-              as int?,
-      readCount: freezed == readCount
-          ? _value.readCount
-          : readCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+      page: null == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$VodPageImplCopyWith<$Res> implements $VodPageCopyWith<$Res> {
-  factory _$$VodPageImplCopyWith(
-          _$VodPageImpl value, $Res Function(_$VodPageImpl) then) =
-      __$$VodPageImplCopyWithImpl<$Res>;
+abstract class _$$ChannelVodResponseImplCopyWith<$Res>
+    implements $ChannelVodResponseCopyWith<$Res> {
+  factory _$$ChannelVodResponseImplCopyWith(_$ChannelVodResponseImpl value,
+          $Res Function(_$ChannelVodResponseImpl) then) =
+      __$$ChannelVodResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? publishDateAt, int? readCount});
+  $Res call(
+      {int page, int size, int totalCount, int totalPages, List<Vod> data});
 }
 
 /// @nodoc
-class __$$VodPageImplCopyWithImpl<$Res>
-    extends _$VodPageCopyWithImpl<$Res, _$VodPageImpl>
-    implements _$$VodPageImplCopyWith<$Res> {
-  __$$VodPageImplCopyWithImpl(
-      _$VodPageImpl _value, $Res Function(_$VodPageImpl) _then)
+class __$$ChannelVodResponseImplCopyWithImpl<$Res>
+    extends _$ChannelVodResponseCopyWithImpl<$Res, _$ChannelVodResponseImpl>
+    implements _$$ChannelVodResponseImplCopyWith<$Res> {
+  __$$ChannelVodResponseImplCopyWithImpl(_$ChannelVodResponseImpl _value,
+      $Res Function(_$ChannelVodResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? publishDateAt = freezed,
-    Object? readCount = freezed,
+    Object? page = null,
+    Object? size = null,
+    Object? totalCount = null,
+    Object? totalPages = null,
+    Object? data = null,
   }) {
-    return _then(_$VodPageImpl(
-      publishDateAt: freezed == publishDateAt
-          ? _value.publishDateAt
-          : publishDateAt // ignore: cast_nullable_to_non_nullable
-              as int?,
-      readCount: freezed == readCount
-          ? _value.readCount
-          : readCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+    return _then(_$ChannelVodResponseImpl(
+      page: null == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$VodPageImpl implements _VodPage {
-  _$VodPageImpl({required this.publishDateAt, required this.readCount});
+class _$ChannelVodResponseImpl implements _ChannelVodResponse {
+  const _$ChannelVodResponseImpl(
+      {required this.page,
+      required this.size,
+      required this.totalCount,
+      required this.totalPages,
+      required final List<Vod> data})
+      : _data = data;
 
-  factory _$VodPageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$VodPageImplFromJson(json);
+  factory _$ChannelVodResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChannelVodResponseImplFromJson(json);
 
   @override
-  final int? publishDateAt;
+  final int page;
   @override
-  final int? readCount;
+  final int size;
+  @override
+  final int totalCount;
+  @override
+  final int totalPages;
+  final List<Vod> _data;
+  @override
+  List<Vod> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
 
   @override
   String toString() {
-    return 'VodPage(publishDateAt: $publishDateAt, readCount: $readCount)';
+    return 'ChannelVodResponse(page: $page, size: $size, totalCount: $totalCount, totalPages: $totalPages, data: $data)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$VodPageImpl &&
-            (identical(other.publishDateAt, publishDateAt) ||
-                other.publishDateAt == publishDateAt) &&
-            (identical(other.readCount, readCount) ||
-                other.readCount == readCount));
+            other is _$ChannelVodResponseImpl &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages) &&
+            const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, publishDateAt, readCount);
+  int get hashCode => Object.hash(runtimeType, page, size, totalCount,
+      totalPages, const DeepCollectionEquality().hash(_data));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$VodPageImplCopyWith<_$VodPageImpl> get copyWith =>
-      __$$VodPageImplCopyWithImpl<_$VodPageImpl>(this, _$identity);
+  _$$ChannelVodResponseImplCopyWith<_$ChannelVodResponseImpl> get copyWith =>
+      __$$ChannelVodResponseImplCopyWithImpl<_$ChannelVodResponseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VodPageImplToJson(
+    return _$$ChannelVodResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _VodPage implements VodPage {
-  factory _VodPage(
-      {required final int? publishDateAt,
-      required final int? readCount}) = _$VodPageImpl;
+abstract class _ChannelVodResponse implements ChannelVodResponse {
+  const factory _ChannelVodResponse(
+      {required final int page,
+      required final int size,
+      required final int totalCount,
+      required final int totalPages,
+      required final List<Vod> data}) = _$ChannelVodResponseImpl;
 
-  factory _VodPage.fromJson(Map<String, dynamic> json) = _$VodPageImpl.fromJson;
+  factory _ChannelVodResponse.fromJson(Map<String, dynamic> json) =
+      _$ChannelVodResponseImpl.fromJson;
 
   @override
-  int? get publishDateAt;
+  int get page;
   @override
-  int? get readCount;
+  int get size;
   @override
-  @JsonKey(ignore: true)
-  _$$VodPageImplCopyWith<_$VodPageImpl> get copyWith =>
+  int get totalCount;
+  @override
+  int get totalPages;
+  @override
+  List<Vod> get data;
+
+  /// Create a copy of ChannelVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ChannelVodResponseImplCopyWith<_$ChannelVodResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+FollowingVod _$FollowingVodFromJson(Map<String, dynamic> json) {
+  return _FollowingVod.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FollowingVod {
+  String get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'content')
+  Vod get vod => throw _privateConstructorUsedError;
+
+  /// Serializes this FollowingVod to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $FollowingVodCopyWith<FollowingVod> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-mixin _$VodResponse {
-  List<Vod>? get vods => throw _privateConstructorUsedError;
-  VodPage? get page => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $VodResponseCopyWith<VodResponse> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $VodResponseCopyWith<$Res> {
-  factory $VodResponseCopyWith(
-          VodResponse value, $Res Function(VodResponse) then) =
-      _$VodResponseCopyWithImpl<$Res, VodResponse>;
+abstract class $FollowingVodCopyWith<$Res> {
+  factory $FollowingVodCopyWith(
+          FollowingVod value, $Res Function(FollowingVod) then) =
+      _$FollowingVodCopyWithImpl<$Res, FollowingVod>;
   @useResult
-  $Res call({List<Vod>? vods, VodPage? page});
+  $Res call({String type, @JsonKey(name: 'content') Vod vod});
 
-  $VodPageCopyWith<$Res>? get page;
+  $VodCopyWith<$Res> get vod;
 }
 
 /// @nodoc
-class _$VodResponseCopyWithImpl<$Res, $Val extends VodResponse>
-    implements $VodResponseCopyWith<$Res> {
-  _$VodResponseCopyWithImpl(this._value, this._then);
+class _$FollowingVodCopyWithImpl<$Res, $Val extends FollowingVod>
+    implements $FollowingVodCopyWith<$Res> {
+  _$FollowingVodCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vods = freezed,
-    Object? page = freezed,
+    Object? type = null,
+    Object? vod = null,
   }) {
     return _then(_value.copyWith(
-      vods: freezed == vods
-          ? _value.vods
-          : vods // ignore: cast_nullable_to_non_nullable
-              as List<Vod>?,
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as VodPage?,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      vod: null == vod
+          ? _value.vod
+          : vod // ignore: cast_nullable_to_non_nullable
+              as Vod,
     ) as $Val);
   }
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $VodPageCopyWith<$Res>? get page {
-    if (_value.page == null) {
-      return null;
-    }
-
-    return $VodPageCopyWith<$Res>(_value.page!, (value) {
-      return _then(_value.copyWith(page: value) as $Val);
+  $VodCopyWith<$Res> get vod {
+    return $VodCopyWith<$Res>(_value.vod, (value) {
+      return _then(_value.copyWith(vod: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$VodResponseImplCopyWith<$Res>
-    implements $VodResponseCopyWith<$Res> {
-  factory _$$VodResponseImplCopyWith(
-          _$VodResponseImpl value, $Res Function(_$VodResponseImpl) then) =
-      __$$VodResponseImplCopyWithImpl<$Res>;
+abstract class _$$FollowingVodImplCopyWith<$Res>
+    implements $FollowingVodCopyWith<$Res> {
+  factory _$$FollowingVodImplCopyWith(
+          _$FollowingVodImpl value, $Res Function(_$FollowingVodImpl) then) =
+      __$$FollowingVodImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Vod>? vods, VodPage? page});
+  $Res call({String type, @JsonKey(name: 'content') Vod vod});
 
   @override
-  $VodPageCopyWith<$Res>? get page;
+  $VodCopyWith<$Res> get vod;
 }
 
 /// @nodoc
-class __$$VodResponseImplCopyWithImpl<$Res>
-    extends _$VodResponseCopyWithImpl<$Res, _$VodResponseImpl>
-    implements _$$VodResponseImplCopyWith<$Res> {
-  __$$VodResponseImplCopyWithImpl(
-      _$VodResponseImpl _value, $Res Function(_$VodResponseImpl) _then)
+class __$$FollowingVodImplCopyWithImpl<$Res>
+    extends _$FollowingVodCopyWithImpl<$Res, _$FollowingVodImpl>
+    implements _$$FollowingVodImplCopyWith<$Res> {
+  __$$FollowingVodImplCopyWithImpl(
+      _$FollowingVodImpl _value, $Res Function(_$FollowingVodImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vods = freezed,
-    Object? page = freezed,
+    Object? type = null,
+    Object? vod = null,
   }) {
-    return _then(_$VodResponseImpl(
-      vods: freezed == vods
-          ? _value._vods
-          : vods // ignore: cast_nullable_to_non_nullable
-              as List<Vod>?,
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as VodPage?,
+    return _then(_$FollowingVodImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      vod: null == vod
+          ? _value.vod
+          : vod // ignore: cast_nullable_to_non_nullable
+              as Vod,
     ));
   }
 }
 
 /// @nodoc
+@JsonSerializable()
+class _$FollowingVodImpl implements _FollowingVod {
+  const _$FollowingVodImpl(
+      {required this.type, @JsonKey(name: 'content') required this.vod});
 
-class _$VodResponseImpl implements _VodResponse {
-  _$VodResponseImpl({required final List<Vod>? vods, required this.page})
-      : _vods = vods;
-
-  final List<Vod>? _vods;
-  @override
-  List<Vod>? get vods {
-    final value = _vods;
-    if (value == null) return null;
-    if (_vods is EqualUnmodifiableListView) return _vods;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
+  factory _$FollowingVodImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FollowingVodImplFromJson(json);
 
   @override
-  final VodPage? page;
+  final String type;
+  @override
+  @JsonKey(name: 'content')
+  final Vod vod;
 
   @override
   String toString() {
-    return 'VodResponse(vods: $vods, page: $page)';
+    return 'FollowingVod(type: $type, vod: $vod)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$VodResponseImpl &&
-            const DeepCollectionEquality().equals(other._vods, _vods) &&
-            (identical(other.page, page) || other.page == page));
+            other is _$FollowingVodImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.vod, vod) || other.vod == vod));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, type, vod);
+
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FollowingVodImplCopyWith<_$FollowingVodImpl> get copyWith =>
+      __$$FollowingVodImplCopyWithImpl<_$FollowingVodImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FollowingVodImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FollowingVod implements FollowingVod {
+  const factory _FollowingVod(
+      {required final String type,
+      @JsonKey(name: 'content') required final Vod vod}) = _$FollowingVodImpl;
+
+  factory _FollowingVod.fromJson(Map<String, dynamic> json) =
+      _$FollowingVodImpl.fromJson;
+
+  @override
+  String get type;
+  @override
+  @JsonKey(name: 'content')
+  Vod get vod;
+
+  /// Create a copy of FollowingVod
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$FollowingVodImplCopyWith<_$FollowingVodImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+FollowingVodResponse _$FollowingVodResponseFromJson(Map<String, dynamic> json) {
+  return _FollowingVodResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FollowingVodResponse {
+  int get size => throw _privateConstructorUsedError;
+  @JsonKey(name: 'page', fromJson: _followingVodPageFromJson)
+  int get next => throw _privateConstructorUsedError;
+  List<FollowingVod> get data => throw _privateConstructorUsedError;
+
+  /// Serializes this FollowingVodResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $FollowingVodResponseCopyWith<FollowingVodResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FollowingVodResponseCopyWith<$Res> {
+  factory $FollowingVodResponseCopyWith(FollowingVodResponse value,
+          $Res Function(FollowingVodResponse) then) =
+      _$FollowingVodResponseCopyWithImpl<$Res, FollowingVodResponse>;
+  @useResult
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _followingVodPageFromJson) int next,
+      List<FollowingVod> data});
+}
+
+/// @nodoc
+class _$FollowingVodResponseCopyWithImpl<$Res,
+        $Val extends FollowingVodResponse>
+    implements $FollowingVodResponseCopyWith<$Res> {
+  _$FollowingVodResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? size = null,
+    Object? next = null,
+    Object? data = null,
+  }) {
+    return _then(_value.copyWith(
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<FollowingVod>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FollowingVodResponseImplCopyWith<$Res>
+    implements $FollowingVodResponseCopyWith<$Res> {
+  factory _$$FollowingVodResponseImplCopyWith(_$FollowingVodResponseImpl value,
+          $Res Function(_$FollowingVodResponseImpl) then) =
+      __$$FollowingVodResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _followingVodPageFromJson) int next,
+      List<FollowingVod> data});
+}
+
+/// @nodoc
+class __$$FollowingVodResponseImplCopyWithImpl<$Res>
+    extends _$FollowingVodResponseCopyWithImpl<$Res, _$FollowingVodResponseImpl>
+    implements _$$FollowingVodResponseImplCopyWith<$Res> {
+  __$$FollowingVodResponseImplCopyWithImpl(_$FollowingVodResponseImpl _value,
+      $Res Function(_$FollowingVodResponseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? size = null,
+    Object? next = null,
+    Object? data = null,
+  }) {
+    return _then(_$FollowingVodResponseImpl(
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: null == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<FollowingVod>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FollowingVodResponseImpl implements _FollowingVodResponse {
+  const _$FollowingVodResponseImpl(
+      {required this.size,
+      @JsonKey(name: 'page', fromJson: _followingVodPageFromJson)
+      required this.next,
+      required final List<FollowingVod> data})
+      : _data = data;
+
+  factory _$FollowingVodResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FollowingVodResponseImplFromJson(json);
+
+  @override
+  final int size;
+  @override
+  @JsonKey(name: 'page', fromJson: _followingVodPageFromJson)
+  final int next;
+  final List<FollowingVod> _data;
+  @override
+  List<FollowingVod> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_vods), page);
+  String toString() {
+    return 'FollowingVodResponse(size: $size, next: $next, data: $data)';
+  }
 
-  @JsonKey(ignore: true)
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FollowingVodResponseImpl &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.next, next) || other.next == next) &&
+            const DeepCollectionEquality().equals(other._data, _data));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, size, next, const DeepCollectionEquality().hash(_data));
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$VodResponseImplCopyWith<_$VodResponseImpl> get copyWith =>
-      __$$VodResponseImplCopyWithImpl<_$VodResponseImpl>(this, _$identity);
+  _$$FollowingVodResponseImplCopyWith<_$FollowingVodResponseImpl>
+      get copyWith =>
+          __$$FollowingVodResponseImplCopyWithImpl<_$FollowingVodResponseImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FollowingVodResponseImplToJson(
+      this,
+    );
+  }
 }
 
-abstract class _VodResponse implements VodResponse {
-  factory _VodResponse(
-      {required final List<Vod>? vods,
-      required final VodPage? page}) = _$VodResponseImpl;
+abstract class _FollowingVodResponse implements FollowingVodResponse {
+  const factory _FollowingVodResponse(
+      {required final int size,
+      @JsonKey(name: 'page', fromJson: _followingVodPageFromJson)
+      required final int next,
+      required final List<FollowingVod> data}) = _$FollowingVodResponseImpl;
+
+  factory _FollowingVodResponse.fromJson(Map<String, dynamic> json) =
+      _$FollowingVodResponseImpl.fromJson;
 
   @override
-  List<Vod>? get vods;
+  int get size;
   @override
-  VodPage? get page;
+  @JsonKey(name: 'page', fromJson: _followingVodPageFromJson)
+  int get next;
   @override
-  @JsonKey(ignore: true)
-  _$$VodResponseImplCopyWith<_$VodResponseImpl> get copyWith =>
+  List<FollowingVod> get data;
+
+  /// Create a copy of FollowingVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$FollowingVodResponseImplCopyWith<_$FollowingVodResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+PopularVodResponse _$PopularVodResponseFromJson(Map<String, dynamic> json) {
+  return _PopularVodResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PopularVodResponse {
+  List<Vod> get videos => throw _privateConstructorUsedError;
+
+  /// Serializes this PopularVodResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PopularVodResponseCopyWith<PopularVodResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PopularVodResponseCopyWith<$Res> {
+  factory $PopularVodResponseCopyWith(
+          PopularVodResponse value, $Res Function(PopularVodResponse) then) =
+      _$PopularVodResponseCopyWithImpl<$Res, PopularVodResponse>;
+  @useResult
+  $Res call({List<Vod> videos});
+}
+
+/// @nodoc
+class _$PopularVodResponseCopyWithImpl<$Res, $Val extends PopularVodResponse>
+    implements $PopularVodResponseCopyWith<$Res> {
+  _$PopularVodResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videos = null,
+  }) {
+    return _then(_value.copyWith(
+      videos: null == videos
+          ? _value.videos
+          : videos // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PopularVodResponseImplCopyWith<$Res>
+    implements $PopularVodResponseCopyWith<$Res> {
+  factory _$$PopularVodResponseImplCopyWith(_$PopularVodResponseImpl value,
+          $Res Function(_$PopularVodResponseImpl) then) =
+      __$$PopularVodResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<Vod> videos});
+}
+
+/// @nodoc
+class __$$PopularVodResponseImplCopyWithImpl<$Res>
+    extends _$PopularVodResponseCopyWithImpl<$Res, _$PopularVodResponseImpl>
+    implements _$$PopularVodResponseImplCopyWith<$Res> {
+  __$$PopularVodResponseImplCopyWithImpl(_$PopularVodResponseImpl _value,
+      $Res Function(_$PopularVodResponseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? videos = null,
+  }) {
+    return _then(_$PopularVodResponseImpl(
+      videos: null == videos
+          ? _value._videos
+          : videos // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PopularVodResponseImpl implements _PopularVodResponse {
+  const _$PopularVodResponseImpl({required final List<Vod> videos})
+      : _videos = videos;
+
+  factory _$PopularVodResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PopularVodResponseImplFromJson(json);
+
+  final List<Vod> _videos;
+  @override
+  List<Vod> get videos {
+    if (_videos is EqualUnmodifiableListView) return _videos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_videos);
+  }
+
+  @override
+  String toString() {
+    return 'PopularVodResponse(videos: $videos)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PopularVodResponseImpl &&
+            const DeepCollectionEquality().equals(other._videos, _videos));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_videos));
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PopularVodResponseImplCopyWith<_$PopularVodResponseImpl> get copyWith =>
+      __$$PopularVodResponseImplCopyWithImpl<_$PopularVodResponseImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PopularVodResponseImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PopularVodResponse implements PopularVodResponse {
+  const factory _PopularVodResponse({required final List<Vod> videos}) =
+      _$PopularVodResponseImpl;
+
+  factory _PopularVodResponse.fromJson(Map<String, dynamic> json) =
+      _$PopularVodResponseImpl.fromJson;
+
+  @override
+  List<Vod> get videos;
+
+  /// Create a copy of PopularVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PopularVodResponseImplCopyWith<_$PopularVodResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CategoryVodResponse _$CategoryVodResponseFromJson(Map<String, dynamic> json) {
+  return _CategoryVodResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CategoryVodResponse {
+  int get size => throw _privateConstructorUsedError;
+  @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+  CategoryVodPage? get next => throw _privateConstructorUsedError;
+  List<Vod> get data => throw _privateConstructorUsedError;
+
+  /// Serializes this CategoryVodResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CategoryVodResponseCopyWith<CategoryVodResponse> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CategoryVodResponseCopyWith<$Res> {
+  factory $CategoryVodResponseCopyWith(
+          CategoryVodResponse value, $Res Function(CategoryVodResponse) then) =
+      _$CategoryVodResponseCopyWithImpl<$Res, CategoryVodResponse>;
+  @useResult
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+      CategoryVodPage? next,
+      List<Vod> data});
+
+  $CategoryVodPageCopyWith<$Res>? get next;
+}
+
+/// @nodoc
+class _$CategoryVodResponseCopyWithImpl<$Res, $Val extends CategoryVodResponse>
+    implements $CategoryVodResponseCopyWith<$Res> {
+  _$CategoryVodResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? size = null,
+    Object? next = freezed,
+    Object? data = null,
+  }) {
+    return _then(_value.copyWith(
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: freezed == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as CategoryVodPage?,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
+    ) as $Val);
+  }
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CategoryVodPageCopyWith<$Res>? get next {
+    if (_value.next == null) {
+      return null;
+    }
+
+    return $CategoryVodPageCopyWith<$Res>(_value.next!, (value) {
+      return _then(_value.copyWith(next: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$CategoryVodResponseImplCopyWith<$Res>
+    implements $CategoryVodResponseCopyWith<$Res> {
+  factory _$$CategoryVodResponseImplCopyWith(_$CategoryVodResponseImpl value,
+          $Res Function(_$CategoryVodResponseImpl) then) =
+      __$$CategoryVodResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int size,
+      @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+      CategoryVodPage? next,
+      List<Vod> data});
+
+  @override
+  $CategoryVodPageCopyWith<$Res>? get next;
+}
+
+/// @nodoc
+class __$$CategoryVodResponseImplCopyWithImpl<$Res>
+    extends _$CategoryVodResponseCopyWithImpl<$Res, _$CategoryVodResponseImpl>
+    implements _$$CategoryVodResponseImplCopyWith<$Res> {
+  __$$CategoryVodResponseImplCopyWithImpl(_$CategoryVodResponseImpl _value,
+      $Res Function(_$CategoryVodResponseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? size = null,
+    Object? next = freezed,
+    Object? data = null,
+  }) {
+    return _then(_$CategoryVodResponseImpl(
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      next: freezed == next
+          ? _value.next
+          : next // ignore: cast_nullable_to_non_nullable
+              as CategoryVodPage?,
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Vod>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CategoryVodResponseImpl implements _CategoryVodResponse {
+  const _$CategoryVodResponseImpl(
+      {required this.size,
+      @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+      required this.next,
+      required final List<Vod> data})
+      : _data = data;
+
+  factory _$CategoryVodResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CategoryVodResponseImplFromJson(json);
+
+  @override
+  final int size;
+  @override
+  @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+  final CategoryVodPage? next;
+  final List<Vod> _data;
+  @override
+  List<Vod> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  @override
+  String toString() {
+    return 'CategoryVodResponse(size: $size, next: $next, data: $data)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CategoryVodResponseImpl &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.next, next) || other.next == next) &&
+            const DeepCollectionEquality().equals(other._data, _data));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, size, next, const DeepCollectionEquality().hash(_data));
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CategoryVodResponseImplCopyWith<_$CategoryVodResponseImpl> get copyWith =>
+      __$$CategoryVodResponseImplCopyWithImpl<_$CategoryVodResponseImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CategoryVodResponseImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CategoryVodResponse implements CategoryVodResponse {
+  const factory _CategoryVodResponse(
+      {required final int size,
+      @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+      required final CategoryVodPage? next,
+      required final List<Vod> data}) = _$CategoryVodResponseImpl;
+
+  factory _CategoryVodResponse.fromJson(Map<String, dynamic> json) =
+      _$CategoryVodResponseImpl.fromJson;
+
+  @override
+  int get size;
+  @override
+  @JsonKey(name: 'page', fromJson: _categoryVodPageFromJson)
+  CategoryVodPage? get next;
+  @override
+  List<Vod> get data;
+
+  /// Create a copy of CategoryVodResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CategoryVodResponseImplCopyWith<_$CategoryVodResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CategoryVodPage _$CategoryVodPageFromJson(Map<String, dynamic> json) {
+  return _CategoryVodPage.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CategoryVodPage {
+  int get publishDateAt => throw _privateConstructorUsedError;
+  int get readCount => throw _privateConstructorUsedError;
+
+  /// Serializes this CategoryVodPage to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CategoryVodPageCopyWith<CategoryVodPage> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CategoryVodPageCopyWith<$Res> {
+  factory $CategoryVodPageCopyWith(
+          CategoryVodPage value, $Res Function(CategoryVodPage) then) =
+      _$CategoryVodPageCopyWithImpl<$Res, CategoryVodPage>;
+  @useResult
+  $Res call({int publishDateAt, int readCount});
+}
+
+/// @nodoc
+class _$CategoryVodPageCopyWithImpl<$Res, $Val extends CategoryVodPage>
+    implements $CategoryVodPageCopyWith<$Res> {
+  _$CategoryVodPageCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? publishDateAt = null,
+    Object? readCount = null,
+  }) {
+    return _then(_value.copyWith(
+      publishDateAt: null == publishDateAt
+          ? _value.publishDateAt
+          : publishDateAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$CategoryVodPageImplCopyWith<$Res>
+    implements $CategoryVodPageCopyWith<$Res> {
+  factory _$$CategoryVodPageImplCopyWith(_$CategoryVodPageImpl value,
+          $Res Function(_$CategoryVodPageImpl) then) =
+      __$$CategoryVodPageImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int publishDateAt, int readCount});
+}
+
+/// @nodoc
+class __$$CategoryVodPageImplCopyWithImpl<$Res>
+    extends _$CategoryVodPageCopyWithImpl<$Res, _$CategoryVodPageImpl>
+    implements _$$CategoryVodPageImplCopyWith<$Res> {
+  __$$CategoryVodPageImplCopyWithImpl(
+      _$CategoryVodPageImpl _value, $Res Function(_$CategoryVodPageImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? publishDateAt = null,
+    Object? readCount = null,
+  }) {
+    return _then(_$CategoryVodPageImpl(
+      publishDateAt: null == publishDateAt
+          ? _value.publishDateAt
+          : publishDateAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CategoryVodPageImpl implements _CategoryVodPage {
+  const _$CategoryVodPageImpl(
+      {required this.publishDateAt, required this.readCount});
+
+  factory _$CategoryVodPageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CategoryVodPageImplFromJson(json);
+
+  @override
+  final int publishDateAt;
+  @override
+  final int readCount;
+
+  @override
+  String toString() {
+    return 'CategoryVodPage(publishDateAt: $publishDateAt, readCount: $readCount)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CategoryVodPageImpl &&
+            (identical(other.publishDateAt, publishDateAt) ||
+                other.publishDateAt == publishDateAt) &&
+            (identical(other.readCount, readCount) ||
+                other.readCount == readCount));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, publishDateAt, readCount);
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CategoryVodPageImplCopyWith<_$CategoryVodPageImpl> get copyWith =>
+      __$$CategoryVodPageImplCopyWithImpl<_$CategoryVodPageImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CategoryVodPageImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CategoryVodPage implements CategoryVodPage {
+  const factory _CategoryVodPage(
+      {required final int publishDateAt,
+      required final int readCount}) = _$CategoryVodPageImpl;
+
+  factory _CategoryVodPage.fromJson(Map<String, dynamic> json) =
+      _$CategoryVodPageImpl.fromJson;
+
+  @override
+  int get publishDateAt;
+  @override
+  int get readCount;
+
+  /// Create a copy of CategoryVodPage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CategoryVodPageImplCopyWith<_$CategoryVodPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

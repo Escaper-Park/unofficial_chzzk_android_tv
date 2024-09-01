@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.escaperbgp.unofficial_chzzk_android_tv"
-    compileSdkVersion 34
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

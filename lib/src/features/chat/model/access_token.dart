@@ -9,7 +9,7 @@ class AccessToken with _$AccessToken {
     required String accessToken,
     required bool realNameAuth,
     required String extraToken,
-    required TemporaryRestrict temporaryRestrict,
+    // required TemporaryRestrict temporaryRestrict,
   }) = _AccessToken;
 
   factory AccessToken.fromJson(Map<String, dynamic> json) =>
@@ -22,7 +22,7 @@ class TemporaryRestrict with _$TemporaryRestrict {
     required bool temporaryRestrict,
     required int times,
     required int? duration,
-    required int? createdTime,
+    required String? createdTime,
   }) = _TemporaryRestrict;
 
   factory TemporaryRestrict.fromJson(Map<String, dynamic> json) =>

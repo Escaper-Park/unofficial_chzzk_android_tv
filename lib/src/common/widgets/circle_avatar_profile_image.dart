@@ -1,69 +1,62 @@
 import 'package:flutter/material.dart';
 
 import '../constants/styles.dart';
-import './optimized_image.dart';
+import 'optimized_image.dart';
 
 class CircleAvatarProfileImage extends StatelessWidget {
+  /// A circle avatar profile image.
+  ///
+  /// If the image's extension is 'gif', shows the empty CircleAvatar
+  /// to prevent memory leaking problem.
   const CircleAvatarProfileImage({
     super.key,
-    this.radius = 30.0,
+    this.radius = 25.0,
     this.useBorder = false,
-    this.fit = BoxFit.cover,
     required this.profileImageUrl,
   });
 
+  /// Half the width or height of the container(or diameter).
   final double radius;
+
+  /// If the channel is broadcasting, set this value to true.
+  ///
+  /// Use [channel.openLive], [following.streamer.openLive].
   final bool useBorder;
-  final BoxFit fit;
+
   final String? profileImageUrl;
 
   @override
   Widget build(BuildContext context) {
-    return (profileImageUrl == null ||
-            profileImageUrl!.isEmpty ||
-            profileImageUrl!.contains('.gif') ||
-            profileImageUrl!.contains('.GIF'))
-        ? _circleShapedContainerWithBorder(
-            CircleAvatar(
-              radius: radius,
-              backgroundColor: AppColors.blackColor,
-            ),
-            null,
-          )
-        : OptimizedNetworkImage(
-            useCacheKey: true,
-            useDynamicCacheKey: false,
-            imageWidth: radius,
-            imageHeight: radius,
-            imageUrl: profileImageUrl!,
-            imageBuilder: (context, imageProvider) {
-              return _circleShapedContainerWithBorder(
-                null,
-                DecorationImage(
-                  image: imageProvider,
-                  fit: fit,
-                ),
-              );
-            },
-          );
-  }
+    // Check the profileImageUrl is available or the extension of the image is 'gif'.
+    final bool isInvalidProfileImage = (profileImageUrl == null ||
+        profileImageUrl!.isEmpty ||
+        profileImageUrl!.toLowerCase().contains('.gif'));
 
-  Widget _circleShapedContainerWithBorder(
-    Widget? child,
-    DecorationImage? image,
-  ) {
     return Container(
-      width: radius,
-      height: radius,
+      width: radius * 2,
+      height: radius * 2,
       decoration: BoxDecoration(
+        shape: BoxShape.circle,
         border: Border.all(
           color: useBorder ? AppColors.chzzkColor : Colors.transparent,
           width: 2.0,
         ),
-        shape: BoxShape.circle,
-        image: image,
       ),
-      child: child,
+      child: isInvalidProfileImage
+          ? CircleAvatar(
+              radius: radius,
+              backgroundColor: AppColors.blackColor,
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(radius),
+              child: OptimizedNetworkImage(
+                imageUrl: profileImageUrl!,
+                useCacheKey: true,
+                useDynamicCacheKey: false,
+                imageWidth: radius * 2,
+                imageHeight: radius * 2,
+              ),
+            ),
     );
   }
 }

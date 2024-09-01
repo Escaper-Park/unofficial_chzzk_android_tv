@@ -8,28 +8,9 @@ SharedPreferences sharedPrefs(SharedPrefsRef ref) {
   return throw UnimplementedError();
 }
 
-class SharedPrefencesKey {
+class SharedPrefsDBKey {
   // Chat
-  static const String chatFontSize = 'chatFontSize';
-  static const String chatPosition = 'chatPosition';
-  static const String chatContainerHeight = 'chatContainerHeight';
-  static const String chatContainerWidth = 'chatContainerWidth';
-  static const String chatContainerTransparency = 'chatContainerTransparency';
-  static const String chatContainerVerticalInterval =
-      'chatContainerVerticalInterval';
-
-  // ScreenMode
-  static const String screenMode = 'screenMode';
-
-  // Settings - Chat
-  static const String chatDelaySec = 'chatDelaySec';
-
-  // Settings - Popular
-  static const String popularChannelsLength = 'popularChannelsLength';
-
-  // ID
-  static const String naverId = 'naverId';
-
-  // Category Favorites
-  static const String category = 'category';
+  static const String chatSettings = 'chat';
+  // Stream
+  static const String streamSettings = 'stream';
 }

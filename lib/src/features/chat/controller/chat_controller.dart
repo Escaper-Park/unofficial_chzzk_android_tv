@@ -1,129 +1,161 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../common/constants/api.dart';
-import '../../auth/controller/auth_controller.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../../user/controller/user_controller.dart';
-import '../model/chat.dart';
+
 import '../repository/chat_repository.dart';
-import './chat_settings_controller.dart';
+
+import '../model/chat.dart';
+import '../model/recent_chat.dart';
 
 part 'chat_controller.g.dart';
 
+/// Chat stream controller
 @riverpod
 class ChatController extends _$ChatController {
-  late WebSocketChannel _channel;
+  // Options? _options;
+  String? _uid;
+  String? _sid;
+
   late ChatRepository _chatRepository;
-  Options? _options;
+  late WebSocketChannel _wsChannel;
+  late List<String> _privateUserBlocks;
 
   @override
-  Stream<List<Chat>> build({
+  Stream<List<dynamic>> build({
     required String channelId,
     required String chatChannelId,
   }) async* {
-    final auth = await ref.watch(authControllerProvider.future);
+    // websocket init
+    await init();
+
+    // connect to chat server
+    await _connect();
+
+    yield* handleMsg();
+
+    // disconnect chat ready
+    _onDispose();
+
+    return;
+  }
+
+  Future<void> init() async {
     final user = await ref.watch(userControllerProvider.future);
-    _options = auth?.getOptions();
-    
+    final dio = ref.watch(dioClientProvider);
+
+    _uid = user?.userIdHash;
+
     Random random = Random();
     int serverNo = random.nextInt(5) + 1;
 
-    final int chatDelaySec =
-        ref.read(chatSettingsControllerProvider.notifier).getChatDelaySec();
+    _wsChannel =
+        WebSocketChannel.connect(Uri.parse(ApiUrl.chatServer(serverNo)));
 
-    _channel = WebSocketChannel.connect(
-      Uri.parse(
-        APIUrl.chatServer(serverNo),
-      ),
-    );
+    _privateUserBlocks =
+        await ref.watch(privateUserBlocksControllerProvider.future);
 
-    _chatRepository = ref.read(
-      chatRepositoryProvider(
-        channel: _channel,
-        chatChannelId: chatChannelId,
-      ),
-    );
+    _chatRepository = ref.read(chatRepositoryProvider(
+      wsChannel: _wsChannel,
+      chatChannelId: chatChannelId,
+      dio: dio,
+    ));
+  }
 
-    // Connect
-    await _chatRepository.connect(
-      options: _options,
-      uid: user?.userIdHash,
-    );
+  Future<void> _connect() async {
+    _chatRepository.connect(uid: _uid);
+  }
 
-    // Disconnect chat ready
+  void _requestRecentChat() {
+    _chatRepository.requestRecentChat(sid: _sid);
+  }
+
+  void _onDispose() {
     ref.onDispose(_chatRepository.disconnect);
+  }
 
-    final transformer = StreamTransformer<dynamic, dynamic>.fromHandlers(
-      handleData: (data, sink) {
-        if (data != null) {
-          Future.delayed(Duration(seconds: chatDelaySec), () {
-            sink.add(data);
-          });
-        }
-      },
-    );
+  Future<void> disconnect() async {
+    await _chatRepository.disconnect();
+  }
 
-    final Stream<dynamic> delayedStream = chatDelaySec == 0
-        ? _channel.stream
-        : _channel.stream.transform(transformer);
+  Stream<List<dynamic>> handleMsg() async* {
+    List<dynamic> allMessages = [];
 
-    List<Chat> allMessages = [];
+    await for (final msg in _wsChannel.stream) {
+      Map<String, dynamic> response = json.decode(msg);
 
-    await for (final message in delayedStream) {
-      Map<String, dynamic> response = json.decode(message);
+      switch (response['cmd']) {
+        // ping
+        case 0:
+          _chatRepository.pong();
+          break;
+        // connected
+        case 10100:
+          _sid = response['bdy']['sid'];
+          // request recent chat.
+          _requestRecentChat();
+          break;
 
-      // Get chat messages
-      if (response['cmd'] == ChatCmd.chat.value) {
-        dynamic body = response['bdy'];
+        // recent chat
+        case 15101:
+          try {
+            // Only chat (not donation, system msg, etc...)
+            final Map<String, dynamic> filteredResponse = {
+              'svcid': response['svcid'],
+              'cmd': response['cmd'],
+              'retCode': response['retCode'],
+              'tid': response['tid'],
+              'cid': response['cid'],
+              // Filter
+              'bdy': {
+                'messageList':
+                    (response['bdy']['messageList'] as List<dynamic>).where(
+                  (element) {
+                    return element['messageTypeCode'] == 1; // Chat
+                  },
+                ).toList(),
+                'userCount': response['bdy']['userCount'],
+              },
+            };
 
-        List<Chat> msg = (body as List)
-            .map((res) {
-              String? profile = res['profile'];
-              String? nickname;
-              Map<String, dynamic>? emojis;
+            final RecentChat recentChat = RecentChat.fromJson(filteredResponse);
 
-              if (profile != null) {
-                try {
-                  nickname = (jsonDecode(profile)['nickname']);
-                  emojis = jsonDecode(res['extras'])['emojis'];
-                } catch (_) {
-                  nickname == 'ERROR';
-                  emojis = null;
-                }
-              } else {
-                nickname = 'ERROR';
-              }
+            final List<RecentChatMsg> msgList = recentChat.bdy.messageList
+                .where((msg) => !_privateUserBlocks
+                    .contains(msg.userId)) // Filter blocked user
+                .toList()
+                .reversed
+                .toList();
 
-              Map<String, dynamic> json = {
-                'nickname': nickname ?? 'ERROR',
-                'msg': res['msg'] ?? 'ERROR',
-                'emojis': emojis,
-              };
+            allMessages = [...msgList];
+          } catch (_) {}
 
-              return Chat.fromJson(json);
-            })
-            .toList()
-            .reversed
-            .toList();
+          yield allMessages;
 
-        allMessages = [...msg, ...allMessages];
+        // chat
+        case 93101:
+          try {
+            final Chat chat = Chat.fromJson(response);
+            final List<ChatBdy> bdy = chat.bdy
+                .where((chatBdy) => !_privateUserBlocks
+                    .contains(chatBdy.uid)) // Filter blocked user
+                .toList()
+                .reversed
+                .toList();
+            allMessages = [...bdy, ...allMessages];
+          } catch (_) {}
 
-        yield allMessages;
+          yield allMessages;
+
+        // donation
+        case 93102:
+          break;
       }
-      // Donation
-      else if (response['cmd'] == ChatCmd.donation.value) {
-      }
-      // Ping - Pong
-      else if (response['cmd'] == ChatCmd.ping.value) {
-        _chatRepository.pong();
-      }
-
-      // Future works
     }
   }
 }

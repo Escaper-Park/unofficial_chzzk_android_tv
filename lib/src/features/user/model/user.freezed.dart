@@ -20,13 +20,20 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$User {
+  /// UID for chat service
   String? get userIdHash => throw _privateConstructorUsedError;
-  bool get hasProfile => throw _privateConstructorUsedError;
-  String get nickname => throw _privateConstructorUsedError;
+  String? get nickname => throw _privateConstructorUsedError;
   String? get profileImageUrl => throw _privateConstructorUsedError;
+  bool? get hasProfile =>
+      throw _privateConstructorUsedError; // required bool verifiedMark,
+  bool? get loggedIn => throw _privateConstructorUsedError;
 
+  /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -37,9 +44,10 @@ abstract class $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {String? userIdHash,
-      bool hasProfile,
-      String nickname,
-      String? profileImageUrl});
+      String? nickname,
+      String? profileImageUrl,
+      bool? hasProfile,
+      bool? loggedIn});
 }
 
 /// @nodoc
@@ -52,31 +60,38 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? userIdHash = freezed,
-    Object? hasProfile = null,
-    Object? nickname = null,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
+    Object? hasProfile = freezed,
+    Object? loggedIn = freezed,
   }) {
     return _then(_value.copyWith(
       userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
               as String?,
-      hasProfile: null == hasProfile
-          ? _value.hasProfile
-          : hasProfile // ignore: cast_nullable_to_non_nullable
-              as bool,
-      nickname: null == nickname
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      hasProfile: freezed == hasProfile
+          ? _value.hasProfile
+          : hasProfile // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      loggedIn: freezed == loggedIn
+          ? _value.loggedIn
+          : loggedIn // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -90,9 +105,10 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {String? userIdHash,
-      bool hasProfile,
-      String nickname,
-      String? profileImageUrl});
+      String? nickname,
+      String? profileImageUrl,
+      bool? hasProfile,
+      bool? loggedIn});
 }
 
 /// @nodoc
@@ -102,31 +118,38 @@ class __$$UserImplCopyWithImpl<$Res>
   __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? userIdHash = freezed,
-    Object? hasProfile = null,
-    Object? nickname = null,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
+    Object? hasProfile = freezed,
+    Object? loggedIn = freezed,
   }) {
     return _then(_$UserImpl(
       userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
               as String?,
-      hasProfile: null == hasProfile
-          ? _value.hasProfile
-          : hasProfile // ignore: cast_nullable_to_non_nullable
-              as bool,
-      nickname: null == nickname
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      hasProfile: freezed == hasProfile
+          ? _value.hasProfile
+          : hasProfile // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      loggedIn: freezed == loggedIn
+          ? _value.loggedIn
+          : loggedIn // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -136,25 +159,30 @@ class __$$UserImplCopyWithImpl<$Res>
 class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.userIdHash,
-      required this.hasProfile,
       required this.nickname,
-      required this.profileImageUrl});
+      required this.profileImageUrl,
+      required this.hasProfile,
+      required this.loggedIn});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
 
+  /// UID for chat service
   @override
   final String? userIdHash;
   @override
-  final bool hasProfile;
-  @override
-  final String nickname;
+  final String? nickname;
   @override
   final String? profileImageUrl;
+  @override
+  final bool? hasProfile;
+// required bool verifiedMark,
+  @override
+  final bool? loggedIn;
 
   @override
   String toString() {
-    return 'User(userIdHash: $userIdHash, hasProfile: $hasProfile, nickname: $nickname, profileImageUrl: $profileImageUrl)';
+    return 'User(userIdHash: $userIdHash, nickname: $nickname, profileImageUrl: $profileImageUrl, hasProfile: $hasProfile, loggedIn: $loggedIn)';
   }
 
   @override
@@ -164,20 +192,24 @@ class _$UserImpl implements _User {
             other is _$UserImpl &&
             (identical(other.userIdHash, userIdHash) ||
                 other.userIdHash == userIdHash) &&
-            (identical(other.hasProfile, hasProfile) ||
-                other.hasProfile == hasProfile) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
-                other.profileImageUrl == profileImageUrl));
+                other.profileImageUrl == profileImageUrl) &&
+            (identical(other.hasProfile, hasProfile) ||
+                other.hasProfile == hasProfile) &&
+            (identical(other.loggedIn, loggedIn) ||
+                other.loggedIn == loggedIn));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, userIdHash, hasProfile, nickname, profileImageUrl);
+      runtimeType, userIdHash, nickname, profileImageUrl, hasProfile, loggedIn);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
@@ -194,22 +226,29 @@ class _$UserImpl implements _User {
 abstract class _User implements User {
   const factory _User(
       {required final String? userIdHash,
-      required final bool hasProfile,
-      required final String nickname,
-      required final String? profileImageUrl}) = _$UserImpl;
+      required final String? nickname,
+      required final String? profileImageUrl,
+      required final bool? hasProfile,
+      required final bool? loggedIn}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
+  /// UID for chat service
   @override
   String? get userIdHash;
   @override
-  bool get hasProfile;
-  @override
-  String get nickname;
+  String? get nickname;
   @override
   String? get profileImageUrl;
   @override
-  @JsonKey(ignore: true)
+  bool? get hasProfile; // required bool verifiedMark,
+  @override
+  bool? get loggedIn;
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

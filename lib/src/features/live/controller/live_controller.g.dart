@@ -6,90 +6,223 @@ part of 'live_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$followingLiveControllerHash() =>
-    r'fe59e94875118a132019d5023de64127e358eb15';
+String _$liveControllerHash() => r'813e5132108acf32ede5da3a3596f461be6cf8c1';
 
-/// See also [FollowingLiveController].
-@ProviderFor(FollowingLiveController)
-final followingLiveControllerProvider = AutoDisposeAsyncNotifierProvider<
-    FollowingLiveController, List<LiveDetail>?>.internal(
-  FollowingLiveController.new,
-  name: r'followingLiveControllerProvider',
+/// See also [LiveController].
+@ProviderFor(LiveController)
+final liveControllerProvider =
+    AutoDisposeNotifierProvider<LiveController, void>.internal(
+  LiveController.new,
+  name: r'liveControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$followingLiveControllerHash,
+      : _$liveControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$FollowingLiveController = AutoDisposeAsyncNotifier<List<LiveDetail>?>;
-String _$popularLivesControllerHash() =>
-    r'b9f4284de016e151182cd7d1d40d9d97fea24388';
-
-/// See also [PopularLivesController].
-@ProviderFor(PopularLivesController)
-final popularLivesControllerProvider = AutoDisposeAsyncNotifierProvider<
-    PopularLivesController, List<LiveDetail>?>.internal(
-  PopularLivesController.new,
-  name: r'popularLivesControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$popularLivesControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$PopularLivesController = AutoDisposeAsyncNotifier<List<LiveDetail>?>;
+typedef _$LiveController = AutoDisposeNotifier<void>;
 String _$allLivesControllerHash() =>
-    r'9ab8587332e53abce440fa094444bc0bd18fe6dc';
+    r'aea3b1533125ef05cb3dd17981261e4f11f11db7';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+abstract class _$AllLivesController
+    extends BuildlessAutoDisposeAsyncNotifier<List<LiveInfo>?> {
+  late final LiveSortType sortType;
+
+  FutureOr<List<LiveInfo>?> build({
+    required LiveSortType sortType,
+  });
+}
 
 /// See also [AllLivesController].
 @ProviderFor(AllLivesController)
-final allLivesControllerProvider = AutoDisposeAsyncNotifierProvider<
-    AllLivesController, List<LiveDetail>?>.internal(
-  AllLivesController.new,
-  name: r'allLivesControllerProvider',
+const allLivesControllerProvider = AllLivesControllerFamily();
+
+/// See also [AllLivesController].
+class AllLivesControllerFamily extends Family<AsyncValue<List<LiveInfo>?>> {
+  /// See also [AllLivesController].
+  const AllLivesControllerFamily();
+
+  /// See also [AllLivesController].
+  AllLivesControllerProvider call({
+    required LiveSortType sortType,
+  }) {
+    return AllLivesControllerProvider(
+      sortType: sortType,
+    );
+  }
+
+  @override
+  AllLivesControllerProvider getProviderOverride(
+    covariant AllLivesControllerProvider provider,
+  ) {
+    return call(
+      sortType: provider.sortType,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'allLivesControllerProvider';
+}
+
+/// See also [AllLivesController].
+class AllLivesControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    AllLivesController, List<LiveInfo>?> {
+  /// See also [AllLivesController].
+  AllLivesControllerProvider({
+    required LiveSortType sortType,
+  }) : this._internal(
+          () => AllLivesController()..sortType = sortType,
+          from: allLivesControllerProvider,
+          name: r'allLivesControllerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$allLivesControllerHash,
+          dependencies: AllLivesControllerFamily._dependencies,
+          allTransitiveDependencies:
+              AllLivesControllerFamily._allTransitiveDependencies,
+          sortType: sortType,
+        );
+
+  AllLivesControllerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.sortType,
+  }) : super.internal();
+
+  final LiveSortType sortType;
+
+  @override
+  FutureOr<List<LiveInfo>?> runNotifierBuild(
+    covariant AllLivesController notifier,
+  ) {
+    return notifier.build(
+      sortType: sortType,
+    );
+  }
+
+  @override
+  Override overrideWith(AllLivesController Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: AllLivesControllerProvider._internal(
+        () => create()..sortType = sortType,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        sortType: sortType,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<AllLivesController, List<LiveInfo>?>
+      createElement() {
+    return _AllLivesControllerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AllLivesControllerProvider && other.sortType == sortType;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, sortType.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin AllLivesControllerRef
+    on AutoDisposeAsyncNotifierProviderRef<List<LiveInfo>?> {
+  /// The parameter `sortType` of this provider.
+  LiveSortType get sortType;
+}
+
+class _AllLivesControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<AllLivesController,
+        List<LiveInfo>?> with AllLivesControllerRef {
+  _AllLivesControllerProviderElement(super.provider);
+
+  @override
+  LiveSortType get sortType => (origin as AllLivesControllerProvider).sortType;
+}
+
+String _$homePopularLivesControllerHash() =>
+    r'f0971cf37b34855ae73b512c986b1a8694e03296';
+
+/// See also [HomePopularLivesController].
+@ProviderFor(HomePopularLivesController)
+final homePopularLivesControllerProvider = AutoDisposeAsyncNotifierProvider<
+    HomePopularLivesController, List<LiveInfo>?>.internal(
+  HomePopularLivesController.new,
+  name: r'homePopularLivesControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$allLivesControllerHash,
+      : _$homePopularLivesControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AllLivesController = AutoDisposeAsyncNotifier<List<LiveDetail>?>;
-String _$allLivesLoadingStateHash() =>
-    r'a4ee4e0058549b3a4ee1446c969c25d66d451d5f';
+typedef _$HomePopularLivesController
+    = AutoDisposeAsyncNotifier<List<LiveInfo>?>;
+String _$liveFetchMoreLoadingStateHash() =>
+    r'5f8d91629ac56c5e81ed996414d831fe22bef7ed';
 
-/// See also [AllLivesLoadingState].
-@ProviderFor(AllLivesLoadingState)
-final allLivesLoadingStateProvider =
-    AutoDisposeNotifierProvider<AllLivesLoadingState, bool>.internal(
-  AllLivesLoadingState.new,
-  name: r'allLivesLoadingStateProvider',
+/// See also [LiveFetchMoreLoadingState].
+@ProviderFor(LiveFetchMoreLoadingState)
+final liveFetchMoreLoadingStateProvider =
+    AutoDisposeNotifierProvider<LiveFetchMoreLoadingState, bool>.internal(
+  LiveFetchMoreLoadingState.new,
+  name: r'liveFetchMoreLoadingStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$allLivesLoadingStateHash,
+      : _$liveFetchMoreLoadingStateHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AllLivesLoadingState = AutoDisposeNotifier<bool>;
-String _$currentLiveSortTypeHash() =>
-    r'2ca9bf40d5e7e49e3599d12f26f51fdc9af7a2ec';
-
-/// See also [CurrentLiveSortType].
-@ProviderFor(CurrentLiveSortType)
-final currentLiveSortTypeProvider =
-    AutoDisposeNotifierProvider<CurrentLiveSortType, LiveSortType>.internal(
-  CurrentLiveSortType.new,
-  name: r'currentLiveSortTypeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentLiveSortTypeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$CurrentLiveSortType = AutoDisposeNotifier<LiveSortType>;
+typedef _$LiveFetchMoreLoadingState = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

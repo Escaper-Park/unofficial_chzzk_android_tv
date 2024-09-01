@@ -1,13 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../utils/shared_preferences/shared_prefs.dart';
-import '../../auth/controller/auth_controller.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../../live/model/live.dart';
-import '../../live/repository/live_repository.dart';
 import '../../vod/model/vod.dart';
-import '../../vod/repository/vod_repository.dart';
 import '../model/category.dart';
 import '../repository/category_repository.dart';
 
@@ -15,251 +10,244 @@ part 'category_controller.g.dart';
 
 @riverpod
 class CategoryController extends _$CategoryController {
-  Options? _options;
-  final int _size = 20;
+  late CategoryRepository _repository;
+
+  // infinite scrolling
   CategoryPage? _next;
 
   @override
   FutureOr<List<Category>?> build() async {
-    final auth = await ref.read(authControllerProvider.future);
-
-    _options = auth?.getOptions();
-
-    return await _initFetch(_next);
-  }
-
-  Future<List<Category>?> _initFetch(CategoryPage? next) async {
-    final CategoryResponse? response =
-        await ref.watch(categoryRepositoryProvider).getCategoryResponse(
-              categoryId: next?.categoryId,
-              concurrentUserCount: next?.concurrentUserCount,
-              openLiveCount: next?.openLiveCount,
-              options: _options,
-              size: _size,
-            );
-
-    _next = response?.page;
-
-    return response?.categories ?? [];
-  }
-
-  Future<void> fetchMore() async {
-    if (_next != null) {
-      final prev = state.value;
-
-      state = await AsyncValue.guard(() async {
-        final response =
-            await ref.watch(categoryRepositoryProvider).getCategoryResponse(
-                  categoryId: _next!.categoryId,
-                  concurrentUserCount: _next!.concurrentUserCount,
-                  openLiveCount: _next!.openLiveCount,
-                  size: 10,
-                );
-
-        _next = response?.page;
-
-        if (response?.categories == null || _next == null) {
-          return [...prev!];
-        }
-
-        return [...prev!, ...response!.categories!];
-      });
-    }
-  }
-}
-
-@riverpod
-class FavoriteCategoriesController extends _$FavoriteCategoriesController {
-  late CategoryLocalRepository _categoryLocalRepository;
-
-  @override
-  FutureOr<List<Category>> build() async {
-    final SharedPreferences sharedPreferences = ref.read(sharedPrefsProvider);
-
-    _categoryLocalRepository = CategoryLocalRepository(sharedPreferences);
-
-    return fetchFavoriteCategories();
-  }
-
-  Future<List<Category>> fetchFavoriteCategories() async {
-    final localFavorites = _categoryLocalRepository.getFavoriteCategories();
-
-    final favorites = await ref
-        .watch(categoryRepositoryProvider)
-        .getFavoriteCategories(favorites: localFavorites);
-
-    favorites.sort(
-      (a, b) => b.concurrentUserCount.compareTo(a.concurrentUserCount),
-    );
-
-    return favorites;
-  }
-
-  Future<void> toggleFavorite({required Category category}) async {
-    final categoryString = '${category.categoryType}/${category.categoryId}';
-
-    await _categoryLocalRepository.setFavoriteCategories(categoryString);
-
-    state = await AsyncValue.guard(() async {
-      return fetchFavoriteCategories();
-    });
-  }
-}
-
-enum CategoryItem {
-  live,
-  vod,
-}
-
-@riverpod
-class CurrentCategoryItem extends _$CurrentCategoryItem {
-  @override
-  CategoryItem build() {
-    return CategoryItem.live;
-  }
-
-  void setState(CategoryItem item) {
-    if (state != item) state = item;
-  }
-}
-
-@riverpod
-class CategoryLiveController extends _$CategoryLiveController {
-  Options? _options;
-  LivePage? _next;
-
-  @override
-  FutureOr<List<LiveDetail>?> build({required Category category}) async {
-    final auth = await ref.read(authControllerProvider.future);
-
-    _options = auth?.getOptions();
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = CategoryRepository(dio);
 
     return await _initFetch();
   }
 
-  Future<List<LiveDetail>?> _initFetch() async {
-    final LiveResponse? liveResponse =
-        await ref.watch(categoryRepositoryProvider).getCategoryLiveResponses(
-              category: category,
-              next: _next,
-              options: _options,
-            );
+  Future<List<Category>?> _initFetch() async {
+    final categoryResponse = await _repository.getCategories(
+      size: 20,
+      categoryId: null,
+      concurrentUserCount: null,
+      openLiveCount: null,
+    );
 
-    _next = liveResponse?.page;
+    _next = categoryResponse?.next;
 
-    return liveResponse?.liveDetails ?? [];
+    return categoryResponse?.data;
   }
 
   Future<void> fetchMore() async {
     if (_next != null) {
       final prev = state.value;
 
-      // Show Loading State in Category Lives Page
-      ref.read(categoryLoadingStateProvider.notifier).setState(true);
-
       state = await AsyncValue.guard(() async {
-        final response = await ref
-            .watch(categoryRepositoryProvider)
-            .getCategoryLiveResponses(
-              category: category,
-              next: _next,
-              options: _options,
-            );
+        final categoryReponse = await _repository
+            .getCategories(
+          size: 20,
+          categoryId: _next!.categoryId,
+          concurrentUserCount: _next!.concurrentUserCount,
+          openLiveCount: _next!.openLiveCount,
+        )
+            .catchError((_) {
+          return null;
+        });
 
-        _next = response?.page;
+        _next = categoryReponse?.next;
 
-        if (response?.liveDetails == null || _next == null) {
-          // Show Loading State in Category Lives Page
-          ref.read(categoryLoadingStateProvider.notifier).setState(false);
-
+        if (categoryReponse?.data == null || _next == null) {
           return [...prev!];
         }
 
-        ref.read(categoryLoadingStateProvider.notifier).setState(false);
-        return [...prev!, ...response!.liveDetails!];
+        return [...prev!, ...categoryReponse!.data];
       });
-    }
-  }
-
-  Future<LiveDetail?> getLiveDetail(final String channelId) async {
-    try {
-      return await ref.watch(liveRepositoryProvider).getLiveDetail(
-            channelId: channelId,
-            options: _options,
-          );
-    } catch (_) {
-      return null;
     }
   }
 }
 
 @riverpod
-class CategoryVodController extends _$CategoryVodController {
-  Options? _options;
-  VodPage? _next;
+class CategoryLivesController extends _$CategoryLivesController {
+  late CategoryRepository _repository;
+  LivePage? _next;
+
+  @override
+  FutureOr<List<LiveInfo>?> build({required Category category}) async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = CategoryRepository(dio);
+
+    return await _initFetch();
+  }
+
+  Future<List<LiveInfo>?> _initFetch() async {
+    final LiveResponse? liveResponse = await _repository.getCategoryLives(
+      categoryType: category.categoryType,
+      categoryId: category.categoryId,
+      size: 18,
+      concurrentUserCount: null,
+      liveId: null,
+    );
+
+    _next = liveResponse?.next;
+
+    return liveResponse?.data;
+  }
+
+  Future<void> fetchMore() async {
+    if (_next != null) {
+      ref.read(categoryFetchMoreLoadingStateProvider.notifier).setState(true);
+      final prev = state.value;
+
+      state = await AsyncValue.guard(() async {
+        final liveRespnse = await _repository
+            .getCategoryLives(
+          categoryType: category.categoryType,
+          categoryId: category.categoryId,
+          size: 18,
+          concurrentUserCount: _next!.concurrentUserCount,
+          liveId: _next!.liveId,
+        )
+            .catchError((_) {
+          ref
+              .read(categoryFetchMoreLoadingStateProvider.notifier)
+              .setState(false);
+          return null;
+        });
+
+        _next = liveRespnse?.next;
+
+        if (liveRespnse?.data == null || _next == null) {
+          return [...prev!];
+        }
+
+        ref
+            .read(categoryFetchMoreLoadingStateProvider.notifier)
+            .setState(false);
+        return [...prev!, ...liveRespnse!.data];
+      });
+    }
+  }
+}
+
+@riverpod
+class CategoryVodsController extends _$CategoryVodsController {
+  late CategoryRepository _repository;
+  CategoryVodPage? _next;
 
   @override
   FutureOr<List<Vod>?> build({required Category category}) async {
-    final auth = await ref.read(authControllerProvider.future);
-
-    _options = auth?.getOptions();
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = CategoryRepository(dio);
 
     return await _initFetch();
   }
 
   Future<List<Vod>?> _initFetch() async {
-    final VodResponse? vodResponse =
-        await ref.watch(categoryRepositoryProvider).getCategoryVodResponse(
-              category: category,
-              next: _next,
-              options: _options,
-            );
+    final categoryVodResponse = await _repository.getCategoryVods(
+      categoryType: category.categoryType,
+      categoryId: category.categoryId,
+      size: 18,
+      publishDateAt: null,
+      readCount: null,
+    );
 
-    _next = vodResponse?.page;
+    _next = categoryVodResponse?.next;
 
-    return vodResponse?.vods ?? [];
+    return categoryVodResponse?.data;
   }
 
   Future<void> fetchMore() async {
     if (_next != null) {
+      ref.read(categoryFetchMoreLoadingStateProvider.notifier).setState(true);
       final prev = state.value;
 
-      // Show Loading State in Category Vods Page
-      ref.read(categoryLoadingStateProvider.notifier).setState(true);
-
       state = await AsyncValue.guard(() async {
-        final response =
-            await ref.watch(categoryRepositoryProvider).getCategoryVodResponse(
-                  category: category,
-                  next: _next,
-                  options: _options,
-                );
+        final categoryVodResponse = await _repository
+            .getCategoryVods(
+          categoryType: category.categoryType,
+          categoryId: category.categoryId,
+          size: 18,
+          publishDateAt: _next!.publishDateAt,
+          readCount: _next!.readCount,
+        )
+            .catchError((_) {
+          ref
+              .read(categoryFetchMoreLoadingStateProvider.notifier)
+              .setState(false);
+          return null;
+        });
 
-        _next = response?.page;
+        _next = categoryVodResponse?.next;
 
-        if (response?.vods == null || _next == null) {
-          // Show Loading State in Category Vods Page
-          ref.read(categoryLoadingStateProvider.notifier).setState(false);
-
+        if (categoryVodResponse?.data == null || _next == null) {
           return [...prev!];
         }
 
-        ref.read(categoryLoadingStateProvider.notifier).setState(false);
-        return [...prev!, ...response!.vods!];
+        ref
+            .read(categoryFetchMoreLoadingStateProvider.notifier)
+            .setState(false);
+        return [...prev!, ...categoryVodResponse!.data];
       });
     }
-  }
-
-  Future<String?> getVodPath({required int videoNo}) async {
-    return await ref.watch(vodRepositoryProvider).getVodPath(
-          videoNo: videoNo,
-          options: _options,
-        );
   }
 }
 
 @riverpod
-class CategoryLoadingState extends _$CategoryLoadingState {
+class FollowingCategoriesController extends _$FollowingCategoriesController {
+  late CategoryRepository _repository;
+
+  /// Get List of following Categories in.
+  ///
+  /// It's used for home screen or checking already followed.
+  @override
+  FutureOr<List<Category>?> build() async {
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = CategoryRepository(dio);
+
+    return await fetchFollowingCategories();
+  }
+
+  Future<List<Category>?> fetchFollowingCategories() async {
+    final response = await _repository.getFollowingCategories();
+
+    return response?.followingList;
+  }
+
+  Future<bool> follow(Category category) async {
+    final response = await _repository
+        .follow(
+          categoryType: category.categoryType,
+          categoryId: category.categoryId,
+        )
+        .then((_) => true)
+        .catchError((_) => false);
+
+    return response;
+  }
+
+  Future<bool> unfollow(Category category) async {
+    final response = await _repository
+        .unfollow(
+          categoryType: category.categoryType,
+          categoryId: category.categoryId,
+        )
+        .then((_) => true)
+        .catchError((_) => false);
+
+    return response;
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        return await fetchFollowingCategories();
+      },
+    );
+  }
+}
+
+@riverpod
+class CategoryFetchMoreLoadingState extends _$CategoryFetchMoreLoadingState {
   @override
   bool build() {
     return false;
