@@ -43,6 +43,9 @@ APK 파일 [다운로드] (v0.3.0)
 
 > [!NOTE]
 > 설치에 문제가 있을 경우 [개발자 모드](docs/INSTALL_DEVELOPER.md)로 변경 후 설치를 진행합니다.
+>
+> 클라우드나 USB 연결을 사용할 수 없으면 TV 웹브라우저에서 직접 다운로드 받거나, [Send Files To TV](https://play.google.com/store/apps/details?id=com.yablio.sendfilestotv&hl=en_US) 앱을 사용해주세요.
+
 
 * [클라우드 설치](docs/INSTALL_CLOUD.md)
 * [USB 설치](docs/INSTALL_USB.md)

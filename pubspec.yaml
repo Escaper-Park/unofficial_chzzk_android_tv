@@ -1,5 +1,5 @@
 name: unofficial_chzzk_android_tv
-description: "A new Flutter project."
+description: "UnOfficial Chzzk for Android TV"
 publish_to: "none"
 
 version: 0.3.0
@@ -23,14 +23,14 @@ dependencies:
   dio: ^5.5.0+1
   logger: ^2.4.0
   # video
-  video_player: ^2.9.1
+  video_player: ^2.8.3
   wakelock_plus: ^1.2.7
   flutter_hls_parser: ^2.0.1
   # webview for login
   flutter_inappwebview: ^6.0.0
   # image
   gif: ^2.3.0
-  cached_network_image: ^3.4.0
+  cached_network_image: ^3.3.1
   # router
   go_router: ^14.2.1
   # websocket
