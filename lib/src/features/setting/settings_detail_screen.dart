@@ -6,6 +6,7 @@ import 'widgets/chat/chat_settings_screen.dart';
 import 'widgets/licences/licenses.dart';
 import 'widgets/streaming/stream_settings_screen.dart';
 import 'widgets/update/update_screen.dart';
+import 'widgets/webview_login/webview_login_screen.dart';
 
 class SettingsDetailScreen extends ConsumerWidget {
   const SettingsDetailScreen({
@@ -27,6 +28,7 @@ class SettingsDetailScreen extends ConsumerWidget {
       StreamSettingsScreen(settingMenuFSN: settingMenuFSN),
       ChatSettingsScreen(settingMenuFSN: settingMenuFSN),
       const UpdateScreen(),
+      const WebviewLoginScreen(),
       OpenSourceLicencesScreen(settingMenuFSN: settingMenuFSN),
     ];
 

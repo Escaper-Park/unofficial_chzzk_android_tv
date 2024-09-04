@@ -1,5 +1,16 @@
 ## CHZZK for Android TV v0.3.x 패치노트
 
+### [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
+* 기본 로그인 방식을 Headless webview로 변경
+    * 웹뷰 로그인 추가 (설정 -> 웹뷰 로그인)
+* 방송 종료 시 "라이브 종료" 메시지가 더 이상 뜨지 않음
+    * 네트워크 이상이 있을 때 방송 화면이 사라지고 소리만 나오는 현상이 있어서 제거함(추후 수정)
+    * 방송 종료 시 화면 보호기 활성화는 정상적으로 작동
+    * 
+
+
+* 화질 설정에 "자동" 추가.
+
 ### [v0.3.0](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.0)
 * UI 변경
 * 홈 화면 스크롤 이동 방식 개선

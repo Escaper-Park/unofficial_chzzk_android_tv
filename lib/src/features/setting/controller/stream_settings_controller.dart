@@ -20,12 +20,12 @@ class StreamSettingsController extends _$StreamSettingsController {
 
   Future<void> setResolutionIndex(int value) async {
     final settings = state.copyWith(resolutionIndex: value);
-    await _updateInt(value, 0, 3, settings);
+    await _updateInt(value, 0, 4, settings);
   }
 
   Future<void> setMultiviewResolutionIndex(int value) async {
     final settings = state.copyWith(multiviewResolutionIndex: value);
-    await _updateInt(value, 0, 3, settings);
+    await _updateInt(value, 0, 4, settings);
   }
 
   Future<void> setChatWindowStateIndex(int value) async {

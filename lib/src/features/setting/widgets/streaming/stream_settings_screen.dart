@@ -25,10 +25,10 @@ class StreamSettingsScreen extends ConsumerWidget {
           headerText: '해상도',
           itemType: SettingItemType.limited,
           autofocus: true,
-          displayTextList: const ['360p', '480p', '720p', '1080p'],
+          displayTextList: const ['360p', '480p', '720p', '1080p', '자동'],
           currentValue: streamSettings.resolutionIndex,
           minValue: 0,
-          maxValue: 3,
+          maxValue: 4,
           onUpdate: (value) {
             ref
                 .read(streamSettingsControllerProvider.notifier)
@@ -39,10 +39,10 @@ class StreamSettingsScreen extends ConsumerWidget {
           settingMenuFSN: settingMenuFSN,
           headerText: '멀티뷰 해상도',
           itemType: SettingItemType.limited,
-          displayTextList: const ['360p', '480p', '720p', '1080p'],
+          displayTextList: const ['360p', '480p', '720p', '1080p', '자동'],
           currentValue: streamSettings.multiviewResolutionIndex,
           minValue: 0,
-          maxValue: 3,
+          maxValue: 4,
           onUpdate: (value) {
             ref
                 .read(streamSettingsControllerProvider.notifier)

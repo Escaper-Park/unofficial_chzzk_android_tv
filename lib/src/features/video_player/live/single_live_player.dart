@@ -20,8 +20,6 @@ class SingleLivePlayer extends HookConsumerWidget {
     final asyncController =
         ref.watch(singleLivePlayerControllerProvider(index: index));
 
-    final msg = useState<String>('라이브 로딩중...');
-
     return asyncController.when(
       data: (controller) {
         if (!controller.value.isPlaying) controller.play();
@@ -36,9 +34,6 @@ class SingleLivePlayer extends HookConsumerWidget {
                       !value.isPlaying;
 
               if (checkEnds) {
-                msg.value = '라이브가 종료되었습니다';
-                controller.pause();
-
                 ref
                     .read(wakelockMonitorControllerProvider.notifier)
                     .setFalse(index);
@@ -51,16 +46,14 @@ class SingleLivePlayer extends HookConsumerWidget {
           [controller],
         );
 
-        return controller.value.isPlaying
-            ? Center(
-                child: AspectRatio(
-                  aspectRatio: controller.value.aspectRatio,
-                  child: VideoPlayer(
-                    controller,
-                  ),
-                ),
-              )
-            : CenteredText(text: msg.value);
+        return Center(
+          child: AspectRatio(
+            aspectRatio: controller.value.aspectRatio,
+            child: VideoPlayer(
+              controller,
+            ),
+          ),
+        );
       },
       error: (error, stackTrace) => CenteredText(text: error.toString()),
       loading: () => const CenteredText(text: '라이브 로딩중...'),

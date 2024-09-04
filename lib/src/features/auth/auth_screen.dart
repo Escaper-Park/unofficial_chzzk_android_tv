@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../common/widgets/pop_scope_screen.dart';
 import '../../utils/router/app_router.dart';
 import '../dashboard/controller/dashboard_controller.dart';
-import './widgets/naver_login_with_webview.dart';
 import './controller/auth_controller.dart';
+import 'widgets/naver_login_with_headless_webview.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -20,7 +20,7 @@ class AuthScreen extends ConsumerWidget {
             .read(dashboardControllerProvider.notifier)
             .changeScreen(context, AppRoute.home);
       },
-      body: const NaverLoginWithWebview(),
+      body: const NaverLoginWithHeadlessWebview(),
     );
   }
 }

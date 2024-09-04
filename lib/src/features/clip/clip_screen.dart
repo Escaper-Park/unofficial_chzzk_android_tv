@@ -12,7 +12,7 @@ class ClipScreen extends StatefulWidget {
 
 class _ClipScreenState extends State<ClipScreen> {
   InAppWebViewSettings settings = InAppWebViewSettings(
-    useHybridComposition: true,
+    useHybridComposition: false,
     javaScriptEnabled: true,
     thirdPartyCookiesEnabled: true,
     useShouldOverrideUrlLoading: true,

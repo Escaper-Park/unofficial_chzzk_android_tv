@@ -40,7 +40,7 @@ class _NaverLoginWithWebviewState extends ConsumerState<NaverLoginWithWebview> {
     super.initState();
 
     settings = InAppWebViewSettings(
-      useHybridComposition: true,
+      useHybridComposition: false,
       javaScriptEnabled: true,
       javaScriptCanOpenWindowsAutomatically: true,
       thirdPartyCookiesEnabled: true,
@@ -53,7 +53,6 @@ class _NaverLoginWithWebviewState extends ConsumerState<NaverLoginWithWebview> {
   @override
   void dispose() {
     super.dispose();
-    _controller?.dispose();
   }
 
   @override

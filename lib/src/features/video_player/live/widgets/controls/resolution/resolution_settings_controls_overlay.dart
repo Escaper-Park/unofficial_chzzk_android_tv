@@ -114,10 +114,10 @@ class ResolutionControlItem extends HookConsumerWidget {
         videoFocusNode: videoFocusNode,
         itemType: SettingItemType.limited,
         headerText: channelName,
-        displayTextList: const ['360p', '480p', '720p', '1080p'],
+        displayTextList: const ['360p', '480p', '720p', '1080p', '자동'],
         currentValue: currentResolutionIndex.value,
         minValue: 0,
-        maxValue: 3,
+        maxValue: 4,
         onUpdate: (updateValue) {
           currentResolutionIndex.value = updateValue;
         },

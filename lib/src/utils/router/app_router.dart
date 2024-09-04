@@ -44,7 +44,10 @@ enum AppRoute {
   categoryDetail('categoryDetail', 'categoryDetail', 14),
 
   // Clip
-  clip('clip', 'clip', 15);
+  clip('clip', 'clip', 15),
+
+  // webview
+  webviewLogin('webviewLogin', 'webviewLogin', 16);
 
   final String routePath;
   final String routeName;
@@ -239,6 +242,14 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
                 ),
               );
             },
+          ),
+          // WebviewLogin: 16
+          GoRoute(
+            path: AppRoute.webviewLogin.routePath,
+            name: AppRoute.webviewLogin.routeName,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: WebviewLoginScreen(key: state.pageKey),
+            ),
           ),
         ],
       ),

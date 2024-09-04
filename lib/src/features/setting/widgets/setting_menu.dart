@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../common/constants/styles.dart';
 import '../../../common/widgets/dpad_widgets.dart';
 import '../../../common/widgets/focused_widget.dart';
+import '../../../utils/router/app_router.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
 import '../controller/setting_screen_controller.dart';
 
 class SettingMenuList extends ConsumerWidget {
@@ -26,6 +28,7 @@ class SettingMenuList extends ConsumerWidget {
       '스트리밍 설정',
       '채팅 설정',
       '업데이트 확인',
+      '웹뷰 로그인',
       '오픈소스 라이선스',
     ];
 
@@ -36,9 +39,17 @@ class SettingMenuList extends ConsumerWidget {
         menuText: itemData[index],
         currentIndex: currentIndex,
         itemIndex: index,
-        onPressed: () {
-          ref.read(settingScreenControllerProvider.notifier).setState(index);
-        },
+        onPressed: index == 3
+            ? () {
+                ref
+                    .read(dashboardControllerProvider.notifier)
+                    .changeScreen(context, AppRoute.webviewLogin);
+              }
+            : () {
+                ref
+                    .read(settingScreenControllerProvider.notifier)
+                    .setState(index);
+              },
       ),
     );
 
