@@ -91,11 +91,13 @@ class CategoryDetailScreen extends HookConsumerWidget {
     };
 
     return VideoGridViewScreen(
-      onPopInvoked: (_) {
-        if (sidebarFSN.hasFocus) {
-          context.pop();
-        } else {
-          sidebarFSN.requestFocus();
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          if (sidebarFSN.hasFocus) {
+            context.pop();
+          } else {
+            sidebarFSN.requestFocus();
+          }
         }
       },
       // Category poster, status and follow button.
