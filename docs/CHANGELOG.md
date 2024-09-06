@@ -10,7 +10,7 @@
 
 #### Hotfix 
 * v0.3.1+1 특정 환경에서 카테고리 화면의 뒤로가기가 비정상적으로 작동하는 문제 수정
-
+* v0.3.1+2 이미지 로딩 방식 변경
 
 
 ### [v0.3.0](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.0)

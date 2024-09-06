@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gif/gif.dart';
 
 import '../../utils/image/image_utils.dart';
@@ -7,25 +6,17 @@ import '../constants/styles.dart';
 import 'center_widgets.dart';
 
 class OptimizedNetworkImage extends StatelessWidget {
-  /// An optimized network image using cache.
   const OptimizedNetworkImage({
     super.key,
     required this.imageUrl,
     this.imageWidth,
     this.imageHeight,
-    this.imageBuilder,
-    this.useCacheKey = true,
-    this.useDynamicCacheKey = false,
-    this.fit = BoxFit.cover,
+    this.useUpdatedImage = false,
     this.updateCacheIntervalMin = 5,
-  }) : assert(imageWidth != null || imageHeight != null,
-            'Either imageWidth or imageHeight must be non-null');
+    this.fit = BoxFit.cover,
+  });
 
   final String imageUrl;
-
-  /// Optional builder to customize the display of the image.
-  final Widget Function(BuildContext context, ImageProvider imageProvider)?
-      imageBuilder;
 
   /// The Width of the image to be displayed.
   final double? imageWidth;
@@ -33,13 +24,10 @@ class OptimizedNetworkImage extends StatelessWidget {
   /// The Height of the image to be displayed.
   final double? imageHeight;
 
-  /// Set this true for updating live images.
-  final bool useCacheKey;
-
   /// Set this true for changing images over time.
   ///
   /// Default value is [false].
-  final bool useDynamicCacheKey;
+  final bool useUpdatedImage;
 
   /// Default value is [BoxFit.cover].
   final BoxFit fit;
@@ -52,61 +40,136 @@ class OptimizedNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // To prevent memory leaking, resize image with cacheSize.
-    final int? cacheWidth = imageWidth?.cacheSize(context);
-    final int? cacheHeight = imageWidth?.cacheSize(context);
+    // final int? cacheWidth = imageWidth?.cacheSize(context);
+    // final int? cacheHeight = imageWidth?.cacheSize(context);
 
-    final String cacheKey = useDynamicCacheKey
-        ? '${imageUrl}_${DateTime.now().minute ~/ updateCacheIntervalMin}'
+    final String url = useUpdatedImage
+        ? '$imageUrl/?v=${DateTime.now().minute ~/ updateCacheIntervalMin}'
         : imageUrl;
 
-    if (useDynamicCacheKey) {
-      // Remove old cache data.
-      CachedNetworkImage.evictFromCache(
-          '${imageUrl}_${(DateTime.now().minute ~/ updateCacheIntervalMin) - 1}');
-    }
-
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: imageBuilder,
-      cacheKey: useCacheKey ? cacheKey : null,
-      memCacheWidth: cacheWidth,
-      memCacheHeight: cacheHeight,
-      maxWidthDiskCache: cacheWidth,
-      maxHeightDiskCache: cacheHeight,
-      fit: fit,
-      placeholder: (context, url) => SizedBox(
-        width: imageWidth,
-        height: imageHeight,
-      ),
-      errorWidget: (context, url, error) {
-        return _loadingNetworkImageFallback(
-          cacheWidth: cacheWidth,
-          cacheHeight: cacheHeight,
-        );
-      },
-    );
-  }
-
-  /// If there is a problem with CachedNetworkImage package,
-  /// try loading network image again with the flutter's embedded [Image] widget.
-  Widget _loadingNetworkImageFallback({
-    required int? cacheWidth,
-    required int? cacheHeight,
-  }) {
-    return Image.network(
-      imageUrl,
+    return Container(
+      // key: useUpdatedImage ? ValueKey(url) : null,
       width: imageWidth,
       height: imageHeight,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
-      fit: fit,
-      errorBuilder: (_, __, ___) => _ImageErrorPlaceholder(
-        imageWidth: imageWidth,
-        imageHeight: imageHeight,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: ResizeImage(
+            NetworkImage(url),
+            height: (imageHeight! * 2).floor(),
+            width: (imageWidth! * 2).floor(),
+          ),
+        ),
       ),
     );
+
+    // Image.network(
+    //   // key: useDynamicCacheKey ? ValueKey(cacheKey) : null,
+    //   imageUrl,
+    //   width: imageWidth,
+    //   height: imageHeight,
+    //   cacheWidth: cacheWidth,
+    //   cacheHeight: cacheHeight,
+    //   fit: fit,
+    //   errorBuilder: (_, __, ___) => _ImageErrorPlaceholder(
+    //     imageWidth: imageWidth,
+    //     imageHeight: imageHeight,
+    //   ),
+    //   loadingBuilder: (_, __, ___) => SizedBox(
+    //     width: imageWidth,
+    //     height: imageHeight,
+    //   ),
+    // );
   }
 }
+
+// class OptimizedCachedNetworkImage extends StatelessWidget {
+//   /// An optimized network image using cache.
+//   const OptimizedCachedNetworkImage({
+//     super.key,
+//     required this.imageUrl,
+//     this.imageWidth,
+//     this.imageHeight,
+//     this.imageBuilder,
+//     this.useCacheKey = true,
+//     this.useDynamicCacheKey = false,
+//     this.fit = BoxFit.cover,
+//     this.updateCacheIntervalMin = 5,
+//   }) : assert(imageWidth != null || imageHeight != null,
+//             'Either imageWidth or imageHeight must be non-null');
+
+//   final String imageUrl;
+
+//   /// Optional builder to customize the display of the image.
+//   final Widget Function(BuildContext context, ImageProvider imageProvider)?
+//       imageBuilder;
+
+//   /// The Width of the image to be displayed.
+//   final double? imageWidth;
+
+//   /// The Height of the image to be displayed.
+//   final double? imageHeight;
+
+//   /// Set this true for updating live images.
+//   final bool useCacheKey;
+
+//   /// Set this true for changing images over time.
+//   ///
+//   /// Default value is [false].
+//   final bool useDynamicCacheKey;
+
+//   /// Default value is [BoxFit.cover].
+//   final BoxFit fit;
+
+//   /// If useCachekey and useDynamicCacheKey is true, image is updated according to this value.
+//   ///
+//   /// Default value is [5] mins.
+//   final int updateCacheIntervalMin;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // To prevent memory leaking, resize image with cacheSize.
+//     final int? cacheWidth = imageWidth?.cacheSize(context);
+//     final int? cacheHeight = imageWidth?.cacheSize(context);
+
+//     final String cacheKey = useDynamicCacheKey
+//         ? '${imageUrl}_${DateTime.now().minute ~/ updateCacheIntervalMin}'
+//         : imageUrl;
+
+//     if (useDynamicCacheKey) {
+//       // Remove old cache data.
+//       CachedNetworkImage.evictFromCache(
+//           '${imageUrl}_${(DateTime.now().minute ~/ updateCacheIntervalMin) - 1}');
+//     }
+
+//     return CachedNetworkImage(
+//       imageUrl: imageUrl,
+//       imageBuilder: imageBuilder,
+//       cacheKey: useCacheKey ? cacheKey : null,
+//       memCacheWidth: cacheWidth,
+//       memCacheHeight: cacheHeight,
+//       maxWidthDiskCache: cacheWidth,
+//       maxHeightDiskCache: cacheHeight,
+//       fit: fit,
+//       placeholder: (context, url) => SizedBox(
+//         width: imageWidth,
+//         height: imageHeight,
+//       ),
+//       errorWidget: (context, url, error) {
+//         return _loadingNetworkImageFallback();
+//       },
+//     );
+//   }
+
+//   /// If there is a problem with CachedNetworkImage package,
+//   /// try loading network image again with the flutter's embedded [Image] widget.
+//   Widget _loadingNetworkImageFallback() {
+//     return OptimizedNetworkImage(
+//       imageUrl: imageUrl,
+//       useUpdatedImage: useDynamicCacheKey,
+//       fit: fit,
+//     );
+//   }
+// }
 
 class OptimizedAssetImage extends StatelessWidget {
   /// An optimized asset image using cache.

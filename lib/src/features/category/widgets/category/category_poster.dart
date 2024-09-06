@@ -32,6 +32,7 @@ class CategoryPoster extends StatelessWidget {
                 imageUrl: posterImageUrl!,
                 imageWidth: imageWidth,
                 imageHeight: imageHeight,
+                
               ),
       ),
     );

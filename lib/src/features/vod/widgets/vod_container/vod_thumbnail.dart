@@ -29,20 +29,6 @@ class VodThumbnail extends StatelessWidget {
                   imageUrl: vod.thumbnailImageUrl!,
                   imageWidth: imageWidth,
                   imageHeight: imageHeight,
-                  useCacheKey: false,
-                  useDynamicCacheKey: false,
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      width: imageWidth,
-                      height: imageHeight,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
                 ),
                 // Adult vod mark
                 if (vod.adult)

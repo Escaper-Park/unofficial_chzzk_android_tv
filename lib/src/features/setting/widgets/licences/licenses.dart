@@ -11,8 +11,10 @@ class OpenSourceLicencesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
-        settingMenuFSN.requestFocus();
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          settingMenuFSN.requestFocus();
+        }
       },
       child: const LicensePage(
         applicationName: 'UnOfficial Chzzk for Android TV',

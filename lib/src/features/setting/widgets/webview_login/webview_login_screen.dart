@@ -13,7 +13,7 @@ class WebviewLoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopScopeScreen(
-      onPopInvoked: (didPop) {
+      onPopInvoked: (_) {
         ref.invalidate(authControllerProvider);
 
         ref

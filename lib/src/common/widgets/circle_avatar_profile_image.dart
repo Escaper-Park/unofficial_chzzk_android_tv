@@ -28,9 +28,10 @@ class CircleAvatarProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Check the profileImageUrl is available or the extension of the image is 'gif'.
-    final bool isInvalidProfileImage = (profileImageUrl == null ||
-        profileImageUrl!.isEmpty ||
-        profileImageUrl!.toLowerCase().contains('.gif'));
+    final bool isInvalidProfileImage =
+        (profileImageUrl == null || profileImageUrl!.isEmpty);
+    //  ||
+    // profileImageUrl!.toLowerCase().contains('.gif'));
 
     return Container(
       width: radius * 2,
@@ -51,10 +52,9 @@ class CircleAvatarProfileImage extends StatelessWidget {
               borderRadius: BorderRadius.circular(radius),
               child: OptimizedNetworkImage(
                 imageUrl: profileImageUrl!,
-                useCacheKey: true,
-                useDynamicCacheKey: false,
                 imageWidth: radius * 2,
                 imageHeight: radius * 2,
+                useUpdatedImage: false,
               ),
             ),
     );

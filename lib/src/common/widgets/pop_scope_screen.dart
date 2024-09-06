@@ -16,7 +16,11 @@ class PopScopeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: onPopInvoked,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          onPopInvoked(didPop);
+        }
+      },
       child: Scaffold(body: body),
     );
   }

@@ -27,6 +27,9 @@ class LiveThumbnail extends StatelessWidget {
             ? liveInfo.defaultThumbnailImageUrl
             : liveInfo.liveImageUrl;
 
+    final bool useUpdatedImage =
+        (liveInfo.defaultThumbnailImageUrl?.isNotEmpty ?? false) ? false : true;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0),
       child: thumbnailUrl != null
@@ -37,22 +40,9 @@ class LiveThumbnail extends StatelessWidget {
                     'image_{type}.jpg',
                     'image_360.jpg',
                   ),
-                  useCacheKey: true,
-                  useDynamicCacheKey: true,
                   imageWidth: imageWidth,
                   imageHeight: imageHeight,
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      width: imageWidth,
-                      height: imageHeight,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
+                  useUpdatedImage: useUpdatedImage,
                 ),
                 // Show transparent adult mark over the thumbnail.
                 // Adult video & user is authenticated.

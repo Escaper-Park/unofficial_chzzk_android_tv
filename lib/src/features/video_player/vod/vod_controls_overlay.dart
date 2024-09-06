@@ -56,17 +56,19 @@ class VodControlsOverlay extends HookConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) {
-        // if overlay is hidden, pop
-        if (vodOverlayType == VodOverlayType.none) {
-          context.pop();
-        }
-        // hide overlay
-        else {
-          ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
-                overlayType: VodOverlayType.none,
-                videoFocusNode: videoFocusNode,
-              );
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          // if overlay is hidden, pop
+          if (vodOverlayType == VodOverlayType.none) {
+            context.pop();
+          }
+          // hide overlay
+          else {
+            ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
+                  overlayType: VodOverlayType.none,
+                  videoFocusNode: videoFocusNode,
+                );
+          }
         }
       },
       child: Stack(

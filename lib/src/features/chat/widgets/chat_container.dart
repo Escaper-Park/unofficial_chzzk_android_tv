@@ -127,16 +127,14 @@ class ChatContainer extends StatelessWidget {
   WidgetSpan _emojiSpan(BuildContext context, String imageUrl) {
     final imageSize = (chatSettings.chatFontSize * 2).toDouble();
 
+    // final bool isGif = imageUrl.toLowerCase().contains('.gif');
+
     return WidgetSpan(
-      child: SizedBox(
-        height: imageSize,
-        width: imageSize,
-        child: OptimizedNetworkImage(
-          imageHeight: imageSize,
-          imageWidth: imageSize,
-          imageUrl: imageUrl,
-          fit: BoxFit.fill,
-        ),
+      child: OptimizedNetworkImage(
+        imageHeight: imageSize,
+        imageWidth: imageSize,
+        imageUrl: imageUrl,
+        fit: BoxFit.fill,
       ),
     );
   }
@@ -149,8 +147,6 @@ class ChatContainer extends StatelessWidget {
           : OptimizedNetworkImage(
               imageWidth: chatSettings.chatFontSize - 5.0,
               imageHeight: chatSettings.chatFontSize - 5.0,
-              useCacheKey: true,
-              useDynamicCacheKey: false,
               imageUrl: imageUrl,
             ),
     );
