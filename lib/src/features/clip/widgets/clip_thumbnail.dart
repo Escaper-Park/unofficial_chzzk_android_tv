@@ -29,6 +29,7 @@ class ClipThumbnail extends StatelessWidget {
                   imageUrl: clip.thumbnailImageUrl!,
                   imageWidth: imageWidth,
                   imageHeight: imageHeight,
+                  fit: BoxFit.fitWidth,
                 ),
                 // Adult vod mark
                 if (clip.adult)

@@ -53,10 +53,14 @@ class OptimizedNetworkImage extends StatelessWidget {
       height: imageHeight,
       decoration: BoxDecoration(
         image: DecorationImage(
+          fit: fit,
           image: ResizeImage(
             NetworkImage(url),
+            policy: ResizeImagePolicy.fit,
             height: (imageHeight! * 2).floor(),
             width: (imageWidth! * 2).floor(),
+            // height: imageHeight!.floor(),
+            // width: imageWidth!.floor(),
           ),
         ),
       ),
