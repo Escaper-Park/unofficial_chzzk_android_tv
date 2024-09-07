@@ -28,7 +28,7 @@ class SingleStreamMainControls extends HookConsumerWidget {
     final firstController =
         ref.watch(singleLivePlayerControllerProvider(index: 0)).value;
 
-    final isPlaying = useState<bool>(firstController!.value.isPlaying);
+    final isPlaying = useState<bool?>(firstController?.value.isPlaying);
     final pauseTimer = ref.watch(pauseTimerProvider);
 
     return Stack(
@@ -49,16 +49,18 @@ class SingleStreamMainControls extends HookConsumerWidget {
                 _controlIconButton(
                   autofocus: true,
                   ref: ref,
-                  iconData: isPlaying.value
+                  iconData: isPlaying.value == true
                       ? Icons.pause_rounded
                       : Icons.play_arrow_rounded,
-                  label: isPlaying.value ? '일시정지' : '재생',
+                  label: isPlaying.value == true ? '일시정지' : '재생',
                   onPressed: () {
-                    isPlaying.value = !isPlaying.value;
-                    ref
-                        .read(singleLivePlayerControllerProvider(index: 0)
-                            .notifier)
-                        .playOrPause(pauseTimer: pauseTimer);
+                    if (isPlaying.value != null) {
+                      isPlaying.value = !isPlaying.value!;
+                      ref
+                          .read(singleLivePlayerControllerProvider(index: 0)
+                              .notifier)
+                          .playOrPause(pauseTimer: pauseTimer);
+                    }
                   },
                 ),
                 // realtime

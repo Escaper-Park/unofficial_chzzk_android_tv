@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../utils/hls_parser/hls_parser.dart';
 import '../../../live/model/live.dart';
 import '../../../setting/controller/stream_settings_controller.dart';
+import '../widgets/util/wakelock_monitor_controller.dart';
 import 'live_playlist_controller.dart';
 
 part 'live_player_controller.g.dart';
@@ -33,23 +34,27 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
 
   Future<VideoPlayerController> init({bool mute = true}) async {
     try {
-      final mediaList = await HlsParser(
-              _liveDetail.livePlaybackJson.media[_latencyIndex].path)
-          .getMediaPlaylistUris();
+      // Find media by latency
+      final media = _liveDetail.livePlaybackJson.media.firstWhere((m) {
+        return _latencyIndex == 0 ? m.mediaId == "HLS" : m.mediaId == "LLHLS";
+      });
+
+      final mediaList = await HlsParser(media.path).getMediaPlaylistUris();
 
       int resolutionIdx = _resolutionIndex;
 
       if (mediaList != null) {
-        if (mediaList.length < _resolutionIndex + 1) {
-          resolutionIdx = mediaList.length - 1;
-        }
-
         Uri? mediaTrackUri;
         // AUTO
-        if (resolutionIdx == 4) {
+        if (_resolutionIndex == 4) {
           mediaTrackUri =
               Uri.parse(_liveDetail.livePlaybackJson.media[_latencyIndex].path);
-        } else {
+        }
+        // Select
+        else {
+          if (mediaList.length < _resolutionIndex + 1) {
+            resolutionIdx = mediaList.length - 1;
+          }
           mediaTrackUri = mediaList[resolutionIdx];
         }
 
@@ -57,12 +62,27 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
         await controller.initialize();
         if (index != 0 && mute) controller.setVolume(0.0);
 
+        await controller.play();
+        controller.addListener(_checkVideoEnds);
+
         return controller;
       }
 
       return _getVideoPlayerController(Uri());
     } catch (_) {
       return _getVideoPlayerController(Uri());
+    }
+  }
+
+  void _checkVideoEnds() {
+    final value = state.value!.value;
+
+    final bool checkEnds = value.hasError == true ||
+        (value.isInitialized && value.position >= value.duration) &&
+            !value.isPlaying;
+
+    if (checkEnds) {
+      ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
     }
   }
 

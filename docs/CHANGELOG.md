@@ -1,6 +1,20 @@
-## CHZZK for Android TV v0.3.x 패치노트
+# CHZZK for Android TV v0.3.x 패치노트
 
-### [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
+## [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
+### Hotfix 
+#### v0.3.1+3 (2024-09-07)
+* v+3 화질 설정 '자동'이 정상적으로 적용되지 않는 현상 수정 
+* 일부 환경에서 영상이 간헐적으로 끊기는 현상 수정
+    - 완벽히 해결되지 않을 수 있습니다. (해당 증상을 테스트 기기에서 발견하지 못함)
+
+#### v0.3.1+2 (2024-09-06)
+* 이미지 로딩 방식 변경
+
+#### v0.3.1+1 (2024-09-05)
+* 특정 환경에서 화면의 뒤로가기가 비정상적으로 작동하는 문제 수정 
+
+
+### 주요 업데이트 내용
 * 기본 로그인 방식을 Headless webview로 변경
     * 웹뷰 로그인 추가 (설정 -> 웹뷰 로그인)
 * 방송 종료 시 "라이브 종료" 메시지가 더 이상 뜨지 않음
@@ -8,12 +22,9 @@
     * 방송 종료 시 화면 보호기 활성화는 정상적으로 작동
 * 화질 설정에 "자동" 추가.
 
-#### Hotfix 
-* v0.3.1+1 특정 환경에서 카테고리 화면의 뒤로가기가 비정상적으로 작동하는 문제 수정
-* v0.3.1+2 이미지 로딩 방식 변경
 
-
-### [v0.3.0](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.0)
+## [v0.3.0](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.0)
+### 주요 업데이트 내용
 * UI 변경
 * 홈 화면 스크롤 이동 방식 개선
 * 전체 다시보기, 인기클립 추가

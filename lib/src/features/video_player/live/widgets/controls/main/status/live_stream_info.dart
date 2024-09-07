@@ -77,19 +77,23 @@ class LiveStreamInfo extends ConsumerWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 3.0),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      LiveStreamConcurrentUserCount(
-                                          concurrentUserCount:
-                                              value.concurrentUserCount),
-                                      LiveStreamUptime(
-                                        strOpenDate: liveDetail.openDate ??
-                                            '2024-01-01 00:00:00',
-                                      ),
-                                    ],
+                                  SizedBox(
+                                    width: 200.0,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        LiveStreamConcurrentUserCount(
+                                            concurrentUserCount:
+                                                value.concurrentUserCount),
+                                        LiveStreamUptime(
+                                          strOpenDate: liveDetail.openDate ??
+                                              '2024-01-01 00:00:00',
+                                        ),
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),

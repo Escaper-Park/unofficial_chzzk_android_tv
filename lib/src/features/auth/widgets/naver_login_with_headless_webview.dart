@@ -95,7 +95,7 @@ class _NaverLoginWithHeadlessWebviewState
     final String hintText = switch (loginStep.value) {
       LoginStep.id => '네이버 아이디를 입력해주세요',
       LoginStep.password => '비밀번호를 입력해주세요',
-      LoginStep.captcha => 'CAPTCHA 정답을 입력해주세요',
+      LoginStep.captcha => '로그인 중...\n2단계 인증을 설정하셨다면 스마트폰 알림을 확인해주세요',
     };
 
     return Column(
@@ -103,7 +103,13 @@ class _NaverLoginWithHeadlessWebviewState
         Expanded(
           child: _inputFieldWithHeader(hintText, isObscure.value),
         ),
-        _keyboardLayout(loginStep, isObscure, isActivateButton),
+        SizedBox(
+          height: 300.0,
+          width: 500.0,
+          child: Center(
+            child: _keyboardLayout(loginStep, isObscure, isActivateButton),
+          ),
+        ),
       ],
     );
   }
@@ -153,6 +159,8 @@ class _NaverLoginWithHeadlessWebviewState
                     // click login button
                     source = script.clickLoginButton();
                     await _controller.evaluateJavascript(source: source);
+
+                    loginStep.value = LoginStep.captcha;
 
                   case _:
                     break;

@@ -31,9 +31,7 @@ class LiveScreen extends ConsumerWidget {
                       addAutomaticKeepAlives: false,
                       addRepaintBoundaries: false,
                       addSemanticIndexes: false,
-                      // // Set shrinkWrap to true for fitting the size of [GridView]
-                      // // to the size of children. (To use [Center] widget)
-                      shrinkWrap: true,
+                      shrinkWrap: false,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: liveCount == 1 ? 1 : 2,
@@ -102,7 +100,7 @@ class LiveScreen extends ConsumerWidget {
                   addAutomaticKeepAlives: false,
                   addRepaintBoundaries: false,
                   addSemanticIndexes: false,
-                  shrinkWrap: true,
+                  shrinkWrap: false,
                   physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.zero,

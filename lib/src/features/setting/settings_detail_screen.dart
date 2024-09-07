@@ -27,7 +27,7 @@ class SettingsDetailScreen extends ConsumerWidget {
     final List<Widget> screens = [
       StreamSettingsScreen(settingMenuFSN: settingMenuFSN),
       ChatSettingsScreen(settingMenuFSN: settingMenuFSN),
-      const UpdateScreen(),
+      UpdateScreen(settingMenuFSN: settingMenuFSN),
       const WebviewLoginScreen(),
       OpenSourceLicencesScreen(settingMenuFSN: settingMenuFSN),
     ];

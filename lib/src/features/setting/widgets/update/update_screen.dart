@@ -9,7 +9,12 @@ import '../../controller/update_controller.dart';
 import 'update_log_markdown.dart';
 
 class UpdateScreen extends ConsumerWidget {
-  const UpdateScreen({super.key});
+  const UpdateScreen({
+    super.key,
+    required this.settingMenuFSN,
+  });
+
+  final FocusScopeNode settingMenuFSN;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,11 +42,14 @@ class UpdateScreen extends ConsumerWidget {
                   color: AppColors.whiteColor,
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 10.0),
               const HeaderText(text: '업데이트 내용'),
               const Divider(),
               Expanded(
-                child: UpdateLogMarkdown(log: update.$2),
+                child: UpdateLogMarkdown(
+                  log: update.$2,
+                  settingMenuFSN: settingMenuFSN,
+                ),
               ),
             ],
           ),

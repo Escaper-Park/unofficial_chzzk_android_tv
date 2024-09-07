@@ -19,7 +19,7 @@ void main() async {
   }
 
   // Check memory leaks in images for debugging
-  debugInvertOversizedImages = true;
+  // debugInvertOversizedImages = true;
 
   // Get local database
   final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
