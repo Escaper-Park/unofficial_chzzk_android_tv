@@ -145,9 +145,10 @@ class ChatContainer extends StatelessWidget {
       child: imageUrl == null
           ? const SizedBox.shrink()
           : OptimizedNetworkImage(
-              imageWidth: chatSettings.chatFontSize - 5.0,
-              imageHeight: chatSettings.chatFontSize - 5.0,
+              imageWidth: (chatSettings.chatFontSize + 2.0).toDouble(),
+              imageHeight: (chatSettings.chatFontSize + 2.0).toDouble(),
               imageUrl: imageUrl,
+              fit: BoxFit.fill,
             ),
     );
   }
