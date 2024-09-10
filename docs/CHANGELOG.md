@@ -1,5 +1,8 @@
 # CHZZK for Android TV v0.3.x 패치노트
 
+## [v0.3.2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.2)
+
+
 ## [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
 ### Hotfix 
 #### v0.3.1+3 (2024-09-07)

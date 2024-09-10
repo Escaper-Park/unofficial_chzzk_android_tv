@@ -98,14 +98,15 @@ class _NaverLoginWithHeadlessWebviewState
       LoginStep.captcha => '로그인 중...\n2단계 인증을 설정하셨다면 스마트폰 알림을 확인해주세요',
     };
 
+    final keyboardLayoutWidth = MediaQuery.of(context).size.width * 0.7;
+
     return Column(
       children: [
         Expanded(
           child: _inputFieldWithHeader(hintText, isObscure.value),
         ),
         SizedBox(
-          height: 300.0,
-          width: 500.0,
+          width: keyboardLayoutWidth,
           child: Center(
             child: _keyboardLayout(loginStep, isObscure, isActivateButton),
           ),
