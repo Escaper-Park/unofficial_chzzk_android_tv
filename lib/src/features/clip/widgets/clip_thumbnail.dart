@@ -11,11 +11,13 @@ class ClipThumbnail extends StatelessWidget {
     required this.clip,
     this.imageHeight = Dimensions.videoThumbnailHeight,
     this.imageWidth = Dimensions.videoThumbnailWidth,
+    this.fit = BoxFit.fitWidth,
   });
 
   final NaverClip clip;
   final double imageHeight;
   final double imageWidth;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class ClipThumbnail extends StatelessWidget {
                   imageUrl: clip.thumbnailImageUrl!,
                   imageWidth: imageWidth,
                   imageHeight: imageHeight,
-                  fit: BoxFit.fitWidth,
+                  fit: fit,
                 ),
                 // Adult vod mark
                 if (clip.adult)

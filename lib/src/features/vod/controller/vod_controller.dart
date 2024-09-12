@@ -39,29 +39,31 @@ class VodController extends _$VodController {
           '${ApiUrl.vodPlayback}/${vod.videoId}',
           queryParameters: {
             'key': vod.inKey,
-            // 'sid': 2099,
-            // 'env': 'real',
-            // 'st': 5,
-            // 'lc': 'ko_KR',
-            // 'cpl': 'ko_KR',
+            'sid': 2099,
+            'env': 'real',
+            'st': 5,
+            'lc': 'ko_KR',
+            'cpl': 'ko_KR',
           },
         );
 
-        final vodRepresentations =
-            response.data?['period'][0]['adaptationSet'][0]['representation'];
+        final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
+            ['otherAttributes']['m3u'];
 
-        int maxQualityIndex = 0;
-        for (int i = 1; i < vodRepresentations.length; i++) {
-          if (vodRepresentations[i]['width'] >
-              vodRepresentations[maxQualityIndex]['width']) {
-            maxQualityIndex = i;
-          }
-        }
+        return m3uAddress;
 
-        final vodPath =
-            vodRepresentations[maxQualityIndex]['baseURL'][0]['value'];
+        // int maxQualityIndex = 0;
+        // for (int i = 1; i < vodRepresentations.length; i++) {
+        //   if (vodRepresentations[i]['width'] >
+        //       vodRepresentations[maxQualityIndex]['width']) {
+        //     maxQualityIndex = i;
+        //   }
+        // }
 
-        return vodPath;
+        // final vodPath =
+        //     vodRepresentations[maxQualityIndex]['baseURL'][0]['value'];
+
+        // return vodPath;
       } catch (_) {
         return null;
       }

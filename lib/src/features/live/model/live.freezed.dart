@@ -37,12 +37,8 @@ mixin _$LiveInfo {
   Object? get blindType => throw _privateConstructorUsedError; // LiveResponse
   Channel? get channel => throw _privateConstructorUsedError;
 
-  /// Serializes this LiveInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LiveInfoCopyWith<LiveInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -81,8 +77,6 @@ class _$LiveInfoCopyWithImpl<$Res, $Val extends LiveInfo>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -158,8 +152,6 @@ class _$LiveInfoCopyWithImpl<$Res, $Val extends LiveInfo>
     ) as $Val);
   }
 
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res>? get channel {
@@ -209,8 +201,6 @@ class __$$LiveInfoImplCopyWithImpl<$Res>
       _$LiveInfoImpl _value, $Res Function(_$LiveInfoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -386,7 +376,7 @@ class _$LiveInfoImpl implements _LiveInfo {
             (identical(other.channel, channel) || other.channel == channel));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -405,9 +395,7 @@ class _$LiveInfoImpl implements _LiveInfo {
       const DeepCollectionEquality().hash(blindType),
       channel);
 
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LiveInfoImplCopyWith<_$LiveInfoImpl> get copyWith =>
@@ -441,8 +429,7 @@ abstract class _LiveInfo implements LiveInfo {
   factory _LiveInfo.fromJson(Map<String, dynamic> json) =
       _$LiveInfoImpl.fromJson;
 
-// Following
-  @override
+  @override // Following
   int? get liveId;
   @override
   String? get liveImageUrl;
@@ -461,20 +448,17 @@ abstract class _LiveInfo implements LiveInfo {
   @override
   bool? get adult;
   @override
-  List<String>? get tags; // Only in popular lives
-  @override
+  List<String>? get tags;
+  @override // Only in popular lives
   String? get openDate;
   @override
   int? get accumulateCount;
   @override
-  Object? get blindType; // LiveResponse
-  @override
+  Object? get blindType;
+  @override // LiveResponse
   Channel? get channel;
-
-  /// Create a copy of LiveInfo
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LiveInfoImplCopyWith<_$LiveInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -518,12 +502,8 @@ mixin _$LiveDetail {
   @LivePlaybackConverter()
   LivePlaybackJson get livePlaybackJson => throw _privateConstructorUsedError;
 
-  /// Serializes this LiveDetail to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LiveDetailCopyWith<LiveDetail> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -577,8 +557,6 @@ class _$LiveDetailCopyWithImpl<$Res, $Val extends LiveDetail>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -719,8 +697,6 @@ class _$LiveDetailCopyWithImpl<$Res, $Val extends LiveDetail>
     ) as $Val);
   }
 
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ChannelCopyWith<$Res> get channel {
@@ -729,8 +705,6 @@ class _$LiveDetailCopyWithImpl<$Res, $Val extends LiveDetail>
     });
   }
 
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LivePlaybackJsonCopyWith<$Res> get livePlaybackJson {
@@ -791,8 +765,6 @@ class __$$LiveDetailImplCopyWithImpl<$Res>
       _$LiveDetailImpl _value, $Res Function(_$LiveDetailImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1106,7 +1078,7 @@ class _$LiveDetailImpl implements _LiveDetail {
                 other.livePlaybackJson == livePlaybackJson));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -1139,9 +1111,7 @@ class _$LiveDetailImpl implements _LiveDetail {
         livePlaybackJson
       ]);
 
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LiveDetailImplCopyWith<_$LiveDetailImpl> get copyWith =>
@@ -1189,8 +1159,7 @@ abstract class _LiveDetail implements LiveDetail {
   factory _LiveDetail.fromJson(Map<String, dynamic> json) =
       _$LiveDetailImpl.fromJson;
 
-// LiveInfo
-  @override
+  @override // LiveInfo
   int get liveId;
   @override
   String? get liveTitle;
@@ -1215,8 +1184,8 @@ abstract class _LiveDetail implements LiveDetail {
   @override
   String? get liveCategoryValue;
   @override
-  Object? get blindType; // LiveDetail only
-  @override
+  Object? get blindType;
+  @override // LiveDetail only
   String get status;
   @override
   String? get closeDate;
@@ -1237,19 +1206,16 @@ abstract class _LiveDetail implements LiveDetail {
   @override
   List<String> get p2pQuality;
   @override
-  Channel get channel; // required LivePollingStatusJson livePollingStatusJson,
-  @override
+  Channel get channel;
+  @override // required LivePollingStatusJson livePollingStatusJson,
   String? get userAdultStatus;
   @override
-  bool get chatDonationRankingExposure; // required AdParameter adParameter,
-  @override
+  bool get chatDonationRankingExposure;
+  @override // required AdParameter adParameter,
   @LivePlaybackConverter()
   LivePlaybackJson get livePlaybackJson;
-
-  /// Create a copy of LiveDetail
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LiveDetailImplCopyWith<_$LiveDetailImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1265,12 +1231,8 @@ mixin _$LiveResponse {
   LivePage? get next => throw _privateConstructorUsedError;
   List<LiveInfo> get data => throw _privateConstructorUsedError;
 
-  /// Serializes this LiveResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LiveResponseCopyWith<LiveResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1299,8 +1261,6 @@ class _$LiveResponseCopyWithImpl<$Res, $Val extends LiveResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1324,8 +1284,6 @@ class _$LiveResponseCopyWithImpl<$Res, $Val extends LiveResponse>
     ) as $Val);
   }
 
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LivePageCopyWith<$Res>? get next {
@@ -1364,8 +1322,6 @@ class __$$LiveResponseImplCopyWithImpl<$Res>
       _$LiveResponseImpl _value, $Res Function(_$LiveResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1430,14 +1386,12 @@ class _$LiveResponseImpl implements _LiveResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LiveResponseImplCopyWith<_$LiveResponseImpl> get copyWith =>
@@ -1468,11 +1422,8 @@ abstract class _LiveResponse implements LiveResponse {
   LivePage? get next;
   @override
   List<LiveInfo> get data;
-
-  /// Create a copy of LiveResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LiveResponseImplCopyWith<_$LiveResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1486,12 +1437,8 @@ mixin _$LivePage {
   int get concurrentUserCount => throw _privateConstructorUsedError;
   int get liveId => throw _privateConstructorUsedError;
 
-  /// Serializes this LivePage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LivePage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LivePageCopyWith<LivePage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1514,8 +1461,6 @@ class _$LivePageCopyWithImpl<$Res, $Val extends LivePage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LivePage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1554,8 +1499,6 @@ class __$$LivePageImplCopyWithImpl<$Res>
       _$LivePageImpl _value, $Res Function(_$LivePageImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LivePage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1604,13 +1547,11 @@ class _$LivePageImpl implements _LivePage {
             (identical(other.liveId, liveId) || other.liveId == liveId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, concurrentUserCount, liveId);
 
-  /// Create a copy of LivePage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LivePageImplCopyWith<_$LivePageImpl> get copyWith =>
@@ -1636,11 +1577,8 @@ abstract class _LivePage implements LivePage {
   int get concurrentUserCount;
   @override
   int get liveId;
-
-  /// Create a copy of LivePage
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LivePageImplCopyWith<_$LivePageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1674,12 +1612,8 @@ mixin _$LiveStatus {
   int? get minFollowerMinute => throw _privateConstructorUsedError;
   bool get chatDonationRankingExposure => throw _privateConstructorUsedError;
 
-  /// Serializes this LiveStatus to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LiveStatus
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LiveStatusCopyWith<LiveStatus> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1724,8 +1658,6 @@ class _$LiveStatusCopyWithImpl<$Res, $Val extends LiveStatus>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LiveStatus
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1874,8 +1806,6 @@ class __$$LiveStatusImplCopyWithImpl<$Res>
       _$LiveStatusImpl _value, $Res Function(_$LiveStatusImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LiveStatus
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2118,7 +2048,7 @@ class _$LiveStatusImpl implements _LiveStatus {
                     chatDonationRankingExposure));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -2145,9 +2075,7 @@ class _$LiveStatusImpl implements _LiveStatus {
         chatDonationRankingExposure
       ]);
 
-  /// Create a copy of LiveStatus
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LiveStatusImplCopyWith<_$LiveStatusImpl> get copyWith =>
@@ -2213,9 +2141,8 @@ abstract class _LiveStatus implements LiveStatus {
   @override
   String? get liveCategory;
   @override
-  String?
-      get liveCategoryValue; // required LivePollingStatusJson? livePollingStatusJson,
-  @override
+  String? get liveCategoryValue;
+  @override // required LivePollingStatusJson? livePollingStatusJson,
   String? get userAdultStatus;
   @override
   Object? get faultStatus;
@@ -2231,11 +2158,8 @@ abstract class _LiveStatus implements LiveStatus {
   int? get minFollowerMinute;
   @override
   bool get chatDonationRankingExposure;
-
-  /// Create a copy of LiveStatus
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LiveStatusImplCopyWith<_$LiveStatusImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

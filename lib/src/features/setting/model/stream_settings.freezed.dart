@@ -46,12 +46,8 @@ mixin _$StreamSettings {
   /// 0: 5s, 1: 10s, 2: 30s
   int get vodPlaybackIntervalIndex => throw _privateConstructorUsedError;
 
-  /// Serializes this StreamSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of StreamSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StreamSettingsCopyWith<StreamSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -81,8 +77,6 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of StreamSettings
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,8 +141,6 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
       _$StreamSettingsImpl _value, $Res Function(_$StreamSettingsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of StreamSettings
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -262,7 +254,7 @@ class _$StreamSettingsImpl implements _StreamSettings {
                 other.vodPlaybackIntervalIndex == vodPlaybackIntervalIndex));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -273,9 +265,7 @@ class _$StreamSettingsImpl implements _StreamSettings {
       overlayControlsDisplayTime,
       vodPlaybackIntervalIndex);
 
-  /// Create a copy of StreamSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StreamSettingsImplCopyWith<_$StreamSettingsImpl> get copyWith =>
@@ -302,42 +292,40 @@ abstract class _StreamSettings implements StreamSettings {
   factory _StreamSettings.fromJson(Map<String, dynamic> json) =
       _$StreamSettingsImpl.fromJson;
 
+  @override
+
   /// The index of default resolution of single view live streaming.
   ///
   /// 0: 360p, 1: 480p, 2:720p, 3:1080p
-  @override
   int get resolutionIndex;
+  @override
 
   /// The index of default resolution of multi view live streaming.
   ///
   /// 0: 360p, 1: 480p, 2:720p, 3:1080p
-  @override
   int get multiviewResolutionIndex;
+  @override
 
   /// The index of default screen mode of single view live streaming.
   ///
   /// 0: off, 1: overlay, 2: side
-  @override
   int get chatWindowStateIndex;
+  @override
 
   /// 0: HLS, 1:LLHLS
-  @override
   int get latencyIndex;
+  @override
 
   /// The time(in seconds) that the overlay controls are displayed.
-  @override
   int get overlayControlsDisplayTime;
+  @override
 
   /// Interval of vod playback controls.
   ///
   /// 0: 5s, 1: 10s, 2: 30s
-  @override
   int get vodPlaybackIntervalIndex;
-
-  /// Create a copy of StreamSettings
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StreamSettingsImplCopyWith<_$StreamSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -11,6 +11,7 @@ class NaverClip with _$NaverClip {
     required String? videoId,
     required String clipTitle,
     required String ownerChannelId,
+    required OwnerChannel ownerChannel,
     required String? thumbnailImageUrl,
     required String? categoryType,
     required String? clipCategory,
@@ -18,12 +19,25 @@ class NaverClip with _$NaverClip {
     required bool adult,
     required String createdDate,
     required String recId,
+    required int readCount,
     // required Object? blindType,
     required bool? privateUserBlock,
   }) = _NaverClip;
 
   factory NaverClip.fromJson(Map<String, dynamic> json) =>
       _$NaverClipFromJson(json);
+}
+
+@freezed
+class OwnerChannel with _$OwnerChannel {
+  const factory OwnerChannel({
+    required String channelId,
+    required String channelName,
+    required String? channelImageUrl,
+    required bool verifiedMark,
+  }) = _OwnerChannel;
+
+  factory OwnerChannel.fromJson(Map<String, dynamic> json) => _$OwnerChannelFromJson(json);
 }
 
 @freezed

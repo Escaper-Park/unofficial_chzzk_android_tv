@@ -192,7 +192,7 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
               return NoTransitionPage(
                 child: VodStreamingScreen(
                   key: state.pageKey,
-                  vodPath: fields['vodPath'] as String,
+                  vodPath: fields['vodPath'] as dynamic,
                   vod: fields['vod'] as Vod,
                 ),
               );

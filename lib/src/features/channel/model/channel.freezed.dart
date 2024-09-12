@@ -31,12 +31,8 @@ mixin _$Channel {
   String? get channelType => throw _privateConstructorUsedError;
   String? get channelDescription => throw _privateConstructorUsedError;
 
-  /// Serializes this Channel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ChannelCopyWith<Channel> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -69,8 +65,6 @@ class _$ChannelCopyWithImpl<$Res, $Val extends Channel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -124,8 +118,6 @@ class _$ChannelCopyWithImpl<$Res, $Val extends Channel>
     ) as $Val);
   }
 
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PersonalDataCopyWith<$Res>? get personalData {
@@ -169,8 +161,6 @@ class __$$ChannelImplCopyWithImpl<$Res>
       _$ChannelImpl _value, $Res Function(_$ChannelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -293,7 +283,7 @@ class _$ChannelImpl implements _Channel {
                 other.channelDescription == channelDescription));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -307,9 +297,7 @@ class _$ChannelImpl implements _Channel {
       channelType,
       channelDescription);
 
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ChannelImplCopyWith<_$ChannelImpl> get copyWith =>
@@ -337,16 +325,15 @@ abstract class _Channel implements Channel {
 
   factory _Channel.fromJson(Map<String, dynamic> json) = _$ChannelImpl.fromJson;
 
-// required
-  @override
+  @override // required
   String get channelId;
   @override
   String get channelName;
   @override
   String? get channelImageUrl;
   @override
-  bool get verifiedMark; // optional
-  @override
+  bool get verifiedMark;
+  @override // optional
   PersonalData? get personalData;
   @override
   int? get followerCount;
@@ -356,11 +343,8 @@ abstract class _Channel implements Channel {
   String? get channelType;
   @override
   String? get channelDescription;
-
-  /// Create a copy of Channel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ChannelImplCopyWith<_$ChannelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -375,12 +359,8 @@ mixin _$PersonalData {
   bool get privateUserBlock => throw _privateConstructorUsedError;
   bool? get subscription => throw _privateConstructorUsedError;
 
-  /// Serializes this PersonalData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PersonalDataCopyWith<PersonalData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -409,8 +389,6 @@ class _$PersonalDataCopyWithImpl<$Res, $Val extends PersonalData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -434,8 +412,6 @@ class _$PersonalDataCopyWithImpl<$Res, $Val extends PersonalData>
     ) as $Val);
   }
 
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PersonalFollowingCopyWith<$Res>? get following {
@@ -474,8 +450,6 @@ class __$$PersonalDataImplCopyWithImpl<$Res>
       _$PersonalDataImpl _value, $Res Function(_$PersonalDataImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -536,14 +510,12 @@ class _$PersonalDataImpl implements _PersonalData {
                 other.subscription == subscription));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, following, privateUserBlock, subscription);
 
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PersonalDataImplCopyWith<_$PersonalDataImpl> get copyWith =>
@@ -572,11 +544,8 @@ abstract class _PersonalData implements PersonalData {
   bool get privateUserBlock;
   @override
   bool? get subscription;
-
-  /// Create a copy of PersonalData
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PersonalDataImplCopyWith<_$PersonalDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -591,12 +560,8 @@ mixin _$PersonalFollowing {
   bool get notification => throw _privateConstructorUsedError;
   String? get followDate => throw _privateConstructorUsedError;
 
-  /// Serializes this PersonalFollowing to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PersonalFollowing
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PersonalFollowingCopyWith<PersonalFollowing> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -620,8 +585,6 @@ class _$PersonalFollowingCopyWithImpl<$Res, $Val extends PersonalFollowing>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PersonalFollowing
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -665,8 +628,6 @@ class __$$PersonalFollowingImplCopyWithImpl<$Res>
       $Res Function(_$PersonalFollowingImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PersonalFollowing
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -727,14 +688,12 @@ class _$PersonalFollowingImpl implements _PersonalFollowing {
                 other.followDate == followDate));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, following, notification, followDate);
 
-  /// Create a copy of PersonalFollowing
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PersonalFollowingImplCopyWith<_$PersonalFollowingImpl> get copyWith =>
@@ -764,11 +723,8 @@ abstract class _PersonalFollowing implements PersonalFollowing {
   bool get notification;
   @override
   String? get followDate;
-
-  /// Create a copy of PersonalFollowing
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PersonalFollowingImplCopyWith<_$PersonalFollowingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -27,7 +27,6 @@ class PopularClipThumbnail extends StatelessWidget {
           colors: [
             AppColors.blackColor,
             AppColors.blackColor,
-            AppColors.blackColor,
             Colors.transparent,
           ],
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));

@@ -31,12 +31,8 @@ mixin _$Category {
   bool? get newCategory => throw _privateConstructorUsedError;
   List<String>? get tags => throw _privateConstructorUsedError;
 
-  /// Serializes this Category to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CategoryCopyWith<Category> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -69,8 +65,6 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -159,8 +153,6 @@ class __$$CategoryImplCopyWithImpl<$Res>
       _$CategoryImpl _value, $Res Function(_$CategoryImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -298,7 +290,7 @@ class _$CategoryImpl implements _Category {
             const DeepCollectionEquality().equals(other._tags, _tags));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -313,9 +305,7 @@ class _$CategoryImpl implements _Category {
       newCategory,
       const DeepCollectionEquality().hash(_tags));
 
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
@@ -365,11 +355,8 @@ abstract class _Category implements Category {
   bool? get newCategory;
   @override
   List<String>? get tags;
-
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -384,12 +371,8 @@ mixin _$CategoryPage {
   int get openLiveCount => throw _privateConstructorUsedError;
   String get categoryId => throw _privateConstructorUsedError;
 
-  /// Serializes this CategoryPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CategoryPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CategoryPageCopyWith<CategoryPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -413,8 +396,6 @@ class _$CategoryPageCopyWithImpl<$Res, $Val extends CategoryPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CategoryPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -458,8 +439,6 @@ class __$$CategoryPageImplCopyWithImpl<$Res>
       _$CategoryPageImpl _value, $Res Function(_$CategoryPageImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CategoryPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -520,14 +499,12 @@ class _$CategoryPageImpl implements _CategoryPage {
                 other.categoryId == categoryId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, concurrentUserCount, openLiveCount, categoryId);
 
-  /// Create a copy of CategoryPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryPageImplCopyWith<_$CategoryPageImpl> get copyWith =>
@@ -556,11 +533,8 @@ abstract class _CategoryPage implements CategoryPage {
   int get openLiveCount;
   @override
   String get categoryId;
-
-  /// Create a copy of CategoryPage
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CategoryPageImplCopyWith<_$CategoryPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -576,12 +550,8 @@ mixin _$CategoryResponse {
   CategoryPage? get next => throw _privateConstructorUsedError;
   List<Category> get data => throw _privateConstructorUsedError;
 
-  /// Serializes this CategoryResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CategoryResponseCopyWith<CategoryResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -611,8 +581,6 @@ class _$CategoryResponseCopyWithImpl<$Res, $Val extends CategoryResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -636,8 +604,6 @@ class _$CategoryResponseCopyWithImpl<$Res, $Val extends CategoryResponse>
     ) as $Val);
   }
 
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryPageCopyWith<$Res>? get next {
@@ -677,8 +643,6 @@ class __$$CategoryResponseImplCopyWithImpl<$Res>
       $Res Function(_$CategoryResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -744,14 +708,12 @@ class _$CategoryResponseImpl implements _CategoryResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryResponseImplCopyWith<_$CategoryResponseImpl> get copyWith =>
@@ -783,11 +745,8 @@ abstract class _CategoryResponse implements CategoryResponse {
   CategoryPage? get next;
   @override
   List<Category> get data;
-
-  /// Create a copy of CategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CategoryResponseImplCopyWith<_$CategoryResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

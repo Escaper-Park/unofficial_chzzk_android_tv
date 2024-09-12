@@ -55,16 +55,24 @@ class ClipContainer extends ConsumerWidget {
             );
           }
         },
-        child: (_) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: (_) => Stack(
           children: [
-            // Image
-            ClipThumbnail(clip: clip),
-            // Info
-            Expanded(
-              child: ClipInfo(clip: clip),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image
+                ClipThumbnail(
+                  clip: clip,
+                  fit: BoxFit.fitHeight,
+                ),
+                // Info
+                Expanded(
+                  child: ClipInfo(clip: clip),
+                ),
+              ],
             ),
+            ClipStatus(clip: clip),
           ],
         ),
       ),

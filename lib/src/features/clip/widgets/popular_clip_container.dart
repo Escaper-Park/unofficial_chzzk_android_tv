@@ -49,7 +49,7 @@ class PopularClipContainer extends StatelessWidget {
               imageHeight: imageHeight,
             ),
             // Info
-            PopularClipInfo(clipTitle: clip.clipTitle),
+            PopularClipInfo(clip: clip),
           ],
         ),
       ),

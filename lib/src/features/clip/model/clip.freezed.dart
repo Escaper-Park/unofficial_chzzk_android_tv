@@ -24,22 +24,20 @@ mixin _$NaverClip {
   String? get videoId => throw _privateConstructorUsedError;
   String get clipTitle => throw _privateConstructorUsedError;
   String get ownerChannelId => throw _privateConstructorUsedError;
+  OwnerChannel get ownerChannel => throw _privateConstructorUsedError;
   String? get thumbnailImageUrl => throw _privateConstructorUsedError;
   String? get categoryType => throw _privateConstructorUsedError;
   String? get clipCategory => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError;
   bool get adult => throw _privateConstructorUsedError;
   String get createdDate => throw _privateConstructorUsedError;
-  String get recId =>
+  String get recId => throw _privateConstructorUsedError;
+  int get readCount =>
       throw _privateConstructorUsedError; // required Object? blindType,
   bool? get privateUserBlock => throw _privateConstructorUsedError;
 
-  /// Serializes this NaverClip to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of NaverClip
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $NaverClipCopyWith<NaverClip> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +52,7 @@ abstract class $NaverClipCopyWith<$Res> {
       String? videoId,
       String clipTitle,
       String ownerChannelId,
+      OwnerChannel ownerChannel,
       String? thumbnailImageUrl,
       String? categoryType,
       String? clipCategory,
@@ -61,7 +60,10 @@ abstract class $NaverClipCopyWith<$Res> {
       bool adult,
       String createdDate,
       String recId,
+      int readCount,
       bool? privateUserBlock});
+
+  $OwnerChannelCopyWith<$Res> get ownerChannel;
 }
 
 /// @nodoc
@@ -74,8 +76,6 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of NaverClip
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -83,6 +83,7 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
     Object? videoId = freezed,
     Object? clipTitle = null,
     Object? ownerChannelId = null,
+    Object? ownerChannel = null,
     Object? thumbnailImageUrl = freezed,
     Object? categoryType = freezed,
     Object? clipCategory = freezed,
@@ -90,6 +91,7 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
     Object? adult = null,
     Object? createdDate = null,
     Object? recId = null,
+    Object? readCount = null,
     Object? privateUserBlock = freezed,
   }) {
     return _then(_value.copyWith(
@@ -109,6 +111,10 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
           ? _value.ownerChannelId
           : ownerChannelId // ignore: cast_nullable_to_non_nullable
               as String,
+      ownerChannel: null == ownerChannel
+          ? _value.ownerChannel
+          : ownerChannel // ignore: cast_nullable_to_non_nullable
+              as OwnerChannel,
       thumbnailImageUrl: freezed == thumbnailImageUrl
           ? _value.thumbnailImageUrl
           : thumbnailImageUrl // ignore: cast_nullable_to_non_nullable
@@ -137,11 +143,23 @@ class _$NaverClipCopyWithImpl<$Res, $Val extends NaverClip>
           ? _value.recId
           : recId // ignore: cast_nullable_to_non_nullable
               as String,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
       privateUserBlock: freezed == privateUserBlock
           ? _value.privateUserBlock
           : privateUserBlock // ignore: cast_nullable_to_non_nullable
               as bool?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $OwnerChannelCopyWith<$Res> get ownerChannel {
+    return $OwnerChannelCopyWith<$Res>(_value.ownerChannel, (value) {
+      return _then(_value.copyWith(ownerChannel: value) as $Val);
+    });
   }
 }
 
@@ -158,6 +176,7 @@ abstract class _$$NaverClipImplCopyWith<$Res>
       String? videoId,
       String clipTitle,
       String ownerChannelId,
+      OwnerChannel ownerChannel,
       String? thumbnailImageUrl,
       String? categoryType,
       String? clipCategory,
@@ -165,7 +184,11 @@ abstract class _$$NaverClipImplCopyWith<$Res>
       bool adult,
       String createdDate,
       String recId,
+      int readCount,
       bool? privateUserBlock});
+
+  @override
+  $OwnerChannelCopyWith<$Res> get ownerChannel;
 }
 
 /// @nodoc
@@ -176,8 +199,6 @@ class __$$NaverClipImplCopyWithImpl<$Res>
       _$NaverClipImpl _value, $Res Function(_$NaverClipImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of NaverClip
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -185,6 +206,7 @@ class __$$NaverClipImplCopyWithImpl<$Res>
     Object? videoId = freezed,
     Object? clipTitle = null,
     Object? ownerChannelId = null,
+    Object? ownerChannel = null,
     Object? thumbnailImageUrl = freezed,
     Object? categoryType = freezed,
     Object? clipCategory = freezed,
@@ -192,6 +214,7 @@ class __$$NaverClipImplCopyWithImpl<$Res>
     Object? adult = null,
     Object? createdDate = null,
     Object? recId = null,
+    Object? readCount = null,
     Object? privateUserBlock = freezed,
   }) {
     return _then(_$NaverClipImpl(
@@ -211,6 +234,10 @@ class __$$NaverClipImplCopyWithImpl<$Res>
           ? _value.ownerChannelId
           : ownerChannelId // ignore: cast_nullable_to_non_nullable
               as String,
+      ownerChannel: null == ownerChannel
+          ? _value.ownerChannel
+          : ownerChannel // ignore: cast_nullable_to_non_nullable
+              as OwnerChannel,
       thumbnailImageUrl: freezed == thumbnailImageUrl
           ? _value.thumbnailImageUrl
           : thumbnailImageUrl // ignore: cast_nullable_to_non_nullable
@@ -239,6 +266,10 @@ class __$$NaverClipImplCopyWithImpl<$Res>
           ? _value.recId
           : recId // ignore: cast_nullable_to_non_nullable
               as String,
+      readCount: null == readCount
+          ? _value.readCount
+          : readCount // ignore: cast_nullable_to_non_nullable
+              as int,
       privateUserBlock: freezed == privateUserBlock
           ? _value.privateUserBlock
           : privateUserBlock // ignore: cast_nullable_to_non_nullable
@@ -255,6 +286,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       required this.videoId,
       required this.clipTitle,
       required this.ownerChannelId,
+      required this.ownerChannel,
       required this.thumbnailImageUrl,
       required this.categoryType,
       required this.clipCategory,
@@ -262,6 +294,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       required this.adult,
       required this.createdDate,
       required this.recId,
+      required this.readCount,
       required this.privateUserBlock});
 
   factory _$NaverClipImpl.fromJson(Map<String, dynamic> json) =>
@@ -276,6 +309,8 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
   @override
   final String ownerChannelId;
   @override
+  final OwnerChannel ownerChannel;
+  @override
   final String? thumbnailImageUrl;
   @override
   final String? categoryType;
@@ -289,13 +324,15 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
   final String createdDate;
   @override
   final String recId;
+  @override
+  final int readCount;
 // required Object? blindType,
   @override
   final bool? privateUserBlock;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'NaverClip(clipUID: $clipUID, videoId: $videoId, clipTitle: $clipTitle, ownerChannelId: $ownerChannelId, thumbnailImageUrl: $thumbnailImageUrl, categoryType: $categoryType, clipCategory: $clipCategory, duration: $duration, adult: $adult, createdDate: $createdDate, recId: $recId, privateUserBlock: $privateUserBlock)';
+    return 'NaverClip(clipUID: $clipUID, videoId: $videoId, clipTitle: $clipTitle, ownerChannelId: $ownerChannelId, ownerChannel: $ownerChannel, thumbnailImageUrl: $thumbnailImageUrl, categoryType: $categoryType, clipCategory: $clipCategory, duration: $duration, adult: $adult, createdDate: $createdDate, recId: $recId, readCount: $readCount, privateUserBlock: $privateUserBlock)';
   }
 
   @override
@@ -307,6 +344,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       ..add(DiagnosticsProperty('videoId', videoId))
       ..add(DiagnosticsProperty('clipTitle', clipTitle))
       ..add(DiagnosticsProperty('ownerChannelId', ownerChannelId))
+      ..add(DiagnosticsProperty('ownerChannel', ownerChannel))
       ..add(DiagnosticsProperty('thumbnailImageUrl', thumbnailImageUrl))
       ..add(DiagnosticsProperty('categoryType', categoryType))
       ..add(DiagnosticsProperty('clipCategory', clipCategory))
@@ -314,6 +352,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       ..add(DiagnosticsProperty('adult', adult))
       ..add(DiagnosticsProperty('createdDate', createdDate))
       ..add(DiagnosticsProperty('recId', recId))
+      ..add(DiagnosticsProperty('readCount', readCount))
       ..add(DiagnosticsProperty('privateUserBlock', privateUserBlock));
   }
 
@@ -328,6 +367,8 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
                 other.clipTitle == clipTitle) &&
             (identical(other.ownerChannelId, ownerChannelId) ||
                 other.ownerChannelId == ownerChannelId) &&
+            (identical(other.ownerChannel, ownerChannel) ||
+                other.ownerChannel == ownerChannel) &&
             (identical(other.thumbnailImageUrl, thumbnailImageUrl) ||
                 other.thumbnailImageUrl == thumbnailImageUrl) &&
             (identical(other.categoryType, categoryType) ||
@@ -340,11 +381,13 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
             (identical(other.createdDate, createdDate) ||
                 other.createdDate == createdDate) &&
             (identical(other.recId, recId) || other.recId == recId) &&
+            (identical(other.readCount, readCount) ||
+                other.readCount == readCount) &&
             (identical(other.privateUserBlock, privateUserBlock) ||
                 other.privateUserBlock == privateUserBlock));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -352,6 +395,7 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       videoId,
       clipTitle,
       ownerChannelId,
+      ownerChannel,
       thumbnailImageUrl,
       categoryType,
       clipCategory,
@@ -359,11 +403,10 @@ class _$NaverClipImpl with DiagnosticableTreeMixin implements _NaverClip {
       adult,
       createdDate,
       recId,
+      readCount,
       privateUserBlock);
 
-  /// Create a copy of NaverClip
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$NaverClipImplCopyWith<_$NaverClipImpl> get copyWith =>
@@ -383,6 +426,7 @@ abstract class _NaverClip implements NaverClip {
       required final String? videoId,
       required final String clipTitle,
       required final String ownerChannelId,
+      required final OwnerChannel ownerChannel,
       required final String? thumbnailImageUrl,
       required final String? categoryType,
       required final String? clipCategory,
@@ -390,6 +434,7 @@ abstract class _NaverClip implements NaverClip {
       required final bool adult,
       required final String createdDate,
       required final String recId,
+      required final int readCount,
       required final bool? privateUserBlock}) = _$NaverClipImpl;
 
   factory _NaverClip.fromJson(Map<String, dynamic> json) =
@@ -404,6 +449,8 @@ abstract class _NaverClip implements NaverClip {
   @override
   String get ownerChannelId;
   @override
+  OwnerChannel get ownerChannel;
+  @override
   String? get thumbnailImageUrl;
   @override
   String? get categoryType;
@@ -416,15 +463,230 @@ abstract class _NaverClip implements NaverClip {
   @override
   String get createdDate;
   @override
-  String get recId; // required Object? blindType,
+  String get recId;
   @override
+  int get readCount;
+  @override // required Object? blindType,
   bool? get privateUserBlock;
-
-  /// Create a copy of NaverClip
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$NaverClipImplCopyWith<_$NaverClipImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+OwnerChannel _$OwnerChannelFromJson(Map<String, dynamic> json) {
+  return _OwnerChannel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$OwnerChannel {
+  String get channelId => throw _privateConstructorUsedError;
+  String get channelName => throw _privateConstructorUsedError;
+  String? get channelImageUrl => throw _privateConstructorUsedError;
+  bool get verifiedMark => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $OwnerChannelCopyWith<OwnerChannel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OwnerChannelCopyWith<$Res> {
+  factory $OwnerChannelCopyWith(
+          OwnerChannel value, $Res Function(OwnerChannel) then) =
+      _$OwnerChannelCopyWithImpl<$Res, OwnerChannel>;
+  @useResult
+  $Res call(
+      {String channelId,
+      String channelName,
+      String? channelImageUrl,
+      bool verifiedMark});
+}
+
+/// @nodoc
+class _$OwnerChannelCopyWithImpl<$Res, $Val extends OwnerChannel>
+    implements $OwnerChannelCopyWith<$Res> {
+  _$OwnerChannelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? channelId = null,
+    Object? channelName = null,
+    Object? channelImageUrl = freezed,
+    Object? verifiedMark = null,
+  }) {
+    return _then(_value.copyWith(
+      channelId: null == channelId
+          ? _value.channelId
+          : channelId // ignore: cast_nullable_to_non_nullable
+              as String,
+      channelName: null == channelName
+          ? _value.channelName
+          : channelName // ignore: cast_nullable_to_non_nullable
+              as String,
+      channelImageUrl: freezed == channelImageUrl
+          ? _value.channelImageUrl
+          : channelImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      verifiedMark: null == verifiedMark
+          ? _value.verifiedMark
+          : verifiedMark // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OwnerChannelImplCopyWith<$Res>
+    implements $OwnerChannelCopyWith<$Res> {
+  factory _$$OwnerChannelImplCopyWith(
+          _$OwnerChannelImpl value, $Res Function(_$OwnerChannelImpl) then) =
+      __$$OwnerChannelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String channelId,
+      String channelName,
+      String? channelImageUrl,
+      bool verifiedMark});
+}
+
+/// @nodoc
+class __$$OwnerChannelImplCopyWithImpl<$Res>
+    extends _$OwnerChannelCopyWithImpl<$Res, _$OwnerChannelImpl>
+    implements _$$OwnerChannelImplCopyWith<$Res> {
+  __$$OwnerChannelImplCopyWithImpl(
+      _$OwnerChannelImpl _value, $Res Function(_$OwnerChannelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? channelId = null,
+    Object? channelName = null,
+    Object? channelImageUrl = freezed,
+    Object? verifiedMark = null,
+  }) {
+    return _then(_$OwnerChannelImpl(
+      channelId: null == channelId
+          ? _value.channelId
+          : channelId // ignore: cast_nullable_to_non_nullable
+              as String,
+      channelName: null == channelName
+          ? _value.channelName
+          : channelName // ignore: cast_nullable_to_non_nullable
+              as String,
+      channelImageUrl: freezed == channelImageUrl
+          ? _value.channelImageUrl
+          : channelImageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      verifiedMark: null == verifiedMark
+          ? _value.verifiedMark
+          : verifiedMark // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$OwnerChannelImpl with DiagnosticableTreeMixin implements _OwnerChannel {
+  const _$OwnerChannelImpl(
+      {required this.channelId,
+      required this.channelName,
+      required this.channelImageUrl,
+      required this.verifiedMark});
+
+  factory _$OwnerChannelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OwnerChannelImplFromJson(json);
+
+  @override
+  final String channelId;
+  @override
+  final String channelName;
+  @override
+  final String? channelImageUrl;
+  @override
+  final bool verifiedMark;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'OwnerChannel(channelId: $channelId, channelName: $channelName, channelImageUrl: $channelImageUrl, verifiedMark: $verifiedMark)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'OwnerChannel'))
+      ..add(DiagnosticsProperty('channelId', channelId))
+      ..add(DiagnosticsProperty('channelName', channelName))
+      ..add(DiagnosticsProperty('channelImageUrl', channelImageUrl))
+      ..add(DiagnosticsProperty('verifiedMark', verifiedMark));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OwnerChannelImpl &&
+            (identical(other.channelId, channelId) ||
+                other.channelId == channelId) &&
+            (identical(other.channelName, channelName) ||
+                other.channelName == channelName) &&
+            (identical(other.channelImageUrl, channelImageUrl) ||
+                other.channelImageUrl == channelImageUrl) &&
+            (identical(other.verifiedMark, verifiedMark) ||
+                other.verifiedMark == verifiedMark));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, channelId, channelName, channelImageUrl, verifiedMark);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OwnerChannelImplCopyWith<_$OwnerChannelImpl> get copyWith =>
+      __$$OwnerChannelImplCopyWithImpl<_$OwnerChannelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$OwnerChannelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _OwnerChannel implements OwnerChannel {
+  const factory _OwnerChannel(
+      {required final String channelId,
+      required final String channelName,
+      required final String? channelImageUrl,
+      required final bool verifiedMark}) = _$OwnerChannelImpl;
+
+  factory _OwnerChannel.fromJson(Map<String, dynamic> json) =
+      _$OwnerChannelImpl.fromJson;
+
+  @override
+  String get channelId;
+  @override
+  String get channelName;
+  @override
+  String? get channelImageUrl;
+  @override
+  bool get verifiedMark;
+  @override
+  @JsonKey(ignore: true)
+  _$$OwnerChannelImplCopyWith<_$OwnerChannelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -439,12 +701,8 @@ mixin _$ClipResponse {
   ClipPage? get next => throw _privateConstructorUsedError;
   List<NaverClip> get data => throw _privateConstructorUsedError;
 
-  /// Serializes this ClipResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ClipResponseCopyWith<ClipResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -473,8 +731,6 @@ class _$ClipResponseCopyWithImpl<$Res, $Val extends ClipResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -498,8 +754,6 @@ class _$ClipResponseCopyWithImpl<$Res, $Val extends ClipResponse>
     ) as $Val);
   }
 
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ClipPageCopyWith<$Res>? get next {
@@ -538,8 +792,6 @@ class __$$ClipResponseImplCopyWithImpl<$Res>
       _$ClipResponseImpl _value, $Res Function(_$ClipResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -614,14 +866,12 @@ class _$ClipResponseImpl with DiagnosticableTreeMixin implements _ClipResponse {
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ClipResponseImplCopyWith<_$ClipResponseImpl> get copyWith =>
@@ -652,11 +902,8 @@ abstract class _ClipResponse implements ClipResponse {
   ClipPage? get next;
   @override
   List<NaverClip> get data;
-
-  /// Create a copy of ClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ClipResponseImplCopyWith<_$ClipResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -670,12 +917,8 @@ mixin _$ClipPage {
   String? get clipUID => throw _privateConstructorUsedError;
   int? get readCount => throw _privateConstructorUsedError;
 
-  /// Serializes this ClipPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ClipPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ClipPageCopyWith<ClipPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -698,8 +941,6 @@ class _$ClipPageCopyWithImpl<$Res, $Val extends ClipPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -738,8 +979,6 @@ class __$$ClipPageImplCopyWithImpl<$Res>
       _$ClipPageImpl _value, $Res Function(_$ClipPageImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -796,13 +1035,11 @@ class _$ClipPageImpl with DiagnosticableTreeMixin implements _ClipPage {
                 other.readCount == readCount));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, clipUID, readCount);
 
-  /// Create a copy of ClipPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ClipPageImplCopyWith<_$ClipPageImpl> get copyWith =>
@@ -828,11 +1065,8 @@ abstract class _ClipPage implements ClipPage {
   String? get clipUID;
   @override
   int? get readCount;
-
-  /// Create a copy of ClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ClipPageImplCopyWith<_$ClipPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -848,12 +1082,8 @@ mixin _$PopularClipResponse {
   PopularClipPage? get next => throw _privateConstructorUsedError;
   List<NaverClip> get data => throw _privateConstructorUsedError;
 
-  /// Serializes this PopularClipResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PopularClipResponseCopyWith<PopularClipResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -883,8 +1113,6 @@ class _$PopularClipResponseCopyWithImpl<$Res, $Val extends PopularClipResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -908,8 +1136,6 @@ class _$PopularClipResponseCopyWithImpl<$Res, $Val extends PopularClipResponse>
     ) as $Val);
   }
 
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PopularClipPageCopyWith<$Res>? get next {
@@ -949,8 +1175,6 @@ class __$$PopularClipResponseImplCopyWithImpl<$Res>
       $Res Function(_$PopularClipResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1028,14 +1252,12 @@ class _$PopularClipResponseImpl
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, size, next, const DeepCollectionEquality().hash(_data));
 
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PopularClipResponseImplCopyWith<_$PopularClipResponseImpl> get copyWith =>
@@ -1067,11 +1289,8 @@ abstract class _PopularClipResponse implements PopularClipResponse {
   PopularClipPage? get next;
   @override
   List<NaverClip> get data;
-
-  /// Create a copy of PopularClipResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PopularClipResponseImplCopyWith<_$PopularClipResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1084,12 +1303,8 @@ PopularClipPage _$PopularClipPageFromJson(Map<String, dynamic> json) {
 mixin _$PopularClipPage {
   String? get next => throw _privateConstructorUsedError;
 
-  /// Serializes this PopularClipPage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PopularClipPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PopularClipPageCopyWith<PopularClipPage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1113,8 +1328,6 @@ class _$PopularClipPageCopyWithImpl<$Res, $Val extends PopularClipPage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PopularClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1148,8 +1361,6 @@ class __$$PopularClipPageImplCopyWithImpl<$Res>
       _$PopularClipPageImpl _value, $Res Function(_$PopularClipPageImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PopularClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1198,13 +1409,11 @@ class _$PopularClipPageImpl
             (identical(other.next, next) || other.next == next));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, next);
 
-  /// Create a copy of PopularClipPage
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PopularClipPageImplCopyWith<_$PopularClipPageImpl> get copyWith =>
@@ -1228,11 +1437,8 @@ abstract class _PopularClipPage implements PopularClipPage {
 
   @override
   String? get next;
-
-  /// Create a copy of PopularClipPage
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PopularClipPageImplCopyWith<_$PopularClipPageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

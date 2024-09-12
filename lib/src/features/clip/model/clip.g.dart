@@ -12,6 +12,8 @@ _$NaverClipImpl _$$NaverClipImplFromJson(Map<String, dynamic> json) =>
       videoId: json['videoId'] as String?,
       clipTitle: json['clipTitle'] as String,
       ownerChannelId: json['ownerChannelId'] as String,
+      ownerChannel:
+          OwnerChannel.fromJson(json['ownerChannel'] as Map<String, dynamic>),
       thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
       categoryType: json['categoryType'] as String?,
       clipCategory: json['clipCategory'] as String?,
@@ -19,6 +21,7 @@ _$NaverClipImpl _$$NaverClipImplFromJson(Map<String, dynamic> json) =>
       adult: json['adult'] as bool,
       createdDate: json['createdDate'] as String,
       recId: json['recId'] as String,
+      readCount: (json['readCount'] as num).toInt(),
       privateUserBlock: json['privateUserBlock'] as bool?,
     );
 
@@ -28,6 +31,7 @@ Map<String, dynamic> _$$NaverClipImplToJson(_$NaverClipImpl instance) =>
       'videoId': instance.videoId,
       'clipTitle': instance.clipTitle,
       'ownerChannelId': instance.ownerChannelId,
+      'ownerChannel': instance.ownerChannel,
       'thumbnailImageUrl': instance.thumbnailImageUrl,
       'categoryType': instance.categoryType,
       'clipCategory': instance.clipCategory,
@@ -35,7 +39,24 @@ Map<String, dynamic> _$$NaverClipImplToJson(_$NaverClipImpl instance) =>
       'adult': instance.adult,
       'createdDate': instance.createdDate,
       'recId': instance.recId,
+      'readCount': instance.readCount,
       'privateUserBlock': instance.privateUserBlock,
+    };
+
+_$OwnerChannelImpl _$$OwnerChannelImplFromJson(Map<String, dynamic> json) =>
+    _$OwnerChannelImpl(
+      channelId: json['channelId'] as String,
+      channelName: json['channelName'] as String,
+      channelImageUrl: json['channelImageUrl'] as String?,
+      verifiedMark: json['verifiedMark'] as bool,
+    );
+
+Map<String, dynamic> _$$OwnerChannelImplToJson(_$OwnerChannelImpl instance) =>
+    <String, dynamic>{
+      'channelId': instance.channelId,
+      'channelName': instance.channelName,
+      'channelImageUrl': instance.channelImageUrl,
+      'verifiedMark': instance.verifiedMark,
     };
 
 _$ClipResponseImpl _$$ClipResponseImplFromJson(Map<String, dynamic> json) =>

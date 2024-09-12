@@ -7,7 +7,7 @@ part of 'stream_settings_controller.dart';
 // **************************************************************************
 
 String _$streamSettingsControllerHash() =>
-    r'74431ea56fbfdc13872debf1f5609a2501579e5c';
+    r'06d0786469b36e51a4bb60ab5759db03b61556f5';
 
 /// See also [StreamSettingsController].
 @ProviderFor(StreamSettingsController)

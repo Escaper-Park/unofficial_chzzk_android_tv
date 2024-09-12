@@ -72,12 +72,8 @@ mixin _$ChatSettings {
   /// 0: false, 1: true
   int get useBadgeCollector => throw _privateConstructorUsedError;
 
-  /// Serializes this ChatSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ChatSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ChatSettingsCopyWith<ChatSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -113,8 +109,6 @@ class _$ChatSettingsCopyWithImpl<$Res, $Val extends ChatSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ChatSettings
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -215,8 +209,6 @@ class __$$ChatSettingsImplCopyWithImpl<$Res>
       _$ChatSettingsImpl _value, $Res Function(_$ChatSettingsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ChatSettings
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -412,7 +404,7 @@ class _$ChatSettingsImpl implements _ChatSettings {
                 other.useBadgeCollector == useBadgeCollector));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -429,9 +421,7 @@ class _$ChatSettingsImpl implements _ChatSettings {
       badgeCollectorHeight,
       useBadgeCollector);
 
-  /// Create a copy of ChatSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ChatSettingsImplCopyWith<_$ChatSettingsImpl> get copyWith =>
@@ -463,74 +453,72 @@ abstract class _ChatSettings implements ChatSettings {
   factory _ChatSettings.fromJson(Map<String, dynamic> json) =
       _$ChatSettingsImpl.fromJson;
 
+  @override
+
   /// The X value of the overlay chat position as a ratio of the entire screen.
   ///
   /// MediaQuery.of(context).size.width * chatPositionX * 0.01.
-  @override
   int get chatPositionX;
+  @override
 
   /// The Y value of the overlay chat position as a ratio of the entire screen.
   ///
   /// MediaQuery.of(context).size.height * chatPositionY * 0.01.
-  @override
   int get chatPositionY;
+  @override
 
   /// The height of entire overlay chat container as a ratio of the entire screen.
-  @override
   int get chatContainerHeight;
+  @override
 
   /// The width of entire overlay chat container as a ratio of the entire screen.
-  @override
   int get chatContainerWidth;
+  @override
 
   /// The font size of the chat.
-  @override
   int get chatFontSize;
+  @override
 
   /// The transparency of the container that wraps the entire chat.
   ///
   /// Used with the opacity function. Opacity = (100 - Transparency) * 0.01.
   /// The max value of opacity  is 1.
-  @override
   int get entireChatContainerTransparency;
+  @override
 
   /// The transparency of the container that wraps a single chat.
   ///
   /// Used with the opacity function. Opacity = (100 - Transparency) * 0.01.
   /// The max value of opacity is 1.
-  @override
   int get singleChatContainerTransparency;
+  @override
 
   /// The vertical spacing between each chat.
-  @override
   int get chatContainerVerticalMargin;
+  @override
 
   /// Show chat created time
   ///
   /// 0: false, 1: true
-  @override
   int get showChatTime;
+  @override
 
   /// Show user's nick name in chat.
   ///
   /// 0: false, 1: true
-  @override
   int get showNickname;
+  @override
 
   /// The height of badge collector as a ratio of the entire chat container.
-  @override
   int get badgeCollectorHeight;
+  @override
 
   /// Show the badge collector.
   ///
   /// 0: false, 1: true
-  @override
   int get useBadgeCollector;
-
-  /// Create a copy of ChatSettings
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ChatSettingsImplCopyWith<_$ChatSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

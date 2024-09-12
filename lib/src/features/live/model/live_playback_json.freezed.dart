@@ -28,12 +28,8 @@ mixin _$LivePlaybackJson {
   Thumbnail get thumbnail => throw _privateConstructorUsedError;
   List<Object?> get multiview => throw _privateConstructorUsedError;
 
-  /// Serializes this LivePlaybackJson to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LivePlaybackJsonCopyWith<LivePlaybackJson> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -69,8 +65,6 @@ class _$LivePlaybackJsonCopyWithImpl<$Res, $Val extends LivePlaybackJson>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -114,8 +108,6 @@ class _$LivePlaybackJsonCopyWithImpl<$Res, $Val extends LivePlaybackJson>
     ) as $Val);
   }
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MetaCopyWith<$Res> get meta {
@@ -124,8 +116,6 @@ class _$LivePlaybackJsonCopyWithImpl<$Res, $Val extends LivePlaybackJson>
     });
   }
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ServiceMetaCopyWith<$Res> get serviceMeta {
@@ -134,8 +124,6 @@ class _$LivePlaybackJsonCopyWithImpl<$Res, $Val extends LivePlaybackJson>
     });
   }
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LiveCopyWith<$Res> get live {
@@ -144,8 +132,6 @@ class _$LivePlaybackJsonCopyWithImpl<$Res, $Val extends LivePlaybackJson>
     });
   }
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ThumbnailCopyWith<$Res> get thumbnail {
@@ -190,8 +176,6 @@ class __$$LivePlaybackJsonImplCopyWithImpl<$Res>
       $Res Function(_$LivePlaybackJsonImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -308,7 +292,7 @@ class _$LivePlaybackJsonImpl implements _LivePlaybackJson {
                 .equals(other._multiview, _multiview));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -320,9 +304,7 @@ class _$LivePlaybackJsonImpl implements _LivePlaybackJson {
       thumbnail,
       const DeepCollectionEquality().hash(_multiview));
 
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LivePlaybackJsonImplCopyWith<_$LivePlaybackJsonImpl> get copyWith =>
@@ -364,11 +346,8 @@ abstract class _LivePlaybackJson implements LivePlaybackJson {
   Thumbnail get thumbnail;
   @override
   List<Object?> get multiview;
-
-  /// Create a copy of LivePlaybackJson
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LivePlaybackJsonImplCopyWith<_$LivePlaybackJsonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -387,12 +366,8 @@ mixin _$Meta {
   bool get p2p => throw _privateConstructorUsedError;
   bool get cmcdEnabled => throw _privateConstructorUsedError;
 
-  /// Serializes this Meta to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $MetaCopyWith<Meta> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -423,8 +398,6 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -468,8 +441,6 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
     ) as $Val);
   }
 
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CdnInfoCopyWith<$Res> get cdnInfo {
@@ -506,8 +477,6 @@ class __$$MetaImplCopyWithImpl<$Res>
   __$$MetaImplCopyWithImpl(_$MetaImpl _value, $Res Function(_$MetaImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -604,14 +573,12 @@ class _$MetaImpl implements _Meta {
                 other.cmcdEnabled == cmcdEnabled));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, videoId, streamSeq, liveId,
       paidLive, cdnInfo, p2p, cmcdEnabled);
 
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MetaImplCopyWith<_$MetaImpl> get copyWith =>
@@ -651,11 +618,8 @@ abstract class _Meta implements Meta {
   bool get p2p;
   @override
   bool get cmcdEnabled;
-
-  /// Create a copy of Meta
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$MetaImplCopyWith<_$MetaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -669,12 +633,8 @@ mixin _$CdnInfo {
   String get cdnType => throw _privateConstructorUsedError;
   bool get zeroRating => throw _privateConstructorUsedError;
 
-  /// Serializes this CdnInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CdnInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CdnInfoCopyWith<CdnInfo> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -696,8 +656,6 @@ class _$CdnInfoCopyWithImpl<$Res, $Val extends CdnInfo>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CdnInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -735,8 +693,6 @@ class __$$CdnInfoImplCopyWithImpl<$Res>
       _$CdnInfoImpl _value, $Res Function(_$CdnInfoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CdnInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -784,13 +740,11 @@ class _$CdnInfoImpl implements _CdnInfo {
                 other.zeroRating == zeroRating));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, cdnType, zeroRating);
 
-  /// Create a copy of CdnInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CdnInfoImplCopyWith<_$CdnInfoImpl> get copyWith =>
@@ -815,11 +769,8 @@ abstract class _CdnInfo implements CdnInfo {
   String get cdnType;
   @override
   bool get zeroRating;
-
-  /// Create a copy of CdnInfo
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CdnInfoImplCopyWith<_$CdnInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -832,12 +783,8 @@ ServiceMeta _$ServiceMetaFromJson(Map<String, dynamic> json) {
 mixin _$ServiceMeta {
   String get contentType => throw _privateConstructorUsedError;
 
-  /// Serializes this ServiceMeta to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ServiceMeta
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ServiceMetaCopyWith<ServiceMeta> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -861,8 +808,6 @@ class _$ServiceMetaCopyWithImpl<$Res, $Val extends ServiceMeta>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ServiceMeta
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -896,8 +841,6 @@ class __$$ServiceMetaImplCopyWithImpl<$Res>
       _$ServiceMetaImpl _value, $Res Function(_$ServiceMetaImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ServiceMeta
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -937,13 +880,11 @@ class _$ServiceMetaImpl implements _ServiceMeta {
                 other.contentType == contentType));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, contentType);
 
-  /// Create a copy of ServiceMeta
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ServiceMetaImplCopyWith<_$ServiceMetaImpl> get copyWith =>
@@ -966,11 +907,8 @@ abstract class _ServiceMeta implements ServiceMeta {
 
   @override
   String get contentType;
-
-  /// Create a copy of ServiceMeta
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ServiceMetaImplCopyWith<_$ServiceMetaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -986,12 +924,8 @@ mixin _$Live {
   bool get timeMachine => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
 
-  /// Serializes this Live to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Live
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $LiveCopyWith<Live> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1013,8 +947,6 @@ class _$LiveCopyWithImpl<$Res, $Val extends Live>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Live
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1061,8 +993,6 @@ class __$$LiveImplCopyWithImpl<$Res>
   __$$LiveImplCopyWithImpl(_$LiveImpl _value, $Res Function(_$LiveImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Live
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1130,14 +1060,12 @@ class _$LiveImpl implements _Live {
             (identical(other.status, status) || other.status == status));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, start, open, timeMachine, status);
 
-  /// Create a copy of Live
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$LiveImplCopyWith<_$LiveImpl> get copyWith =>
@@ -1168,11 +1096,8 @@ abstract class _Live implements Live {
   bool get timeMachine;
   @override
   String get status;
-
-  /// Create a copy of Live
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$LiveImplCopyWith<_$LiveImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1189,12 +1114,8 @@ mixin _$Media {
   String? get latency => throw _privateConstructorUsedError;
   List<EncodingTrack> get encodingTrack => throw _privateConstructorUsedError;
 
-  /// Serializes this Media to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Media
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $MediaCopyWith<Media> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1221,8 +1142,6 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Media
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1280,8 +1199,6 @@ class __$$MediaImplCopyWithImpl<$Res>
       _$MediaImpl _value, $Res Function(_$MediaImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Media
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1365,14 +1282,12 @@ class _$MediaImpl implements _Media {
                 .equals(other._encodingTrack, _encodingTrack));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, mediaId, protocol, path, latency,
       const DeepCollectionEquality().hash(_encodingTrack));
 
-  /// Create a copy of Media
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MediaImplCopyWith<_$MediaImpl> get copyWith =>
@@ -1406,11 +1321,8 @@ abstract class _Media implements Media {
   String? get latency;
   @override
   List<EncodingTrack> get encodingTrack;
-
-  /// Create a copy of Media
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$MediaImplCopyWith<_$MediaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1438,12 +1350,8 @@ mixin _$EncodingTrack {
   String? get p2pPath => throw _privateConstructorUsedError;
   String? get p2pPathUrlEncoding => throw _privateConstructorUsedError;
 
-  /// Serializes this EncodingTrack to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of EncodingTrack
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $EncodingTrackCopyWith<EncodingTrack> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1482,8 +1390,6 @@ class _$EncodingTrackCopyWithImpl<$Res, $Val extends EncodingTrack>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of EncodingTrack
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1602,8 +1508,6 @@ class __$$EncodingTrackImplCopyWithImpl<$Res>
       _$EncodingTrackImpl _value, $Res Function(_$EncodingTrackImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of EncodingTrack
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1784,7 +1688,7 @@ class _$EncodingTrackImpl implements _EncodingTrack {
                 other.p2pPathUrlEncoding == p2pPathUrlEncoding));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1804,9 +1708,7 @@ class _$EncodingTrackImpl implements _EncodingTrack {
       p2pPath,
       p2pPathUrlEncoding);
 
-  /// Create a copy of EncodingTrack
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$EncodingTrackImplCopyWith<_$EncodingTrackImpl> get copyWith =>
@@ -1866,16 +1768,13 @@ abstract class _EncodingTrack implements EncodingTrack {
   @override
   bool get avoidReencoding;
   @override
-  String get videoDynamicRange; // 720p, 1080p
-  @override
+  String get videoDynamicRange;
+  @override // 720p, 1080p
   String? get p2pPath;
   @override
   String? get p2pPathUrlEncoding;
-
-  /// Create a copy of EncodingTrack
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$EncodingTrackImplCopyWith<_$EncodingTrackImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1889,12 +1788,8 @@ mixin _$Thumbnail {
   String get snapshotThumbnailTemplate => throw _privateConstructorUsedError;
   List<String> get types => throw _privateConstructorUsedError;
 
-  /// Serializes this Thumbnail to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Thumbnail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ThumbnailCopyWith<Thumbnail> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1917,8 +1812,6 @@ class _$ThumbnailCopyWithImpl<$Res, $Val extends Thumbnail>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Thumbnail
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1957,8 +1850,6 @@ class __$$ThumbnailImplCopyWithImpl<$Res>
       _$ThumbnailImpl _value, $Res Function(_$ThumbnailImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Thumbnail
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -2015,14 +1906,12 @@ class _$ThumbnailImpl implements _Thumbnail {
             const DeepCollectionEquality().equals(other._types, _types));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, snapshotThumbnailTemplate,
       const DeepCollectionEquality().hash(_types));
 
-  /// Create a copy of Thumbnail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ThumbnailImplCopyWith<_$ThumbnailImpl> get copyWith =>
@@ -2048,11 +1937,8 @@ abstract class _Thumbnail implements Thumbnail {
   String get snapshotThumbnailTemplate;
   @override
   List<String> get types;
-
-  /// Create a copy of Thumbnail
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ThumbnailImplCopyWith<_$ThumbnailImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

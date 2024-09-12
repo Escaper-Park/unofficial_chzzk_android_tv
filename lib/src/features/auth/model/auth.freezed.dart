@@ -23,12 +23,8 @@ mixin _$Auth {
   String get nidAuth => throw _privateConstructorUsedError;
   String get nidSession => throw _privateConstructorUsedError;
 
-  /// Serializes this Auth to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Auth
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AuthCopyWith<Auth> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -50,8 +46,6 @@ class _$AuthCopyWithImpl<$Res, $Val extends Auth>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Auth
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -88,8 +82,6 @@ class __$$AuthImplCopyWithImpl<$Res>
   __$$AuthImplCopyWithImpl(_$AuthImpl _value, $Res Function(_$AuthImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Auth
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -138,13 +130,11 @@ class _$AuthImpl extends _Auth {
                 other.nidSession == nidSession));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, nidAuth, nidSession);
 
-  /// Create a copy of Auth
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthImplCopyWith<_$AuthImpl> get copyWith =>
@@ -170,11 +160,8 @@ abstract class _Auth extends Auth {
   String get nidAuth;
   @override
   String get nidSession;
-
-  /// Create a copy of Auth
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AuthImplCopyWith<_$AuthImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

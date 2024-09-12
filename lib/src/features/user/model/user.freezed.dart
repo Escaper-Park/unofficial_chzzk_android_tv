@@ -28,12 +28,8 @@ mixin _$User {
       throw _privateConstructorUsedError; // required bool verifiedMark,
   bool? get loggedIn => throw _privateConstructorUsedError;
 
-  /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -60,8 +56,6 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -118,8 +112,6 @@ class __$$UserImplCopyWithImpl<$Res>
   __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -202,14 +194,12 @@ class _$UserImpl implements _User {
                 other.loggedIn == loggedIn));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, userIdHash, nickname, profileImageUrl, hasProfile, loggedIn);
 
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
@@ -233,22 +223,20 @@ abstract class _User implements User {
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
-  /// UID for chat service
   @override
+
+  /// UID for chat service
   String? get userIdHash;
   @override
   String? get nickname;
   @override
   String? get profileImageUrl;
   @override
-  bool? get hasProfile; // required bool verifiedMark,
-  @override
+  bool? get hasProfile;
+  @override // required bool verifiedMark,
   bool? get loggedIn;
-
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
