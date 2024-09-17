@@ -102,7 +102,7 @@ class ApiUrl {
 
   /// [chzzkService] Tags search results.
   ///
-  /// [queryParameters] int size = 20, String sortType = 'POPULAR', String tags 
+  /// [queryParameters] int size = 20, String sortType = 'POPULAR', int concurrentUserCount, int liveId, String tags 
   static const String searchTags = '/v1/tag/lives';
 
   /// [naverGame] Access token for chat.

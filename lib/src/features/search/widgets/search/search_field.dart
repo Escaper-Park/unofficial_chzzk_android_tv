@@ -5,16 +5,21 @@ import '../../../../utils/virtual_keyboard/widgets/virtual_keyboard_input_field.
 
 class SearchField extends StatelessWidget {
   /// Hint and input fields.
-  const SearchField({super.key});
+  const SearchField({
+    super.key,
+    required this.hintText,
+  });
+
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        HeaderText(text: '검색어를 입력해주세요'),
-        VirtualKeyboardInputField(),
+        HeaderText(text: hintText),
+        const VirtualKeyboardInputField(),
       ],
     );
   }

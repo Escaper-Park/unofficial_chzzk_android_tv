@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unofficial_chzzk_android_tv/src/features/video_player/live/widgets/util/wakelock_monitor.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'controller/live_player_controller.dart';
 import 'controller/live_playlist_controller.dart';
 import 'live_screen.dart';
 import 'live_controls_overlay.dart';
+import 'widgets/util/wakelock_monitor.dart';
 
 class LivePlayer extends ConsumerStatefulWidget {
   const LivePlayer({super.key});

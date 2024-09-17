@@ -17,7 +17,7 @@ class SearchChannelScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchChannel = ref.watch(searchChannelControllerProvider);
+    final searchChannel = ref.watch(currentSearchChannelControllerProvider);
 
     return searchChannel == null
         ? const CenteredText(text: '채널을 선택해주세요')

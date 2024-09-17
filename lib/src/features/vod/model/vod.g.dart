@@ -31,7 +31,12 @@ _$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
       inKey: json['inKey'] as String?,
       liveOpenDate: json['liveOpenDate'] as String?,
       vodStatus: json['vodStatus'] as String?,
+      liveRewindPlaybackJson:
+          _$JsonConverterFromJson<String, LiveRewindPlaybackJson>(
+              json['liveRewindPlaybackJson'],
+              const LiveRewindPlaybackConverter().fromJson),
       userAdultStatus: json['userAdultStatus'] as String?,
+      liveChatEnabled: json['liveChatEnabled'] as bool?,
     );
 
 Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
@@ -59,8 +64,25 @@ Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
       'inKey': instance.inKey,
       'liveOpenDate': instance.liveOpenDate,
       'vodStatus': instance.vodStatus,
+      'liveRewindPlaybackJson':
+          _$JsonConverterToJson<String, LiveRewindPlaybackJson>(
+              instance.liveRewindPlaybackJson,
+              const LiveRewindPlaybackConverter().toJson),
       'userAdultStatus': instance.userAdultStatus,
+      'liveChatEnabled': instance.liveChatEnabled,
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);
 
 _$ChannelVodResponseImpl _$$ChannelVodResponseImplFromJson(
         Map<String, dynamic> json) =>

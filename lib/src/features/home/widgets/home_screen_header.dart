@@ -65,8 +65,17 @@ class HomeScreenHeader extends HookConsumerWidget {
         }
       ),
       (
+        Icons.manage_search_rounded,
+        '태그 검색',
+        () {
+          ref
+              .read(dashboardControllerProvider.notifier)
+              .changeScreen(context, AppRoute.searchTag);
+        }
+      ),
+      (
         Icons.content_cut_rounded,
-        '인기클립',
+        '인기 클립',
         () {
           ref
               .read(dashboardControllerProvider.notifier)
@@ -121,6 +130,7 @@ class HomeScreenHeader extends HookConsumerWidget {
                 _expandedFlex1(functionButtons[1]),
                 _expandedFlex1(functionButtons[2]),
                 _expandedFlex1(functionButtons[3]),
+                _expandedFlex1(functionButtons[4]),
               ],
             ),
           ),

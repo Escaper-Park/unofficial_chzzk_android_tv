@@ -24,7 +24,7 @@ class _SearchRepository implements SearchRepository {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<SearchResponse?> getSearchChannelResults({
+  Future<SearchChannelResponse?> getSearchChannelResults({
     required String keyword,
     int offset = 0,
     int size = 50,
@@ -39,7 +39,7 @@ class _SearchRepository implements SearchRepository {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<SearchResponse>(Options(
+    final _options = _setStreamType<SearchChannelResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -56,10 +56,58 @@ class _SearchRepository implements SearchRepository {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
-    late SearchResponse? _value;
+    late SearchChannelResponse? _value;
+    try {
+      _value = _result.data == null
+          ? null
+          : SearchChannelResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<LiveResponse?> getSearchTagResults({
+    int size = 20,
+    required String sortType,
+    int? concurrentUserCount,
+    int? liveId,
+    required String tags,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'size': size,
+      r'sortType': sortType,
+      r'concurrentUserCount': concurrentUserCount,
+      r'liveId': liveId,
+      r'tags': tags,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<LiveResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v1/tag/lives',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
+    late LiveResponse? _value;
     try {
       _value =
-          _result.data == null ? null : SearchResponse.fromJson(_result.data!);
+          _result.data == null ? null : LiveResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

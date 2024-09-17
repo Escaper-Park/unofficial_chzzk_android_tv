@@ -15,7 +15,7 @@ enum AppRoute {
   splash('/splash', 'splash', 99),
 
   // Main sidebar
-  search('search', 'search', 0),
+  searchChannel('search', 'search', 0),
   home('home', 'home', 1),
   following('following', 'following', 2),
   category('category', 'category', 3),
@@ -38,7 +38,7 @@ enum AppRoute {
   vodStreaming('vodStreaming', 'vodStreaming', 12),
 
   // Search results
-  searchResults('searchResults', 'searchResults', 13),
+  searchChannelResults('searchChannelResults', 'searchChannelResults', 13),
 
   // Category details
   categoryDetail('categoryDetail', 'categoryDetail', 14),
@@ -47,7 +47,11 @@ enum AppRoute {
   clip('clip', 'clip', 15),
 
   // webview
-  webviewLogin('webviewLogin', 'webviewLogin', 16);
+  webviewLogin('webviewLogin', 'webviewLogin', 16),
+
+  // Search Tags
+  searchTag('searchTag', 'searchTag', 17),
+  searchTagResults('searchTagResults', 'searchTagResults', 18);
 
   final String routePath;
   final String routeName;
@@ -79,10 +83,10 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
         routes: <GoRoute>[
           // Search: 0
           GoRoute(
-            path: AppRoute.search.routePath,
-            name: AppRoute.search.routeName,
+            path: AppRoute.searchChannel.routePath,
+            name: AppRoute.searchChannel.routeName,
             pageBuilder: (context, state) => NoTransitionPage(
-              child: SearchScreen(key: state.pageKey),
+              child: SearchChannelScreen(key: state.pageKey),
             ),
           ),
           // Home: 1
@@ -200,13 +204,13 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
           ),
           // Search Results: 13
           GoRoute(
-            path: AppRoute.searchResults.routePath,
-            name: AppRoute.searchResults.routeName,
+            path: AppRoute.searchChannelResults.routePath,
+            name: AppRoute.searchChannelResults.routeName,
             pageBuilder: (context, state) {
               final fields = state.extra as Map<String, dynamic>;
 
               return NoTransitionPage(
-                child: SearchResultScreen(
+                child: SearchChannelResultScreen(
                   key: state.pageKey,
                   keyword: fields['keyword'] as String,
                 ),
@@ -250,6 +254,29 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
             pageBuilder: (context, state) => NoTransitionPage(
               child: WebviewLoginScreen(key: state.pageKey),
             ),
+          ),
+          // Search Tag: 17
+          GoRoute(
+            path: AppRoute.searchTag.routePath,
+            name: AppRoute.searchTag.routeName,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: SearchTagScreen(key: state.pageKey),
+            ),
+          ),
+          // Search Tag Restuls: 18
+          GoRoute(
+            path: AppRoute.searchTagResults.routePath,
+            name: AppRoute.searchTagResults.routeName,
+            pageBuilder: (context, state) {
+              final fields = state.extra as Map<String, dynamic>;
+
+              return NoTransitionPage(
+                child: SearchTagResultScreen(
+                  key: state.pageKey,
+                  tag: fields['tag'] as String,
+                ),
+              );
+            },
           ),
         ],
       ),

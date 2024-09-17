@@ -41,7 +41,7 @@ class ResponsiveSidebar extends HookConsumerWidget {
 
     // Menu items without login button(or user profile).
     final List<SidebarItem> sidebarMenuItemData = [
-      (Icons.search_rounded, '검색', AppRoute.search),
+      (Icons.search_rounded, '검색', AppRoute.searchChannel),
       (Icons.home_rounded, '홈', AppRoute.home),
       (Icons.favorite_rounded, '팔로잉', AppRoute.following),
       (Icons.category_rounded, '카테고리', AppRoute.category),

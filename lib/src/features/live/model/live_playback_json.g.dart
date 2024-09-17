@@ -43,6 +43,7 @@ _$MetaImpl _$$MetaImplFromJson(Map<String, dynamic> json) => _$MetaImpl(
       cdnInfo: CdnInfo.fromJson(json['cdnInfo'] as Map<String, dynamic>),
       p2p: json['p2p'] as bool?,
       cmcdEnabled: json['cmcdEnabled'] as bool,
+      liveRewind: json['liveRewind'] as bool?,
     );
 
 Map<String, dynamic> _$$MetaImplToJson(_$MetaImpl instance) =>
@@ -54,6 +55,7 @@ Map<String, dynamic> _$$MetaImplToJson(_$MetaImpl instance) =>
       'cdnInfo': instance.cdnInfo,
       'p2p': instance.p2p,
       'cmcdEnabled': instance.cmcdEnabled,
+      'liveRewind': instance.liveRewind,
     };
 
 _$CdnInfoImpl _$$CdnInfoImplFromJson(Map<String, dynamic> json) =>

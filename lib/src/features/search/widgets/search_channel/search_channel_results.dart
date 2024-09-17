@@ -5,10 +5,10 @@ import '../../../../common/widgets/center_widgets.dart';
 import '../../../../common/widgets/dpad_widgets.dart';
 import '../../../../common/widgets/header_text.dart';
 import '../../controller/search_controller.dart';
-import './search_result_channel_info_card.dart';
+import 'search_channel_result_info_card.dart';
 
-class SearchResults extends ConsumerWidget {
-  const SearchResults({
+class SearchChannelResults extends ConsumerWidget {
+  const SearchChannelResults({
     super.key,
     required this.keyword,
     required this.channelListFSN,
@@ -22,7 +22,7 @@ class SearchResults extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncSearchResult =
-        ref.watch(searchControllerProvider(keyword: keyword));
+        ref.watch(searchChannelControllerProvider(keyword: keyword));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -44,12 +44,13 @@ class SearchResults extends ConsumerWidget {
                       itemBuilder: (context, index) {
                         final channel = value[index];
 
-                        return SearchResultChannelInfoCard(
+                        return SearchChannelResultInfoCard(
                           autofocus: index == 0 ? true : false,
                           channel: channel,
                           onPressed: () {
                             ref
-                                .read(searchChannelControllerProvider.notifier)
+                                .read(currentSearchChannelControllerProvider
+                                    .notifier)
                                 .setCurrentChannel(channel);
                           },
                         );

@@ -29,9 +29,12 @@ class Meta with _$Meta {
     required String liveId,
     required bool paidLive,
     required CdnInfo cdnInfo,
-    // Nullable for abroad users 
+    // Nullable for abroad users
     required bool? p2p,
     required bool cmcdEnabled,
+    /* For Vod */
+    required bool? liveRewind,
+    // required double? duration,
   }) = _Meta;
 
   factory Meta.fromJson(Map<String, dynamic> json) => _$MetaFromJson(json);

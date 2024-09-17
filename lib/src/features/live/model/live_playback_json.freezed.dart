@@ -365,7 +365,8 @@ mixin _$Meta {
   CdnInfo get cdnInfo =>
       throw _privateConstructorUsedError; // Nullable for abroad users
   bool? get p2p => throw _privateConstructorUsedError;
-  bool get cmcdEnabled => throw _privateConstructorUsedError;
+  bool get cmcdEnabled => throw _privateConstructorUsedError; /* For Vod */
+  bool? get liveRewind => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -384,7 +385,8 @@ abstract class $MetaCopyWith<$Res> {
       bool paidLive,
       CdnInfo cdnInfo,
       bool? p2p,
-      bool cmcdEnabled});
+      bool cmcdEnabled,
+      bool? liveRewind});
 
   $CdnInfoCopyWith<$Res> get cdnInfo;
 }
@@ -409,6 +411,7 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
     Object? cdnInfo = null,
     Object? p2p = freezed,
     Object? cmcdEnabled = null,
+    Object? liveRewind = freezed,
   }) {
     return _then(_value.copyWith(
       videoId: null == videoId
@@ -439,6 +442,10 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
           ? _value.cmcdEnabled
           : cmcdEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      liveRewind: freezed == liveRewind
+          ? _value.liveRewind
+          : liveRewind // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -465,7 +472,8 @@ abstract class _$$MetaImplCopyWith<$Res> implements $MetaCopyWith<$Res> {
       bool paidLive,
       CdnInfo cdnInfo,
       bool? p2p,
-      bool cmcdEnabled});
+      bool cmcdEnabled,
+      bool? liveRewind});
 
   @override
   $CdnInfoCopyWith<$Res> get cdnInfo;
@@ -488,6 +496,7 @@ class __$$MetaImplCopyWithImpl<$Res>
     Object? cdnInfo = null,
     Object? p2p = freezed,
     Object? cmcdEnabled = null,
+    Object? liveRewind = freezed,
   }) {
     return _then(_$MetaImpl(
       videoId: null == videoId
@@ -518,6 +527,10 @@ class __$$MetaImplCopyWithImpl<$Res>
           ? _value.cmcdEnabled
           : cmcdEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      liveRewind: freezed == liveRewind
+          ? _value.liveRewind
+          : liveRewind // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -532,7 +545,8 @@ class _$MetaImpl implements _Meta {
       required this.paidLive,
       required this.cdnInfo,
       required this.p2p,
-      required this.cmcdEnabled});
+      required this.cmcdEnabled,
+      required this.liveRewind});
 
   factory _$MetaImpl.fromJson(Map<String, dynamic> json) =>
       _$$MetaImplFromJson(json);
@@ -552,10 +566,13 @@ class _$MetaImpl implements _Meta {
   final bool? p2p;
   @override
   final bool cmcdEnabled;
+/* For Vod */
+  @override
+  final bool? liveRewind;
 
   @override
   String toString() {
-    return 'Meta(videoId: $videoId, streamSeq: $streamSeq, liveId: $liveId, paidLive: $paidLive, cdnInfo: $cdnInfo, p2p: $p2p, cmcdEnabled: $cmcdEnabled)';
+    return 'Meta(videoId: $videoId, streamSeq: $streamSeq, liveId: $liveId, paidLive: $paidLive, cdnInfo: $cdnInfo, p2p: $p2p, cmcdEnabled: $cmcdEnabled, liveRewind: $liveRewind)';
   }
 
   @override
@@ -572,13 +589,15 @@ class _$MetaImpl implements _Meta {
             (identical(other.cdnInfo, cdnInfo) || other.cdnInfo == cdnInfo) &&
             (identical(other.p2p, p2p) || other.p2p == p2p) &&
             (identical(other.cmcdEnabled, cmcdEnabled) ||
-                other.cmcdEnabled == cmcdEnabled));
+                other.cmcdEnabled == cmcdEnabled) &&
+            (identical(other.liveRewind, liveRewind) ||
+                other.liveRewind == liveRewind));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, videoId, streamSeq, liveId,
-      paidLive, cdnInfo, p2p, cmcdEnabled);
+      paidLive, cdnInfo, p2p, cmcdEnabled, liveRewind);
 
   @JsonKey(ignore: true)
   @override
@@ -602,7 +621,8 @@ abstract class _Meta implements Meta {
       required final bool paidLive,
       required final CdnInfo cdnInfo,
       required final bool? p2p,
-      required final bool cmcdEnabled}) = _$MetaImpl;
+      required final bool cmcdEnabled,
+      required final bool? liveRewind}) = _$MetaImpl;
 
   factory _Meta.fromJson(Map<String, dynamic> json) = _$MetaImpl.fromJson;
 
@@ -620,6 +640,8 @@ abstract class _Meta implements Meta {
   bool? get p2p;
   @override
   bool get cmcdEnabled;
+  @override /* For Vod */
+  bool? get liveRewind;
   @override
   @JsonKey(ignore: true)
   _$$MetaImplCopyWith<_$MetaImpl> get copyWith =>

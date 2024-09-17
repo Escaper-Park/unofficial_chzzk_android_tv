@@ -29,43 +29,41 @@ class VodController extends _$VodController {
   Future<String?> getVodPlayback({required int videoNo}) async {
     final Vod? vod = await getVod(videoNo: videoNo);
 
-    final auth = await ref.watch(authControllerProvider.future);
-    final dio = ref.read(dioClientProvider.notifier).getBaseDio();
+    if (vod != null) {
+      // Old version
+      if (vod.liveRewindPlaybackJson == null) {
+        try {
+          final auth = await ref.watch(authControllerProvider.future);
+          final dio = ref.read(dioClientProvider.notifier).getBaseDio();
 
-    if (vod != null && vod.inKey != null) {
-      try {
-        final response = await dio.get(
-          options: auth?.getOptions(),
-          '${ApiUrl.vodPlayback}/${vod.videoId}',
-          queryParameters: {
-            'key': vod.inKey,
-            'sid': 2099,
-            'env': 'real',
-            'st': 5,
-            'lc': 'ko_KR',
-            'cpl': 'ko_KR',
-          },
-        );
+          final response = await dio.get(
+            options: auth?.getOptions(),
+            '${ApiUrl.vodPlayback}/${vod.videoId}',
+            queryParameters: {
+              'key': vod.inKey,
+              'sid': 2099,
+              'env': 'real',
+              'st': 5,
+              'lc': 'ko_KR',
+              'cpl': 'ko_KR',
+            },
+          );
 
-        final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
-            ['otherAttributes']['m3u'];
+          final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
+              ['otherAttributes']['m3u'];
 
-        return m3uAddress;
-
-        // int maxQualityIndex = 0;
-        // for (int i = 1; i < vodRepresentations.length; i++) {
-        //   if (vodRepresentations[i]['width'] >
-        //       vodRepresentations[maxQualityIndex]['width']) {
-        //     maxQualityIndex = i;
-        //   }
-        // }
-
-        // final vodPath =
-        //     vodRepresentations[maxQualityIndex]['baseURL'][0]['value'];
-
-        // return vodPath;
-      } catch (_) {
-        return null;
+          return m3uAddress;
+        } catch (_) {
+          return null;
+        }
+      }
+      // New version (liveRewind and liveChat)
+      else {
+        try {
+          return vod.liveRewindPlaybackJson!.media.first.path;
+        } catch (_) {
+          return null;
+        }
       }
     }
 

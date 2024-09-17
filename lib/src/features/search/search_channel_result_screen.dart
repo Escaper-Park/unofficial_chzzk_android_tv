@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import './widgets/search_result/search_results_widgets.dart';
+import 'widgets/search_channel/search_results_widgets.dart';
 
-class SearchResultScreen extends HookWidget {
-  const SearchResultScreen({super.key, required this.keyword});
+class SearchChannelResultScreen extends HookWidget {
+  const SearchChannelResultScreen({super.key, required this.keyword});
 
   final String keyword;
 
@@ -22,7 +22,7 @@ class SearchResultScreen extends HookWidget {
           children: [
             Expanded(
               flex: 1,
-              child: SearchResults(
+              child: SearchChannelResults(
                 keyword: keyword,
                 channelListFSN: channelListFSN,
                 channelDataFSN: channelDataFSN,

@@ -6,14 +6,14 @@ part 'search.freezed.dart';
 part 'search.g.dart';
 
 @freezed
-class SearchResponse with _$SearchResponse {
-  const factory SearchResponse({
+class SearchChannelResponse with _$SearchChannelResponse {
+  const factory SearchChannelResponse({
     required int size,
     required List<SearchChannelData> data,
-  }) = _SearchResponse;
+  }) = _SearchChannelResponse;
 
-  factory SearchResponse.fromJson(Map<String, dynamic> json) =>
-      _$SearchResponseFromJson(json);
+  factory SearchChannelResponse.fromJson(Map<String, dynamic> json) =>
+      _$SearchChannelResponseFromJson(json);
 }
 
 @freezed
@@ -25,3 +25,4 @@ class SearchChannelData with _$SearchChannelData {
   factory SearchChannelData.fromJson(Map<String, dynamic> json) =>
       _$SearchChannelDataFromJson(json);
 }
+

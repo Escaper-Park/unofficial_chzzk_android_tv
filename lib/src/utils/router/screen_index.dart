@@ -27,8 +27,12 @@ export '../../features/vod/all_vods_screen.dart';
 export '../../features/channel/channel_vod_screen.dart';
 
 // Search
-export '../../features/search/search_result_screen.dart';
-export '../../features/search/search_screen.dart';
+export '../../features/search/search_channel_result_screen.dart';
+export '../../features/search/search_channel_screen.dart';
+
+// Search Tags
+export '../../features/search/search_tag_screen.dart';
+export '../../features/search/search_tag_result_screen.dart';
 
 // Settings
 export '../../features/setting/settings_screen.dart';

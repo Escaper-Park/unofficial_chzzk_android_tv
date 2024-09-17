@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../channel/model/channel.dart';
+import 'live_rewind_playback_json.dart';
 
 part 'vod.freezed.dart';
 part 'vod.g.dart';
@@ -35,7 +36,10 @@ class Vod with _$Vod {
     required String? inKey,
     required String? liveOpenDate,
     required String? vodStatus,
+    // vod playback
+    @LiveRewindPlaybackConverter() required LiveRewindPlaybackJson? liveRewindPlaybackJson,
     required String? userAdultStatus,
+    required bool? liveChatEnabled,
   }) = _Vod;
 
   factory Vod.fromJson(Map<String, dynamic> json) => _$VodFromJson(json);

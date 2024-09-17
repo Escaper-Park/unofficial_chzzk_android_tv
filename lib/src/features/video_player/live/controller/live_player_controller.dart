@@ -79,8 +79,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
   void _checkVideoEnds() {
     final value = state.value!.value;
 
-    final bool checkEnds = value.hasError ||
-        ((value.position >= value.duration) && !value.isPlaying);
+    final bool checkEnds = value.hasError || (value.position >= value.duration);
 
     if (checkEnds) {
       // Check Ends Start
@@ -89,7 +88,9 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
       }
       // Ends
       else {
-        ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
+        if (!value.isPlaying) {
+          ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
+        }
       }
     }
     // After buffering

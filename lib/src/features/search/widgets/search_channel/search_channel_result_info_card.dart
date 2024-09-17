@@ -5,8 +5,8 @@ import '../../../../common/widgets/circle_avatar_profile_image.dart';
 import '../../../../common/widgets/focused_widget.dart';
 import '../../../channel/model/channel.dart';
 
-class SearchResultChannelInfoCard extends StatelessWidget {
-  const SearchResultChannelInfoCard({
+class SearchChannelResultInfoCard extends StatelessWidget {
+  const SearchChannelResultInfoCard({
     super.key,
     required this.autofocus,
     required this.channel,

@@ -44,8 +44,12 @@ mixin _$Vod {
   bool? get paidPromotion => throw _privateConstructorUsedError;
   String? get inKey => throw _privateConstructorUsedError;
   String? get liveOpenDate => throw _privateConstructorUsedError;
-  String? get vodStatus => throw _privateConstructorUsedError;
+  String? get vodStatus => throw _privateConstructorUsedError; // vod playback
+  @LiveRewindPlaybackConverter()
+  LiveRewindPlaybackJson? get liveRewindPlaybackJson =>
+      throw _privateConstructorUsedError;
   String? get userAdultStatus => throw _privateConstructorUsedError;
+  bool? get liveChatEnabled => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -82,9 +86,13 @@ abstract class $VodCopyWith<$Res> {
       String? inKey,
       String? liveOpenDate,
       String? vodStatus,
-      String? userAdultStatus});
+      @LiveRewindPlaybackConverter()
+      LiveRewindPlaybackJson? liveRewindPlaybackJson,
+      String? userAdultStatus,
+      bool? liveChatEnabled});
 
   $ChannelCopyWith<$Res> get channel;
+  $LiveRewindPlaybackJsonCopyWith<$Res>? get liveRewindPlaybackJson;
 }
 
 /// @nodoc
@@ -123,7 +131,9 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
     Object? vodStatus = freezed,
+    Object? liveRewindPlaybackJson = freezed,
     Object? userAdultStatus = freezed,
+    Object? liveChatEnabled = freezed,
   }) {
     return _then(_value.copyWith(
       videoNo: null == videoNo
@@ -219,10 +229,18 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
           ? _value.vodStatus
           : vodStatus // ignore: cast_nullable_to_non_nullable
               as String?,
+      liveRewindPlaybackJson: freezed == liveRewindPlaybackJson
+          ? _value.liveRewindPlaybackJson
+          : liveRewindPlaybackJson // ignore: cast_nullable_to_non_nullable
+              as LiveRewindPlaybackJson?,
       userAdultStatus: freezed == userAdultStatus
           ? _value.userAdultStatus
           : userAdultStatus // ignore: cast_nullable_to_non_nullable
               as String?,
+      liveChatEnabled: freezed == liveChatEnabled
+          ? _value.liveChatEnabled
+          : liveChatEnabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -231,6 +249,19 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
   $ChannelCopyWith<$Res> get channel {
     return $ChannelCopyWith<$Res>(_value.channel, (value) {
       return _then(_value.copyWith(channel: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $LiveRewindPlaybackJsonCopyWith<$Res>? get liveRewindPlaybackJson {
+    if (_value.liveRewindPlaybackJson == null) {
+      return null;
+    }
+
+    return $LiveRewindPlaybackJsonCopyWith<$Res>(_value.liveRewindPlaybackJson!,
+        (value) {
+      return _then(_value.copyWith(liveRewindPlaybackJson: value) as $Val);
     });
   }
 }
@@ -266,10 +297,15 @@ abstract class _$$VodImplCopyWith<$Res> implements $VodCopyWith<$Res> {
       String? inKey,
       String? liveOpenDate,
       String? vodStatus,
-      String? userAdultStatus});
+      @LiveRewindPlaybackConverter()
+      LiveRewindPlaybackJson? liveRewindPlaybackJson,
+      String? userAdultStatus,
+      bool? liveChatEnabled});
 
   @override
   $ChannelCopyWith<$Res> get channel;
+  @override
+  $LiveRewindPlaybackJsonCopyWith<$Res>? get liveRewindPlaybackJson;
 }
 
 /// @nodoc
@@ -305,7 +341,9 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
     Object? vodStatus = freezed,
+    Object? liveRewindPlaybackJson = freezed,
     Object? userAdultStatus = freezed,
+    Object? liveChatEnabled = freezed,
   }) {
     return _then(_$VodImpl(
       videoNo: null == videoNo
@@ -401,10 +439,18 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
           ? _value.vodStatus
           : vodStatus // ignore: cast_nullable_to_non_nullable
               as String?,
+      liveRewindPlaybackJson: freezed == liveRewindPlaybackJson
+          ? _value.liveRewindPlaybackJson
+          : liveRewindPlaybackJson // ignore: cast_nullable_to_non_nullable
+              as LiveRewindPlaybackJson?,
       userAdultStatus: freezed == userAdultStatus
           ? _value.userAdultStatus
           : userAdultStatus // ignore: cast_nullable_to_non_nullable
               as String?,
+      liveChatEnabled: freezed == liveChatEnabled
+          ? _value.liveChatEnabled
+          : liveChatEnabled // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -437,7 +483,9 @@ class _$VodImpl implements _Vod {
       required this.inKey,
       required this.liveOpenDate,
       required this.vodStatus,
-      required this.userAdultStatus});
+      @LiveRewindPlaybackConverter() required this.liveRewindPlaybackJson,
+      required this.userAdultStatus,
+      required this.liveChatEnabled});
 
   factory _$VodImpl.fromJson(Map<String, dynamic> json) =>
       _$$VodImplFromJson(json);
@@ -493,12 +541,18 @@ class _$VodImpl implements _Vod {
   final String? liveOpenDate;
   @override
   final String? vodStatus;
+// vod playback
+  @override
+  @LiveRewindPlaybackConverter()
+  final LiveRewindPlaybackJson? liveRewindPlaybackJson;
   @override
   final String? userAdultStatus;
+  @override
+  final bool? liveChatEnabled;
 
   @override
   String toString() {
-    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, readCount: $readCount, publishDateAt: $publishDateAt, categoryType: $categoryType, videoCategory: $videoCategory, videoCategoryValue: $videoCategoryValue, exposure: $exposure, adult: $adult, clipActive: $clipActive, channel: $channel, blindType: $blindType, livePv: $livePv, watchTimeline: $watchTimeline, paidPromotion: $paidPromotion, inKey: $inKey, liveOpenDate: $liveOpenDate, vodStatus: $vodStatus, userAdultStatus: $userAdultStatus)';
+    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, readCount: $readCount, publishDateAt: $publishDateAt, categoryType: $categoryType, videoCategory: $videoCategory, videoCategoryValue: $videoCategoryValue, exposure: $exposure, adult: $adult, clipActive: $clipActive, channel: $channel, blindType: $blindType, livePv: $livePv, watchTimeline: $watchTimeline, paidPromotion: $paidPromotion, inKey: $inKey, liveOpenDate: $liveOpenDate, vodStatus: $vodStatus, liveRewindPlaybackJson: $liveRewindPlaybackJson, userAdultStatus: $userAdultStatus, liveChatEnabled: $liveChatEnabled)';
   }
 
   @override
@@ -547,8 +601,12 @@ class _$VodImpl implements _Vod {
                 other.liveOpenDate == liveOpenDate) &&
             (identical(other.vodStatus, vodStatus) ||
                 other.vodStatus == vodStatus) &&
+            (identical(other.liveRewindPlaybackJson, liveRewindPlaybackJson) ||
+                other.liveRewindPlaybackJson == liveRewindPlaybackJson) &&
             (identical(other.userAdultStatus, userAdultStatus) ||
-                other.userAdultStatus == userAdultStatus));
+                other.userAdultStatus == userAdultStatus) &&
+            (identical(other.liveChatEnabled, liveChatEnabled) ||
+                other.liveChatEnabled == liveChatEnabled));
   }
 
   @JsonKey(ignore: true)
@@ -579,7 +637,9 @@ class _$VodImpl implements _Vod {
         inKey,
         liveOpenDate,
         vodStatus,
-        userAdultStatus
+        liveRewindPlaybackJson,
+        userAdultStatus,
+        liveChatEnabled
       ]);
 
   @JsonKey(ignore: true)
@@ -622,7 +682,10 @@ abstract class _Vod implements Vod {
       required final String? inKey,
       required final String? liveOpenDate,
       required final String? vodStatus,
-      required final String? userAdultStatus}) = _$VodImpl;
+      @LiveRewindPlaybackConverter()
+      required final LiveRewindPlaybackJson? liveRewindPlaybackJson,
+      required final String? userAdultStatus,
+      required final bool? liveChatEnabled}) = _$VodImpl;
 
   factory _Vod.fromJson(Map<String, dynamic> json) = _$VodImpl.fromJson;
 
@@ -674,8 +737,13 @@ abstract class _Vod implements Vod {
   String? get liveOpenDate;
   @override
   String? get vodStatus;
+  @override // vod playback
+  @LiveRewindPlaybackConverter()
+  LiveRewindPlaybackJson? get liveRewindPlaybackJson;
   @override
   String? get userAdultStatus;
+  @override
+  bool? get liveChatEnabled;
   @override
   @JsonKey(ignore: true)
   _$$VodImplCopyWith<_$VodImpl> get copyWith =>

@@ -14,34 +14,36 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SearchResponse _$SearchResponseFromJson(Map<String, dynamic> json) {
-  return _SearchResponse.fromJson(json);
+SearchChannelResponse _$SearchChannelResponseFromJson(
+    Map<String, dynamic> json) {
+  return _SearchChannelResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SearchResponse {
+mixin _$SearchChannelResponse {
   int get size => throw _privateConstructorUsedError;
   List<SearchChannelData> get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $SearchResponseCopyWith<SearchResponse> get copyWith =>
+  $SearchChannelResponseCopyWith<SearchChannelResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SearchResponseCopyWith<$Res> {
-  factory $SearchResponseCopyWith(
-          SearchResponse value, $Res Function(SearchResponse) then) =
-      _$SearchResponseCopyWithImpl<$Res, SearchResponse>;
+abstract class $SearchChannelResponseCopyWith<$Res> {
+  factory $SearchChannelResponseCopyWith(SearchChannelResponse value,
+          $Res Function(SearchChannelResponse) then) =
+      _$SearchChannelResponseCopyWithImpl<$Res, SearchChannelResponse>;
   @useResult
   $Res call({int size, List<SearchChannelData> data});
 }
 
 /// @nodoc
-class _$SearchResponseCopyWithImpl<$Res, $Val extends SearchResponse>
-    implements $SearchResponseCopyWith<$Res> {
-  _$SearchResponseCopyWithImpl(this._value, this._then);
+class _$SearchChannelResponseCopyWithImpl<$Res,
+        $Val extends SearchChannelResponse>
+    implements $SearchChannelResponseCopyWith<$Res> {
+  _$SearchChannelResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -68,22 +70,24 @@ class _$SearchResponseCopyWithImpl<$Res, $Val extends SearchResponse>
 }
 
 /// @nodoc
-abstract class _$$SearchResponseImplCopyWith<$Res>
-    implements $SearchResponseCopyWith<$Res> {
-  factory _$$SearchResponseImplCopyWith(_$SearchResponseImpl value,
-          $Res Function(_$SearchResponseImpl) then) =
-      __$$SearchResponseImplCopyWithImpl<$Res>;
+abstract class _$$SearchChannelResponseImplCopyWith<$Res>
+    implements $SearchChannelResponseCopyWith<$Res> {
+  factory _$$SearchChannelResponseImplCopyWith(
+          _$SearchChannelResponseImpl value,
+          $Res Function(_$SearchChannelResponseImpl) then) =
+      __$$SearchChannelResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int size, List<SearchChannelData> data});
 }
 
 /// @nodoc
-class __$$SearchResponseImplCopyWithImpl<$Res>
-    extends _$SearchResponseCopyWithImpl<$Res, _$SearchResponseImpl>
-    implements _$$SearchResponseImplCopyWith<$Res> {
-  __$$SearchResponseImplCopyWithImpl(
-      _$SearchResponseImpl _value, $Res Function(_$SearchResponseImpl) _then)
+class __$$SearchChannelResponseImplCopyWithImpl<$Res>
+    extends _$SearchChannelResponseCopyWithImpl<$Res,
+        _$SearchChannelResponseImpl>
+    implements _$$SearchChannelResponseImplCopyWith<$Res> {
+  __$$SearchChannelResponseImplCopyWithImpl(_$SearchChannelResponseImpl _value,
+      $Res Function(_$SearchChannelResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +96,7 @@ class __$$SearchResponseImplCopyWithImpl<$Res>
     Object? size = null,
     Object? data = null,
   }) {
-    return _then(_$SearchResponseImpl(
+    return _then(_$SearchChannelResponseImpl(
       size: null == size
           ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
@@ -107,13 +111,13 @@ class __$$SearchResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SearchResponseImpl implements _SearchResponse {
-  const _$SearchResponseImpl(
+class _$SearchChannelResponseImpl implements _SearchChannelResponse {
+  const _$SearchChannelResponseImpl(
       {required this.size, required final List<SearchChannelData> data})
       : _data = data;
 
-  factory _$SearchResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SearchResponseImplFromJson(json);
+  factory _$SearchChannelResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SearchChannelResponseImplFromJson(json);
 
   @override
   final int size;
@@ -127,14 +131,14 @@ class _$SearchResponseImpl implements _SearchResponse {
 
   @override
   String toString() {
-    return 'SearchResponse(size: $size, data: $data)';
+    return 'SearchChannelResponse(size: $size, data: $data)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchResponseImpl &&
+            other is _$SearchChannelResponseImpl &&
             (identical(other.size, size) || other.size == size) &&
             const DeepCollectionEquality().equals(other._data, _data));
   }
@@ -147,25 +151,26 @@ class _$SearchResponseImpl implements _SearchResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchResponseImplCopyWith<_$SearchResponseImpl> get copyWith =>
-      __$$SearchResponseImplCopyWithImpl<_$SearchResponseImpl>(
-          this, _$identity);
+  _$$SearchChannelResponseImplCopyWith<_$SearchChannelResponseImpl>
+      get copyWith => __$$SearchChannelResponseImplCopyWithImpl<
+          _$SearchChannelResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SearchResponseImplToJson(
+    return _$$SearchChannelResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _SearchResponse implements SearchResponse {
-  const factory _SearchResponse(
-      {required final int size,
-      required final List<SearchChannelData> data}) = _$SearchResponseImpl;
+abstract class _SearchChannelResponse implements SearchChannelResponse {
+  const factory _SearchChannelResponse(
+          {required final int size,
+          required final List<SearchChannelData> data}) =
+      _$SearchChannelResponseImpl;
 
-  factory _SearchResponse.fromJson(Map<String, dynamic> json) =
-      _$SearchResponseImpl.fromJson;
+  factory _SearchChannelResponse.fromJson(Map<String, dynamic> json) =
+      _$SearchChannelResponseImpl.fromJson;
 
   @override
   int get size;
@@ -173,8 +178,8 @@ abstract class _SearchResponse implements SearchResponse {
   List<SearchChannelData> get data;
   @override
   @JsonKey(ignore: true)
-  _$$SearchResponseImplCopyWith<_$SearchResponseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SearchChannelResponseImplCopyWith<_$SearchChannelResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 SearchChannelData _$SearchChannelDataFromJson(Map<String, dynamic> json) {

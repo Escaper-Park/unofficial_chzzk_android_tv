@@ -6,16 +6,17 @@ part of 'search.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SearchResponseImpl _$$SearchResponseImplFromJson(Map<String, dynamic> json) =>
-    _$SearchResponseImpl(
+_$SearchChannelResponseImpl _$$SearchChannelResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SearchChannelResponseImpl(
       size: (json['size'] as num).toInt(),
       data: (json['data'] as List<dynamic>)
           .map((e) => SearchChannelData.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$SearchResponseImplToJson(
-        _$SearchResponseImpl instance) =>
+Map<String, dynamic> _$$SearchChannelResponseImplToJson(
+        _$SearchChannelResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'data': instance.data,
