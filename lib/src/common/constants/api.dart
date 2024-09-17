@@ -21,7 +21,7 @@ class ApiUrl {
 
   /// [naverGame] Private user blocks
   static const String privateUserBlocks = '/v1/privateUserBlocks/allUserIdHash';
-  
+
   /// [chzzkService][path] /$channelId
   static const String channel = '$chzzkService/v1/channels';
 
@@ -99,6 +99,11 @@ class ApiUrl {
   ///
   /// [queryParamters] String keyword, int size = 50, int offset = 0, bool withFirstChannelContent = false
   static const String searchChannels = '/v1/search/channels';
+
+  /// [chzzkService] Tags search results.
+  ///
+  /// [queryParameters] int size = 20, String sortType = 'POPULAR', String tags 
+  static const String searchTags = '/v1/tag/lives';
 
   /// [naverGame] Access token for chat.
   ///

@@ -169,22 +169,35 @@ class LiveStreamContainer extends ConsumerWidget {
                   const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    ChannelNameWithVerifiedMark(
-                      channel: channel,
-                      fontColor: AppColors.whiteColor,
-                      fontSize: 12.0,
+                    CircleAvatarProfileImage(
+                      profileImageUrl: channel.channelImageUrl,
+                      radius: 15.0,
+                      useBorder: true,
+                      borderWidth: 1.5,
                     ),
-                    Text(
-                      liveInfo.liveTitle?.replaceAll('\n', '') ?? ' ',
-                      style: const TextStyle(
-                        fontSize: 11.0,
-                        color: AppColors.whiteColor,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ChannelNameWithVerifiedMark(
+                            channel: channel,
+                            fontColor: AppColors.whiteColor,
+                            fontSize: 12.0,
+                          ),
+                          Text(
+                            liveInfo.liveTitle?.replaceAll('\n', '') ?? ' ',
+                            style: const TextStyle(
+                              fontSize: 11.0,
+                              color: AppColors.whiteColor,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

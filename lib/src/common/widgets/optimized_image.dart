@@ -43,14 +43,19 @@ class OptimizedNetworkImage extends StatelessWidget {
     // final int? cacheWidth = imageWidth?.cacheSize(context);
     // final int? cacheHeight = imageWidth?.cacheSize(context);
 
-    final String url = useUpdatedImage
-        ? '$imageUrl/?v=${DateTime.now().minute ~/ updateCacheIntervalMin}'
-        : imageUrl;
+    final cacheMin = DateTime.now().minute ~/ updateCacheIntervalMin;
+    final nowDate = DateTime.now();
+    final cacheKey = DateTime(
+            nowDate.year, nowDate.month, nowDate.day, nowDate.hour, cacheMin)
+        .millisecondsSinceEpoch;
+
+    final String url = useUpdatedImage ? '$imageUrl/?v=$cacheKey' : imageUrl;
 
     return Container(
       // key: useUpdatedImage ? ValueKey(url) : null,
       width: imageWidth,
       height: imageHeight,
+
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: fit,
@@ -61,6 +66,10 @@ class OptimizedNetworkImage extends StatelessWidget {
             width: (imageWidth! * 2).floor(),
             // height: imageHeight!.floor(),
             // width: imageWidth!.floor(),
+          ),
+          onError: (_, __) => _ImageErrorPlaceholder(
+            imageHeight: imageHeight,
+            imageWidth: imageWidth,
           ),
         ),
       ),

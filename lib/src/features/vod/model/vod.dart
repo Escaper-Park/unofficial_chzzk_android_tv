@@ -26,6 +26,10 @@ class Vod with _$Vod {
     required bool clipActive,
     required Channel channel,
     required Object? blindType,
+    // accumulated live count
+    required int? livePv,
+    // Last seen timeline
+    required int? watchTimeline,
     // Detailed
     required bool? paidPromotion,
     required String? inKey,

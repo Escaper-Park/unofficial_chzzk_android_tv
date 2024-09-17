@@ -11,6 +11,7 @@ import '../../../../utils/router/app_router.dart';
 import '../../controller/vod_controller.dart';
 import '../../model/vod.dart';
 import './vod_container_widgets.dart';
+import './vod_tag_badge.dart';
 
 class VodContainer extends ConsumerWidget {
   const VodContainer({
@@ -66,6 +67,7 @@ class VodContainer extends ConsumerWidget {
                         VodThumbnail(vod: vod),
                         VodDuration(durationInSeconds: vod.duration),
                         VodPublishDateAt(publishDateAt: vod.publishDateAt),
+                        const VodTagBadge(),
                       ],
                     ),
                   ),

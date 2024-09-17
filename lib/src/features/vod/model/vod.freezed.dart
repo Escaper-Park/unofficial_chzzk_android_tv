@@ -37,7 +37,10 @@ mixin _$Vod {
   bool get adult => throw _privateConstructorUsedError;
   bool get clipActive => throw _privateConstructorUsedError;
   Channel get channel => throw _privateConstructorUsedError;
-  Object? get blindType => throw _privateConstructorUsedError; // Detailed
+  Object? get blindType =>
+      throw _privateConstructorUsedError; // accumulated live count
+  int? get livePv => throw _privateConstructorUsedError; // Last seen timeline
+  int? get watchTimeline => throw _privateConstructorUsedError; // Detailed
   bool? get paidPromotion => throw _privateConstructorUsedError;
   String? get inKey => throw _privateConstructorUsedError;
   String? get liveOpenDate => throw _privateConstructorUsedError;
@@ -73,6 +76,8 @@ abstract class $VodCopyWith<$Res> {
       bool clipActive,
       Channel channel,
       Object? blindType,
+      int? livePv,
+      int? watchTimeline,
       bool? paidPromotion,
       String? inKey,
       String? liveOpenDate,
@@ -112,6 +117,8 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
     Object? clipActive = null,
     Object? channel = null,
     Object? blindType = freezed,
+    Object? livePv = freezed,
+    Object? watchTimeline = freezed,
     Object? paidPromotion = freezed,
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
@@ -188,6 +195,14 @@ class _$VodCopyWithImpl<$Res, $Val extends Vod> implements $VodCopyWith<$Res> {
           : channel // ignore: cast_nullable_to_non_nullable
               as Channel,
       blindType: freezed == blindType ? _value.blindType : blindType,
+      livePv: freezed == livePv
+          ? _value.livePv
+          : livePv // ignore: cast_nullable_to_non_nullable
+              as int?,
+      watchTimeline: freezed == watchTimeline
+          ? _value.watchTimeline
+          : watchTimeline // ignore: cast_nullable_to_non_nullable
+              as int?,
       paidPromotion: freezed == paidPromotion
           ? _value.paidPromotion
           : paidPromotion // ignore: cast_nullable_to_non_nullable
@@ -245,6 +260,8 @@ abstract class _$$VodImplCopyWith<$Res> implements $VodCopyWith<$Res> {
       bool clipActive,
       Channel channel,
       Object? blindType,
+      int? livePv,
+      int? watchTimeline,
       bool? paidPromotion,
       String? inKey,
       String? liveOpenDate,
@@ -282,6 +299,8 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
     Object? clipActive = null,
     Object? channel = null,
     Object? blindType = freezed,
+    Object? livePv = freezed,
+    Object? watchTimeline = freezed,
     Object? paidPromotion = freezed,
     Object? inKey = freezed,
     Object? liveOpenDate = freezed,
@@ -358,6 +377,14 @@ class __$$VodImplCopyWithImpl<$Res> extends _$VodCopyWithImpl<$Res, _$VodImpl>
           : channel // ignore: cast_nullable_to_non_nullable
               as Channel,
       blindType: freezed == blindType ? _value.blindType : blindType,
+      livePv: freezed == livePv
+          ? _value.livePv
+          : livePv // ignore: cast_nullable_to_non_nullable
+              as int?,
+      watchTimeline: freezed == watchTimeline
+          ? _value.watchTimeline
+          : watchTimeline // ignore: cast_nullable_to_non_nullable
+              as int?,
       paidPromotion: freezed == paidPromotion
           ? _value.paidPromotion
           : paidPromotion // ignore: cast_nullable_to_non_nullable
@@ -404,6 +431,8 @@ class _$VodImpl implements _Vod {
       required this.clipActive,
       required this.channel,
       required this.blindType,
+      required this.livePv,
+      required this.watchTimeline,
       required this.paidPromotion,
       required this.inKey,
       required this.liveOpenDate,
@@ -449,6 +478,12 @@ class _$VodImpl implements _Vod {
   final Channel channel;
   @override
   final Object? blindType;
+// accumulated live count
+  @override
+  final int? livePv;
+// Last seen timeline
+  @override
+  final int? watchTimeline;
 // Detailed
   @override
   final bool? paidPromotion;
@@ -463,7 +498,7 @@ class _$VodImpl implements _Vod {
 
   @override
   String toString() {
-    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, readCount: $readCount, publishDateAt: $publishDateAt, categoryType: $categoryType, videoCategory: $videoCategory, videoCategoryValue: $videoCategoryValue, exposure: $exposure, adult: $adult, clipActive: $clipActive, channel: $channel, blindType: $blindType, paidPromotion: $paidPromotion, inKey: $inKey, liveOpenDate: $liveOpenDate, vodStatus: $vodStatus, userAdultStatus: $userAdultStatus)';
+    return 'Vod(videoNo: $videoNo, videoId: $videoId, videoTitle: $videoTitle, videoType: $videoType, publishDate: $publishDate, thumbnailImageUrl: $thumbnailImageUrl, trailerUrl: $trailerUrl, duration: $duration, readCount: $readCount, publishDateAt: $publishDateAt, categoryType: $categoryType, videoCategory: $videoCategory, videoCategoryValue: $videoCategoryValue, exposure: $exposure, adult: $adult, clipActive: $clipActive, channel: $channel, blindType: $blindType, livePv: $livePv, watchTimeline: $watchTimeline, paidPromotion: $paidPromotion, inKey: $inKey, liveOpenDate: $liveOpenDate, vodStatus: $vodStatus, userAdultStatus: $userAdultStatus)';
   }
 
   @override
@@ -502,6 +537,9 @@ class _$VodImpl implements _Vod {
                 other.clipActive == clipActive) &&
             (identical(other.channel, channel) || other.channel == channel) &&
             const DeepCollectionEquality().equals(other.blindType, blindType) &&
+            (identical(other.livePv, livePv) || other.livePv == livePv) &&
+            (identical(other.watchTimeline, watchTimeline) ||
+                other.watchTimeline == watchTimeline) &&
             (identical(other.paidPromotion, paidPromotion) ||
                 other.paidPromotion == paidPromotion) &&
             (identical(other.inKey, inKey) || other.inKey == inKey) &&
@@ -535,6 +573,8 @@ class _$VodImpl implements _Vod {
         clipActive,
         channel,
         const DeepCollectionEquality().hash(blindType),
+        livePv,
+        watchTimeline,
         paidPromotion,
         inKey,
         liveOpenDate,
@@ -576,6 +616,8 @@ abstract class _Vod implements Vod {
       required final bool clipActive,
       required final Channel channel,
       required final Object? blindType,
+      required final int? livePv,
+      required final int? watchTimeline,
       required final bool? paidPromotion,
       required final String? inKey,
       required final String? liveOpenDate,
@@ -620,6 +662,10 @@ abstract class _Vod implements Vod {
   Channel get channel;
   @override
   Object? get blindType;
+  @override // accumulated live count
+  int? get livePv;
+  @override // Last seen timeline
+  int? get watchTimeline;
   @override // Detailed
   bool? get paidPromotion;
   @override

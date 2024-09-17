@@ -11,12 +11,16 @@ class CircleAvatarProfileImage extends StatelessWidget {
   const CircleAvatarProfileImage({
     super.key,
     this.radius = 25.0,
+    this.borderWidth = 2.0,
     this.useBorder = false,
     required this.profileImageUrl,
   });
 
   /// Half the width or height of the container(or diameter).
   final double radius;
+
+  /// Width of border
+  final double borderWidth;
 
   /// If the channel is broadcasting, set this value to true.
   ///
@@ -40,7 +44,7 @@ class CircleAvatarProfileImage extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(
           color: useBorder ? AppColors.chzzkColor : Colors.transparent,
-          width: 2.0,
+          width: borderWidth,
         ),
       ),
       child: isInvalidProfileImage

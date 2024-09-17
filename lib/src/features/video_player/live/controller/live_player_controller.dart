@@ -17,6 +17,8 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
   late int _latencyIndex;
   late int _resolutionIndex;
 
+  bool? _streamEnds;
+
   @override
   FutureOr<Raw<VideoPlayerController>> build({required int index}) async {
     final streamSettings = ref.read(streamSettingsControllerProvider);
@@ -77,12 +79,25 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
   void _checkVideoEnds() {
     final value = state.value!.value;
 
-    final bool checkEnds = value.hasError == true ||
-        (value.isInitialized && value.position >= value.duration) &&
-            !value.isPlaying;
+    final bool checkEnds = value.hasError ||
+        ((value.position >= value.duration) && !value.isPlaying);
 
     if (checkEnds) {
-      ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
+      // Check Ends Start
+      if (_streamEnds == null) {
+        _streamEnds = true;
+      }
+      // Ends
+      else {
+        ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
+      }
+    }
+    // After buffering
+    else {
+      if (_streamEnds == true) {
+        ref.read(wakelockMonitorControllerProvider.notifier).setTrue(index);
+        _streamEnds = null;
+      }
     }
   }
 
@@ -126,6 +141,8 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
     if (state.value?.value.isPlaying == true) {
       state.value!.pause();
     }
+
+    state.value?.removeListener(_checkVideoEnds);
     state.value?.dispose();
   }
 

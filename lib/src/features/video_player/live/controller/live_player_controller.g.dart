@@ -7,7 +7,7 @@ part of 'live_player_controller.dart';
 // **************************************************************************
 
 String _$singleLivePlayerControllerHash() =>
-    r'642a3f211674bf29f748d3bf06ca7285f44e2385';
+    r'b92f054c172397223cf2723a78f81973693ba227';
 
 /// Copied from Dart SDK
 class _SystemHash {

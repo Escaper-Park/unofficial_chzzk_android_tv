@@ -29,7 +29,8 @@ class Meta with _$Meta {
     required String liveId,
     required bool paidLive,
     required CdnInfo cdnInfo,
-    required bool p2p,
+    // Nullable for abroad users 
+    required bool? p2p,
     required bool cmcdEnabled,
   }) = _Meta;
 

@@ -362,8 +362,9 @@ mixin _$Meta {
   int get streamSeq => throw _privateConstructorUsedError;
   String get liveId => throw _privateConstructorUsedError;
   bool get paidLive => throw _privateConstructorUsedError;
-  CdnInfo get cdnInfo => throw _privateConstructorUsedError;
-  bool get p2p => throw _privateConstructorUsedError;
+  CdnInfo get cdnInfo =>
+      throw _privateConstructorUsedError; // Nullable for abroad users
+  bool? get p2p => throw _privateConstructorUsedError;
   bool get cmcdEnabled => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -382,7 +383,7 @@ abstract class $MetaCopyWith<$Res> {
       String liveId,
       bool paidLive,
       CdnInfo cdnInfo,
-      bool p2p,
+      bool? p2p,
       bool cmcdEnabled});
 
   $CdnInfoCopyWith<$Res> get cdnInfo;
@@ -406,7 +407,7 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
     Object? liveId = null,
     Object? paidLive = null,
     Object? cdnInfo = null,
-    Object? p2p = null,
+    Object? p2p = freezed,
     Object? cmcdEnabled = null,
   }) {
     return _then(_value.copyWith(
@@ -430,10 +431,10 @@ class _$MetaCopyWithImpl<$Res, $Val extends Meta>
           ? _value.cdnInfo
           : cdnInfo // ignore: cast_nullable_to_non_nullable
               as CdnInfo,
-      p2p: null == p2p
+      p2p: freezed == p2p
           ? _value.p2p
           : p2p // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       cmcdEnabled: null == cmcdEnabled
           ? _value.cmcdEnabled
           : cmcdEnabled // ignore: cast_nullable_to_non_nullable
@@ -463,7 +464,7 @@ abstract class _$$MetaImplCopyWith<$Res> implements $MetaCopyWith<$Res> {
       String liveId,
       bool paidLive,
       CdnInfo cdnInfo,
-      bool p2p,
+      bool? p2p,
       bool cmcdEnabled});
 
   @override
@@ -485,7 +486,7 @@ class __$$MetaImplCopyWithImpl<$Res>
     Object? liveId = null,
     Object? paidLive = null,
     Object? cdnInfo = null,
-    Object? p2p = null,
+    Object? p2p = freezed,
     Object? cmcdEnabled = null,
   }) {
     return _then(_$MetaImpl(
@@ -509,10 +510,10 @@ class __$$MetaImplCopyWithImpl<$Res>
           ? _value.cdnInfo
           : cdnInfo // ignore: cast_nullable_to_non_nullable
               as CdnInfo,
-      p2p: null == p2p
+      p2p: freezed == p2p
           ? _value.p2p
           : p2p // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       cmcdEnabled: null == cmcdEnabled
           ? _value.cmcdEnabled
           : cmcdEnabled // ignore: cast_nullable_to_non_nullable
@@ -546,8 +547,9 @@ class _$MetaImpl implements _Meta {
   final bool paidLive;
   @override
   final CdnInfo cdnInfo;
+// Nullable for abroad users
   @override
-  final bool p2p;
+  final bool? p2p;
   @override
   final bool cmcdEnabled;
 
@@ -599,7 +601,7 @@ abstract class _Meta implements Meta {
       required final String liveId,
       required final bool paidLive,
       required final CdnInfo cdnInfo,
-      required final bool p2p,
+      required final bool? p2p,
       required final bool cmcdEnabled}) = _$MetaImpl;
 
   factory _Meta.fromJson(Map<String, dynamic> json) = _$MetaImpl.fromJson;
@@ -614,8 +616,8 @@ abstract class _Meta implements Meta {
   bool get paidLive;
   @override
   CdnInfo get cdnInfo;
-  @override
-  bool get p2p;
+  @override // Nullable for abroad users
+  bool? get p2p;
   @override
   bool get cmcdEnabled;
   @override

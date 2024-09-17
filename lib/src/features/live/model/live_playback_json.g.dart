@@ -41,7 +41,7 @@ _$MetaImpl _$$MetaImplFromJson(Map<String, dynamic> json) => _$MetaImpl(
       liveId: json['liveId'] as String,
       paidLive: json['paidLive'] as bool,
       cdnInfo: CdnInfo.fromJson(json['cdnInfo'] as Map<String, dynamic>),
-      p2p: json['p2p'] as bool,
+      p2p: json['p2p'] as bool?,
       cmcdEnabled: json['cmcdEnabled'] as bool,
     );
 

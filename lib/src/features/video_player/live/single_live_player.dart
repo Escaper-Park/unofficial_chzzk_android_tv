@@ -23,9 +23,7 @@ class SingleLivePlayer extends ConsumerWidget {
         return Center(
           child: AspectRatio(
             aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(
-              controller,
-            ),
+            child: VideoPlayer(controller),
           ),
         );
       },
