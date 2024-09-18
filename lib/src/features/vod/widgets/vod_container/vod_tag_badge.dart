@@ -10,7 +10,7 @@ class VodTagBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return const TagBadge(
       margin: EdgeInsets.all(8.0),
-      fontSize: 11.0,
+      fontSize: 10.0,
       fontWeight: FontWeight.w600,
       backgroundColor: AppColors.indigoColor,
       fontColor: AppColors.whiteColor,

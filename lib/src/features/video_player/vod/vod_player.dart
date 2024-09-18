@@ -36,18 +36,14 @@ class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
   }
 
   Future<void> initialize() async {
-    RegExp regExp = RegExp(r'_lsu_sa_=([a-zA-Z0-9]+)');
-    Match? match = regExp.firstMatch(widget.vodPath);
-
-    String lsuSa = '';
-    if (match != null) {
-      lsuSa = match.group(1)!;
-    }
+    Uri uri = Uri.parse(widget.vodPath);
+    String baseUrl = '${uri.scheme}://${uri.host}${uri.path}';
+    Map<String, String> queryParams = uri.queryParameters;
 
     _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse(widget.vodPath),
+      Uri.parse(baseUrl),
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      httpHeaders: {'_lsu_sa_': lsuSa},
+      httpHeaders: queryParams,
     );
 
     await Future.wait([_videoPlayerController!.initialize()]);

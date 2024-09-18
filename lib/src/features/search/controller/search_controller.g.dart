@@ -192,7 +192,7 @@ final currentSearchChannelControllerProvider = AutoDisposeNotifierProvider<
 
 typedef _$CurrentSearchChannelController = AutoDisposeNotifier<Channel?>;
 String _$searchTagControllerHash() =>
-    r'f7076143d86bc9f70545badd34a4d417778495a3';
+    r'3453aa437dd8d5d0b8e3135d5c2aa7c5ad42c406';
 
 abstract class _$SearchTagController
     extends BuildlessAutoDisposeAsyncNotifier<List<LiveInfo>?> {

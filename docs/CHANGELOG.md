@@ -2,11 +2,10 @@
 
 ## [v0.3.2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.2)
 ### 주요 업데이트 내용
-
-* 일부 UI 변경
 * 버퍼링이 생길 때 비디오가 종료됐다고 판단하여 화면보호기가 켜지는 현상 수정
 * 치지직 VOD 재생방식 변경 대응
 * 라이브 태그 검색 추가
+* 일부 UI 변경
 
 ## [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
 ### Hotfix 

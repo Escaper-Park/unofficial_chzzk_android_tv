@@ -11,6 +11,7 @@ analyzer:
   exclude:
     - lib/**.g.dart
     - lib/**.freezed.dart
+    - packages/video_player
 
   plugins:
     - custom_lint

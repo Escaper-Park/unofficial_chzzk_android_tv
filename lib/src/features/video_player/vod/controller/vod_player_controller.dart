@@ -5,6 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../setting/controller/stream_settings_controller.dart';
+// import '../../../vod/model/vod.dart';
+// import '../../../vod/model/vod_event.dart';
 
 part 'vod_player_controller.g.dart';
 
@@ -99,6 +101,33 @@ class VodPlayerController extends _$VodPlayerController {
 
     return;
   }
+
+  // // TODO: POST Paused Event
+  // void pause({
+  //   required Vod vod,
+  //   required VideoPlayerController controller,
+  //   required FocusNode videoFocusNode,
+  // }) {
+  //   final VodEvent event = VodEvent(
+  //     channelId: vod.channel.channelId,
+  //     videoNo: vod.videoNo,
+  //     payload: Payload(
+  //       watchEventType: WatchEventType.watchPaused.value,
+  //       sessionId: '', // TODO :
+  //       duration: vod.duration,
+  //       positionAt: controller.value.position.inSeconds,
+  //     ),
+  //     totalLength: vod.duration,
+  //   );
+
+  //   // keep overlay state
+  //   // ref
+  //   //     .read(vodOverlayControllerProvider.notifier)
+  //   //     .resetOverlayTimer(videoFocusNode: videoFocusNode);
+  // }
+
+  // // TODO: POST Ended Event
+  // void end() {}
 
   void seekTo({
     required VideoPlayerController controller,
