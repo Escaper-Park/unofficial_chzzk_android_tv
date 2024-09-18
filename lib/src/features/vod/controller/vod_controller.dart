@@ -29,8 +29,6 @@ class VodController extends _$VodController {
   Future<String?> getVodPlayback({required int videoNo}) async {
     final Vod? vod = await getVod(videoNo: videoNo);
 
-    print(vod);
-
     if (vod != null) {
       // Old version
       if (vod.liveRewindPlaybackJson == null) {

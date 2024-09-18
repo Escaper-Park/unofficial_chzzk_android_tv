@@ -113,7 +113,7 @@ class VodPlayerController extends _$VodPlayerController {
   //     videoNo: vod.videoNo,
   //     payload: Payload(
   //       watchEventType: WatchEventType.watchPaused.value,
-  //       sessionId: '', // TODO :
+  //       sessionId: '', // TODO: Get Session From Server
   //       duration: vod.duration,
   //       positionAt: controller.value.position.inSeconds,
   //     ),
