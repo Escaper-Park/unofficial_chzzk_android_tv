@@ -88,9 +88,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
       }
       // Ends
       else {
-        if (!value.isPlaying) {
-          ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
-        }
+        ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
       }
     }
     // After buffering

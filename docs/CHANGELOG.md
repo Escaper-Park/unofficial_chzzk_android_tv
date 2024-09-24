@@ -1,6 +1,11 @@
-# CHZZK for Android TV v0.3.x 패치노트
+# CHZZK for Android TV v0.3 패치노트
 
-## [v0.3.2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.2)
+## [v0.3.2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.2+1)
+### HotFix
+#### v0.3.2+1 (2024-09)
+* 채팅이 오랜 시간 올라오지 않았다가 다시 올라왔을 때 앱에서 새로운 채팅이 보이지 않는 현상 수정
+* 화면보호기 작동 수정
+
 ### 주요 업데이트 내용
 * 버퍼링이 생길 때 비디오가 종료됐다고 판단하여 화면보호기가 켜지는 현상 수정
 * 치지직 VOD 재생방식 변경 대응
@@ -10,7 +15,7 @@
 ## [v0.3.1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.1)
 ### Hotfix 
 #### v0.3.1+3 (2024-09-07)
-* v+3 화질 설정 '자동'이 정상적으로 적용되지 않는 현상 수정 
+* 화질 설정 '자동'이 정상적으로 적용되지 않는 현상 수정 
 * 일부 환경에서 영상이 간헐적으로 끊기는 현상 수정
     - 완벽히 해결되지 않을 수 있습니다. (해당 증상을 테스트 기기에서 발견하지 못함)
 
