@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -26,6 +27,10 @@ class ChatController extends _$ChatController {
   late WebSocketChannel _wsChannel;
   late List<String> _privateUserBlocks;
 
+  // Ping
+  final int _pingInterval = 20000;
+  late Timer? _pingTimer;
+
   @override
   Stream<List<dynamic>> build({
     required String channelId,
@@ -33,21 +38,20 @@ class ChatController extends _$ChatController {
   }) async* {
     // websocket init
     await init();
+    // disconnect chat ready
+    _onDispose();
 
     // connect to chat server
     await _connect();
 
     yield* handleMsg();
 
-    // disconnect chat ready
-    _onDispose();
-
     return;
   }
 
   Future<void> init() async {
-    final user = await ref.watch(userControllerProvider.future);
-    final dio = ref.watch(dioClientProvider);
+    final user = await ref.read(userControllerProvider.future);
+    final dio = ref.read(dioClientProvider);
 
     _uid = user?.userIdHash;
 
@@ -58,13 +62,15 @@ class ChatController extends _$ChatController {
         WebSocketChannel.connect(Uri.parse(ApiUrl.chatServer(serverNo)));
 
     _privateUserBlocks =
-        await ref.watch(privateUserBlocksControllerProvider.future);
+        await ref.read(privateUserBlocksControllerProvider.future);
 
     _chatRepository = ref.read(chatRepositoryProvider(
       wsChannel: _wsChannel,
       chatChannelId: chatChannelId,
       dio: dio,
     ));
+
+    _pingTimer = null;
   }
 
   Future<void> _connect() async {
@@ -76,10 +82,28 @@ class ChatController extends _$ChatController {
   }
 
   void _onDispose() {
-    ref.onDispose(_chatRepository.disconnect);
+    ref.onDispose(disconnect);
+  }
+
+  void _runPingTimer() {
+    _clearPingTimer();
+
+    _pingTimer = Timer(
+      Duration(milliseconds: _pingInterval),
+      () {
+        _chatRepository.sendPing();
+        _pingTimer = null;
+      },
+    );
+  }
+
+  void _clearPingTimer() {
+    _pingTimer?.cancel();
+    _pingTimer = null;
   }
 
   Future<void> disconnect() async {
+    _clearPingTimer();
     await _chatRepository.disconnect();
   }
 
@@ -89,10 +113,15 @@ class ChatController extends _$ChatController {
     await for (final msg in _wsChannel.stream) {
       Map<String, dynamic> response = json.decode(msg);
 
+      _runPingTimer();
+
       switch (response['cmd']) {
         // ping
         case 0:
-          _chatRepository.pong();
+          _chatRepository.sendPong();
+          break;
+        // pong:
+        case 10000:
           break;
         // connected
         case 10100:

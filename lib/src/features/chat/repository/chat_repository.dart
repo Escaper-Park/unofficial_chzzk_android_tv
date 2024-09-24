@@ -70,7 +70,7 @@ class ChatRepository {
     required this.dio,
   });
 
-  void send(Map<String, dynamic> object) {
+  void _send(Map<String, dynamic> object) {
     wsChannel.sink.add(json.encode(object));
   }
 
@@ -99,7 +99,7 @@ class ChatRepository {
     // Get Access Token for watching adult restriction channel's chats
     final AccessToken? accessToken = await _getAccessToken();
 
-    send({
+    _send({
       'bdy': {
         'accTkn': accessToken?.accessToken,
         'auth': uid == null ? 'READ' : 'SEND',
@@ -118,7 +118,7 @@ class ChatRepository {
 
   /// After connect, get sid from connect response and use in.
   void requestRecentChat({required String? sid}) {
-    send({
+    _send({
       'bdy': {"recentMessageCount": 50},
       'cid': chatChannelId,
       'cmd': ChatCmd.requestRecentChat.value,
@@ -129,11 +129,18 @@ class ChatRepository {
     });
   }
 
-  void pong() {
-    wsChannel.sink.add(json.encode({
+  void sendPing() {
+    _send({
+      'cmd': ChatCmd.ping.value,
+      'ver': "3",
+    });
+  }
+
+  void sendPong() {
+    _send({
       'cmd': ChatCmd.pong.value,
       'ver': "3",
-    }));
+    });
   }
 
   Future<void> disconnect() async {
