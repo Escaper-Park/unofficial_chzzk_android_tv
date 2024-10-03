@@ -14,9 +14,7 @@ import 'live_stream_status.dart';
 import 'live_stream_uptime.dart';
 
 class LiveStreamInfo extends ConsumerWidget {
-  const LiveStreamInfo({
-    super.key,
-  });
+  const LiveStreamInfo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

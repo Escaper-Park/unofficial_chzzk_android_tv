@@ -39,7 +39,8 @@ class Vod with _$Vod {
     // vod playback
     @LiveRewindPlaybackConverter() required LiveRewindPlaybackJson? liveRewindPlaybackJson,
     required String? userAdultStatus,
-    required bool? liveChatEnabled,
+    required bool? videoChatEnabled,
+    required String? videoChatChannelId,
   }) = _Vod;
 
   factory Vod.fromJson(Map<String, dynamic> json) => _$VodFromJson(json);

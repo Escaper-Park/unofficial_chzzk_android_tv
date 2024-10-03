@@ -9,14 +9,14 @@ class WakelockMonitorController extends _$WakelockMonitorController {
     return [];
   }
 
-  void setTrue(int index) {
+  void setWakelockEnable(int index) {
     state = [
       for (int i = 0; i < state.length; i++)
         if (i == index) true else state[i]
     ];
   }
 
-  void setFalse(int index) {
+  void setWakelockDisable(int index) {
     state = [
       for (int i = 0; i < state.length; i++)
         if (i == index) false else state[i]

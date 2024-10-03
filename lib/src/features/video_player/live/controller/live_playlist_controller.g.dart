@@ -7,7 +7,7 @@ part of 'live_playlist_controller.dart';
 // **************************************************************************
 
 String _$livePlaylistControllerHash() =>
-    r'c5e7311b4914cc840237286e399518538bdca7c6';
+    r'731bb00f50d6511c28af1322e403b48297c958ba';
 
 /// See also [LivePlaylistController].
 @ProviderFor(LivePlaylistController)

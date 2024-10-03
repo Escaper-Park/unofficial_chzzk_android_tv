@@ -21,28 +21,30 @@ class HlsParser {
     }
   }
 
-  Future<List<Uri?>?> getMediaPlaylistUris() async {
+  Future<List<Uri?>?> getLiveMediaPlaylistUris() async {
+    return await _getMediaPlaylistUriAndSortbyResolution(4);
+  }
+
+  Future<List<Uri?>?> getVodMediaPlaylistUris() async {
+    return await _getMediaPlaylistUriAndSortbyResolution(2);
+  }
+
+  Future<List<Uri?>?> _getMediaPlaylistUriAndSortbyResolution(int count) async {
     final String? contents = await _getContents();
 
     if (contents != null) {
-      final playList = await HlsPlaylistParser.create()
+      final playlist = await HlsPlaylistParser.create()
           .parseString(Uri.parse(hlsUrl), contents) as HlsMasterPlaylist;
 
       // sort by width
-      final mediaPlaylistUris = playList.mediaPlaylistUrls;
-      mediaPlaylistUris.sort((a, b) {
-        int widthA = int.parse(
-            RegExp(r'(\d+)p\.m3u8').firstMatch(a.toString())!.group(1)!);
-        int widthB = int.parse(
-            RegExp(r'(\d+)p\.m3u8').firstMatch(b.toString())!.group(1)!);
-        return widthA.compareTo(widthB);
-      });
+      final mediaPlaylist = playlist.variants;
+      mediaPlaylist.sort((a, b) => a.format.width!.compareTo(b.format.width!));
 
-      // Get last 4 res: 360p, 480p, 720p, 1080p.
-      final last4Elements = mediaPlaylistUris.sublist(
-          mediaPlaylistUris.length >= 4 ? mediaPlaylistUris.length - 4 : 0);
+      // Get last N res: 360p, 480p, 720p, 1080p.
+      final lastNElements = mediaPlaylist.sublist(
+          mediaPlaylist.length >= count ? mediaPlaylist.length - count : 0);
 
-      return last4Elements;
+      return lastNElements.map((rendition) => rendition.url).toList();
     }
     return null;
   }

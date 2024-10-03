@@ -22,18 +22,28 @@ StreamSettings _$StreamSettingsFromJson(Map<String, dynamic> json) {
 mixin _$StreamSettings {
   /// The index of default resolution of single view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   int get resolutionIndex => throw _privateConstructorUsedError;
 
   /// The index of default resolution of multi view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   int get multiviewResolutionIndex => throw _privateConstructorUsedError;
+
+  /// The index of default resolution of vod streaming.
+  ///
+  /// 0: 720p, 1: 1080p, 2: auto
+  int get vodResolutionIndex => throw _privateConstructorUsedError;
 
   /// The index of default screen mode of single view live streaming.
   ///
   /// 0: off, 1: overlay, 2: side
-  int get chatWindowStateIndex => throw _privateConstructorUsedError;
+  int get liveChatWindowStateIndex => throw _privateConstructorUsedError;
+
+  /// The index of default screen mode of vod streaming.
+  ///
+  /// 0: off, 1: overlay, 2: side
+  int get vodChatWindowStateIndex => throw _privateConstructorUsedError;
 
   /// 0: HLS, 1:LLHLS
   int get latencyIndex => throw _privateConstructorUsedError;
@@ -61,7 +71,9 @@ abstract class $StreamSettingsCopyWith<$Res> {
   $Res call(
       {int resolutionIndex,
       int multiviewResolutionIndex,
-      int chatWindowStateIndex,
+      int vodResolutionIndex,
+      int liveChatWindowStateIndex,
+      int vodChatWindowStateIndex,
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex});
@@ -82,7 +94,9 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
   $Res call({
     Object? resolutionIndex = null,
     Object? multiviewResolutionIndex = null,
-    Object? chatWindowStateIndex = null,
+    Object? vodResolutionIndex = null,
+    Object? liveChatWindowStateIndex = null,
+    Object? vodChatWindowStateIndex = null,
     Object? latencyIndex = null,
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
@@ -96,9 +110,17 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
           ? _value.multiviewResolutionIndex
           : multiviewResolutionIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      chatWindowStateIndex: null == chatWindowStateIndex
-          ? _value.chatWindowStateIndex
-          : chatWindowStateIndex // ignore: cast_nullable_to_non_nullable
+      vodResolutionIndex: null == vodResolutionIndex
+          ? _value.vodResolutionIndex
+          : vodResolutionIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      liveChatWindowStateIndex: null == liveChatWindowStateIndex
+          ? _value.liveChatWindowStateIndex
+          : liveChatWindowStateIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      vodChatWindowStateIndex: null == vodChatWindowStateIndex
+          ? _value.vodChatWindowStateIndex
+          : vodChatWindowStateIndex // ignore: cast_nullable_to_non_nullable
               as int,
       latencyIndex: null == latencyIndex
           ? _value.latencyIndex
@@ -127,7 +149,9 @@ abstract class _$$StreamSettingsImplCopyWith<$Res>
   $Res call(
       {int resolutionIndex,
       int multiviewResolutionIndex,
-      int chatWindowStateIndex,
+      int vodResolutionIndex,
+      int liveChatWindowStateIndex,
+      int vodChatWindowStateIndex,
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex});
@@ -146,7 +170,9 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
   $Res call({
     Object? resolutionIndex = null,
     Object? multiviewResolutionIndex = null,
-    Object? chatWindowStateIndex = null,
+    Object? vodResolutionIndex = null,
+    Object? liveChatWindowStateIndex = null,
+    Object? vodChatWindowStateIndex = null,
     Object? latencyIndex = null,
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
@@ -160,9 +186,17 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
           ? _value.multiviewResolutionIndex
           : multiviewResolutionIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      chatWindowStateIndex: null == chatWindowStateIndex
-          ? _value.chatWindowStateIndex
-          : chatWindowStateIndex // ignore: cast_nullable_to_non_nullable
+      vodResolutionIndex: null == vodResolutionIndex
+          ? _value.vodResolutionIndex
+          : vodResolutionIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      liveChatWindowStateIndex: null == liveChatWindowStateIndex
+          ? _value.liveChatWindowStateIndex
+          : liveChatWindowStateIndex // ignore: cast_nullable_to_non_nullable
+              as int,
+      vodChatWindowStateIndex: null == vodChatWindowStateIndex
+          ? _value.vodChatWindowStateIndex
+          : vodChatWindowStateIndex // ignore: cast_nullable_to_non_nullable
               as int,
       latencyIndex: null == latencyIndex
           ? _value.latencyIndex
@@ -186,7 +220,9 @@ class _$StreamSettingsImpl implements _StreamSettings {
   const _$StreamSettingsImpl(
       {required this.resolutionIndex,
       required this.multiviewResolutionIndex,
-      required this.chatWindowStateIndex,
+      required this.vodResolutionIndex,
+      required this.liveChatWindowStateIndex,
+      required this.vodChatWindowStateIndex,
       required this.latencyIndex,
       required this.overlayControlsDisplayTime,
       required this.vodPlaybackIntervalIndex});
@@ -196,21 +232,33 @@ class _$StreamSettingsImpl implements _StreamSettings {
 
   /// The index of default resolution of single view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   @override
   final int resolutionIndex;
 
   /// The index of default resolution of multi view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   @override
   final int multiviewResolutionIndex;
+
+  /// The index of default resolution of vod streaming.
+  ///
+  /// 0: 720p, 1: 1080p, 2: auto
+  @override
+  final int vodResolutionIndex;
 
   /// The index of default screen mode of single view live streaming.
   ///
   /// 0: off, 1: overlay, 2: side
   @override
-  final int chatWindowStateIndex;
+  final int liveChatWindowStateIndex;
+
+  /// The index of default screen mode of vod streaming.
+  ///
+  /// 0: off, 1: overlay, 2: side
+  @override
+  final int vodChatWindowStateIndex;
 
   /// 0: HLS, 1:LLHLS
   @override
@@ -228,7 +276,7 @@ class _$StreamSettingsImpl implements _StreamSettings {
 
   @override
   String toString() {
-    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, chatWindowStateIndex: $chatWindowStateIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex)';
+    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, vodResolutionIndex: $vodResolutionIndex, liveChatWindowStateIndex: $liveChatWindowStateIndex, vodChatWindowStateIndex: $vodChatWindowStateIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex)';
   }
 
   @override
@@ -241,8 +289,14 @@ class _$StreamSettingsImpl implements _StreamSettings {
             (identical(
                     other.multiviewResolutionIndex, multiviewResolutionIndex) ||
                 other.multiviewResolutionIndex == multiviewResolutionIndex) &&
-            (identical(other.chatWindowStateIndex, chatWindowStateIndex) ||
-                other.chatWindowStateIndex == chatWindowStateIndex) &&
+            (identical(other.vodResolutionIndex, vodResolutionIndex) ||
+                other.vodResolutionIndex == vodResolutionIndex) &&
+            (identical(
+                    other.liveChatWindowStateIndex, liveChatWindowStateIndex) ||
+                other.liveChatWindowStateIndex == liveChatWindowStateIndex) &&
+            (identical(
+                    other.vodChatWindowStateIndex, vodChatWindowStateIndex) ||
+                other.vodChatWindowStateIndex == vodChatWindowStateIndex) &&
             (identical(other.latencyIndex, latencyIndex) ||
                 other.latencyIndex == latencyIndex) &&
             (identical(other.overlayControlsDisplayTime,
@@ -260,7 +314,9 @@ class _$StreamSettingsImpl implements _StreamSettings {
       runtimeType,
       resolutionIndex,
       multiviewResolutionIndex,
-      chatWindowStateIndex,
+      vodResolutionIndex,
+      liveChatWindowStateIndex,
+      vodChatWindowStateIndex,
       latencyIndex,
       overlayControlsDisplayTime,
       vodPlaybackIntervalIndex);
@@ -284,7 +340,9 @@ abstract class _StreamSettings implements StreamSettings {
   const factory _StreamSettings(
       {required final int resolutionIndex,
       required final int multiviewResolutionIndex,
-      required final int chatWindowStateIndex,
+      required final int vodResolutionIndex,
+      required final int liveChatWindowStateIndex,
+      required final int vodChatWindowStateIndex,
       required final int latencyIndex,
       required final int overlayControlsDisplayTime,
       required final int vodPlaybackIntervalIndex}) = _$StreamSettingsImpl;
@@ -296,20 +354,32 @@ abstract class _StreamSettings implements StreamSettings {
 
   /// The index of default resolution of single view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   int get resolutionIndex;
   @override
 
   /// The index of default resolution of multi view live streaming.
   ///
-  /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+  /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
   int get multiviewResolutionIndex;
+  @override
+
+  /// The index of default resolution of vod streaming.
+  ///
+  /// 0: 720p, 1: 1080p, 2: auto
+  int get vodResolutionIndex;
   @override
 
   /// The index of default screen mode of single view live streaming.
   ///
   /// 0: off, 1: overlay, 2: side
-  int get chatWindowStateIndex;
+  int get liveChatWindowStateIndex;
+  @override
+
+  /// The index of default screen mode of vod streaming.
+  ///
+  /// 0: off, 1: overlay, 2: side
+  int get vodChatWindowStateIndex;
   @override
 
   /// 0: HLS, 1:LLHLS

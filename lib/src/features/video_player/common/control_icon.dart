@@ -5,6 +5,7 @@ import '../../../common/constants/styles.dart';
 import '../../../common/widgets/dpad_widgets.dart';
 import '../../setting/widgets/common/setting_item.dart';
 import '../live/controller/live_overlay_controller.dart';
+import '../vod/controller/vod_overlay_controller.dart';
 
 class ControlsNavigator extends StatelessWidget {
   /// A list of controls with dpad navigator
@@ -122,6 +123,11 @@ class ControlIconButton extends StatelessWidget {
   }
 }
 
+enum StreamType {
+  live,
+  vod,
+}
+
 class DpadControlIconButton extends ConsumerWidget {
   /// Control icon button with dpad.
   ///
@@ -141,6 +147,7 @@ class DpadControlIconButton extends ConsumerWidget {
     required this.maxValue,
     this.unitSuffix,
     this.onPressedSelect,
+    this.streamType = StreamType.live,
     required this.onUpdate,
   }) : assert(itemType != SettingItemType.limited || displayTextList != null,
             'displayText cannot be null when itemType is SettingItemType.limited');
@@ -192,6 +199,9 @@ class DpadControlIconButton extends ConsumerWidget {
 
   /// Callback when the arrow up button is preseed.
   final Function(int updateValue) onUpdate;
+
+  /// Stream type for reset overlay
+  final StreamType streamType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -266,8 +276,17 @@ class DpadControlIconButton extends ConsumerWidget {
   }
 
   void _resetOverlayTimer(WidgetRef ref) {
-    ref
-        .read(liveOverlayControllerProvider.notifier)
-        .resetOverlayTimer(videoFocusNode: videoFocusNode);
+    // live
+    if (streamType == StreamType.live) {
+      ref
+          .read(liveOverlayControllerProvider.notifier)
+          .resetOverlayTimer(videoFocusNode: videoFocusNode);
+    }
+    // vode
+    else {
+      ref
+          .read(vodOverlayControllerProvider.notifier)
+          .resetOverlayTimer(videoFocusNode: videoFocusNode);
+    }
   }
 }

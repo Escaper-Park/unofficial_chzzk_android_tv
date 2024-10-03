@@ -7,7 +7,7 @@ part of 'wakelock_monitor_controller.dart';
 // **************************************************************************
 
 String _$wakelockMonitorControllerHash() =>
-    r'd56c6ae85a74d098f606d8fae174b04e70f9ba2b';
+    r'edbe175e579d08cf692f116d296db341fdbf0367';
 
 /// See also [WakelockMonitorController].
 @ProviderFor(WakelockMonitorController)

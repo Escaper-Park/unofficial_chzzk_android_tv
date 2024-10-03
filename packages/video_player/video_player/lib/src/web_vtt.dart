@@ -68,7 +68,7 @@ List<Caption> _parseCaptionsFromWebVTTString(String file) {
 
     final String text = captionLines.sublist(hasHeader ? 2 : 1).join('\n');
 
-    // TODO(cyanglaz): Handle special syntax in VTT captions.
+    // Handle special syntax in VTT captions.
     // https://github.com/flutter/flutter/issues/90007.
     final String textWithoutFormat = _extractTextFromHtml(text);
 
@@ -167,7 +167,7 @@ Duration? _parseWebVTTTimestamp(String timestampString) {
 
   final List<String> milisecondsStyles = dotSections[1].split(' ');
 
-  // TODO(cyanglaz): Handle caption styles.
+  // Handle caption styles.
   // https://github.com/flutter/flutter/issues/90009.
   // ```dart
   // if (milisecondsStyles.length > 1) {

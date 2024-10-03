@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/category/model/category.dart';
 import '../../features/channel/model/channel.dart';
-import '../../features/vod/model/vod.dart';
 import './screen_index.dart';
 
 export 'package:go_router/go_router.dart';
@@ -191,14 +190,8 @@ Raw<GoRouter> appRouter(AppRouterRef ref) {
             path: AppRoute.vodStreaming.routePath,
             name: AppRoute.vodStreaming.routeName,
             pageBuilder: (context, state) {
-              final fields = state.extra as Map<String, dynamic>;
-
               return NoTransitionPage(
-                child: VodStreamingScreen(
-                  key: state.pageKey,
-                  vodPath: fields['vodPath'] as dynamic,
-                  vod: fields['vod'] as Vod,
-                ),
+                child: VodStreamingScreen(key: state.pageKey),
               );
             },
           ),

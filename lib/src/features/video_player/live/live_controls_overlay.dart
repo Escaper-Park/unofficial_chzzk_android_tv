@@ -68,7 +68,8 @@ class LiveControlsOverlay extends HookConsumerWidget {
           videoFocusNode: videoFocusNode,
           controlsFSN: controlsFSN,
         ),
-      LiveOverlayType.resolutionSettings => ResolutionSettingsControlsOverlay(
+      LiveOverlayType.resolutionSettings =>
+        LiveResolutionSettingsControlsOverlay(
           videoFocusNode: videoFocusNode,
           controlsFSN: controlsFSN,
         ),

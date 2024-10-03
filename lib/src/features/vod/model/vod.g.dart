@@ -36,7 +36,8 @@ _$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
               json['liveRewindPlaybackJson'],
               const LiveRewindPlaybackConverter().fromJson),
       userAdultStatus: json['userAdultStatus'] as String?,
-      liveChatEnabled: json['liveChatEnabled'] as bool?,
+      videoChatEnabled: json['videoChatEnabled'] as bool?,
+      videoChatChannelId: json['videoChatChannelId'] as String?,
     );
 
 Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
@@ -69,7 +70,8 @@ Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
               instance.liveRewindPlaybackJson,
               const LiveRewindPlaybackConverter().toJson),
       'userAdultStatus': instance.userAdultStatus,
-      'liveChatEnabled': instance.liveChatEnabled,
+      'videoChatEnabled': instance.videoChatEnabled,
+      'videoChatChannelId': instance.videoChatChannelId,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

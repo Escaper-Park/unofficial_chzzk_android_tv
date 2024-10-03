@@ -25,7 +25,9 @@ class LivePlaylistController extends _$LivePlaylistController {
     required LiveDetail liveDetail,
   }) {
     // change wakelock state
-    ref.read(wakelockMonitorControllerProvider.notifier).setTrue(index);
+    ref
+        .read(wakelockMonitorControllerProvider.notifier)
+        .setWakelockEnable(index);
 
     state = [
       for (int i = 0; i < state.length; i++)

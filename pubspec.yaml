@@ -2,7 +2,7 @@ name: unofficial_chzzk_android_tv
 description: "UnOfficial Chzzk for Android TV"
 publish_to: "none"
 
-version: 0.3.2+1
+version: 0.3.3
 
 environment:
   sdk: ">=3.2.6 <4.0.0"

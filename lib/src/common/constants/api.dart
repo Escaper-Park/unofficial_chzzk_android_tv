@@ -73,11 +73,18 @@ class ApiUrl {
 
   /// [baseUrl] Vod playback.
   ///
-  /// [path] /$videoId (String videoId)
+  /// [path] /$videoNo (int videoNo)
   ///
   /// [queryParamters] String key = inKey
   static const String vodPlayback =
       'https://apis.naver.com/neonplayer/vodplay/v1/playback';
+
+  /// [chzzkService] Vod Chat
+  /// 
+  /// [path] /$videoNo/chats
+  /// 
+  /// [queryParamters] int playerMessageTime, int? previousVideoChatSize
+  static const String vodChat = '/v1/videos';
 
   /// [chzzkService] All Categories.
   ///
@@ -102,7 +109,7 @@ class ApiUrl {
 
   /// [chzzkService] Tags search results.
   ///
-  /// [queryParameters] int size = 20, String sortType = 'POPULAR', int concurrentUserCount, int liveId, String tags 
+  /// [queryParameters] int size = 20, String sortType = 'POPULAR', int concurrentUserCount, int liveId, String tags
   static const String searchTags = '/v1/tag/lives';
 
   /// [naverGame] Access token for chat.

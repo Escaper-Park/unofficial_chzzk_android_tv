@@ -1,84 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../../common/widgets/center_widgets.dart';
-import '../../vod/model/vod.dart';
+import 'controller/vod_player_controller.dart';
 import 'vod_controls_overlay.dart';
+import 'vod_screen.dart';
 
-class VodPlayer extends StatefulWidget {
-  const VodPlayer({
-    super.key,
-    required this.vodPath,
-    required this.vod,
-  });
-
-  final String vodPath;
-  final Vod vod;
+class VodPlayer extends ConsumerStatefulWidget {
+  const VodPlayer({super.key});
 
   @override
-  State<VodPlayer> createState() => _VodPlayerState();
+  ConsumerState<VodPlayer> createState() => _VodPlayerState();
 }
 
-class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
-  VideoPlayerController? _videoPlayerController;
-
-  // Show current state.
-  String msg = '동영상 로딩 중...';
-
+class _VodPlayerState extends ConsumerState<VodPlayer>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // add observer for detecting App Life cycle
-    WidgetsBinding.instance.addObserver(this);
 
     initialize();
   }
 
   Future<void> initialize() async {
-    Uri uri = Uri.parse(widget.vodPath);
-    String baseUrl = '${uri.scheme}://${uri.host}${uri.path}';
-    Map<String, String> queryParams = uri.queryParameters;
-
-    _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse(baseUrl),
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      httpHeaders: queryParams,
-    );
-
-    await Future.wait([_videoPlayerController!.initialize()]);
-    _videoPlayerController!.play();
-
-    // Check wakelock
+    WidgetsBinding.instance.addObserver(this);
     if (!await WakelockPlus.enabled) {
       await WakelockPlus.enable();
-    }
-
-    _videoPlayerController?.addListener(_checkVideoEnds);
-
-    if (context.mounted) {
-      setState(() {});
-    }
-  }
-
-  void _checkVideoEnds() async {
-    if (_videoPlayerController != null) {
-      final value = _videoPlayerController!.value;
-
-      // Sometimes this package detects the end of video as an error situation.
-      final bool checkEnds = value.hasError == true || // Error
-          // Ends
-          (value.isInitialized &&
-              (value.position >= value.duration) &&
-              !value.isPlaying);
-
-      if (checkEnds) {
-        setState(() {
-          msg = '영상이 마지막까지 재생되었습니다';
-          WakelockPlus.disable();
-          _videoPlayerController = null;
-        });
-      }
     }
   }
 
@@ -86,12 +33,6 @@ class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     WakelockPlus.disable();
-    if (_videoPlayerController != null) {
-      _videoPlayerController!.pause(); // To avoid android errors.
-      _videoPlayerController!.removeListener(_checkVideoEnds);
-      _videoPlayerController!.dispose();
-    }
-
     super.dispose();
   }
 
@@ -106,15 +47,12 @@ class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
         break;
       // Pause
       case AppLifecycleState.paused:
-        _videoPlayerController?.pause();
-        WakelockPlus.disable();
+        _pause(ref);
+
         break;
       // Pause -> Resume
       case AppLifecycleState.resumed:
-        if (_videoPlayerController?.value.isPlaying == false) {
-          _videoPlayerController?.play();
-          await WakelockPlus.enable();
-        }
+        _resume(ref);
         break;
       // System Ends
       case AppLifecycleState.detached:
@@ -122,25 +60,23 @@ class _VodPlayerState extends State<VodPlayer> with WidgetsBindingObserver {
     }
   }
 
+  void _pause(WidgetRef ref) {
+    ref.read(vodPlayerControllerProvider.notifier).pause();
+    WakelockPlus.disable();
+  }
+
+  void _resume(WidgetRef ref) {
+    ref.read(vodPlayerControllerProvider.notifier).resume();
+    WakelockPlus.enable();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _videoPlayerController != null &&
-            _videoPlayerController!.value.isInitialized
-        ? Stack(
-            children: [
-              Center(
-                child: AspectRatio(
-                  aspectRatio: _videoPlayerController!.value.aspectRatio,
-                  child: VideoPlayer(_videoPlayerController!),
-                ),
-              ),
-              // Controls
-              VodControlsOverlay(
-                controller: _videoPlayerController!,
-                vod: widget.vod,
-              ),
-            ],
-          )
-        : CenteredText(text: msg);
+    return const Stack(
+      children: [
+        VodScreen(),
+        VodControlsOverlay(),
+      ],
+    );
   }
 }

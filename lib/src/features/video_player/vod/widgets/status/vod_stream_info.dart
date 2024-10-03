@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../common/constants/dimensions.dart';
 import '../../../../../common/constants/styles.dart';
 import '../../../../../common/widgets/circle_avatar_profile_image.dart';
 import '../../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
-import '../../../../vod/model/vod.dart';
 import '../../../common/controls_overlay_container.dart';
+import '../../controller/vod_playlist_controller.dart';
 import './vod_stream_status.dart';
 
-class VodStreamInfo extends StatelessWidget {
-  const VodStreamInfo({super.key, required this.vod});
-
-  final Vod vod;
+class VodStreamInfo extends ConsumerWidget {
+  const VodStreamInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final vodPlay = ref.watch(vodPlaylistControllerProvider);
+    final vod = vodPlay!.$1;
+
     return ControlsOverlayContainer(
       alignment: Alignment.topLeft,
       height: Dimensions.vodStreamInfoContainerHeight,

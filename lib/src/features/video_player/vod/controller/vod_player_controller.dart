@@ -1,20 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../../../utils/hls_parser/hls_parser.dart';
 import '../../../setting/controller/stream_settings_controller.dart';
-// import '../../../vod/model/vod.dart';
-// import '../../../vod/model/vod_event.dart';
+import 'vod_overlay_controller.dart';
+import 'vod_playlist_controller.dart';
 
 part 'vod_player_controller.g.dart';
-
-enum VodOverlayType {
-  none,
-  main,
-  channelData, // show channel data.
-}
 
 enum PlaybackDirection {
   forward,
@@ -22,84 +16,176 @@ enum PlaybackDirection {
 }
 
 @riverpod
-class VodOverlayController extends _$VodOverlayController {
-  late int _overlayControlsDisplayTime;
-
-  @override
-  VodOverlayType build() {
-    final streamSettings = ref.read(streamSettingsControllerProvider);
-
-    _overlayControlsDisplayTime = streamSettings.overlayControlsDisplayTime;
-
-    return VodOverlayType.none;
-  }
-
-  void setState(VodOverlayType overlayType) {
-    if (state != overlayType) state = overlayType;
-  }
-
-  void changeOverlay({
-    /// Vod overlay type
-    required VodOverlayType overlayType,
-
-    /// Request focus to video when the timer ends.
-    required FocusNode videoFocusNode,
-
-    /// overlay display time
-    int? seconds,
-  }) {
-    // Hide overlay
-    if (overlayType == VodOverlayType.none) {
-      setState(overlayType);
-      ref.read(vodPlayerOverlayTimerProvider.notifier).cancelTimer();
-      videoFocusNode.requestFocus();
-    }
-    // Show overlay
-    else {
-      ref.read(vodPlayerOverlayTimerProvider.notifier).startTimer(
-            seconds: seconds ?? _overlayControlsDisplayTime,
-            startCallback: () {
-              videoFocusNode.unfocus();
-              setState(overlayType);
-            },
-            endCallback: () {
-              // hide overlay and request focus to video
-              setState(VodOverlayType.none);
-              videoFocusNode.requestFocus();
-            },
-          );
-    }
-  }
-
-  /// Each time the button is clicked, the timer resets to keep the overlay active.
-  void resetOverlayTimer({required FocusNode videoFocusNode}) {
-    ref.read(vodPlayerOverlayTimerProvider.notifier).startTimer(
-          startCallback: null, // maintain the previous state.
-          endCallback: () {
-            // hide overlay and request focus to video
-            setState(VodOverlayType.none);
-            videoFocusNode.requestFocus();
-          },
-        );
-  }
-}
-
-@riverpod
 class VodPlayerController extends _$VodPlayerController {
   late int _playbackInterval;
+  late int _resolutionIndex;
+  late VodPlay? _vodPlay;
+
+  VodPlay? getVodPlay() => _vodPlay;
 
   @override
-  void build() {
-    final streamSettings = ref.read(streamSettingsControllerProvider);
+  FutureOr<Raw<VideoPlayerController?>> build() async {
+    final playbackIntervalIndex = ref.read(streamSettingsControllerProvider
+        .select((value) => value.vodPlaybackIntervalIndex));
 
-    _playbackInterval = switch (streamSettings.vodPlaybackIntervalIndex) {
+    _resolutionIndex = ref.read(streamSettingsControllerProvider.select(
+      (value) => value.vodResolutionIndex,
+    ));
+
+    _playbackInterval = switch (playbackIntervalIndex) {
       0 => 5,
       1 => 10,
       2 => 30,
       _ => 10,
     };
 
-    return;
+    _vodPlay = ref.read(vodPlaylistControllerProvider);
+
+    return await init();
+  }
+
+  Future<VideoPlayerController?> init({int duration = 0}) async {
+    try {
+      if (_vodPlay?.$2 != null) {
+        final Uri uri = Uri.parse(_vodPlay!.$2);
+        final queryParams = uri.queryParameters;
+
+        final mediaList =
+            await HlsParser(uri.toString()).getVodMediaPlaylistUris();
+        int resolutionIndex = _resolutionIndex;
+
+        if (mediaList != null) {
+          Uri? mediaTrackUrl;
+          // Auto
+          if (_resolutionIndex == 2) {
+            mediaTrackUrl = mediaList.first;
+          }
+          // Selected
+          else {
+            if (mediaList.length < _resolutionIndex + 1) {
+              resolutionIndex = mediaList.length - 1;
+            }
+            mediaTrackUrl = mediaList[resolutionIndex];
+          }
+
+          final controller =
+              _getVideoPlayerController(mediaTrackUrl!, queryParams);
+
+          await controller.initialize();
+          
+
+          if (duration != 0) {
+            await controller.seekTo(Duration(seconds: duration));
+          }
+
+          await controller.play();
+          controller.addListener(_checkVideoEnds);
+
+          return controller;
+        }
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _checkVideoEnds() async {
+    final value = state.value?.value;
+
+    if (value != null) {
+      final bool checkEnds = value.hasError == true ||
+          (value.isInitialized &&
+              (value.position >= value.duration) &&
+              !value.isPlaying);
+
+      if (checkEnds) {
+        state = const AsyncValue.data(null);
+        await WakelockPlus.disable();
+        // Check again
+        WakelockPlus.enabled.then(
+          (value) async {
+            if (value == true) await WakelockPlus.disable();
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> dispose() async {
+    if (state.value?.value.isPlaying == true) {
+      await state.value!.pause();
+    }
+    state.value?.removeListener(_checkVideoEnds);
+    state.value?.dispose();
+  }
+
+  void changeResolution(int resolutionIndex) async {
+    final lastPosition = state.value?.value.position.inSeconds;
+    _resolutionIndex = resolutionIndex;
+
+    await changeSource(duration: lastPosition!);
+  }
+
+  Future<void> changeSource({int duration = 0}) async {
+    dispose();
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(
+      () async {
+        _vodPlay = ref.read(vodPlaylistControllerProvider);
+        return await init(duration: duration);
+      },
+    );
+  }
+
+  VideoPlayerController _getVideoPlayerController(
+    Uri uri,
+    Map<String, String> queryParams,
+  ) {
+    return VideoPlayerController.networkUrl(
+      uri,
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false),
+      httpHeaders: queryParams,
+    );
+  }
+
+  int getCurrentResolutionIndex() => _resolutionIndex;
+
+  void seekTo({
+    required VideoPlayerController controller,
+    required FocusNode videoFocusNode,
+    required PlaybackDirection direction,
+  }) {
+    final currentPos = controller.value.position;
+
+    switch (direction) {
+      case PlaybackDirection.forward:
+        final newPos = currentPos + Duration(seconds: _playbackInterval);
+        if (newPos <= controller.value.duration) {
+          controller.seekTo(newPos);
+        }
+        break;
+      case PlaybackDirection.backword:
+        final newPos = currentPos - Duration(seconds: _playbackInterval);
+        controller.seekTo(newPos);
+        break;
+    }
+
+    // keep overlay state
+    ref
+        .read(vodOverlayControllerProvider.notifier)
+        .resetOverlayTimer(videoFocusNode: videoFocusNode);
+  }
+
+  void pause() {
+    state.value?.pause();
+  }
+
+  void resume() {
+    if (!state.value!.value.isPlaying) {
+      state.value?.play();
+    }
   }
 
   // // TODO: POST Paused Event
@@ -128,78 +214,4 @@ class VodPlayerController extends _$VodPlayerController {
 
   // // TODO: POST Ended Event
   // void end() {}
-
-  void seekTo({
-    required VideoPlayerController controller,
-    required FocusNode videoFocusNode,
-    required PlaybackDirection direction,
-  }) {
-    final currentPos = controller.value.position;
-
-    switch (direction) {
-      case PlaybackDirection.forward:
-        final newPos = currentPos + Duration(seconds: _playbackInterval);
-        if (newPos <= controller.value.duration) {
-          controller.seekTo(newPos);
-        }
-        break;
-      case PlaybackDirection.backword:
-        final newPos = currentPos - Duration(seconds: _playbackInterval);
-        controller.seekTo(newPos);
-        break;
-    }
-
-    // keep overlay state
-    ref
-        .read(vodOverlayControllerProvider.notifier)
-        .resetOverlayTimer(videoFocusNode: videoFocusNode);
-  }
-}
-
-/// Set this true to ensure that the existing state is maintained wherever this timer is called.
-@Riverpod(keepAlive: true)
-class VodPlayerOverlayTimer extends _$VodPlayerOverlayTimer {
-  late int _overlayControlsDisplayTime;
-
-  @override
-  Timer? build() {
-    final streamSettings = ref.read(streamSettingsControllerProvider);
-    _overlayControlsDisplayTime = streamSettings.overlayControlsDisplayTime;
-
-    return null;
-  }
-
-  /// Start timer with start callback and stop timer with end callback.
-  void startTimer({
-    /// Call this when the timer starts.
-    ///
-    /// Nullable to reset only timer period.
-    required VoidCallback? startCallback,
-
-    /// Call this when the timer ends.
-    required VoidCallback? endCallback,
-
-    /// The period(or time) when the overlay is displayed.
-    int? seconds,
-  }) {
-    // reset before start.
-    cancelTimer();
-
-    if (startCallback != null) startCallback();
-
-    state = Timer(
-      Duration(seconds: seconds ?? _overlayControlsDisplayTime),
-      () {
-        // timer ends
-        if (endCallback != null) endCallback();
-        // stop timer.
-        cancelTimer();
-      },
-    );
-  }
-
-  void cancelTimer() {
-    state?.cancel();
-    state = null;
-  }
 }

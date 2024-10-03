@@ -85,7 +85,6 @@ final class HttpVideoAsset extends VideoAsset {
     return new DefaultMediaSourceFactory(context).setDataSourceFactory(dataSourceFactory);
   }
 
-  // TODO: Migrate to stable API, see https://github.com/flutter/flutter/issues/147039.
   @OptIn(markerClass = UnstableApi.class)
   private static void unstableUpdateDataSourceFactory(
       @NonNull CustomHttpDataSource.Factory factory,

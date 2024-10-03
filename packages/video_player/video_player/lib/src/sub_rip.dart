@@ -16,7 +16,7 @@ class SubRipCaptionFile extends ClosedCaptionFile {
       : _captions = _parseCaptionsFromSubRipString(fileContents);
 
   /// The entire body of the SubRip file.
-  // TODO(cyanglaz): Remove this public member as it doesn't seem need to exist.
+  // Remove this public member as it doesn't seem need to exist.
   // https://github.com/flutter/flutter/issues/90471
   final String fileContents;
 

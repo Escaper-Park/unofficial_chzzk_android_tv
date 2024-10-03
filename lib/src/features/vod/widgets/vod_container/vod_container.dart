@@ -9,6 +9,7 @@ import '../../../../common/widgets/rounded_container.dart';
 
 import '../../../../utils/popup/popup_utils.dart';
 import '../../../../utils/router/app_router.dart';
+import '../../../video_player/vod/controller/vod_playlist_controller.dart';
 import '../../controller/vod_controller.dart';
 import '../../model/vod.dart';
 import './vod_container_widgets.dart';
@@ -45,21 +46,31 @@ class VodContainer extends ConsumerWidget {
               .read(vodControllerProvider.notifier)
               .getVodPlayback(videoNo: vod.videoNo);
 
-          if (context.mounted) {
-            if (vodPath == null) {
+          // Error
+          if (vodPath == null) {
+            if (context.mounted) {
               await PopupUtils.showButtonDialog(
                 context: context,
                 titleText: '재생 오류',
                 contentText: '다시보기 재생 오류',
               );
-
-              return;
-            } else {
-              context.pushNamed(AppRoute.vodStreaming.routeName, extra: {
-                'vodPath': vodPath,
-                'vod': vod,
-              });
             }
+
+            return;
+          }
+          //
+          else {
+            // reset
+            ref.read(vodPlaylistControllerProvider.notifier).reset();
+            ref.read(vodPlaylistControllerProvider.notifier).setVod(
+              vodPlay: (vod, vodPath),
+            );
+
+            if (context.mounted) {
+              context.pushNamed(AppRoute.vodStreaming.routeName);
+            }
+
+            return;
           }
         },
         child: (hasFocus) => vod.channel.personalData?.privateUserBlock == true

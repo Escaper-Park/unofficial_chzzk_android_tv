@@ -207,7 +207,7 @@ class VideoEvent {
   ///
   /// Depending on the [eventType], the [duration], [size],
   /// [rotationCorrection], and [buffered] arguments can be null.
-  // TODO(stuartmorgan): Temporarily suppress warnings about not using const
+  // Temporarily suppress warnings about not using const
   // in all of the other video player packages, fix this, and then update
   // the other packages to use const.
   // ignore: prefer_const_constructors_in_immutables
@@ -308,7 +308,7 @@ enum VideoEventType {
 class DurationRange {
   /// Trusts that the given [start] and [end] are actually in order. They should
   /// both be non-null.
-  // TODO(stuartmorgan): Temporarily suppress warnings about not using const
+  // Temporarily suppress warnings about not using const
   // in all of the other video player packages, fix this, and then update
   // the other packages to use const.
   // ignore: prefer_const_constructors_in_immutables
@@ -371,7 +371,7 @@ class DurationRange {
 @immutable
 class VideoPlayerOptions {
   /// Set additional optional player settings
-  // TODO(stuartmorgan): Temporarily suppress warnings about not using const
+  // Temporarily suppress warnings about not using const
   // in all of the other video player packages, fix this, and then update
   // the other packages to use const.
   // ignore: prefer_const_constructors_in_immutables

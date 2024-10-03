@@ -12,9 +12,11 @@ class StreamSettingsRepository extends SettingsRepository<StreamSettings> {
   StreamSettings initSettings() {
     const StreamSettings settings = StreamSettings(
       resolutionIndex: 4, // Auto
-      chatWindowStateIndex: 0, // Full
-      overlayControlsDisplayTime: 10,
       multiviewResolutionIndex: 2, // 720p
+      vodResolutionIndex: 2, // Auto
+      liveChatWindowStateIndex: 0, // Full
+      vodChatWindowStateIndex: 0, // Full
+      overlayControlsDisplayTime: 10,
       latencyIndex: 1, // LLHLS
       vodPlaybackIntervalIndex: 1, // 10s
     );

@@ -51,16 +51,44 @@ class StreamSettingsScreen extends ConsumerWidget {
         ),
         SettingItem(
           settingMenuFSN: settingMenuFSN,
-          headerText: '채팅창 모드',
+          headerText: '다시보기 해상도',
           itemType: SettingItemType.limited,
-          displayTextList: const ['끄기', '오버레이', '크게보기'],
-          currentValue: streamSettings.chatWindowStateIndex,
+          displayTextList: const ['720p', '1080p', '자동'],
+          currentValue: streamSettings.vodResolutionIndex,
           minValue: 0,
           maxValue: 2,
           onUpdate: (value) {
             ref
                 .read(streamSettingsControllerProvider.notifier)
-                .setChatWindowStateIndex(value);
+                .setVodResolutionIndex(value);
+          },
+        ),
+        SettingItem(
+          settingMenuFSN: settingMenuFSN,
+          headerText: '라이브 채팅창 모드',
+          itemType: SettingItemType.limited,
+          displayTextList: const ['끄기', '오버레이', '크게보기'],
+          currentValue: streamSettings.liveChatWindowStateIndex,
+          minValue: 0,
+          maxValue: 2,
+          onUpdate: (value) {
+            ref
+                .read(streamSettingsControllerProvider.notifier)
+                .setLiveChatWindowStateIndex(value);
+          },
+        ),
+        SettingItem(
+          settingMenuFSN: settingMenuFSN,
+          headerText: '다시보기 채팅창 모드',
+          itemType: SettingItemType.limited,
+          displayTextList: const ['끄기', '오버레이', '크게보기'],
+          currentValue: streamSettings.vodChatWindowStateIndex,
+          minValue: 0,
+          maxValue: 2,
+          onUpdate: (value) {
+            ref
+                .read(streamSettingsControllerProvider.notifier)
+                .setVodChatWindowStateIndex(value);
           },
         ),
         SettingItem(

@@ -41,7 +41,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
         return _latencyIndex == 0 ? m.mediaId == "HLS" : m.mediaId == "LLHLS";
       });
 
-      final mediaList = await HlsParser(media.path).getMediaPlaylistUris();
+      final mediaList = await HlsParser(media.path).getLiveMediaPlaylistUris();
 
       int resolutionIdx = _resolutionIndex;
 
@@ -76,10 +76,13 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
     }
   }
 
-  void _checkVideoEnds() {
+  void _checkVideoEnds() async {
     final value = state.value!.value;
 
-    final bool checkEnds = value.hasError || (value.position >= value.duration);
+    final bool checkEnds = value.hasError ||
+        (value.isInitialized &&
+            (value.position >= value.duration) &&
+            !value.isPlaying);
 
     if (checkEnds) {
       // Check Ends Start
@@ -88,13 +91,17 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
       }
       // Ends
       else {
-        ref.read(wakelockMonitorControllerProvider.notifier).setFalse(index);
+        ref
+            .read(wakelockMonitorControllerProvider.notifier)
+            .setWakelockDisable(index);
       }
     }
     // After buffering
     else {
       if (_streamEnds == true) {
-        ref.read(wakelockMonitorControllerProvider.notifier).setTrue(index);
+        ref
+            .read(wakelockMonitorControllerProvider.notifier)
+            .setWakelockEnable(index);
         _streamEnds = null;
       }
     }

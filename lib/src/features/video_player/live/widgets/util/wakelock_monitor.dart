@@ -12,16 +12,26 @@ class WakelockMonitor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<bool> wakelockMontiorList =
-        ref.watch(wakelockMonitorControllerProvider);
+    ref.listen(
+      wakelockMonitorControllerProvider,
+      (previous, next) {
+        if (previous != next) {
+          final bool allFalse = next.every((e) => e == false);
 
-    final bool allFalse = wakelockMontiorList.every((e) => e == false);
-
-    if (allFalse) {
-      WakelockPlus.disable();
-    } else {
-      WakelockPlus.enable();
-    }
+          if (allFalse) {
+            WakelockPlus.disable();
+            // Check again
+            WakelockPlus.enabled.then(
+              (value) {
+                if (value == true) WakelockPlus.disable();
+              },
+            );
+          } else {
+            WakelockPlus.enable();
+          }
+        }
+      },
+    );
 
     return const SizedBox.shrink();
   }

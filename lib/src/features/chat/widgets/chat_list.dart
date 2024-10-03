@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../common/constants/styles.dart';
 import '../../../common/widgets/rounded_container.dart';
 import '../../setting/model/chat_settings.dart';
+import '../../vod/model/vod_chat.dart';
 import '../model/base_chat.dart';
 import '../model/chat.dart';
 import '../model/recent_chat.dart';
@@ -62,6 +63,11 @@ class ChatList extends StatelessWidget {
             profile = bdy.profile;
             extras = bdy.extras;
             ctime = bdy.createTime;
+          } else if (bdy is VodChat) {
+            msg = bdy.content;
+            profile = bdy.profile;
+            extras = bdy.extras;
+            ctime = bdy.messageTime; // TODO : Change
           }
 
           final BaseChat chat = BaseChat(

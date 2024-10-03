@@ -8,7 +8,7 @@ import '../../../../chat/widgets/chat_list.dart';
 import '../../../../live/model/live.dart';
 import '../../../../setting/controller/chat_settings_controller.dart';
 import '../../../../setting/model/chat_settings.dart';
-import '../../controller/live_mode_controller.dart';
+import '../../../common/chat/chat_window_mode.dart';
 
 class LiveChatStream extends ConsumerStatefulWidget {
   const LiveChatStream({

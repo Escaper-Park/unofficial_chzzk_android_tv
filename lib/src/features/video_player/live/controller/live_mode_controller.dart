@@ -1,14 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../setting/controller/stream_settings_controller.dart';
+import '../../common/chat/chat_window_mode.dart';
 
 part 'live_mode_controller.g.dart';
-
-enum ChatWindowMode {
-  off,
-  overlay,
-  side,
-}
 
 enum LiveMode {
   singleView,
@@ -21,10 +16,10 @@ class ChatWindowModeController extends _$ChatWindowModeController {
 
   @override
   ChatWindowMode build() {
-    final streamSettings = ref.read(streamSettingsControllerProvider);
+    final chatWindowStateIndex = ref.read(streamSettingsControllerProvider
+        .select((value) => value.liveChatWindowStateIndex));
 
-    _lastSelectedMode =
-        _getChatWindowModeFromIndex(streamSettings.chatWindowStateIndex);
+    _lastSelectedMode = _getChatWindowModeFromIndex(chatWindowStateIndex);
 
     return _lastSelectedMode;
   }
@@ -90,7 +85,7 @@ class ChatWindowModeController extends _$ChatWindowModeController {
 
     ref
         .read(streamSettingsControllerProvider.notifier)
-        .setChatWindowStateIndex(chatWindowIndex);
+        .setLiveChatWindowStateIndex(chatWindowIndex);
   }
 }
 

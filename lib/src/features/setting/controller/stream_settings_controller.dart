@@ -28,8 +28,18 @@ class StreamSettingsController extends _$StreamSettingsController {
     await _updateInt(value, 0, 4, settings);
   }
 
-  Future<void> setChatWindowStateIndex(int value) async {
-    final settings = state.copyWith(chatWindowStateIndex: value);
+  Future<void> setVodResolutionIndex(int value) async {
+    final settings = state.copyWith(vodResolutionIndex: value);
+    await _updateInt(value, 0, 2, settings);
+  }
+
+  Future<void> setLiveChatWindowStateIndex(int value) async {
+    final settings = state.copyWith(liveChatWindowStateIndex: value);
+    await _updateInt(value, 0, 2, settings);
+  }
+
+  Future<void> setVodChatWindowStateIndex(int value) async {
+    final settings = state.copyWith(vodChatWindowStateIndex: value);
     await _updateInt(value, 0, 2, settings);
   }
 

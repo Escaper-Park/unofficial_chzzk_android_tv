@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../common/constants/api.dart';
 import '../model/vod.dart';
+import '../model/vod_chat.dart';
 
 part 'vod_repository.g.dart';
 
@@ -44,6 +45,13 @@ abstract class VodRepository {
 
   @GET('${ApiUrl.vod}/{videoNo}')
   Future<Vod?> getVod({@Path('videoNo') required int videoNo});
+
+  @GET('${ApiUrl.vodChat}/{videoNo}/chats')
+  Future<VodChatResponse?> getVodChat({
+    @Path('videoNo') required int videoNo,
+    @Query('playerMessageTime') required int playerMessageTime,
+    @Query('previousVideoChatSize') required int? previousVideoChatSize,
+  });
 
   // TODO : POST EVENT
 }

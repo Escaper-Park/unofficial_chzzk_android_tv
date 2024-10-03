@@ -358,7 +358,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
   final String dataSource;
 
   /// HTTP headers used for the request to the [dataSource].
-  /// Only for [VideoPlayerController.network].
+  /// Only for [VideoPlayerController.networkUrl].
   /// Always empty for other video types.
   final Map<String, String> httpHeaders;
 
@@ -724,7 +724,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
     }
 
     final Duration delayedPosition = position + value.captionOffset;
-    // TODO(johnsonmh): This would be more efficient as a binary search.
+    // This would be more efficient as a binary search.
     for (final Caption caption in _closedCaptionFile!.captions) {
       if (caption.start <= delayedPosition && caption.end >= delayedPosition) {
         return caption;

@@ -7,7 +7,7 @@ part of 'live_mode_controller.dart';
 // **************************************************************************
 
 String _$chatWindowModeControllerHash() =>
-    r'57a55e138e4429bba9ad109a2e77d92bff5b03b7';
+    r'e2901dec0248a4501cb9b002b7b9c29518946f48';
 
 /// See also [ChatWindowModeController].
 @ProviderFor(ChatWindowModeController)

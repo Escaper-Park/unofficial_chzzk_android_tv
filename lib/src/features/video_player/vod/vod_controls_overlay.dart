@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:video_player/video_player.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../common/widgets/dpad_widgets.dart';
-import '../../vod/model/vod.dart';
 
-import './controller/vod_player_controller.dart';
+import '../../../utils/popup/popup_utils.dart';
+import '../common/chat/chat_settings_controls_overlay.dart';
 import './widgets/controls/main/vod_stream_main_controls.dart';
 import './widgets/status/vod_stream_info.dart';
 import './widgets/controls/channel/vod_stream_channel_data_controls.dart';
+import './controller/vod_overlay_controller.dart';
+import 'controller/vod_player_controller.dart';
+import 'widgets/controls/resolution/vod_resolution_settings_controls_overlay.dart';
 
 class VodControlsOverlay extends HookConsumerWidget {
-  const VodControlsOverlay({
-    super.key,
-    required this.controller,
-    required this.vod,
-  });
-
-  final VideoPlayerController controller;
-  final Vod vod;
+  const VodControlsOverlay({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // snackbar
+    const int snackbarDisplaySeconds = 2;
+    DateTime? lastPressedBackButtonAt;
+
     final videoFocusNode = useFocusNode();
     final mainControlsFSN = useFocusScopeNode();
-    final channelDataControlsFSN = useFocusScopeNode();
+    final contentsFSN = useFocusScopeNode();
 
     final vodOverlayType = ref.watch(vodOverlayControllerProvider);
 
@@ -36,31 +35,51 @@ class VodControlsOverlay extends HookConsumerWidget {
           node: mainControlsFSN,
           child: Stack(
             children: [
-              VodStreamInfo(vod: vod),
-              VodStreamMainControls(
-                controller: controller,
-                videoFocusNode: videoFocusNode,
-                vod: vod,
-              ),
+              const VodStreamInfo(),
+              VodStreamMainControls(videoFocusNode: videoFocusNode),
             ],
           ),
         ),
       VodOverlayType.channelData => FocusScope(
-          node: channelDataControlsFSN,
-          child: VodStreamChannelDataControls(
-            videoFocusNode: videoFocusNode,
-            vod: vod,
-          ),
+          node: contentsFSN,
+          child: VodStreamChannelDataControls(videoFocusNode: videoFocusNode),
+        ),
+      VodOverlayType.chatSettings => ChatSettingsControlsOverlay(
+          videoFocusNode: videoFocusNode,
+          controlsFSN: contentsFSN,
+        ),
+      VodOverlayType.resolutionSettings => VodResolutionSettingsControlsOverlay(
+          videoFocusNode: videoFocusNode,
+          controlsFSN: contentsFSN,
         ),
     };
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvoked: (didPop) async {
         if (!didPop) {
           // if overlay is hidden, pop
           if (vodOverlayType == VodOverlayType.none) {
-            context.pop();
+            final currentTime = DateTime.now();
+
+            // Before [Snackbar] is visible
+            if (lastPressedBackButtonAt == null ||
+                currentTime.difference(lastPressedBackButtonAt!) >
+                    const Duration(seconds: snackbarDisplaySeconds)) {
+              lastPressedBackButtonAt = currentTime;
+
+              if (context.mounted) {
+                // Show Snackbar
+                const String msg = '뒤로 가기를 한 번 더 누르면 종료됩니다';
+                PopupUtils.showSnackbar(context, msg, milliseconds: 1000);
+              }
+            }
+            // While [Snackbar] is Visible
+            else {
+              await ref.read(vodPlayerControllerProvider.notifier).dispose();
+
+              if (context.mounted) context.pop();
+            }
           }
           // hide overlay
           else {
@@ -92,7 +111,7 @@ class VodControlsOverlay extends HookConsumerWidget {
               },
               DpadAction.arrowUp: () {
                 videoFocusNode.unfocus();
-                channelDataControlsFSN.requestFocus();
+                contentsFSN.requestFocus();
 
                 ref.read(vodOverlayControllerProvider.notifier).changeOverlay(
                       overlayType: VodOverlayType.channelData,

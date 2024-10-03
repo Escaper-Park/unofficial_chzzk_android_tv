@@ -8,18 +8,28 @@ class StreamSettings with _$StreamSettings {
   const factory StreamSettings({
     /// The index of default resolution of single view live streaming.
     ///
-    /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+    /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
     required int resolutionIndex,
 
     /// The index of default resolution of multi view live streaming.
     ///
-    /// 0: 360p, 1: 480p, 2:720p, 3:1080p
+    /// 0: 360p, 1: 480p, 2: 720p, 3: 1080p, 4: auto
     required int multiviewResolutionIndex,
+
+    /// The index of default resolution of vod streaming.
+    ///
+    /// 0: 720p, 1: 1080p, 2: auto
+    required int vodResolutionIndex,
 
     /// The index of default screen mode of single view live streaming.
     ///
     /// 0: off, 1: overlay, 2: side
-    required int chatWindowStateIndex,
+    required int liveChatWindowStateIndex,
+
+    /// The index of default screen mode of vod streaming.
+    ///
+    /// 0: off, 1: overlay, 2: side
+    required int vodChatWindowStateIndex,
 
     /// 0: HLS, 1:LLHLS
     required int latencyIndex,
