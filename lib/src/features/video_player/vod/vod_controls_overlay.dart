@@ -99,6 +99,20 @@ class VodControlsOverlay extends HookConsumerWidget {
                       videoFocusNode: videoFocusNode,
                     );
               },
+              DpadAction.arrowRight: () {
+                ref.read(vodPlayerControllerProvider.notifier).seekTo(
+                  videoFocusNode: videoFocusNode,
+                  controller: controller,
+                  direction: PlaybackDirection.forward,
+                );
+              },
+              DpadAction.arrowLeft: () {
+                ref.read(vodPlayerControllerProvider.notifier).seekTo(
+                  videoFocusNode: videoFocusNode,
+                  controller: controller,
+                  direction: PlaybackDirection.backword,
+                );
+              },
             },
             child: const SizedBox.shrink(),
           ),
