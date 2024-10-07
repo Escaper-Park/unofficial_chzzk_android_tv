@@ -73,6 +73,7 @@ class VodChatQueue extends _$VodChatQueue {
 class VodChatController extends _$VodChatController {
   late int _queueIndex;
   late int _lastChatIndex;
+  late int _videoChatLength;
   late VodChatResponse? _queue;
 
   final int _previousVideoChatSize = 50;
@@ -91,25 +92,32 @@ class VodChatController extends _$VodChatController {
   void removeListener() => controller.removeListener(_addChatFromQueue);
 
   void _addChatFromQueue() async {
-    if (_queue != null && _queue!.videoChats!.length > _queueIndex) {
+    if (_queue != null && _videoChatLength > _queueIndex) {
       final pos = controller.value.position.inMilliseconds;
-      final vodChat = _queue!.videoChats![_queueIndex];
 
-      if (pos >= vodChat.playerMessageTime) {
-        final prev = state.value!;
-        state = AsyncData([vodChat, ...prev, ..._queue!.previousVideoChats!]);
+      // Add Batch
+      final List<VodChat> newChats = [];
+      while (_queueIndex < _videoChatLength &&
+          _queue!.videoChats![_queueIndex].playerMessageTime <= pos) {
+        newChats.add(_queue!.videoChats![_queueIndex]);
         _queueIndex += 1;
+      }
 
-        if (_queueIndex == _lastChatIndex + 1) {
-          // if next is null stop
-          if (_queue?.nextPlayerMessageTime == null) {
-            removeListener();
-          }
-          // if next is not null, fetch more
-          else {
-            await ref.read(vodChatQueueProvider.notifier).autoFetch();
-            _resetQueueValue();
-          }
+      if (newChats.isNotEmpty) {
+        final prev = state.value!;
+        state = AsyncData(
+            [...newChats.reversed, ...prev, ..._queue!.previousVideoChats!]);
+      }
+
+      if (_queueIndex == _lastChatIndex + 1) {
+        // if next is null stop
+        if (_queue?.nextPlayerMessageTime == null) {
+          removeListener();
+        }
+        // if next is not null, fetch more
+        else {
+          await ref.read(vodChatQueueProvider.notifier).autoFetch();
+          _resetQueueValue();
         }
       }
     }
@@ -124,7 +132,8 @@ class VodChatController extends _$VodChatController {
     }
     // reset values
     else {
-      _lastChatIndex = _queue!.videoChats!.length - 1;
+      _videoChatLength = _queue!.videoChats!.length;
+      _lastChatIndex = _videoChatLength - 1;
     }
   }
 
