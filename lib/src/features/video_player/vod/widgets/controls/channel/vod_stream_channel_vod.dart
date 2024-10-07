@@ -120,11 +120,12 @@ class VodStreamChannelVodContainer extends ConsumerWidget {
               return;
             }
 
-            final vodPath = await ref
+            final vodPlay = await ref
                 .read(vodControllerProvider.notifier)
-                .getVodPlayback(videoNo: vod.videoNo);
+                .getVodPlay(videoNo: vod.videoNo);
+
             // Error
-            if (vodPath == null) {
+            if (vodPlay == null) {
               if (context.mounted) {
                 await PopupUtils.showButtonDialog(
                   context: context,
@@ -142,9 +143,7 @@ class VodStreamChannelVodContainer extends ConsumerWidget {
                   .checkIsSameVod(videoNo: vod.videoNo);
 
               if (!checkIsSame) {
-                ref.read(vodPlaylistControllerProvider.notifier).setVod(
-                  vodPlay: (vod, vodPath),
-                );
+                ref.read(vodControllerProvider.notifier).play(vodPlay);
                 ref.read(vodPlayerControllerProvider.notifier).changeSource();
               }
 

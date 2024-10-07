@@ -2,9 +2,10 @@
 
 ## [v0.3.3](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3)
 ### 주요 업데이트 내용
-* 다시보기 채팅 보기
+* 다시보기 채팅 보기 (버그가 있을 수 있습니다. 사용에 문제가 있다면 제보 부탁드립니다)
 * 다시보기 채팅, 화질 설정 추가
 * 채팅이 오랜 시간 올라오지 않았다가 다시 올라왔을 때 앱에서 새로운 채팅이 보이지 않는 현상 수정
+* 라이브 종료 시 종료 화면 표시
 
 ## [v0.3.2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.2)
 ### 주요 업데이트 내용

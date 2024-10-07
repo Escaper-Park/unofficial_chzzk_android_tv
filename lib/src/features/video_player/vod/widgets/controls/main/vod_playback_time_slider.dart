@@ -5,14 +5,16 @@ import 'package:video_player/video_player.dart';
 import '../../../../../../common/widgets/dpad_widgets.dart';
 import '../../../../common/dpad_slider.dart';
 import '../../../controller/vod_overlay_controller.dart';
+import '../../../controller/vod_player_controller.dart';
 
 class VodPlaybackTimeSlider extends ConsumerWidget {
-  const VodPlaybackTimeSlider(
-      {super.key,
-      required this.controller,
-      required this.videoFocusNode,
-      required this.playbackButtonsFSN,
-      required this.playbackSliderFSN});
+  const VodPlaybackTimeSlider({
+    super.key,
+    required this.controller,
+    required this.videoFocusNode,
+    required this.playbackButtonsFSN,
+    required this.playbackSliderFSN,
+  });
 
   final VideoPlayerController controller;
   final FocusNode videoFocusNode;
@@ -29,8 +31,17 @@ class VodPlaybackTimeSlider extends ConsumerWidget {
       maxValue: controller.value.duration.inSeconds.toDouble(),
       initialValue: controller.value.position.inSeconds.toDouble(),
       updateSliderEverySecond: true,
+      keyRepeatEndCallback: (String keyLabel) {
+        final direction = keyLabel == "Arrow Left"
+            ? PlaybackDirection.backword
+            : PlaybackDirection.forward;
+
+        ref.read(vodPlayerControllerProvider.notifier).updateChat(direction);
+      },
       sliderMoveCallback: (position) {
-        controller.seekTo(Duration(seconds: position.toInt()));
+        ref
+            .read(vodPlayerControllerProvider.notifier)
+            .seekToBySlider(duration: Duration(seconds: position.toInt()));
       },
       resetTimerCallback: () {
         ref.read(vodOverlayControllerProvider.notifier).changeOverlay(

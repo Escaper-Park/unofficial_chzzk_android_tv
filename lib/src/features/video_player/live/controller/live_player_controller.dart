@@ -17,10 +17,8 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
   late int _latencyIndex;
   late int _resolutionIndex;
 
-  bool? _streamEnds;
-
   @override
-  FutureOr<Raw<VideoPlayerController>> build({required int index}) async {
+  FutureOr<Raw<VideoPlayerController?>> build({required int index}) async {
     final streamSettings = ref.read(streamSettingsControllerProvider);
     final liveDetails = ref.read(livePlaylistControllerProvider);
 
@@ -34,7 +32,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
     return await init();
   }
 
-  Future<VideoPlayerController> init({bool mute = true}) async {
+  Future<VideoPlayerController?> init({bool mute = true}) async {
     try {
       // Find media by latency
       final media = _liveDetail.livePlaybackJson.media.firstWhere((m) {
@@ -60,7 +58,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
           mediaTrackUri = mediaList[resolutionIdx];
         }
 
-        final controller = _getVideoPlayerController(mediaTrackUri!);
+        final controller = _getVideoPlayerController(mediaTrackUri!)!;
         await controller.initialize();
         if (index != 0 && mute) controller.setVolume(0.0);
 
@@ -70,40 +68,25 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
         return controller;
       }
 
-      return _getVideoPlayerController(Uri());
+      return null;
     } catch (_) {
-      return _getVideoPlayerController(Uri());
+      return null;
     }
   }
 
   void _checkVideoEnds() async {
     final value = state.value!.value;
 
-    final bool checkEnds = value.hasError ||
-        (value.isInitialized &&
-            (value.position >= value.duration) &&
-            !value.isPlaying);
+    final bool checkEnds = (value.isInitialized && value.isCompleted);
 
-    if (checkEnds) {
+    if (checkEnds && !value.isBuffering) {
       // Check Ends Start
-      if (_streamEnds == null) {
-        _streamEnds = true;
-      }
-      // Ends
-      else {
-        ref
-            .read(wakelockMonitorControllerProvider.notifier)
-            .setWakelockDisable(index);
-      }
-    }
-    // After buffering
-    else {
-      if (_streamEnds == true) {
-        ref
-            .read(wakelockMonitorControllerProvider.notifier)
-            .setWakelockEnable(index);
-        _streamEnds = null;
-      }
+      ref
+          .read(wakelockMonitorControllerProvider.notifier)
+          .setWakelockDisable(index);
+
+      state.value?.removeListener(_checkVideoEnds);
+      state = const AsyncValue.data(null);
     }
   }
 
@@ -136,7 +119,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
     );
   }
 
-  VideoPlayerController _getVideoPlayerController(Uri uri) {
+  VideoPlayerController? _getVideoPlayerController(Uri uri) {
     return VideoPlayerController.networkUrl(
       uri,
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),

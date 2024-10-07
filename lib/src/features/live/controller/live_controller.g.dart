@@ -6,7 +6,7 @@ part of 'live_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$liveControllerHash() => r'813e5132108acf32ede5da3a3596f461be6cf8c1';
+String _$liveControllerHash() => r'80e2008e9969b83f8589922954615ef9fe02cf48';
 
 /// See also [LiveController].
 @ProviderFor(LiveController)

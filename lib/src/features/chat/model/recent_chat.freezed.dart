@@ -467,7 +467,7 @@ mixin _$RecentChatMsg {
   Profile? get profile => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   @JsonKey(fromJson: extrasFromJson)
-  Extras get extras => throw _privateConstructorUsedError;
+  Extras? get extras => throw _privateConstructorUsedError;
   int get memberCount => throw _privateConstructorUsedError;
   int get messageTypeCode => throw _privateConstructorUsedError;
   String get messageStatusType => throw _privateConstructorUsedError;
@@ -494,7 +494,7 @@ abstract class $RecentChatMsgCopyWith<$Res> {
       String userId,
       @JsonKey(fromJson: profileFromJson) Profile? profile,
       String content,
-      @JsonKey(fromJson: extrasFromJson) Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int memberCount,
       int messageTypeCode,
       String messageStatusType,
@@ -503,7 +503,7 @@ abstract class $RecentChatMsgCopyWith<$Res> {
       Object? msgTid});
 
   $ProfileCopyWith<$Res>? get profile;
-  $ExtrasCopyWith<$Res> get extras;
+  $ExtrasCopyWith<$Res>? get extras;
 }
 
 /// @nodoc
@@ -525,7 +525,7 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
     Object? userId = null,
     Object? profile = freezed,
     Object? content = null,
-    Object? extras = null,
+    Object? extras = freezed,
     Object? memberCount = null,
     Object? messageTypeCode = null,
     Object? messageStatusType = null,
@@ -558,10 +558,10 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      extras: null == extras
+      extras: freezed == extras
           ? _value.extras
           : extras // ignore: cast_nullable_to_non_nullable
-              as Extras,
+              as Extras?,
       memberCount: null == memberCount
           ? _value.memberCount
           : memberCount // ignore: cast_nullable_to_non_nullable
@@ -600,8 +600,12 @@ class _$RecentChatMsgCopyWithImpl<$Res, $Val extends RecentChatMsg>
 
   @override
   @pragma('vm:prefer-inline')
-  $ExtrasCopyWith<$Res> get extras {
-    return $ExtrasCopyWith<$Res>(_value.extras, (value) {
+  $ExtrasCopyWith<$Res>? get extras {
+    if (_value.extras == null) {
+      return null;
+    }
+
+    return $ExtrasCopyWith<$Res>(_value.extras!, (value) {
       return _then(_value.copyWith(extras: value) as $Val);
     });
   }
@@ -622,7 +626,7 @@ abstract class _$$RecentChatMsgImplCopyWith<$Res>
       String userId,
       @JsonKey(fromJson: profileFromJson) Profile? profile,
       String content,
-      @JsonKey(fromJson: extrasFromJson) Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int memberCount,
       int messageTypeCode,
       String messageStatusType,
@@ -633,7 +637,7 @@ abstract class _$$RecentChatMsgImplCopyWith<$Res>
   @override
   $ProfileCopyWith<$Res>? get profile;
   @override
-  $ExtrasCopyWith<$Res> get extras;
+  $ExtrasCopyWith<$Res>? get extras;
 }
 
 /// @nodoc
@@ -653,7 +657,7 @@ class __$$RecentChatMsgImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? profile = freezed,
     Object? content = null,
-    Object? extras = null,
+    Object? extras = freezed,
     Object? memberCount = null,
     Object? messageTypeCode = null,
     Object? messageStatusType = null,
@@ -686,10 +690,10 @@ class __$$RecentChatMsgImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      extras: null == extras
+      extras: freezed == extras
           ? _value.extras
           : extras // ignore: cast_nullable_to_non_nullable
-              as Extras,
+              as Extras?,
       memberCount: null == memberCount
           ? _value.memberCount
           : memberCount // ignore: cast_nullable_to_non_nullable
@@ -751,7 +755,7 @@ class _$RecentChatMsgImpl implements _RecentChatMsg {
   final String content;
   @override
   @JsonKey(fromJson: extrasFromJson)
-  final Extras extras;
+  final Extras? extras;
   @override
   final int memberCount;
   @override
@@ -838,7 +842,7 @@ abstract class _RecentChatMsg implements RecentChatMsg {
       required final String userId,
       @JsonKey(fromJson: profileFromJson) required final Profile? profile,
       required final String content,
-      @JsonKey(fromJson: extrasFromJson) required final Extras extras,
+      @JsonKey(fromJson: extrasFromJson) required final Extras? extras,
       required final int memberCount,
       required final int messageTypeCode,
       required final String messageStatusType,
@@ -864,7 +868,7 @@ abstract class _RecentChatMsg implements RecentChatMsg {
   String get content;
   @override
   @JsonKey(fromJson: extrasFromJson)
-  Extras get extras;
+  Extras? get extras;
   @override
   int get memberCount;
   @override

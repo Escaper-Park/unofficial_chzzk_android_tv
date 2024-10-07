@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
@@ -19,6 +20,7 @@ class DpadSlider extends HookWidget {
     required this.initialValue,
     this.intervalScalingFactor = 0.01,
     this.updateSliderEverySecond = false,
+    this.keyRepeatEndCallback,
     required this.sliderMoveCallback,
     required this.resetTimerCallback,
   });
@@ -42,6 +44,8 @@ class DpadSlider extends HookWidget {
 
   /// Timer reset function
   final VoidCallback resetTimerCallback;
+
+  final void Function(String keyLabel)? keyRepeatEndCallback;
 
   /// Calculate interval with this scaling factor to move position of long video fast.
   ///
@@ -85,6 +89,20 @@ class DpadSlider extends HookWidget {
         focusNode: dpadFocusNode,
         useFocusedBorder: true,
         useKeyRepeatEvent: true,
+        customOnKeyEvent: (event, dpadActionCallbacks) {
+          final String keyLabel = event.logicalKey.keyLabel;
+
+          if (keyLabel == "Arrow Left" || keyLabel == "Arrow Right") {
+            if (event is KeyUpEvent) {
+              _onKey(keyLabel, dpadActionCallbacks);
+              if (keyRepeatEndCallback != null) keyRepeatEndCallback!(keyLabel);
+            }
+
+            if (event is KeyRepeatEvent) {
+              _onKey(keyLabel, dpadActionCallbacks);
+            }
+          }
+        },
         dpadActionCallbacks: {
           DpadAction.arrowLeft: () {
             position.value - interval > minValue
@@ -161,5 +179,18 @@ class DpadSlider extends HookWidget {
         ),
       ),
     );
+  }
+
+  void _onKey(String keyLabel, DpadActionCallbacks dpadActionCallbacks) {
+    switch (keyLabel) {
+      case "Arrow Left": // left
+        dpadActionCallbacks[DpadAction.arrowLeft]?.call();
+        break;
+      case "Arrow Right": // right
+        dpadActionCallbacks[DpadAction.arrowRight]?.call();
+        break;
+      default:
+        break;
+    }
   }
 }

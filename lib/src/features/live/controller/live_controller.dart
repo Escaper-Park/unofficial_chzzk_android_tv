@@ -1,6 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../utils/dio/dio_client.dart';
+import '../../video_player/live/controller/live_mode_controller.dart';
+import '../../video_player/live/controller/live_playlist_controller.dart';
+import '../../video_player/live/widgets/util/wakelock_monitor_controller.dart';
 import '../model/live.dart';
 import '../repository/live_repository.dart';
 
@@ -26,6 +29,18 @@ class LiveController extends _$LiveController {
   /// Get [LiveStatus] when watching a live stream.
   Future<LiveStatus?> getLiveStatus({required String channelId}) async {
     return await _repository.getLiveStatus(channelId: channelId);
+  }
+
+  void play({required LiveDetail liveDetail}) {
+    // reset playlist and live mode
+    ref.read(livePlaylistControllerProvider.notifier).reset();
+    ref.read(liveModeControllerProvider.notifier).reset();
+    ref.read(wakelockMonitorControllerProvider.notifier).reset();
+
+    // add playlist
+    ref
+        .read(livePlaylistControllerProvider.notifier)
+        .addLive(liveDetail: liveDetail);
   }
 }
 

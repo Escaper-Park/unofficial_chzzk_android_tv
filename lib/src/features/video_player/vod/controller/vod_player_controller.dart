@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
@@ -5,6 +7,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../utils/hls_parser/hls_parser.dart';
 import '../../../setting/controller/stream_settings_controller.dart';
+import 'vod_chat_controller.dart';
 import 'vod_overlay_controller.dart';
 import 'vod_playlist_controller.dart';
 
@@ -20,6 +23,7 @@ class VodPlayerController extends _$VodPlayerController {
   late int _playbackInterval;
   late int _resolutionIndex;
   late VodPlay? _vodPlay;
+  Timer? _vodChatSeekTimer;
 
   VodPlay? getVodPlay() => _vodPlay;
 
@@ -72,7 +76,6 @@ class VodPlayerController extends _$VodPlayerController {
               _getVideoPlayerController(mediaTrackUrl!, queryParams);
 
           await controller.initialize();
-          
 
           if (duration != 0) {
             await controller.seekTo(Duration(seconds: duration));
@@ -94,10 +97,8 @@ class VodPlayerController extends _$VodPlayerController {
     final value = state.value?.value;
 
     if (value != null) {
-      final bool checkEnds = value.hasError == true ||
-          (value.isInitialized &&
-              (value.position >= value.duration) &&
-              !value.isPlaying);
+      final bool checkEnds =
+          value.hasError == true || (value.isInitialized && value.isCompleted);
 
       if (checkEnds) {
         state = const AsyncValue.data(null);
@@ -113,6 +114,11 @@ class VodPlayerController extends _$VodPlayerController {
   }
 
   Future<void> dispose() async {
+    _vodChatSeekTimer?.cancel();
+    _vodChatSeekTimer = null;
+
+    ref.read(vodChatQueueProvider.notifier).reset();
+
     if (state.value?.value.isPlaying == true) {
       await state.value!.pause();
     }
@@ -152,30 +158,77 @@ class VodPlayerController extends _$VodPlayerController {
 
   int getCurrentResolutionIndex() => _resolutionIndex;
 
-  void seekTo({
-    required VideoPlayerController controller,
+  Future<void> seekToByButton({
     required FocusNode videoFocusNode,
     required PlaybackDirection direction,
-  }) {
-    final currentPos = controller.value.position;
+  }) async {
+    final value = state.value?.value;
 
-    switch (direction) {
-      case PlaybackDirection.forward:
-        final newPos = currentPos + Duration(seconds: _playbackInterval);
-        if (newPos <= controller.value.duration) {
-          controller.seekTo(newPos);
-        }
-        break;
-      case PlaybackDirection.backword:
-        final newPos = currentPos - Duration(seconds: _playbackInterval);
-        controller.seekTo(newPos);
-        break;
+    if (value != null) {
+      final currentPos = value.position;
+
+      switch (direction) {
+        case PlaybackDirection.forward:
+          final newPos = currentPos + Duration(seconds: _playbackInterval);
+          if (newPos <= value.duration) {
+            ref.read(vodSeekIndicatorProvider.notifier).startTimer(direction);
+
+            await state.value!.seekTo(newPos);
+            updateChat(direction);
+          }
+          break;
+        case PlaybackDirection.backword:
+          final newPos = currentPos - Duration(seconds: _playbackInterval);
+          ref.read(vodSeekIndicatorProvider.notifier).startTimer(direction);
+          await state.value!.seekTo(newPos);
+
+          updateChat(direction);
+          break;
+      }
+
+      // keep overlay state
+      ref
+          .read(vodOverlayControllerProvider.notifier)
+          .resetOverlayTimer(videoFocusNode: videoFocusNode);
     }
+  }
 
-    // keep overlay state
+  Future<void> seekToBySlider({required Duration duration}) async {
+    _removeChatListener();
+    await state.value!.seekTo(duration);
+  }
+
+  Future<void> updateChat(PlaybackDirection direction) async {
+    // Vod Chat
+    if (_vodPlay?.$1.videoChatEnabled == true) {
+      _removeChatListener();
+      _vodChatSeekTimer?.cancel();
+      _vodChatSeekTimer = Timer(
+        const Duration(milliseconds: 500),
+        () async {
+          // forward
+          if (direction == PlaybackDirection.forward) {
+            await ref
+                .read(vodChatControllerProvider(controller: state.value!)
+                    .notifier)
+                .vodChatForwardSeekTo();
+          }
+          // backward
+          else {
+            await ref
+                .read(vodChatControllerProvider(controller: state.value!)
+                    .notifier)
+                .vodChatBackwardSeekTo();
+          }
+        },
+      );
+    }
+  }
+
+  void _removeChatListener() {
     ref
-        .read(vodOverlayControllerProvider.notifier)
-        .resetOverlayTimer(videoFocusNode: videoFocusNode);
+        .read(vodChatControllerProvider(controller: state.value!).notifier)
+        .removeListener();
   }
 
   void pause() {
@@ -214,4 +267,38 @@ class VodPlayerController extends _$VodPlayerController {
 
   // // TODO: POST Ended Event
   // void end() {}
+}
+
+@riverpod
+class VodSeekIndicator extends _$VodSeekIndicator {
+  Timer? _timer;
+  late PlaybackDirection? _direction;
+
+  PlaybackDirection? getCurrentDirection() => _direction;
+
+  @override
+  bool build() {
+    _direction = null;
+    // if true, show icon
+    return false;
+  }
+
+  void startTimer(PlaybackDirection direction) {
+    _direction = direction;
+    _resetTimer();
+
+    state = true;
+    _timer = Timer(
+      const Duration(milliseconds: 500),
+      () {
+        state = false;
+        _resetTimer();
+      },
+    );
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
 }

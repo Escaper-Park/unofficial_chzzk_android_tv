@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import './widgets/controls/main/vod_stream_main_controls.dart';
 import './widgets/status/vod_stream_info.dart';
 import './widgets/controls/channel/vod_stream_channel_data_controls.dart';
 import './controller/vod_overlay_controller.dart';
+import 'controller/vod_mode_controller.dart';
 import 'controller/vod_player_controller.dart';
 import 'widgets/controls/resolution/vod_resolution_settings_controls_overlay.dart';
 
@@ -99,6 +101,25 @@ class VodControlsOverlay extends HookConsumerWidget {
             useFocusedBorder: false,
             useKeyRepeatEvent: false,
             borderRadius: 0.0,
+            customOnKeyEvent: (event, dpadActionCallbacks) {
+              final String keyLabel = event.logicalKey.keyLabel;
+              // Seek To
+              if (keyLabel == "Arrow Left" || keyLabel == "Arrow Right") {
+                if (event is KeyRepeatEvent) {
+                  _onKey(keyLabel, dpadActionCallbacks);
+                }
+
+                if (event is KeyDownEvent) {
+                  _onKey(keyLabel, dpadActionCallbacks);
+                }
+              }
+              // Others
+              else {
+                if (event is KeyDownEvent) {
+                  _onKey(keyLabel, dpadActionCallbacks);
+                }
+              }
+            },
             dpadActionCallbacks: {
               DpadAction.select: () {
                 videoFocusNode.unfocus();
@@ -118,6 +139,25 @@ class VodControlsOverlay extends HookConsumerWidget {
                       videoFocusNode: videoFocusNode,
                     );
               },
+              DpadAction.arrowDown: () {
+                ref
+                    .read(vodChatWindowModeControllerProvider.notifier)
+                    .toggleOverlayChat();
+              },
+              DpadAction.arrowLeft: () async {
+                await ref
+                    .read(vodPlayerControllerProvider.notifier)
+                    .seekToByButton(
+                        videoFocusNode: videoFocusNode,
+                        direction: PlaybackDirection.backword);
+              },
+              DpadAction.arrowRight: () async {
+                await ref
+                    .read(vodPlayerControllerProvider.notifier)
+                    .seekToByButton(
+                        videoFocusNode: videoFocusNode,
+                        direction: PlaybackDirection.forward);
+              },
             },
             child: const SizedBox.shrink(),
           ),
@@ -126,5 +166,27 @@ class VodControlsOverlay extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _onKey(String keyLabel, DpadActionCallbacks dpadActionCallbacks) {
+    switch (keyLabel) {
+      case "Arrow Left": // left
+        dpadActionCallbacks[DpadAction.arrowLeft]?.call();
+        break;
+      case "Arrow Right": // right
+        dpadActionCallbacks[DpadAction.arrowRight]?.call();
+        break;
+      case "Arrow Up": // up
+        dpadActionCallbacks[DpadAction.arrowUp]?.call();
+        break;
+      case "Arrow Down": // down
+        dpadActionCallbacks[DpadAction.arrowDown]?.call();
+        break;
+      case "Select": // select
+        dpadActionCallbacks[DpadAction.select]?.call();
+        break;
+      default:
+        break;
+    }
   }
 }

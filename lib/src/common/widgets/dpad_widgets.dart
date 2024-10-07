@@ -93,6 +93,7 @@ class DpadActionWidget extends HookWidget {
     this.useKeyRepeatEvent = false,
     this.useFocusedBorder = true,
     this.borderRadius = 12.0,
+    this.customOnKeyEvent,
     required this.dpadActionCallbacks,
     required this.child,
   });
@@ -106,6 +107,10 @@ class DpadActionWidget extends HookWidget {
   /// Show border when this widget has focus.
   final bool useFocusedBorder;
   final double borderRadius;
+
+  /// Excute this function when the keyRepeatEvent is ends.
+  final void Function(KeyEvent event, DpadActionCallbacks dpadActionCallbacks)?
+      customOnKeyEvent;
 
   /// Add a map that constists of [Direction(DpadAction)] and [VoidCallback].
   /// The callback is activated when you press a directional key.
@@ -130,15 +135,20 @@ class DpadActionWidget extends HookWidget {
     return KeyboardListener(
       autofocus: autofocus,
       focusNode: widgetFocusNode,
-      onKeyEvent: (event) {
-        if (event is KeyDownEvent) {
-          _onKeyEvent(event);
-        }
+      onKeyEvent: customOnKeyEvent == null
+          ? (KeyEvent event) {
+              if (event is KeyDownEvent) {
+                _onKeyEvent(event);
+              }
 
-        if (useKeyRepeatEvent && event is KeyRepeatEvent) {
-          _onKeyEvent(event);
-        }
-      },
+              if (useKeyRepeatEvent && event is KeyRepeatEvent) {
+                _onKeyEvent(event);
+              }
+            }
+          : // custom event
+          (KeyEvent event) {
+              customOnKeyEvent!(event, dpadActionCallbacks);
+            },
       child: useFocusedBorder
           ? Container(
               margin: EdgeInsets.zero,
@@ -168,7 +178,7 @@ class DpadActionWidget extends HookWidget {
       case "Arrow Down": // down
         dpadActionCallbacks[DpadAction.arrowDown]?.call();
         break;
-      case 'Arrow Left': // left
+      case "Arrow Left": // left
         dpadActionCallbacks[DpadAction.arrowLeft]?.call();
         break;
       case "Arrow Right": // right

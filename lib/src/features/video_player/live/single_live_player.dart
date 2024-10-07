@@ -20,12 +20,14 @@ class SingleLivePlayer extends ConsumerWidget {
 
     return asyncController.when(
       data: (controller) {
-        return Center(
-          child: AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(controller),
-          ),
-        );
+        return controller == null
+            ? const CenteredText(text: '라이브가 종료되었습니다')
+            : Center(
+                child: AspectRatio(
+                  aspectRatio: controller.value.aspectRatio,
+                  child: VideoPlayer(controller),
+                ),
+              );
       },
       error: (error, stackTrace) => CenteredText(text: error.toString()),
       loading: () => const CenteredText(text: '라이브 로딩중...'),

@@ -12,14 +12,10 @@ _$VodChatImpl _$$VodChatImplFromJson(Map<String, dynamic> json) =>
       messageTime: (json['messageTime'] as num).toInt(),
       userIdHash: json['userIdHash'] as String,
       content: json['content'] as String,
-      extras: json['extras'] == null
-          ? null
-          : Extras.fromJson(json['extras'] as Map<String, dynamic>),
+      extras: extrasFromJson(json['extras'] as String?),
       messageTypeCode: (json['messageTypeCode'] as num).toInt(),
       messageStatusType: json['messageStatusType'] as String,
-      profile: json['profile'] == null
-          ? null
-          : Profile.fromJson(json['profile'] as Map<String, dynamic>),
+      profile: profileFromJson(json['profile'] as String?),
       playerMessageTime: (json['playerMessageTime'] as num).toInt(),
     );
 

@@ -27,6 +27,10 @@ class ChatContainer extends StatelessWidget {
     // Use rich text for emoji
     List<InlineSpan> textSpans = [];
 
+    final chatTime = chat.ctime < 62000000
+        ? chat.ctime.playerMsgTimeTohhmmss()
+        : chat.ctime.timestampTohhmm();
+
     // Only text
     if (chat.extras?.emojis == null) {
       textSpans.add(_textSpan(chat.msg));
@@ -61,6 +65,7 @@ class ChatContainer extends StatelessWidget {
     }
 
     return RoundedContainer(
+      borderRadius: 10.0,
       backgroundColor: AppColors.blackColor.withOpacity(
           (100 - chatSettings.singleChatContainerTransparency) * 0.01),
       padding: chatSettings.singleChatContainerTransparency == 100
@@ -96,7 +101,10 @@ class ChatContainer extends StatelessWidget {
               children: [
                 // Created time
                 if (chatSettings.showChatTime == 1)
-                  _textSpan(chat.ctime.hhmm(), color: AppColors.greyColor),
+                  _textSpan(
+                    chatTime,
+                    color: AppColors.greyColor,
+                  ),
                 if (chatSettings.showChatTime == 1)
                   const WidgetSpan(child: SizedBox(width: 5.0)),
                 // Message

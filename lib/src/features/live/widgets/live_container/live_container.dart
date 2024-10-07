@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/constants/dimensions.dart';
@@ -9,15 +10,12 @@ import '../../../../common/widgets/focused_widget.dart';
 import '../../../../utils/popup/popup_utils.dart';
 import '../../../../utils/router/app_router.dart';
 import '../../../channel/model/channel.dart';
-import '../../../video_player/live/controller/live_mode_controller.dart';
-import '../../../video_player/live/controller/live_playlist_controller.dart';
-import '../../../video_player/live/widgets/util/wakelock_monitor_controller.dart';
 import '../../controller/live_controller.dart';
 import '../../model/live.dart';
 
 import './live_container_widgets.dart';
 
-class LiveContainer extends ConsumerWidget {
+class LiveContainer extends HookConsumerWidget {
   /// A live streaming container.
   const LiveContainer({
     super.key,
@@ -38,6 +36,8 @@ class LiveContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = useState<bool>(false);
+
     return RoundedContainer(
       width: Dimensions.videoThumbnailWidth,
       backgroundColor: AppColors.greyContainerColor,
@@ -63,35 +63,38 @@ class LiveContainer extends ConsumerWidget {
           }
           // Get LiveDetail;
           else {
-            final liveDetail = await ref
-                .read(liveControllerProvider.notifier)
-                .getLiveDetail(channelId: channel.channelId);
+            if (!isLoading.value) {
+              isLoading.value = true;
+              final liveDetail = await ref
+                  .read(liveControllerProvider.notifier)
+                  .getLiveDetail(channelId: channel.channelId);
 
-            if (liveDetail != null && context.mounted) {
-              if (liveDetail.livePlaybackJson.media.isEmpty) {
-                await PopupUtils.showButtonDialog(
-                  context: context,
-                  titleText: '종료된 방송',
-                  contentText: '종료된 방송입니다. 방송 목록을 새로고침 해주세요.',
-                );
+              if (liveDetail != null && context.mounted) {
+                if (liveDetail.livePlaybackJson.media.isEmpty) {
+                  await PopupUtils.showButtonDialog(
+                    context: context,
+                    titleText: '종료된 방송',
+                    contentText: '종료된 방송입니다. 방송 목록을 새로고침 해주세요.',
+                  );
+
+                  isLoading.value = false;
+                  return;
+                }
+
+                ref
+                    .read(liveControllerProvider.notifier)
+                    .play(liveDetail: liveDetail);
+
+                if (context.mounted) {
+                  context.pushNamed(AppRoute.liveStreaming.routeName);
+                }
+                isLoading.value = false;
                 return;
               }
 
-              // reset playlist and live mode
-              ref.read(livePlaylistControllerProvider.notifier).reset();
-              ref.read(liveModeControllerProvider.notifier).reset();
-              ref.read(wakelockMonitorControllerProvider.notifier).reset();
-
-              // add playlist
-              ref
-                  .read(livePlaylistControllerProvider.notifier)
-                  .addLive(liveDetail: liveDetail);
-
-              if (context.mounted) {
-                context.pushNamed(AppRoute.liveStreaming.routeName);
-              }
+              isLoading.value = false;
+              return;
             }
-            return;
           }
         },
         child: (hasFocus) => liveInfo.channel?.personalData?.privateUserBlock ==

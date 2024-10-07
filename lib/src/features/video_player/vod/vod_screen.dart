@@ -5,8 +5,8 @@ import '../../../common/widgets/center_widgets.dart';
 import '../common/chat/chat_window_mode.dart';
 import './controller/vod_mode_controller.dart';
 import './single_vod_player.dart';
-import 'controller/vod_player_controller.dart';
-import 'widgets/chat/vod_chat_stream.dart';
+import './controller/vod_player_controller.dart';
+import './widgets/chat/vod_chat_stream.dart';
 
 class VodScreen extends ConsumerWidget {
   const VodScreen({super.key});
@@ -18,6 +18,13 @@ class VodScreen extends ConsumerWidget {
 
     return asyncController.when(
       data: (controller) {
+        final isVodChatExist = ref
+                .read(vodPlayerControllerProvider.notifier)
+                .getVodPlay()
+                ?.$1
+                .videoChatEnabled ==
+            true;
+
         return controller != null && controller.value.isInitialized
             ? Stack(
                 children: [
@@ -32,11 +39,22 @@ class VodScreen extends ConsumerWidget {
                       if (chatWindowMode == ChatWindowMode.side)
                         Expanded(
                           flex: 1,
-                          child: VodChatStream(),
+                          child: isVodChatExist
+                              ? VodChatStream(
+                                  controller: controller,
+                                  chatWindowMode: chatWindowMode,
+                                )
+                              : const CenteredText(
+                                  text: '다시보기 채팅이 저장되어 있지 않습니다'),
                         ),
                     ],
                   ),
-                  if (chatWindowMode == ChatWindowMode.overlay) VodChatStream(),
+                  if (chatWindowMode == ChatWindowMode.overlay &&
+                      isVodChatExist)
+                    VodChatStream(
+                      controller: controller,
+                      chatWindowMode: chatWindowMode,
+                    ),
                 ],
               )
             : const CenteredText(text: '동영상이 마지막까지 재생되었습니다');

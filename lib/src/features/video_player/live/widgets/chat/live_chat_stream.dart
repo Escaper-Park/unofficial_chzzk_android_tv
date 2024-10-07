@@ -121,7 +121,8 @@ class _LiveChatStreamState extends ConsumerState<LiveChatStream>
     return chatStream.when(
       data: (chatList) {
         final badgesChatList = chatList.where((chat) {
-          return (chat.profile?.userRoleCode != "common_user") ||
+          return (chat.profile != null &&
+                  chat.profile?.userRoleCode != "common_user") ||
               (chat.profile?.verifiedMark == true);
         }).toList();
 

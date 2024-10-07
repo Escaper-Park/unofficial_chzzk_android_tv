@@ -29,6 +29,20 @@ class CustomFormatter {
 
     return formattedTime;
   }
+
+  /// playerMessageTime to HH:mm:ss
+  static String formatPlayerMessageTimeToHms(int playerMessageTime) {
+    int totalSec = playerMessageTime ~/ 1000;
+
+    int secs = totalSec % 60;
+    int mins = (totalSec ~/ 60) % 60;
+    int hours = (totalSec ~/ 60) ~/ 60;
+
+    String formattedTime =
+        '${hours.toString().padLeft(2, '0')}:${mins.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+
+    return formattedTime;
+  }
 }
 
 extension DurationX on Duration {
@@ -37,5 +51,8 @@ extension DurationX on Duration {
 
 extension IntX on int? {
   String commaFormat() => CustomFormatter.formatNumToCommaString(this);
-  String hhmm() => CustomFormatter.formatTimeStampToHoursAndMins(this!);
+  String timestampTohhmm() =>
+      CustomFormatter.formatTimeStampToHoursAndMins(this!);
+  String playerMsgTimeTohhmmss() =>
+      CustomFormatter.formatPlayerMessageTimeToHms(this!);
 }

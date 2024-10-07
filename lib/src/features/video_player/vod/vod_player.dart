@@ -5,6 +5,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'controller/vod_player_controller.dart';
 import 'vod_controls_overlay.dart';
 import 'vod_screen.dart';
+import 'widgets/controls/main/vod_seek_indicator.dart';
 
 class VodPlayer extends ConsumerStatefulWidget {
   const VodPlayer({super.key});
@@ -76,6 +77,7 @@ class _VodPlayerState extends ConsumerState<VodPlayer>
       children: [
         VodScreen(),
         VodControlsOverlay(),
+        VodSeekIndicatorIcon(),
       ],
     );
   }

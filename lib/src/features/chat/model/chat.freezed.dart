@@ -273,7 +273,7 @@ mixin _$ChatBdy {
   int get msgTypeCode => throw _privateConstructorUsedError;
   String get msgStatusType => throw _privateConstructorUsedError;
   @JsonKey(fromJson: extrasFromJson)
-  Extras get extras => throw _privateConstructorUsedError;
+  Extras? get extras => throw _privateConstructorUsedError;
   int get ctime => throw _privateConstructorUsedError;
   int get utime => throw _privateConstructorUsedError;
   Object? get msgTid => throw _privateConstructorUsedError;
@@ -298,14 +298,14 @@ abstract class $ChatBdyCopyWith<$Res> {
       String msg,
       int msgTypeCode,
       String msgStatusType,
-      @JsonKey(fromJson: extrasFromJson) Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int ctime,
       int utime,
       Object? msgTid,
       int msgTime});
 
   $ProfileCopyWith<$Res>? get profile;
-  $ExtrasCopyWith<$Res> get extras;
+  $ExtrasCopyWith<$Res>? get extras;
 }
 
 /// @nodoc
@@ -329,7 +329,7 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
     Object? msg = null,
     Object? msgTypeCode = null,
     Object? msgStatusType = null,
-    Object? extras = null,
+    Object? extras = freezed,
     Object? ctime = null,
     Object? utime = null,
     Object? msgTid = freezed,
@@ -368,10 +368,10 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
           ? _value.msgStatusType
           : msgStatusType // ignore: cast_nullable_to_non_nullable
               as String,
-      extras: null == extras
+      extras: freezed == extras
           ? _value.extras
           : extras // ignore: cast_nullable_to_non_nullable
-              as Extras,
+              as Extras?,
       ctime: null == ctime
           ? _value.ctime
           : ctime // ignore: cast_nullable_to_non_nullable
@@ -402,8 +402,12 @@ class _$ChatBdyCopyWithImpl<$Res, $Val extends ChatBdy>
 
   @override
   @pragma('vm:prefer-inline')
-  $ExtrasCopyWith<$Res> get extras {
-    return $ExtrasCopyWith<$Res>(_value.extras, (value) {
+  $ExtrasCopyWith<$Res>? get extras {
+    if (_value.extras == null) {
+      return null;
+    }
+
+    return $ExtrasCopyWith<$Res>(_value.extras!, (value) {
       return _then(_value.copyWith(extras: value) as $Val);
     });
   }
@@ -425,7 +429,7 @@ abstract class _$$ChatBdyImplCopyWith<$Res> implements $ChatBdyCopyWith<$Res> {
       String msg,
       int msgTypeCode,
       String msgStatusType,
-      @JsonKey(fromJson: extrasFromJson) Extras extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int ctime,
       int utime,
       Object? msgTid,
@@ -434,7 +438,7 @@ abstract class _$$ChatBdyImplCopyWith<$Res> implements $ChatBdyCopyWith<$Res> {
   @override
   $ProfileCopyWith<$Res>? get profile;
   @override
-  $ExtrasCopyWith<$Res> get extras;
+  $ExtrasCopyWith<$Res>? get extras;
 }
 
 /// @nodoc
@@ -456,7 +460,7 @@ class __$$ChatBdyImplCopyWithImpl<$Res>
     Object? msg = null,
     Object? msgTypeCode = null,
     Object? msgStatusType = null,
-    Object? extras = null,
+    Object? extras = freezed,
     Object? ctime = null,
     Object? utime = null,
     Object? msgTid = freezed,
@@ -495,10 +499,10 @@ class __$$ChatBdyImplCopyWithImpl<$Res>
           ? _value.msgStatusType
           : msgStatusType // ignore: cast_nullable_to_non_nullable
               as String,
-      extras: null == extras
+      extras: freezed == extras
           ? _value.extras
           : extras // ignore: cast_nullable_to_non_nullable
-              as Extras,
+              as Extras?,
       ctime: null == ctime
           ? _value.ctime
           : ctime // ignore: cast_nullable_to_non_nullable
@@ -556,7 +560,7 @@ class _$ChatBdyImpl implements _ChatBdy {
   final String msgStatusType;
   @override
   @JsonKey(fromJson: extrasFromJson)
-  final Extras extras;
+  final Extras? extras;
   @override
   final int ctime;
   @override
@@ -635,7 +639,7 @@ abstract class _ChatBdy implements ChatBdy {
       required final String msg,
       required final int msgTypeCode,
       required final String msgStatusType,
-      @JsonKey(fromJson: extrasFromJson) required final Extras extras,
+      @JsonKey(fromJson: extrasFromJson) required final Extras? extras,
       required final int ctime,
       required final int utime,
       required final Object? msgTid,
@@ -662,7 +666,7 @@ abstract class _ChatBdy implements ChatBdy {
   String get msgStatusType;
   @override
   @JsonKey(fromJson: extrasFromJson)
-  Extras get extras;
+  Extras? get extras;
   @override
   int get ctime;
   @override
@@ -683,14 +687,14 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
-  String get userIdHash => throw _privateConstructorUsedError;
-  String get nickname => throw _privateConstructorUsedError;
+  String? get userIdHash => throw _privateConstructorUsedError;
+  String? get nickname => throw _privateConstructorUsedError;
   String? get profileImageUrl => throw _privateConstructorUsedError;
   String? get userRoleCode =>
       throw _privateConstructorUsedError; // "common-user", "streaming_channel_manager", "streaming_chat_manager",
   Badge? get badge => throw _privateConstructorUsedError;
   ChatTitle? get title => throw _privateConstructorUsedError;
-  bool get verifiedMark => throw _privateConstructorUsedError;
+  bool? get verifiedMark => throw _privateConstructorUsedError;
   List<ActivityBadge>? get activityBadges => throw _privateConstructorUsedError;
   StreamingProperty? get streamingProperty =>
       throw _privateConstructorUsedError;
@@ -706,13 +710,13 @@ abstract class $ProfileCopyWith<$Res> {
       _$ProfileCopyWithImpl<$Res, Profile>;
   @useResult
   $Res call(
-      {String userIdHash,
-      String nickname,
+      {String? userIdHash,
+      String? nickname,
       String? profileImageUrl,
       String? userRoleCode,
       Badge? badge,
       ChatTitle? title,
-      bool verifiedMark,
+      bool? verifiedMark,
       List<ActivityBadge>? activityBadges,
       StreamingProperty? streamingProperty});
 
@@ -734,25 +738,25 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userIdHash = null,
-    Object? nickname = null,
+    Object? userIdHash = freezed,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
     Object? userRoleCode = freezed,
     Object? badge = freezed,
     Object? title = freezed,
-    Object? verifiedMark = null,
+    Object? verifiedMark = freezed,
     Object? activityBadges = freezed,
     Object? streamingProperty = freezed,
   }) {
     return _then(_value.copyWith(
-      userIdHash: null == userIdHash
+      userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      nickname: null == nickname
+              as String?,
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
@@ -769,10 +773,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as ChatTitle?,
-      verifiedMark: null == verifiedMark
+      verifiedMark: freezed == verifiedMark
           ? _value.verifiedMark
           : verifiedMark // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       activityBadges: freezed == activityBadges
           ? _value.activityBadges
           : activityBadges // ignore: cast_nullable_to_non_nullable
@@ -829,13 +833,13 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String userIdHash,
-      String nickname,
+      {String? userIdHash,
+      String? nickname,
       String? profileImageUrl,
       String? userRoleCode,
       Badge? badge,
       ChatTitle? title,
-      bool verifiedMark,
+      bool? verifiedMark,
       List<ActivityBadge>? activityBadges,
       StreamingProperty? streamingProperty});
 
@@ -858,25 +862,25 @@ class __$$ProfileImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userIdHash = null,
-    Object? nickname = null,
+    Object? userIdHash = freezed,
+    Object? nickname = freezed,
     Object? profileImageUrl = freezed,
     Object? userRoleCode = freezed,
     Object? badge = freezed,
     Object? title = freezed,
-    Object? verifiedMark = null,
+    Object? verifiedMark = freezed,
     Object? activityBadges = freezed,
     Object? streamingProperty = freezed,
   }) {
     return _then(_$ProfileImpl(
-      userIdHash: null == userIdHash
+      userIdHash: freezed == userIdHash
           ? _value.userIdHash
           : userIdHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      nickname: null == nickname
+              as String?,
+      nickname: freezed == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       profileImageUrl: freezed == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
@@ -893,10 +897,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as ChatTitle?,
-      verifiedMark: null == verifiedMark
+      verifiedMark: freezed == verifiedMark
           ? _value.verifiedMark
           : verifiedMark // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
       activityBadges: freezed == activityBadges
           ? _value._activityBadges
           : activityBadges // ignore: cast_nullable_to_non_nullable
@@ -928,9 +932,9 @@ class _$ProfileImpl implements _Profile {
       _$$ProfileImplFromJson(json);
 
   @override
-  final String userIdHash;
+  final String? userIdHash;
   @override
-  final String nickname;
+  final String? nickname;
   @override
   final String? profileImageUrl;
   @override
@@ -941,7 +945,7 @@ class _$ProfileImpl implements _Profile {
   @override
   final ChatTitle? title;
   @override
-  final bool verifiedMark;
+  final bool? verifiedMark;
   final List<ActivityBadge>? _activityBadges;
   @override
   List<ActivityBadge>? get activityBadges {
@@ -1013,22 +1017,22 @@ class _$ProfileImpl implements _Profile {
 
 abstract class _Profile implements Profile {
   const factory _Profile(
-      {required final String userIdHash,
-      required final String nickname,
+      {required final String? userIdHash,
+      required final String? nickname,
       required final String? profileImageUrl,
       required final String? userRoleCode,
       required final Badge? badge,
       required final ChatTitle? title,
-      required final bool verifiedMark,
+      required final bool? verifiedMark,
       required final List<ActivityBadge>? activityBadges,
       required final StreamingProperty? streamingProperty}) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
   @override
-  String get userIdHash;
+  String? get userIdHash;
   @override
-  String get nickname;
+  String? get nickname;
   @override
   String? get profileImageUrl;
   @override
@@ -1038,7 +1042,7 @@ abstract class _Profile implements Profile {
   @override
   ChatTitle? get title;
   @override
-  bool get verifiedMark;
+  bool? get verifiedMark;
   @override
   List<ActivityBadge>? get activityBadges;
   @override

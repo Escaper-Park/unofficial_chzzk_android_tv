@@ -14,11 +14,13 @@ class ChatList extends StatelessWidget {
     super.key,
     required this.chatList,
     required this.chatSettings,
+    this.addRepaintBoundary = false,
   });
 
   /// List of chat.
   final List<dynamic> chatList;
   final ChatSettings chatSettings;
+  final bool addRepaintBoundary;
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +65,13 @@ class ChatList extends StatelessWidget {
             profile = bdy.profile;
             extras = bdy.extras;
             ctime = bdy.createTime;
-          } else if (bdy is VodChat) {
+          }
+          // Vod Chat
+          else if (bdy is VodChat) {
             msg = bdy.content;
             profile = bdy.profile;
             extras = bdy.extras;
-            ctime = bdy.messageTime; // TODO : Change
+            ctime = bdy.playerMessageTime;
           }
 
           final BaseChat chat = BaseChat(

@@ -34,8 +34,8 @@ class ChannelClipList extends ConsumerWidget {
           asyncValue: asyncChannelClips,
           sidebarFSN: sidebarFSN,
           gridViewFSN: gridViewFSN,
-          emptyText: '카테고리에 클립이 없습니다',
-          errorText: '카테고리 클립을 불러올 수 없습니다',
+          emptyText: '채널에 클립이 없습니다',
+          errorText: '클립을 불러올 수 없습니다',
           fetchMore: () async {
             await ref
                 .read(channelClipControllerProvider(

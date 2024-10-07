@@ -24,9 +24,11 @@ mixin _$VodChat {
   int get messageTime => throw _privateConstructorUsedError;
   String get userIdHash => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: extrasFromJson)
   Extras? get extras => throw _privateConstructorUsedError;
   int get messageTypeCode => throw _privateConstructorUsedError;
   String get messageStatusType => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: profileFromJson)
   Profile? get profile => throw _privateConstructorUsedError;
   int get playerMessageTime => throw _privateConstructorUsedError;
 
@@ -45,10 +47,10 @@ abstract class $VodChatCopyWith<$Res> {
       int messageTime,
       String userIdHash,
       String content,
-      Extras? extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int messageTypeCode,
       String messageStatusType,
-      Profile? profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       int playerMessageTime});
 
   $ExtrasCopyWith<$Res>? get extras;
@@ -155,10 +157,10 @@ abstract class _$$VodChatImplCopyWith<$Res> implements $VodChatCopyWith<$Res> {
       int messageTime,
       String userIdHash,
       String content,
-      Extras? extras,
+      @JsonKey(fromJson: extrasFromJson) Extras? extras,
       int messageTypeCode,
       String messageStatusType,
-      Profile? profile,
+      @JsonKey(fromJson: profileFromJson) Profile? profile,
       int playerMessageTime});
 
   @override
@@ -237,10 +239,10 @@ class _$VodChatImpl implements _VodChat {
       required this.messageTime,
       required this.userIdHash,
       required this.content,
-      required this.extras,
+      @JsonKey(fromJson: extrasFromJson) required this.extras,
       required this.messageTypeCode,
       required this.messageStatusType,
-      required this.profile,
+      @JsonKey(fromJson: profileFromJson) required this.profile,
       required this.playerMessageTime});
 
   factory _$VodChatImpl.fromJson(Map<String, dynamic> json) =>
@@ -255,12 +257,14 @@ class _$VodChatImpl implements _VodChat {
   @override
   final String content;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   final Extras? extras;
   @override
   final int messageTypeCode;
   @override
   final String messageStatusType;
   @override
+  @JsonKey(fromJson: profileFromJson)
   final Profile? profile;
   @override
   final int playerMessageTime;
@@ -326,10 +330,10 @@ abstract class _VodChat implements VodChat {
       required final int messageTime,
       required final String userIdHash,
       required final String content,
-      required final Extras? extras,
+      @JsonKey(fromJson: extrasFromJson) required final Extras? extras,
       required final int messageTypeCode,
       required final String messageStatusType,
-      required final Profile? profile,
+      @JsonKey(fromJson: profileFromJson) required final Profile? profile,
       required final int playerMessageTime}) = _$VodChatImpl;
 
   factory _VodChat.fromJson(Map<String, dynamic> json) = _$VodChatImpl.fromJson;
@@ -343,12 +347,14 @@ abstract class _VodChat implements VodChat {
   @override
   String get content;
   @override
+  @JsonKey(fromJson: extrasFromJson)
   Extras? get extras;
   @override
   int get messageTypeCode;
   @override
   String get messageStatusType;
   @override
+  @JsonKey(fromJson: profileFromJson)
   Profile? get profile;
   @override
   int get playerMessageTime;

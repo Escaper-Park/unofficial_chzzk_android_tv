@@ -42,7 +42,7 @@ class RecentChatMsg with _$RecentChatMsg {
     required String userId,
     @JsonKey(fromJson: profileFromJson) required Profile? profile,
     required String content,
-    @JsonKey(fromJson: extrasFromJson) required Extras extras,
+    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
     required int memberCount,
     required int messageTypeCode,
     required String messageStatusType,

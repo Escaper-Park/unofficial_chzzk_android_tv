@@ -7,7 +7,7 @@ part of 'live_player_controller.dart';
 // **************************************************************************
 
 String _$singleLivePlayerControllerHash() =>
-    r'7b41c5d8d8531990d7e6e8331ad440ebd3ce8b75';
+    r'8133a257be7f63e10c775e6f24d4b76078687356';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$SingleLivePlayerController
-    extends BuildlessAutoDisposeAsyncNotifier<Raw<VideoPlayerController>> {
+    extends BuildlessAutoDisposeAsyncNotifier<Raw<VideoPlayerController?>> {
   late final int index;
 
-  FutureOr<Raw<VideoPlayerController>> build({
+  FutureOr<Raw<VideoPlayerController?>> build({
     required int index,
   });
 }
@@ -45,7 +45,7 @@ const singleLivePlayerControllerProvider = SingleLivePlayerControllerFamily();
 
 /// See also [SingleLivePlayerController].
 class SingleLivePlayerControllerFamily
-    extends Family<AsyncValue<Raw<VideoPlayerController>>> {
+    extends Family<AsyncValue<Raw<VideoPlayerController?>>> {
   /// See also [SingleLivePlayerController].
   const SingleLivePlayerControllerFamily();
 
@@ -85,7 +85,7 @@ class SingleLivePlayerControllerFamily
 /// See also [SingleLivePlayerController].
 class SingleLivePlayerControllerProvider
     extends AutoDisposeAsyncNotifierProviderImpl<SingleLivePlayerController,
-        Raw<VideoPlayerController>> {
+        Raw<VideoPlayerController?>> {
   /// See also [SingleLivePlayerController].
   SingleLivePlayerControllerProvider({
     required int index,
@@ -116,7 +116,7 @@ class SingleLivePlayerControllerProvider
   final int index;
 
   @override
-  FutureOr<Raw<VideoPlayerController>> runNotifierBuild(
+  FutureOr<Raw<VideoPlayerController?>> runNotifierBuild(
     covariant SingleLivePlayerController notifier,
   ) {
     return notifier.build(
@@ -142,7 +142,7 @@ class SingleLivePlayerControllerProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<SingleLivePlayerController,
-      Raw<VideoPlayerController>> createElement() {
+      Raw<VideoPlayerController?>> createElement() {
     return _SingleLivePlayerControllerProviderElement(this);
   }
 
@@ -161,14 +161,14 @@ class SingleLivePlayerControllerProvider
 }
 
 mixin SingleLivePlayerControllerRef
-    on AutoDisposeAsyncNotifierProviderRef<Raw<VideoPlayerController>> {
+    on AutoDisposeAsyncNotifierProviderRef<Raw<VideoPlayerController?>> {
   /// The parameter `index` of this provider.
   int get index;
 }
 
 class _SingleLivePlayerControllerProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<SingleLivePlayerController,
-        Raw<VideoPlayerController>> with SingleLivePlayerControllerRef {
+        Raw<VideoPlayerController?>> with SingleLivePlayerControllerRef {
   _SingleLivePlayerControllerProviderElement(super.provider);
 
   @override

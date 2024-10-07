@@ -30,7 +30,7 @@ class ChatBdy with _$ChatBdy {
     required String msg,
     required int msgTypeCode,
     required String msgStatusType,
-    @JsonKey(fromJson: extrasFromJson) required Extras extras,
+    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
     required int ctime,
     required int utime,
     required Object? msgTid,
@@ -41,23 +41,23 @@ class ChatBdy with _$ChatBdy {
       _$ChatBdyFromJson(json);
 }
 
-Profile profileFromJson(String jsonString) =>
+Profile? profileFromJson(String? jsonString) =>
     decodeAndFromJson<Profile>(jsonString, Profile.fromJson);
 
-Extras extrasFromJson(String jsonString) =>
+Extras? extrasFromJson(String? jsonString) =>
     decodeAndFromJson<Extras>(jsonString, Extras.fromJson);
 
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    required String userIdHash,
-    required String nickname,
+    required String? userIdHash,
+    required String? nickname,
     required String? profileImageUrl,
     required String?
         userRoleCode, // "common-user", "streaming_channel_manager", "streaming_chat_manager",
     required Badge? badge,
     required ChatTitle? title,
-    required bool verifiedMark,
+    required bool? verifiedMark,
     required List<ActivityBadge>? activityBadges,
     required StreamingProperty? streamingProperty,
   }) = _Profile;

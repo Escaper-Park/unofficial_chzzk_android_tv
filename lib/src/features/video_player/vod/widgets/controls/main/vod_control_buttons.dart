@@ -47,10 +47,9 @@ class VodControlButtons extends HookConsumerWidget {
         ref: ref,
         iconData: playbackIconData.$1,
         label: '되감기',
-        onPressed: () {
-          ref.read(vodPlayerControllerProvider.notifier).seekTo(
+        onPressed: () async {
+          await ref.read(vodPlayerControllerProvider.notifier).seekToByButton(
                 videoFocusNode: videoFocusNode,
-                controller: controller,
                 direction: PlaybackDirection.backword,
               );
         },
@@ -72,10 +71,9 @@ class VodControlButtons extends HookConsumerWidget {
         ref: ref,
         iconData: playbackIconData.$2,
         label: '빨리감기',
-        onPressed: () {
-          ref.read(vodPlayerControllerProvider.notifier).seekTo(
+        onPressed: () async {
+          await ref.read(vodPlayerControllerProvider.notifier).seekToByButton(
                 videoFocusNode: videoFocusNode,
-                controller: controller,
                 direction: PlaybackDirection.forward,
               );
         },

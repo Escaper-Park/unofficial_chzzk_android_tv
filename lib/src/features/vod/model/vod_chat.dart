@@ -12,10 +12,10 @@ class VodChat with _$VodChat {
     required int messageTime,
     required String userIdHash,
     required String content,
-    required Extras? extras,
+    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
     required int messageTypeCode,
     required String messageStatusType,
-    required Profile? profile,
+    @JsonKey(fromJson: profileFromJson) required Profile? profile,
     required int playerMessageTime,
   }) = _VodChat;
 

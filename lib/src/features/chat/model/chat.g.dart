@@ -33,11 +33,11 @@ _$ChatBdyImpl _$$ChatBdyImplFromJson(Map<String, dynamic> json) =>
       cid: json['cid'] as String,
       mbrCnt: (json['mbrCnt'] as num).toInt(),
       uid: json['uid'] as String,
-      profile: profileFromJson(json['profile'] as String),
+      profile: profileFromJson(json['profile'] as String?),
       msg: json['msg'] as String,
       msgTypeCode: (json['msgTypeCode'] as num).toInt(),
       msgStatusType: json['msgStatusType'] as String,
-      extras: extrasFromJson(json['extras'] as String),
+      extras: extrasFromJson(json['extras'] as String?),
       ctime: (json['ctime'] as num).toInt(),
       utime: (json['utime'] as num).toInt(),
       msgTid: json['msgTid'],
@@ -63,8 +63,8 @@ Map<String, dynamic> _$$ChatBdyImplToJson(_$ChatBdyImpl instance) =>
 
 _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
     _$ProfileImpl(
-      userIdHash: json['userIdHash'] as String,
-      nickname: json['nickname'] as String,
+      userIdHash: json['userIdHash'] as String?,
+      nickname: json['nickname'] as String?,
       profileImageUrl: json['profileImageUrl'] as String?,
       userRoleCode: json['userRoleCode'] as String?,
       badge: json['badge'] == null
@@ -73,7 +73,7 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       title: json['title'] == null
           ? null
           : ChatTitle.fromJson(json['title'] as Map<String, dynamic>),
-      verifiedMark: json['verifiedMark'] as bool,
+      verifiedMark: json['verifiedMark'] as bool?,
       activityBadges: (json['activityBadges'] as List<dynamic>?)
           ?.map((e) => ActivityBadge.fromJson(e as Map<String, dynamic>))
           .toList(),

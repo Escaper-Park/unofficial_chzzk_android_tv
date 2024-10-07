@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/constants/dimensions.dart';
@@ -9,13 +10,12 @@ import '../../../../common/widgets/rounded_container.dart';
 
 import '../../../../utils/popup/popup_utils.dart';
 import '../../../../utils/router/app_router.dart';
-import '../../../video_player/vod/controller/vod_playlist_controller.dart';
 import '../../controller/vod_controller.dart';
 import '../../model/vod.dart';
 import './vod_container_widgets.dart';
 import './vod_tag_badge.dart';
 
-class VodContainer extends ConsumerWidget {
+class VodContainer extends HookConsumerWidget {
   const VodContainer({
     super.key,
     this.autofocus = false,
@@ -31,6 +31,8 @@ class VodContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = useState<bool>(false);
+
     return RoundedContainer(
       backgroundColor: AppColors.greyContainerColor,
       borderRadius: 12.0,
@@ -42,35 +44,36 @@ class VodContainer extends ConsumerWidget {
             return;
           }
 
-          final vodPath = await ref
-              .read(vodControllerProvider.notifier)
-              .getVodPlayback(videoNo: vod.videoNo);
+          if (!isLoading.value) {
+            isLoading.value = true;
+            final vodPlay = await ref
+                .read(vodControllerProvider.notifier)
+                .getVodPlay(videoNo: vod.videoNo);
 
-          // Error
-          if (vodPath == null) {
-            if (context.mounted) {
-              await PopupUtils.showButtonDialog(
-                context: context,
-                titleText: '재생 오류',
-                contentText: '다시보기 재생 오류',
-              );
+            // Error
+            if (vodPlay == null) {
+              if (context.mounted) {
+                await PopupUtils.showButtonDialog(
+                  context: context,
+                  titleText: '재생 오류',
+                  contentText: '다시보기 재생 오류',
+                );
+              }
+              
+              isLoading.value = false;
+              return;
             }
+            //
+            else {
+              await ref.read(vodControllerProvider.notifier).play(vodPlay);
 
-            return;
-          }
-          //
-          else {
-            // reset
-            ref.read(vodPlaylistControllerProvider.notifier).reset();
-            ref.read(vodPlaylistControllerProvider.notifier).setVod(
-              vodPlay: (vod, vodPath),
-            );
+              if (context.mounted) {
+                context.pushNamed(AppRoute.vodStreaming.routeName);
+              }
 
-            if (context.mounted) {
-              context.pushNamed(AppRoute.vodStreaming.routeName);
+              isLoading.value = false;
+              return;
             }
-
-            return;
           }
         },
         child: (hasFocus) => vod.channel.personalData?.privateUserBlock == true

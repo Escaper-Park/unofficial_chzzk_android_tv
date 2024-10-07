@@ -3,6 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../common/constants/api.dart';
 import '../../../utils/dio/dio_client.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../video_player/vod/controller/vod_chat_controller.dart';
+import '../../video_player/vod/controller/vod_playlist_controller.dart';
 import '../model/vod.dart';
 import '../repository/vod_repository.dart';
 
@@ -20,13 +22,27 @@ class VodController extends _$VodController {
     return;
   }
 
+  Future<void> play(VodPlay vodPlay) async {
+    // reset
+    ref.read(vodPlaylistControllerProvider.notifier).reset();
+    ref.read(vodPlaylistControllerProvider.notifier).setVod(vodPlay: vodPlay);
+    await ref.read(vodChatQueueProvider.notifier).reset();
+
+    // add chat
+    if (vodPlay.$1.videoChatEnabled == true) {
+      await ref
+          .read(vodChatQueueProvider.notifier)
+          .fetchVodChatsWithPrevChatSize(playerMessageTime: 0);
+    }
+  }
+
   Future<Vod?> getVod({required int videoNo}) async {
     return await _repository.getVod(videoNo: videoNo);
   }
 
   // Don't use repository for the unity of dio client.
   // This request doesn't use response.data['content'] so can't use dio interceptor.
-  Future<String?> getVodPlayback({required int videoNo}) async {
+  Future<VodPlay?> getVodPlay({required int videoNo}) async {
     final Vod? vod = await getVod(videoNo: videoNo);
 
     if (vod != null) {
@@ -50,9 +66,9 @@ class VodController extends _$VodController {
           );
 
           final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
-              ['otherAttributes']['m3u'];
+              ['otherAttributes']['m3u'] as String;
 
-          return m3uAddress;
+          return (vod, m3uAddress);
         } catch (_) {
           return null;
         }
@@ -60,7 +76,7 @@ class VodController extends _$VodController {
       // New version (liveRewind and liveChat)
       else {
         try {
-          return vod.liveRewindPlaybackJson!.media.first.path;
+          return (vod, vod.liveRewindPlaybackJson!.media.first.path);
         } catch (_) {
           return null;
         }
