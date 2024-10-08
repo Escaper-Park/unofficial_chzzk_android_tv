@@ -79,7 +79,7 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
 
     final bool checkEnds = (value.isInitialized && value.isCompleted);
 
-    if (checkEnds) {
+    if (checkEnds && !value.isBuffering) {
       // Check Ends Start
       ref
           .read(wakelockMonitorControllerProvider.notifier)
