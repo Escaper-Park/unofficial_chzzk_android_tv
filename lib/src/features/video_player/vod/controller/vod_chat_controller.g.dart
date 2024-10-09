@@ -6,7 +6,7 @@ part of 'vod_chat_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vodChatQueueHash() => r'aa5c89bcb02574528533b2f25504e3daf708ee07';
+String _$vodChatQueueHash() => r'05e6b4af40cc0fece30128a2dad8ad3cc24099fc';
 
 /// See also [VodChatQueue].
 @ProviderFor(VodChatQueue)
@@ -21,7 +21,7 @@ final vodChatQueueProvider =
 );
 
 typedef _$VodChatQueue = AsyncNotifier<VodChatResponse?>;
-String _$vodChatControllerHash() => r'dae1615c084a87a255eb244568c28aa7f7dcec44';
+String _$vodChatControllerHash() => r'bfe007305ed7b5b9bab1a5e52be52bba0b615ebd';
 
 /// Copied from Dart SDK
 class _SystemHash {

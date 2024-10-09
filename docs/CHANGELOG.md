@@ -1,6 +1,10 @@
 # CHZZK for Android TV v0.3 패치노트
 
 ## [v0.3.3](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3)
+### Hotfix
+#### v0.3.3+1
+* 라이브 종료 시 종료 화면 표시 일부 수정 (계속 테스트 중)
+
 ### 주요 업데이트 내용
 * 다시보기 채팅 보기 (버그가 있을 수 있습니다. 사용에 문제가 있다면 제보 부탁드립니다)
 * 다시보기 채팅, 화질 설정 추가

@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
@@ -75,19 +75,41 @@ class SingleLivePlayerController extends _$SingleLivePlayerController {
   }
 
   void _checkVideoEnds() async {
-    final value = state.value!.value;
+    final value = state.value?.value;
 
-    final bool checkEnds = (value.isInitialized && value.isCompleted);
+    if (value != null && value.isInitialized) {
+      // Check Ends
+      if (!value.isPlaying) {
+        final bool checkEnds =
+            value.isBuffering || value.isCompleted || value.hasError;
 
-    if (checkEnds && !value.isBuffering) {
-      // Check Ends Start
-      ref
-          .read(wakelockMonitorControllerProvider.notifier)
-          .setWakelockDisable(index);
+        if (checkEnds) {
+          // try re-play
+          try {
+            state.value?.play();
+          } catch (_) {
+            _setEndTimer();
+          }
 
-      state.value?.removeListener(_checkVideoEnds);
-      state = const AsyncValue.data(null);
+          _setEndTimer();
+        }
+      }
     }
+  }
+
+  void _setEndTimer() {
+    ref.read(streamEndTimerProvider.notifier).startTimer(
+      callback: () {
+        if (!state.value!.value.isPlaying) {
+          ref
+              .read(wakelockMonitorControllerProvider.notifier)
+              .setWakelockDisable(index);
+
+          state.value?.removeListener(_checkVideoEnds);
+          state = const AsyncValue.data(null);
+        }
+      },
+    );
   }
 
   Future<void> changeResolution(int resolutionIndex) async {
@@ -186,6 +208,31 @@ class PauseTimer extends _$PauseTimer {
     state = Timer(const Duration(seconds: 45), () {
       cancelTimer();
     });
+  }
+
+  void cancelTimer() {
+    state?.cancel();
+    state = null;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class StreamEndTimer extends _$StreamEndTimer {
+  @override
+  Timer? build() {
+    return null;
+  }
+
+  void startTimer({required VoidCallback callback}) {
+    cancelTimer();
+
+    state = Timer(
+      const Duration(seconds: 20),
+      () {
+        callback();
+        cancelTimer();
+      },
+    );
   }
 
   void cancelTimer() {

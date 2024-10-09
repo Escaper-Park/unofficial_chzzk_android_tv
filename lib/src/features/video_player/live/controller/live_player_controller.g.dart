@@ -6,8 +6,24 @@ part of 'live_player_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$streamEndTimerHash() => r'e70eb746ef6ba5e9afc8c5c83f90dd2e15759d03';
+
+/// See also [StreamEndTimer].
+@ProviderFor(StreamEndTimer)
+final streamEndTimerProvider =
+    NotifierProvider<StreamEndTimer, Timer?>.internal(
+  StreamEndTimer.new,
+  name: r'streamEndTimerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$streamEndTimerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$StreamEndTimer = Notifier<Timer?>;
 String _$singleLivePlayerControllerHash() =>
-    r'8133a257be7f63e10c775e6f24d4b76078687356';
+    r'51a878f0f2c69098ac05f408d446e97f0c90a9e0';
 
 /// Copied from Dart SDK
 class _SystemHash {
