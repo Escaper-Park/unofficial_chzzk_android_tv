@@ -90,21 +90,24 @@ class Media with _$Media {
 class EncodingTrack with _$EncodingTrack {
   const factory EncodingTrack({
     required String encodingTrackId,
-    required String videoProfile,
-    required String audioProfile,
-    required String videoCodec,
-    required int videoBitRate,
+    required String? videoProfile,
+    required String? audioProfile,
+    required String? videoCodec,
+    required int? videoBitRate,
     required int audioBitRate,
-    required String videoFrameRate,
-    required int videoWidth,
-    required int videoHeight,
+    required String? videoFrameRate,
+    required int? videoWidth,
+    required int? videoHeight,
     required int audioSamplingRate,
     required int audioChannel,
     required bool avoidReencoding,
-    required String videoDynamicRange,
+    required String? videoDynamicRange,
     // 720p, 1080p
     required String? p2pPath,
     required String? p2pPathUrlEncoding,
+    required String? path,
+    required String? audioCodec,
+    required bool? audioOnly,
   }) = _EncodingTrack;
 
   factory EncodingTrack.fromJson(Map<String, dynamic> json) =>
