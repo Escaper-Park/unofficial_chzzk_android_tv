@@ -117,20 +117,23 @@ Map<String, dynamic> _$$MediaImplToJson(_$MediaImpl instance) =>
 _$EncodingTrackImpl _$$EncodingTrackImplFromJson(Map<String, dynamic> json) =>
     _$EncodingTrackImpl(
       encodingTrackId: json['encodingTrackId'] as String,
-      videoProfile: json['videoProfile'] as String,
-      audioProfile: json['audioProfile'] as String,
-      videoCodec: json['videoCodec'] as String,
-      videoBitRate: (json['videoBitRate'] as num).toInt(),
+      videoProfile: json['videoProfile'] as String?,
+      audioProfile: json['audioProfile'] as String?,
+      videoCodec: json['videoCodec'] as String?,
+      videoBitRate: (json['videoBitRate'] as num?)?.toInt(),
       audioBitRate: (json['audioBitRate'] as num).toInt(),
-      videoFrameRate: json['videoFrameRate'] as String,
-      videoWidth: (json['videoWidth'] as num).toInt(),
-      videoHeight: (json['videoHeight'] as num).toInt(),
+      videoFrameRate: json['videoFrameRate'] as String?,
+      videoWidth: (json['videoWidth'] as num?)?.toInt(),
+      videoHeight: (json['videoHeight'] as num?)?.toInt(),
       audioSamplingRate: (json['audioSamplingRate'] as num).toInt(),
       audioChannel: (json['audioChannel'] as num).toInt(),
       avoidReencoding: json['avoidReencoding'] as bool,
-      videoDynamicRange: json['videoDynamicRange'] as String,
+      videoDynamicRange: json['videoDynamicRange'] as String?,
       p2pPath: json['p2pPath'] as String?,
       p2pPathUrlEncoding: json['p2pPathUrlEncoding'] as String?,
+      path: json['path'] as String?,
+      audioCodec: json['audioCodec'] as String?,
+      audioOnly: json['audioOnly'] as bool?,
     );
 
 Map<String, dynamic> _$$EncodingTrackImplToJson(_$EncodingTrackImpl instance) =>
@@ -150,6 +153,9 @@ Map<String, dynamic> _$$EncodingTrackImplToJson(_$EncodingTrackImpl instance) =>
       'videoDynamicRange': instance.videoDynamicRange,
       'p2pPath': instance.p2pPath,
       'p2pPathUrlEncoding': instance.p2pPathUrlEncoding,
+      'path': instance.path,
+      'audioCodec': instance.audioCodec,
+      'audioOnly': instance.audioOnly,
     };
 
 _$ThumbnailImpl _$$ThumbnailImplFromJson(Map<String, dynamic> json) =>

@@ -1358,21 +1358,24 @@ EncodingTrack _$EncodingTrackFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$EncodingTrack {
   String get encodingTrackId => throw _privateConstructorUsedError;
-  String get videoProfile => throw _privateConstructorUsedError;
-  String get audioProfile => throw _privateConstructorUsedError;
-  String get videoCodec => throw _privateConstructorUsedError;
-  int get videoBitRate => throw _privateConstructorUsedError;
+  String? get videoProfile => throw _privateConstructorUsedError;
+  String? get audioProfile => throw _privateConstructorUsedError;
+  String? get videoCodec => throw _privateConstructorUsedError;
+  int? get videoBitRate => throw _privateConstructorUsedError;
   int get audioBitRate => throw _privateConstructorUsedError;
-  String get videoFrameRate => throw _privateConstructorUsedError;
-  int get videoWidth => throw _privateConstructorUsedError;
-  int get videoHeight => throw _privateConstructorUsedError;
+  String? get videoFrameRate => throw _privateConstructorUsedError;
+  int? get videoWidth => throw _privateConstructorUsedError;
+  int? get videoHeight => throw _privateConstructorUsedError;
   int get audioSamplingRate => throw _privateConstructorUsedError;
   int get audioChannel => throw _privateConstructorUsedError;
   bool get avoidReencoding => throw _privateConstructorUsedError;
-  String get videoDynamicRange =>
+  String? get videoDynamicRange =>
       throw _privateConstructorUsedError; // 720p, 1080p
   String? get p2pPath => throw _privateConstructorUsedError;
   String? get p2pPathUrlEncoding => throw _privateConstructorUsedError;
+  String? get path => throw _privateConstructorUsedError;
+  String? get audioCodec => throw _privateConstructorUsedError;
+  bool? get audioOnly => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1388,20 +1391,23 @@ abstract class $EncodingTrackCopyWith<$Res> {
   @useResult
   $Res call(
       {String encodingTrackId,
-      String videoProfile,
-      String audioProfile,
-      String videoCodec,
-      int videoBitRate,
+      String? videoProfile,
+      String? audioProfile,
+      String? videoCodec,
+      int? videoBitRate,
       int audioBitRate,
-      String videoFrameRate,
-      int videoWidth,
-      int videoHeight,
+      String? videoFrameRate,
+      int? videoWidth,
+      int? videoHeight,
       int audioSamplingRate,
       int audioChannel,
       bool avoidReencoding,
-      String videoDynamicRange,
+      String? videoDynamicRange,
       String? p2pPath,
-      String? p2pPathUrlEncoding});
+      String? p2pPathUrlEncoding,
+      String? path,
+      String? audioCodec,
+      bool? audioOnly});
 }
 
 /// @nodoc
@@ -1418,58 +1424,61 @@ class _$EncodingTrackCopyWithImpl<$Res, $Val extends EncodingTrack>
   @override
   $Res call({
     Object? encodingTrackId = null,
-    Object? videoProfile = null,
-    Object? audioProfile = null,
-    Object? videoCodec = null,
-    Object? videoBitRate = null,
+    Object? videoProfile = freezed,
+    Object? audioProfile = freezed,
+    Object? videoCodec = freezed,
+    Object? videoBitRate = freezed,
     Object? audioBitRate = null,
-    Object? videoFrameRate = null,
-    Object? videoWidth = null,
-    Object? videoHeight = null,
+    Object? videoFrameRate = freezed,
+    Object? videoWidth = freezed,
+    Object? videoHeight = freezed,
     Object? audioSamplingRate = null,
     Object? audioChannel = null,
     Object? avoidReencoding = null,
-    Object? videoDynamicRange = null,
+    Object? videoDynamicRange = freezed,
     Object? p2pPath = freezed,
     Object? p2pPathUrlEncoding = freezed,
+    Object? path = freezed,
+    Object? audioCodec = freezed,
+    Object? audioOnly = freezed,
   }) {
     return _then(_value.copyWith(
       encodingTrackId: null == encodingTrackId
           ? _value.encodingTrackId
           : encodingTrackId // ignore: cast_nullable_to_non_nullable
               as String,
-      videoProfile: null == videoProfile
+      videoProfile: freezed == videoProfile
           ? _value.videoProfile
           : videoProfile // ignore: cast_nullable_to_non_nullable
-              as String,
-      audioProfile: null == audioProfile
+              as String?,
+      audioProfile: freezed == audioProfile
           ? _value.audioProfile
           : audioProfile // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoCodec: null == videoCodec
+              as String?,
+      videoCodec: freezed == videoCodec
           ? _value.videoCodec
           : videoCodec // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoBitRate: null == videoBitRate
+              as String?,
+      videoBitRate: freezed == videoBitRate
           ? _value.videoBitRate
           : videoBitRate // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       audioBitRate: null == audioBitRate
           ? _value.audioBitRate
           : audioBitRate // ignore: cast_nullable_to_non_nullable
               as int,
-      videoFrameRate: null == videoFrameRate
+      videoFrameRate: freezed == videoFrameRate
           ? _value.videoFrameRate
           : videoFrameRate // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoWidth: null == videoWidth
+              as String?,
+      videoWidth: freezed == videoWidth
           ? _value.videoWidth
           : videoWidth // ignore: cast_nullable_to_non_nullable
-              as int,
-      videoHeight: null == videoHeight
+              as int?,
+      videoHeight: freezed == videoHeight
           ? _value.videoHeight
           : videoHeight // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       audioSamplingRate: null == audioSamplingRate
           ? _value.audioSamplingRate
           : audioSamplingRate // ignore: cast_nullable_to_non_nullable
@@ -1482,10 +1491,10 @@ class _$EncodingTrackCopyWithImpl<$Res, $Val extends EncodingTrack>
           ? _value.avoidReencoding
           : avoidReencoding // ignore: cast_nullable_to_non_nullable
               as bool,
-      videoDynamicRange: null == videoDynamicRange
+      videoDynamicRange: freezed == videoDynamicRange
           ? _value.videoDynamicRange
           : videoDynamicRange // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       p2pPath: freezed == p2pPath
           ? _value.p2pPath
           : p2pPath // ignore: cast_nullable_to_non_nullable
@@ -1494,6 +1503,18 @@ class _$EncodingTrackCopyWithImpl<$Res, $Val extends EncodingTrack>
           ? _value.p2pPathUrlEncoding
           : p2pPathUrlEncoding // ignore: cast_nullable_to_non_nullable
               as String?,
+      path: freezed == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String?,
+      audioCodec: freezed == audioCodec
+          ? _value.audioCodec
+          : audioCodec // ignore: cast_nullable_to_non_nullable
+              as String?,
+      audioOnly: freezed == audioOnly
+          ? _value.audioOnly
+          : audioOnly // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -1508,20 +1529,23 @@ abstract class _$$EncodingTrackImplCopyWith<$Res>
   @useResult
   $Res call(
       {String encodingTrackId,
-      String videoProfile,
-      String audioProfile,
-      String videoCodec,
-      int videoBitRate,
+      String? videoProfile,
+      String? audioProfile,
+      String? videoCodec,
+      int? videoBitRate,
       int audioBitRate,
-      String videoFrameRate,
-      int videoWidth,
-      int videoHeight,
+      String? videoFrameRate,
+      int? videoWidth,
+      int? videoHeight,
       int audioSamplingRate,
       int audioChannel,
       bool avoidReencoding,
-      String videoDynamicRange,
+      String? videoDynamicRange,
       String? p2pPath,
-      String? p2pPathUrlEncoding});
+      String? p2pPathUrlEncoding,
+      String? path,
+      String? audioCodec,
+      bool? audioOnly});
 }
 
 /// @nodoc
@@ -1536,58 +1560,61 @@ class __$$EncodingTrackImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? encodingTrackId = null,
-    Object? videoProfile = null,
-    Object? audioProfile = null,
-    Object? videoCodec = null,
-    Object? videoBitRate = null,
+    Object? videoProfile = freezed,
+    Object? audioProfile = freezed,
+    Object? videoCodec = freezed,
+    Object? videoBitRate = freezed,
     Object? audioBitRate = null,
-    Object? videoFrameRate = null,
-    Object? videoWidth = null,
-    Object? videoHeight = null,
+    Object? videoFrameRate = freezed,
+    Object? videoWidth = freezed,
+    Object? videoHeight = freezed,
     Object? audioSamplingRate = null,
     Object? audioChannel = null,
     Object? avoidReencoding = null,
-    Object? videoDynamicRange = null,
+    Object? videoDynamicRange = freezed,
     Object? p2pPath = freezed,
     Object? p2pPathUrlEncoding = freezed,
+    Object? path = freezed,
+    Object? audioCodec = freezed,
+    Object? audioOnly = freezed,
   }) {
     return _then(_$EncodingTrackImpl(
       encodingTrackId: null == encodingTrackId
           ? _value.encodingTrackId
           : encodingTrackId // ignore: cast_nullable_to_non_nullable
               as String,
-      videoProfile: null == videoProfile
+      videoProfile: freezed == videoProfile
           ? _value.videoProfile
           : videoProfile // ignore: cast_nullable_to_non_nullable
-              as String,
-      audioProfile: null == audioProfile
+              as String?,
+      audioProfile: freezed == audioProfile
           ? _value.audioProfile
           : audioProfile // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoCodec: null == videoCodec
+              as String?,
+      videoCodec: freezed == videoCodec
           ? _value.videoCodec
           : videoCodec // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoBitRate: null == videoBitRate
+              as String?,
+      videoBitRate: freezed == videoBitRate
           ? _value.videoBitRate
           : videoBitRate // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       audioBitRate: null == audioBitRate
           ? _value.audioBitRate
           : audioBitRate // ignore: cast_nullable_to_non_nullable
               as int,
-      videoFrameRate: null == videoFrameRate
+      videoFrameRate: freezed == videoFrameRate
           ? _value.videoFrameRate
           : videoFrameRate // ignore: cast_nullable_to_non_nullable
-              as String,
-      videoWidth: null == videoWidth
+              as String?,
+      videoWidth: freezed == videoWidth
           ? _value.videoWidth
           : videoWidth // ignore: cast_nullable_to_non_nullable
-              as int,
-      videoHeight: null == videoHeight
+              as int?,
+      videoHeight: freezed == videoHeight
           ? _value.videoHeight
           : videoHeight // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       audioSamplingRate: null == audioSamplingRate
           ? _value.audioSamplingRate
           : audioSamplingRate // ignore: cast_nullable_to_non_nullable
@@ -1600,10 +1627,10 @@ class __$$EncodingTrackImplCopyWithImpl<$Res>
           ? _value.avoidReencoding
           : avoidReencoding // ignore: cast_nullable_to_non_nullable
               as bool,
-      videoDynamicRange: null == videoDynamicRange
+      videoDynamicRange: freezed == videoDynamicRange
           ? _value.videoDynamicRange
           : videoDynamicRange // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       p2pPath: freezed == p2pPath
           ? _value.p2pPath
           : p2pPath // ignore: cast_nullable_to_non_nullable
@@ -1612,6 +1639,18 @@ class __$$EncodingTrackImplCopyWithImpl<$Res>
           ? _value.p2pPathUrlEncoding
           : p2pPathUrlEncoding // ignore: cast_nullable_to_non_nullable
               as String?,
+      path: freezed == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String?,
+      audioCodec: freezed == audioCodec
+          ? _value.audioCodec
+          : audioCodec // ignore: cast_nullable_to_non_nullable
+              as String?,
+      audioOnly: freezed == audioOnly
+          ? _value.audioOnly
+          : audioOnly // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -1634,7 +1673,10 @@ class _$EncodingTrackImpl implements _EncodingTrack {
       required this.avoidReencoding,
       required this.videoDynamicRange,
       required this.p2pPath,
-      required this.p2pPathUrlEncoding});
+      required this.p2pPathUrlEncoding,
+      required this.path,
+      required this.audioCodec,
+      required this.audioOnly});
 
   factory _$EncodingTrackImpl.fromJson(Map<String, dynamic> json) =>
       _$$EncodingTrackImplFromJson(json);
@@ -1642,21 +1684,21 @@ class _$EncodingTrackImpl implements _EncodingTrack {
   @override
   final String encodingTrackId;
   @override
-  final String videoProfile;
+  final String? videoProfile;
   @override
-  final String audioProfile;
+  final String? audioProfile;
   @override
-  final String videoCodec;
+  final String? videoCodec;
   @override
-  final int videoBitRate;
+  final int? videoBitRate;
   @override
   final int audioBitRate;
   @override
-  final String videoFrameRate;
+  final String? videoFrameRate;
   @override
-  final int videoWidth;
+  final int? videoWidth;
   @override
-  final int videoHeight;
+  final int? videoHeight;
   @override
   final int audioSamplingRate;
   @override
@@ -1664,16 +1706,22 @@ class _$EncodingTrackImpl implements _EncodingTrack {
   @override
   final bool avoidReencoding;
   @override
-  final String videoDynamicRange;
+  final String? videoDynamicRange;
 // 720p, 1080p
   @override
   final String? p2pPath;
   @override
   final String? p2pPathUrlEncoding;
+  @override
+  final String? path;
+  @override
+  final String? audioCodec;
+  @override
+  final bool? audioOnly;
 
   @override
   String toString() {
-    return 'EncodingTrack(encodingTrackId: $encodingTrackId, videoProfile: $videoProfile, audioProfile: $audioProfile, videoCodec: $videoCodec, videoBitRate: $videoBitRate, audioBitRate: $audioBitRate, videoFrameRate: $videoFrameRate, videoWidth: $videoWidth, videoHeight: $videoHeight, audioSamplingRate: $audioSamplingRate, audioChannel: $audioChannel, avoidReencoding: $avoidReencoding, videoDynamicRange: $videoDynamicRange, p2pPath: $p2pPath, p2pPathUrlEncoding: $p2pPathUrlEncoding)';
+    return 'EncodingTrack(encodingTrackId: $encodingTrackId, videoProfile: $videoProfile, audioProfile: $audioProfile, videoCodec: $videoCodec, videoBitRate: $videoBitRate, audioBitRate: $audioBitRate, videoFrameRate: $videoFrameRate, videoWidth: $videoWidth, videoHeight: $videoHeight, audioSamplingRate: $audioSamplingRate, audioChannel: $audioChannel, avoidReencoding: $avoidReencoding, videoDynamicRange: $videoDynamicRange, p2pPath: $p2pPath, p2pPathUrlEncoding: $p2pPathUrlEncoding, path: $path, audioCodec: $audioCodec, audioOnly: $audioOnly)';
   }
 
   @override
@@ -1709,7 +1757,12 @@ class _$EncodingTrackImpl implements _EncodingTrack {
                 other.videoDynamicRange == videoDynamicRange) &&
             (identical(other.p2pPath, p2pPath) || other.p2pPath == p2pPath) &&
             (identical(other.p2pPathUrlEncoding, p2pPathUrlEncoding) ||
-                other.p2pPathUrlEncoding == p2pPathUrlEncoding));
+                other.p2pPathUrlEncoding == p2pPathUrlEncoding) &&
+            (identical(other.path, path) || other.path == path) &&
+            (identical(other.audioCodec, audioCodec) ||
+                other.audioCodec == audioCodec) &&
+            (identical(other.audioOnly, audioOnly) ||
+                other.audioOnly == audioOnly));
   }
 
   @JsonKey(ignore: true)
@@ -1730,7 +1783,10 @@ class _$EncodingTrackImpl implements _EncodingTrack {
       avoidReencoding,
       videoDynamicRange,
       p2pPath,
-      p2pPathUrlEncoding);
+      p2pPathUrlEncoding,
+      path,
+      audioCodec,
+      audioOnly);
 
   @JsonKey(ignore: true)
   @override
@@ -1749,20 +1805,23 @@ class _$EncodingTrackImpl implements _EncodingTrack {
 abstract class _EncodingTrack implements EncodingTrack {
   const factory _EncodingTrack(
       {required final String encodingTrackId,
-      required final String videoProfile,
-      required final String audioProfile,
-      required final String videoCodec,
-      required final int videoBitRate,
+      required final String? videoProfile,
+      required final String? audioProfile,
+      required final String? videoCodec,
+      required final int? videoBitRate,
       required final int audioBitRate,
-      required final String videoFrameRate,
-      required final int videoWidth,
-      required final int videoHeight,
+      required final String? videoFrameRate,
+      required final int? videoWidth,
+      required final int? videoHeight,
       required final int audioSamplingRate,
       required final int audioChannel,
       required final bool avoidReencoding,
-      required final String videoDynamicRange,
+      required final String? videoDynamicRange,
       required final String? p2pPath,
-      required final String? p2pPathUrlEncoding}) = _$EncodingTrackImpl;
+      required final String? p2pPathUrlEncoding,
+      required final String? path,
+      required final String? audioCodec,
+      required final bool? audioOnly}) = _$EncodingTrackImpl;
 
   factory _EncodingTrack.fromJson(Map<String, dynamic> json) =
       _$EncodingTrackImpl.fromJson;
@@ -1770,21 +1829,21 @@ abstract class _EncodingTrack implements EncodingTrack {
   @override
   String get encodingTrackId;
   @override
-  String get videoProfile;
+  String? get videoProfile;
   @override
-  String get audioProfile;
+  String? get audioProfile;
   @override
-  String get videoCodec;
+  String? get videoCodec;
   @override
-  int get videoBitRate;
+  int? get videoBitRate;
   @override
   int get audioBitRate;
   @override
-  String get videoFrameRate;
+  String? get videoFrameRate;
   @override
-  int get videoWidth;
+  int? get videoWidth;
   @override
-  int get videoHeight;
+  int? get videoHeight;
   @override
   int get audioSamplingRate;
   @override
@@ -1792,11 +1851,17 @@ abstract class _EncodingTrack implements EncodingTrack {
   @override
   bool get avoidReencoding;
   @override
-  String get videoDynamicRange;
+  String? get videoDynamicRange;
   @override // 720p, 1080p
   String? get p2pPath;
   @override
   String? get p2pPathUrlEncoding;
+  @override
+  String? get path;
+  @override
+  String? get audioCodec;
+  @override
+  bool? get audioOnly;
   @override
   @JsonKey(ignore: true)
   _$$EncodingTrackImplCopyWith<_$EncodingTrackImpl> get copyWith =>

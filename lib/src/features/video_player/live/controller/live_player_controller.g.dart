@@ -6,24 +6,8 @@ part of 'live_player_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$streamEndTimerHash() => r'e70eb746ef6ba5e9afc8c5c83f90dd2e15759d03';
-
-/// See also [StreamEndTimer].
-@ProviderFor(StreamEndTimer)
-final streamEndTimerProvider =
-    NotifierProvider<StreamEndTimer, Timer?>.internal(
-  StreamEndTimer.new,
-  name: r'streamEndTimerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$streamEndTimerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$StreamEndTimer = Notifier<Timer?>;
 String _$singleLivePlayerControllerHash() =>
-    r'51a878f0f2c69098ac05f408d446e97f0c90a9e0';
+    r'3bb21aff6de5ffeab70f0fdb641652fcf0dd2e64';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -205,5 +189,21 @@ final pauseTimerProvider = NotifierProvider<PauseTimer, Timer?>.internal(
 );
 
 typedef _$PauseTimer = Notifier<Timer?>;
+String _$streamEndTimerHash() => r'bca601a70502259c4b3fb7a01a90e8c0128301ee';
+
+/// See also [StreamEndTimer].
+@ProviderFor(StreamEndTimer)
+final streamEndTimerProvider =
+    NotifierProvider<StreamEndTimer, Timer?>.internal(
+  StreamEndTimer.new,
+  name: r'streamEndTimerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$streamEndTimerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$StreamEndTimer = Notifier<Timer?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

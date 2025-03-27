@@ -2,6 +2,9 @@
 
 ## [v0.3.3](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3)
 ### Hotfix
+#### v0.3.3+2
+* 치치직 API 업데이트로 인한 재생 불가능 현상 수정 (Thansk to [@pontus-jeong](https://github.com/pontus-jeong))
+
 #### v0.3.3+1
 * 라이브 종료 시 종료 화면 표시 일부 수정 (계속 테스트 중)
 
