@@ -87,5 +87,5 @@ APK 파일 [다운로드] (v0.3.3+2)
 > [!CAUTION]
 > 보안을 위해 네이버 로그인 2단계 인증을 사용해주세요.
 
-[다운로드]: https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3+1
+[다운로드]: https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3+2
 [치지직]: https://chzzk.naver.com/
