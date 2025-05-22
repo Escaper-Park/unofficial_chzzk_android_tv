@@ -1,0 +1,80 @@
+name: unofficial_chzzk_android_tv
+description: "UnOfficial Chzzk for Android TV"
+publish_to: "none"
+version: 0.3.4
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # riverpod
+  flutter_hooks: ^0.21.2
+  hooks_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # freezed
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # CRUD
+  retrofit: ^4.4.2
+  logger: ^2.5.0
+  dio: ^5.8.0+1
+  web_socket_channel: ^3.0.3
+
+  # router
+  go_router: ^15.1.2
+
+  # utils
+  wakelock_plus: ^1.3.2
+  shared_preferences: ^2.5.3
+  flutter_native_splash: ^2.4.4
+  intl: ^0.20.2
+  hangul: ^0.7.0
+  flutter_hls_parser: ^2.0.1
+  uuid: ^4.5.1
+  
+  # webview
+  flutter_markdown: ^0.7.7+1
+  flutter_inappwebview: ^6.1.5
+
+  # video player
+  video_player:
+    path: ./packages/video_player/video_player
+  video_player_android:
+    path: ./packages/video_player/video_player_android
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.13
+  custom_lint: ^0.7.0
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
+  retrofit_generator: ^9.1.5
+  riverpod_generator: ^2.6.3
+  riverpod_lint: ^2.6.3
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard-Bold.otf
+          weight: 700

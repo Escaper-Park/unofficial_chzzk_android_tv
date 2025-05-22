@@ -1,0 +1,27 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    require_trailing_commas: true
+    annotate_overrides: false
+
+analyzer:
+  errors:
+    invalid_annotation_target: ignore
+
+  exclude:
+    - lib/**.g.dart
+    - lib/**.freezed.dart
+    - packages/video_player
+
+  plugins:
+    - custom_lint
+
+
+custom_lint:
+  rules:
+    - missing_provider_scope: false
+
+formatter:
+  page_width: 80
+  # trailing_commas: preserve
