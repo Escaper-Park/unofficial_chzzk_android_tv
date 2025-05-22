@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class StreamScreenBase extends StatefulHookConsumerWidget {
   const StreamScreenBase({
@@ -29,6 +30,13 @@ class _StreamingScreenState extends ConsumerState<StreamScreenBase>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    initWakelock();
+  }
+
+  Future<void> initWakelock() async {
+    if (!await WakelockPlus.enabled) {
+      await WakelockPlus.enable();
+    }
   }
 
   @override

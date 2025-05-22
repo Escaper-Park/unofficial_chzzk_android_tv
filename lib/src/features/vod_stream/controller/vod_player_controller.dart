@@ -103,6 +103,8 @@ class VodPlayerController extends _$VodPlayerController {
       await controller.play();
       controller.addListener(_checkVideoEnds);
 
+      await ref.read(wakelockControllerProvider.notifier).enable();
+
       // await postEvent(
       //   controller,
       //   WatchEventType.watchStarted,

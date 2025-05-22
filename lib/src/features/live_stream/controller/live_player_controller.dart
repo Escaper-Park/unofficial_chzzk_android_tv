@@ -78,6 +78,8 @@ class LivePlayerController extends _$LivePlayerController {
       await controller.play();
       controller.addListener(_checkVideoEnds);
 
+      await ref.read(wakelockControllerProvider.notifier).enable();
+
       return controller;
     } catch (_) {
       return null;
