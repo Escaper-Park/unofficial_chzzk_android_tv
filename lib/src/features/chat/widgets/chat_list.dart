@@ -1,47 +1,53 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/constants/styles.dart';
-import '../../../common/widgets/rounded_container.dart';
-import '../../setting/model/chat_settings.dart';
+import '../../../common/constants/enums.dart' show DonationType, ChatWindowMode;
+import '../../../common/constants/styles.dart' show AppColors;
+import '../../../common/widgets/ui/ui_widgets.dart' show RoundedContainer;
+import '../../settings/model/chat_settings.dart';
 import '../../vod/model/vod_chat.dart';
 import '../model/base_chat.dart';
 import '../model/chat.dart';
+import '../model/extras.dart';
+import '../model/profile.dart';
 import '../model/recent_chat.dart';
-import 'chat_container.dart';
+import 'chat_widgets.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({
     super.key,
     required this.chatList,
     required this.chatSettings,
-    this.addRepaintBoundary = false,
+    required this.chatWindowMode,
   });
 
-  /// List of chat.
   final List<dynamic> chatList;
   final ChatSettings chatSettings;
-  final bool addRepaintBoundary;
+  final ChatWindowMode chatWindowMode;
 
   @override
   Widget build(BuildContext context) {
-    final opacity = (100 - chatSettings.entireChatContainerTransparency) * 0.01;
+    final int transparencyPercent =
+        chatSettings.entireChatContainerTransparency;
+
+    final double opacity = (100 - transparencyPercent) * 0.01;
 
     return RoundedContainer(
-      backgroundColor: chatSettings.entireChatContainerTransparency == 100
+      backgroundColor: transparencyPercent == 100
           ? Colors.transparent
           : AppColors.blackColor.withOpacity(opacity),
-      padding: chatSettings.entireChatContainerTransparency == 100
+      padding: transparencyPercent == 100
           ? EdgeInsets.zero
           : const EdgeInsets.all(3.0),
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        // Don't save previous chats to memory for performance.
+        padding: EdgeInsets.only(
+          top: chatSettings.chatContainerVerticalMargin.toDouble(),
+          left: chatSettings.chatContainerHorizontalMargin.toDouble(),
+          right: chatSettings.chatContainerHorizontalMargin.toDouble(),
+        ),
         addAutomaticKeepAlives: false,
-        // Set this false for performance.
         addRepaintBoundaries: false,
-        // Don't use.
         addSemanticIndexes: false,
-        // Set this to 'true' to make the chat appear from bottom to top.
         reverse: true,
         itemCount: chatList.length,
         itemBuilder: (context, index) {
@@ -51,13 +57,15 @@ class ChatList extends StatelessWidget {
           Profile? profile;
           Extras? extras;
           int ctime = 0;
+          int msgTypeCode = 1;
 
-          // Normal Chat
+          // Chat, Donation
           if (bdy is ChatBdy) {
             msg = bdy.msg;
             profile = bdy.profile;
             extras = bdy.extras;
             ctime = bdy.ctime;
+            msgTypeCode = bdy.msgTypeCode;
           }
           // Recent Chat
           else if (bdy is RecentChatMsg) {
@@ -65,6 +73,7 @@ class ChatList extends StatelessWidget {
             profile = bdy.profile;
             extras = bdy.extras;
             ctime = bdy.createTime;
+            msgTypeCode = bdy.messageTypeCode;
           }
           // Vod Chat
           else if (bdy is VodChat) {
@@ -72,6 +81,7 @@ class ChatList extends StatelessWidget {
             profile = bdy.profile;
             extras = bdy.extras;
             ctime = bdy.playerMessageTime;
+            msgTypeCode = bdy.messageTypeCode;
           }
 
           final BaseChat chat = BaseChat(
@@ -81,15 +91,46 @@ class ChatList extends StatelessWidget {
             ctime: ctime,
           );
 
-          return Padding(
-            padding: EdgeInsets.only(
-              top: chatSettings.chatContainerVerticalMargin.toDouble(),
-            ),
-            child: ChatContainer(
-              chat: chat,
-              chatSettings: chatSettings,
-            ),
-          );
+          // chat
+          if (msgTypeCode == 1) {
+            return Padding(
+              padding: EdgeInsets.only(
+                top: chatSettings.chatContainerVerticalMargin.toDouble(),
+              ),
+              child: ChatContainer(
+                chat: chat,
+                chatSettings: chatWindowMode == ChatWindowMode.side
+                    ? chatSettings.copyWith(
+                        entireChatContainerTransparency: 100,
+                        singleChatContainerTransparency: 100,
+                      )
+                    : chatSettings,
+              ),
+            );
+          }
+          // donation
+          else if (msgTypeCode == 10) {
+            String? donationType = extras?.donationType;
+
+            // chat donation
+            if (donationType == DonationType.chat.value) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: chatSettings.chatContainerVerticalMargin.toDouble(),
+                ),
+                child: DonationContainer(
+                  chat: chat,
+                  chatSettings: chatSettings,
+                ),
+              );
+            }
+            // video, mission
+            else {
+              return const SizedBox.shrink();
+            }
+          }
+
+          return const SizedBox.shrink();
         },
       ),
     );

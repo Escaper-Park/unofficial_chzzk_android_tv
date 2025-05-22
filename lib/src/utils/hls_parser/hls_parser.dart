@@ -5,14 +5,13 @@ import '../dio/dio_client.dart';
 class HlsParser {
   final String hlsUrl;
 
-  HlsParser(this.hlsUrl);
+  HlsParser({required this.hlsUrl});
 
-  final Dio _dio = DioClient().getBaseDio();
+  final Dio _dio = DioClient().getBaseDio(null);
 
   Future<String?> _getContents() async {
     try {
       final response = await _dio.get(hlsUrl);
-
       final String? contents = response.data;
 
       return contents;
@@ -21,31 +20,23 @@ class HlsParser {
     }
   }
 
-  Future<List<Uri?>?> getLiveMediaPlaylistUris() async {
-    return await _getMediaPlaylistUriAndSortbyResolution(4);
-  }
-
-  Future<List<Uri?>?> getVodMediaPlaylistUris() async {
-    return await _getMediaPlaylistUriAndSortbyResolution(2);
-  }
-
-  Future<List<Uri?>?> _getMediaPlaylistUriAndSortbyResolution(int count) async {
+  Future<List<Uri?>?> getMediaPlaylistSortByResolution(int count) async {
     final String? contents = await _getContents();
 
-    if (contents != null) {
-      final playlist = await HlsPlaylistParser.create()
-          .parseString(Uri.parse(hlsUrl), contents) as HlsMasterPlaylist;
+    if (contents == null) return null;
 
-      // sort by width
-      final mediaPlaylist = playlist.variants;
-      mediaPlaylist.sort((a, b) => a.format.width!.compareTo(b.format.width!));
+    final playlist = await HlsPlaylistParser.create()
+        .parseString(Uri.parse(hlsUrl), contents) as HlsMasterPlaylist;
 
-      // Get last N res: 360p, 480p, 720p, 1080p.
-      final lastNElements = mediaPlaylist.sublist(
-          mediaPlaylist.length >= count ? mediaPlaylist.length - count : 0);
+    // sort by width
+    final mediaPlaylist = playlist.variants;
+    mediaPlaylist.sort((a, b) => a.format.width!.compareTo(b.format.width!));
 
-      return lastNElements.map((rendition) => rendition.url).toList();
-    }
-    return null;
+    // Get last N res: 360p, 480p, 720p, 1080p.
+    final lastNElements = mediaPlaylist.sublist(
+      mediaPlaylist.length >= count ? mediaPlaylist.length - count : 0,
+    );
+
+    return lastNElements.map((rendition) => rendition.url).toList();
   }
 }

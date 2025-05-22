@@ -2,24 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../../common/constants/api.dart';
-import '../model/live.dart';
+import '../model/live_detail.dart';
+import '../model/live_response.dart';
+import '../model/live_status.dart';
 
 part 'live_repository.g.dart';
 
-enum LiveSortType {
-  popular('POPULAR'),
-  latest('LATEST');
-
-  final String value;
-
-  const LiveSortType(this.value);
-}
-
-@RestApi(baseUrl: ApiUrl.chzzk)
+@RestApi(baseUrl: BaseUrl.chzzkService)
 abstract class LiveRepository {
   factory LiveRepository(Dio dio, {String baseUrl}) = _LiveRepository;
 
-  @GET(ApiUrl.allLives)
+  @GET(ChzzkServiceApi.allLives)
   Future<LiveResponse?> getLiveResponse({
     @Query('size') required int size,
     @Query('sortType') required String sortType,
@@ -27,11 +20,21 @@ abstract class LiveRepository {
     @Query('liveId') required int? liveId,
   });
 
-  @GET('${ApiUrl.liveDetail}/{channelId}/live-detail')
-  Future<LiveDetail?> getLiveDetail(
-      {@Path('channelId') required String channelId});
+  @GET('${ChzzkServiceApi.liveDetail}/{channelId}/live-detail')
+  Future<LiveDetail?> getLiveDetail({
+    @Path('channelId') required String channelId,
+  });
+}
 
-  @GET('${ApiUrl.liveStatus}/{channelId}/live-status')
-  Future<LiveStatus?> getLiveStatus(
-      {@Path('channelId') required String channelId});
+@RestApi(baseUrl: BaseUrl.chzzk)
+abstract class LiveStatusRepository {
+  factory LiveStatusRepository(Dio dio, {String baseUrl}) =
+      _LiveStatusRepository;
+
+  @GET('${ChzzkApi.liveStatus}/{channelId}/live-status')
+  Future<LiveStatus?> getLiveStatus({
+    @Path('channelId') required String channelId,
+    @Query('includePlayerRecommendContent')
+    required bool includePlayerRecommendContent,
+  });
 }

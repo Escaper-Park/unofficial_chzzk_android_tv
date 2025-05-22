@@ -1,21 +1,29 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../../live/model/live_playback_json.dart';
 
-part 'live_rewind_playback_json.freezed.dart';
 part 'live_rewind_playback_json.g.dart';
+part 'live_rewind_playback_json.freezed.dart';
 
 @freezed
+@JsonSerializable()
 class LiveRewindPlaybackJson with _$LiveRewindPlaybackJson {
-  const factory LiveRewindPlaybackJson({
-    required Meta meta,
-    required List<Map<String, String>> api,
-    required List<Media> media,
-  }) = _LiveRewindPlaybackJson;
+  final Meta meta;
+  final List<Map<String, String>> api;
+  final List<Media> media;
 
   factory LiveRewindPlaybackJson.fromJson(Map<String, dynamic> json) =>
       _$LiveRewindPlaybackJsonFromJson(json);
+
+  LiveRewindPlaybackJson({
+    required this.meta,
+    required this.api,
+    required this.media,
+  });
+
+  Map<String, Object?> toJson() => _$LiveRewindPlaybackJsonToJson(this);
 }
 
 class LiveRewindPlaybackConverter

@@ -1,21 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../common/constants/api.dart';
-import '../model/following.dart';
+import '../../../common/constants/api.dart' show BaseUrl, ChzzkServiceApi;
+import '../model/following_response.dart';
 
 part 'following_repository.g.dart';
 
-@RestApi(baseUrl: ApiUrl.chzzkService)
+@RestApi(baseUrl: BaseUrl.chzzkService)
 abstract class FollowingRepository {
   factory FollowingRepository(Dio dio, {String baseUrl}) = _FollowingRepository;
 
-  @GET(ApiUrl.followings)
-  Future<FollowingResponse?> getFollowingResponse({
+  @GET(ChzzkServiceApi.followings)
+  Future<FollowingResponse?> getFollowings({
     @Query('size') required int size,
     @Query('page') required int page,
   });
 
-  @GET(ApiUrl.followingLives)
-  Future<FollowingResponse?> getFollowingLives();
+  @GET(ChzzkServiceApi.followingLives)
+  Future<FollowingResponse?> getFollowingLives({
+    @Query('sortType') required String sortType,
+  });
 }

@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'auth.freezed.dart';
 part 'auth.g.dart';
+part 'auth.freezed.dart';
 
 /// Get Auth from cookies in webview.
 ///
 /// Use 'NID_AUT' and 'NID_SES'.
 @freezed
-class Auth with _$Auth {
+abstract class Auth with _$Auth {
   // Add this to use custom method.
   const Auth._();
 

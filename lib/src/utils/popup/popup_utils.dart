@@ -1,113 +1,39 @@
 import 'package:flutter/material.dart';
 
-import '../../common/constants/styles.dart';
-import '../../common/widgets/center_widgets.dart';
-import '../../common/widgets/focused_widget.dart';
+import '../../common/constants/enums.dart' show DialogButtonType;
+import '../../common/constants/styles.dart' show AppColors;
+import '../../common/widgets/ui/ui_widgets.dart'
+    show CenteredText, FocusedOutlinedButton, HeaderText;
 
-enum DialogButtonType {
-  singleButton,
-  doubleButton,
-}
+abstract class PopupUtils {
+  const PopupUtils._();
 
-class PopupUtils {
-  /// Show popup dialog with a single button.
-  static Future<void> showButtonDialog({
-    /// Choose number of buttons(single or double).
-    DialogButtonType buttonType = DialogButtonType.singleButton,
+  /// Shows the [SnackBar]. If the Snackbar position is at the bottom, it shows a
+  /// rounded snack bar, and if it's at the top, it shows a flat SnackBar.
+  static void showSnackBar({
     required BuildContext context,
-    required String titleText,
-    required String contentText,
-    double titleFontSize = 20.0,
-    double fontSize = 16.0,
-    String confirmText = '확인',
-    String cancelText = '취소',
-    VoidCallback? confirmCallback,
-    VoidCallback? cancelFallback,
-  }) async {
-    await showDialog(
-      context: context,
-      useRootNavigator: false,
-      // Set the value of 'barrierDismissible' to 'false'
-      // to escape from the popup dialog when you click on an outside empty space.
-      barrierDismissible: false,
-      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
-      builder: (dialogContext) {
-        return AlertDialog(
-          backgroundColor: AppColors.greyContainerColor,
-          title: Text(
-            titleText,
-            style: TextStyle(
-              fontSize: titleFontSize,
-              color: AppColors.whiteColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: IntrinsicHeight(
-            child: CenteredText(
-              text: contentText,
-              fontSize: fontSize,
-              fontColor: AppColors.whiteColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          actions: switch (buttonType) {
-            DialogButtonType.singleButton => [
-                PopupActionButton(
-                  actionText: confirmText,
-                  onPressed: () {
-                    // Escape from popup dialog
-                    if (dialogContext.mounted) Navigator.pop(dialogContext);
-                  },
-                ),
-              ],
-            DialogButtonType.doubleButton => [
-                // Cancel
-                PopupActionButton(
-                  autofocus: true,
-                  actionText: cancelText,
-                  onPressed: () {
-                    if (cancelFallback != null) cancelFallback();
-                    // Escape from popup dialog
-                    if (dialogContext.mounted) Navigator.pop(dialogContext);
-                  },
-                ),
-                // Confirm
-                PopupActionButton(
-                  autofocus: false,
-                  actionText: confirmText,
-                  onPressed: () {
-                    // Do action
-                    if (confirmCallback != null) confirmCallback();
+    required String content,
+    double bottomMargin = 0.0,
 
-                    // Escape from popup dialog
-                    if (dialogContext.mounted) Navigator.pop(dialogContext);
-                  },
-                ),
-              ],
-          },
-        );
-      },
-    );
-  }
+    /// Opacity of background container.
+    double alpha = 0.7,
 
-  /// Show snackbar
-  static void showSnackbar(
-    BuildContext context,
-    String content, {
-    int milliseconds = 2000, // Display duration
-    double bottomMargin = 0.0, // Position
+    /// Display duration in milliseconds.
+    int displayDuration = 2000,
   }) {
+    final Radius radius = Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0);
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(bottom: bottomMargin),
         elevation: 0.0,
-        backgroundColor: AppColors.blackColor.withOpacity(0.7),
-        duration: Duration(milliseconds: milliseconds),
+        backgroundColor: AppColors.blackColor.withOpacity(alpha),
+        duration: Duration(milliseconds: displayDuration),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
-            topRight: Radius.circular(bottomMargin < 0.1 ? 12.0 : 0.0),
+            topLeft: radius,
+            topRight: radius,
           ),
         ),
         content: CenteredText(
@@ -119,31 +45,113 @@ class PopupUtils {
     );
   }
 
-  static Future<void> showWidgetDialog({
+  /// Shows a dialog with a button or buttons.
+  static Future<void> showButtonDialog({
     required BuildContext context,
     required String titleText,
-    required Widget Function(BuildContext dialogContext) content,
-    double titleFontSize = 16.0,
+    required String contentText,
+    DialogButtonType buttonType = DialogButtonType.singleButton,
+    double titleFontSize = 20.0,
+    double contentFontSize = 16.0,
+    String confirmText = '확인',
+    String cancelText = '취소',
+    VoidCallback? confirmCallback,
+    VoidCallback? fallback,
+  }) async {
+    await showDialog(
+      context: context,
+      useRootNavigator: false,
+      // Set the value of `barrierDismissible` to `false`
+      // to escape from the popup dialog when you click on an outside empty space.
+      barrierDismissible: false,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+      builder: (dialogContext) {
+        PopupActionButton createButton({
+          required String text,
+          required VoidCallback? callback,
+          bool autofocus = false,
+        }) {
+          return PopupActionButton(
+            autofocus: autofocus,
+            actionText: text,
+            onPressed: () {
+              callback?.call();
+              if (dialogContext.mounted) Navigator.pop(dialogContext);
+            },
+          );
+        }
+
+        return AlertDialog(
+          backgroundColor: AppColors.greyContainerColor,
+          title: HeaderText(
+            text: titleText,
+            fontSize: titleFontSize,
+          ),
+          content: _PopupDialogContent(
+            contentText: contentText,
+            contentFontSize: contentFontSize,
+          ),
+          actions: switch (buttonType) {
+            DialogButtonType.singleButton => [
+                createButton(
+                  autofocus: true,
+                  text: confirmText,
+                  callback: confirmCallback,
+                ),
+              ],
+            DialogButtonType.doubleButton => [
+                createButton(
+                  text: cancelText,
+                  callback: fallback,
+                  autofocus: true,
+                ),
+                createButton(
+                  text: confirmText,
+                  callback: confirmCallback,
+                ),
+              ]
+          },
+        );
+      },
+    );
+  }
+
+  static Future<dynamic> showWidgetDialog({
+    Color backgroundColor = AppColors.backgroundBlack,
+    required BuildContext context,
+    required Widget Function(BuildContext dialogContext) widget,
   }) async {
     await showDialog(
       context: context,
       useRootNavigator: false,
       barrierDismissible: false,
       traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
-      builder: (dialogContext) {
-        return AlertDialog(
-          backgroundColor: AppColors.greyContainerColor,
-          title: Text(
-            titleText,
-            style: TextStyle(
-              fontSize: titleFontSize,
-              color: AppColors.whiteColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          content: content(dialogContext),
-        );
-      },
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppColors.backgroundBlack,
+        content: widget(dialogContext),
+      ),
+    );
+  }
+}
+
+class _PopupDialogContent extends StatelessWidget {
+  const _PopupDialogContent({
+    required this.contentText,
+    required this.contentFontSize,
+  });
+
+  final String contentText;
+  final double contentFontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    // for using dynamic height
+    return IntrinsicHeight(
+      child: CenteredText(
+        text: contentText,
+        fontSize: contentFontSize,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 }
@@ -160,10 +168,7 @@ class PopupActionButton extends StatelessWidget {
   /// If you use this in [DoubleButtonDialog],
   /// use this as true for either of them.
   final bool autofocus;
-
   final double fontSize;
-
-  /// Show user what this button do.
   final String actionText;
   final VoidCallback onPressed;
 
@@ -171,18 +176,18 @@ class PopupActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FocusedOutlinedButton(
       autofocus: autofocus,
-      padding: const EdgeInsets.symmetric(
-        vertical: 8.0,
-        horizontal: 16.0,
+      padding: EdgeInsets.symmetric(
+        vertical: 10.0,
+        horizontal: 20.0,
       ),
       onPressed: onPressed,
-      unFocusedBorderColor: AppColors.greyColor,
-      child: (_) => Text(
+      unFocusedBorderColor: AppColors.whiteColor,
+      child: Text(
         actionText,
         style: TextStyle(
+          fontSize: fontSize,
           color: AppColors.whiteColor,
           fontWeight: FontWeight.w600,
-          fontSize: fontSize,
         ),
       ),
     );

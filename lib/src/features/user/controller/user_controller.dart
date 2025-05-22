@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
-import '../../auth/repository/auth_repository.dart';
 import '../model/user.dart';
 import '../repository/user_repository.dart';
+import '../../auth/repository/auth_repository.dart';
+import '../../../utils/dio/dio_client.dart';
 
 part 'user_controller.g.dart';
 
@@ -23,7 +23,7 @@ class UserController extends _$UserController {
     final User? user = await _repository.getUser();
 
     // Error handling
-    if (user == null || user.loggedIn == false) {
+    if (user == null) {
       await ref.watch(authRepositoryProvider).deleteCookies();
       return null;
     }
@@ -31,29 +31,13 @@ class UserController extends _$UserController {
     return user;
   }
 
+  Future<void> signIn() async {
+    final User? user = await fetchUser();
+
+    state = AsyncData(user);
+  }
+
   void signOut() {
     state = const AsyncData(null);
-  }
-}
-
-@riverpod
-class PrivateUserBlocksController extends _$PrivateUserBlocksController {
-  late UserRepository _repository;
-
-  @override
-  FutureOr<List<String>> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = UserRepository(dio);
-
-    return await fetchPrivateUserBlocks();
-  }
-
-  Future<List<String>> fetchPrivateUserBlocks() async {
-    final List<String> response =
-        await _repository.getPrivateUserBlocks().catchError((_) {
-      return [''];
-    });
-
-    return response;
   }
 }

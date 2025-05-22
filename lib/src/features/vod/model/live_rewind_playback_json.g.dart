@@ -6,9 +6,9 @@ part of 'live_rewind_playback_json.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LiveRewindPlaybackJsonImpl _$$LiveRewindPlaybackJsonImplFromJson(
+LiveRewindPlaybackJson _$LiveRewindPlaybackJsonFromJson(
         Map<String, dynamic> json) =>
-    _$LiveRewindPlaybackJsonImpl(
+    LiveRewindPlaybackJson(
       meta: Meta.fromJson(json['meta'] as Map<String, dynamic>),
       api: (json['api'] as List<dynamic>)
           .map((e) => Map<String, String>.from(e as Map))
@@ -18,8 +18,8 @@ _$LiveRewindPlaybackJsonImpl _$$LiveRewindPlaybackJsonImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$LiveRewindPlaybackJsonImplToJson(
-        _$LiveRewindPlaybackJsonImpl instance) =>
+Map<String, dynamic> _$LiveRewindPlaybackJsonToJson(
+        LiveRewindPlaybackJson instance) =>
     <String, dynamic>{
       'meta': instance.meta,
       'api': instance.api,

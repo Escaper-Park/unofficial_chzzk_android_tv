@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,92 +10,74 @@ part of 'auth.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Auth _$AuthFromJson(Map<String, dynamic> json) {
-  return _Auth.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Auth {
-  String get nidAuth => throw _privateConstructorUsedError;
-  String get nidSession => throw _privateConstructorUsedError;
+  String get nidAuth;
+  String get nidSession;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $AuthCopyWith<Auth> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AuthCopyWith<$Res> {
-  factory $AuthCopyWith(Auth value, $Res Function(Auth) then) =
-      _$AuthCopyWithImpl<$Res, Auth>;
-  @useResult
-  $Res call({String nidAuth, String nidSession});
-}
-
-/// @nodoc
-class _$AuthCopyWithImpl<$Res, $Val extends Auth>
-    implements $AuthCopyWith<$Res> {
-  _$AuthCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of Auth
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $AuthCopyWith<Auth> get copyWith =>
+      _$AuthCopyWithImpl<Auth>(this as Auth, _$identity);
+
+  /// Serializes this Auth to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? nidAuth = null,
-    Object? nidSession = null,
-  }) {
-    return _then(_value.copyWith(
-      nidAuth: null == nidAuth
-          ? _value.nidAuth
-          : nidAuth // ignore: cast_nullable_to_non_nullable
-              as String,
-      nidSession: null == nidSession
-          ? _value.nidSession
-          : nidSession // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Auth &&
+            (identical(other.nidAuth, nidAuth) || other.nidAuth == nidAuth) &&
+            (identical(other.nidSession, nidSession) ||
+                other.nidSession == nidSession));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, nidAuth, nidSession);
+
+  @override
+  String toString() {
+    return 'Auth(nidAuth: $nidAuth, nidSession: $nidSession)';
   }
 }
 
 /// @nodoc
-abstract class _$$AuthImplCopyWith<$Res> implements $AuthCopyWith<$Res> {
-  factory _$$AuthImplCopyWith(
-          _$AuthImpl value, $Res Function(_$AuthImpl) then) =
-      __$$AuthImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $AuthCopyWith<$Res> {
+  factory $AuthCopyWith(Auth value, $Res Function(Auth) _then) =
+      _$AuthCopyWithImpl;
   @useResult
   $Res call({String nidAuth, String nidSession});
 }
 
 /// @nodoc
-class __$$AuthImplCopyWithImpl<$Res>
-    extends _$AuthCopyWithImpl<$Res, _$AuthImpl>
-    implements _$$AuthImplCopyWith<$Res> {
-  __$$AuthImplCopyWithImpl(_$AuthImpl _value, $Res Function(_$AuthImpl) _then)
-      : super(_value, _then);
+class _$AuthCopyWithImpl<$Res> implements $AuthCopyWith<$Res> {
+  _$AuthCopyWithImpl(this._self, this._then);
 
+  final Auth _self;
+  final $Res Function(Auth) _then;
+
+  /// Create a copy of Auth
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? nidAuth = null,
     Object? nidSession = null,
   }) {
-    return _then(_$AuthImpl(
+    return _then(_self.copyWith(
       nidAuth: null == nidAuth
-          ? _value.nidAuth
+          ? _self.nidAuth
           : nidAuth // ignore: cast_nullable_to_non_nullable
               as String,
       nidSession: null == nidSession
-          ? _value.nidSession
+          ? _self.nidSession
           : nidSession // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -103,65 +86,85 @@ class __$$AuthImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AuthImpl extends _Auth {
-  const _$AuthImpl({required this.nidAuth, required this.nidSession})
-      : super._();
-
-  factory _$AuthImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AuthImplFromJson(json);
+class _Auth extends Auth {
+  const _Auth({required this.nidAuth, required this.nidSession}) : super._();
+  factory _Auth.fromJson(Map<String, dynamic> json) => _$AuthFromJson(json);
 
   @override
   final String nidAuth;
   @override
   final String nidSession;
 
+  /// Create a copy of Auth
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'Auth(nidAuth: $nidAuth, nidSession: $nidSession)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AuthCopyWith<_Auth> get copyWith =>
+      __$AuthCopyWithImpl<_Auth>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$AuthToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthImpl &&
+            other is _Auth &&
             (identical(other.nidAuth, nidAuth) || other.nidAuth == nidAuth) &&
             (identical(other.nidSession, nidSession) ||
                 other.nidSession == nidSession));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, nidAuth, nidSession);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$AuthImplCopyWith<_$AuthImpl> get copyWith =>
-      __$$AuthImplCopyWithImpl<_$AuthImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AuthImplToJson(
-      this,
-    );
+  String toString() {
+    return 'Auth(nidAuth: $nidAuth, nidSession: $nidSession)';
   }
 }
 
-abstract class _Auth extends Auth {
-  const factory _Auth(
-      {required final String nidAuth,
-      required final String nidSession}) = _$AuthImpl;
-  const _Auth._() : super._();
-
-  factory _Auth.fromJson(Map<String, dynamic> json) = _$AuthImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$AuthCopyWith<$Res> implements $AuthCopyWith<$Res> {
+  factory _$AuthCopyWith(_Auth value, $Res Function(_Auth) _then) =
+      __$AuthCopyWithImpl;
   @override
-  String get nidAuth;
-  @override
-  String get nidSession;
-  @override
-  @JsonKey(ignore: true)
-  _$$AuthImplCopyWith<_$AuthImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @useResult
+  $Res call({String nidAuth, String nidSession});
 }
+
+/// @nodoc
+class __$AuthCopyWithImpl<$Res> implements _$AuthCopyWith<$Res> {
+  __$AuthCopyWithImpl(this._self, this._then);
+
+  final _Auth _self;
+  final $Res Function(_Auth) _then;
+
+  /// Create a copy of Auth
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? nidAuth = null,
+    Object? nidSession = null,
+  }) {
+    return _then(_Auth(
+      nidAuth: null == nidAuth
+          ? _self.nidAuth
+          : nidAuth // ignore: cast_nullable_to_non_nullable
+              as String,
+      nidSession: null == nidSession
+          ? _self.nidSession
+          : nidSession // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+// dart format on

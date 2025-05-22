@@ -1,21 +1,25 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'chat.dart';
+import 'extras.dart';
+import 'profile.dart';
 
 part 'base_chat.freezed.dart';
 part 'base_chat.g.dart';
 
 @freezed
+@JsonSerializable()
 class BaseChat with _$BaseChat {
-  /// A custom chat model to handle both Chat and RecentChat
-  const factory BaseChat({
-    required String msg,
-    required Profile? profile,
-    required Extras? extras,
+  final String msg;
+  final Profile? profile;
+  final Extras? extras;
+  final int ctime;
 
-    /// chat created time
-    required int ctime,
-  }) = _BaseChat;
+  BaseChat({
+    required this.msg,
+    required this.profile,
+    required this.extras,
+    required this.ctime,
+  });
 
   factory BaseChat.fromJson(Map<String, dynamic> json) =>
       _$BaseChatFromJson(json);

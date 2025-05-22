@@ -1,77 +1,95 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../utils/dio/dio_client.dart';
-import '../../auth/controller/auth_controller.dart';
+
 import '../model/following.dart';
+import '../model/following_response.dart';
+
 import '../repository/following_repository.dart';
+import '../../channel/repository/channel_repository.dart';
 
 part 'following_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FollowingController extends _$FollowingController {
-  late FollowingRepository _repository;
+  late FollowingRepository _followingRepository;
+  late ChannelRepository _channelRepository;
 
-  /// Get List of following channels.
   @override
-  Future<List<Following>?> build() async {
+  FutureOr<List<Following>?> build() async {
     final Dio dio = ref.watch(dioClientProvider);
-    _repository = FollowingRepository(dio);
+    _followingRepository = FollowingRepository(dio);
+    _channelRepository = ChannelRepository(dio);
 
-    final auth = await ref.watch(authControllerProvider.future);
-
-    return auth == null ? null : await fetchFollowings();
+    return await _fetch();
   }
 
-  Future<List<Following>?> fetchFollowings({
+  Future<List<Following>?> _fetch({
     int size = 505,
     int page = 0,
   }) async {
     final FollowingResponse? response =
-        await _repository.getFollowingResponse(size: size, page: page);
+        await _followingRepository.getFollowings(
+      size: size,
+      page: page,
+    );
 
     if (response != null && response.followingList.isNotEmpty) {
-      // copyWith
       List<Following>? followingList = List.from(response.followingList);
 
       // sort by concurrentUserCount
-      followingList.sort((a, b) => b.liveInfo.concurrentUserCount
-          .compareTo(a.liveInfo.concurrentUserCount));
+      followingList.sort(
+        (a, b) => b.liveInfo.concurrentUserCount
+            .compareTo(a.liveInfo.concurrentUserCount),
+      );
 
       return followingList;
     }
 
     return null;
   }
-}
 
-@riverpod
-class FollowingLivesController extends _$FollowingLivesController {
-  late FollowingRepository _repository;
+  Future<void> toggleFollow({
+    required bool isFollowing,
+    required String channelId,
+  }) async {
+    if (state.value == null) return;
 
-  /// Get List of following channel's live streams.
-  ///
-  /// [Following] has [LiveInfo].
-  @override
-  FutureOr<List<Following>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = FollowingRepository(dio);
+    final success =
+        isFollowing ? await _unFollow(channelId) : await _follow(channelId);
 
-    return await fetchFollowingLives();
-  }
+    if (!success) return;
 
-  Future<List<Following>?> fetchFollowingLives() async {
-    final followingResponse = await _repository.getFollowingLives();
-
-    return followingResponse?.followingList;
-  }
-
-  Future<void> refresh() async {
     state = const AsyncValue.loading();
+    state = await AsyncValue.guard(_fetch);
+  }
 
-    state = await AsyncValue.guard(
-      () async {
-        return await fetchFollowingLives();
-      },
-    );
+  /// Follow channel and remove notification.
+  Future<bool> _follow(String channelId) async {
+    // follow
+    final res = await _channelRepository
+        .follow(channelId: channelId)
+        .then((_) => true)
+        .catchError((_) => false);
+
+    // remove notification
+    if (res) {
+      await _channelRepository.deleteNotification(channelId: channelId);
+    }
+
+    return res;
+  }
+
+  /// UnFollow channel
+  Future<bool> _unFollow(String channelId) async {
+    // unFollow
+    final res = await _channelRepository
+        .unFollow(channelId: channelId)
+        .then((_) => true)
+        .catchError((e) {
+      return false;
+    });
+
+    return res;
   }
 }

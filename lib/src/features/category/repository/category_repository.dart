@@ -1,66 +1,64 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../common/constants/api.dart';
-import '../../following/model/following.dart';
-import '../../live/model/live.dart';
-import '../../vod/model/vod.dart';
+import '../../../common/constants/api.dart' show BaseUrl, ChzzkServiceApi;
+
+import '../../live/model/live_response.dart';
+import '../../vod/model/vod_response.dart';
 import '../model/category.dart';
+import '../model/category_response.dart';
 
 part 'category_repository.g.dart';
 
-enum CategorySortType {
-  live('POPULAR'),
-  vod('VOD'),
-  popularClip('POPULAR'),
-  recentClip('RECENT');
-
-  final String value;
-
-  const CategorySortType(this.value);
-}
-
-@RestApi(baseUrl: ApiUrl.chzzkService)
+@RestApi(baseUrl: BaseUrl.chzzkService)
 abstract class CategoryRepository {
   factory CategoryRepository(Dio dio, {String baseUrl}) = _CategoryRepository;
 
-  @GET('${ApiUrl.category}/live')
+  @GET(ChzzkServiceApi.categories)
   Future<CategoryResponse?> getCategories({
-    @Query('size') required int size,
     @Query('categoryId') required String? categoryId,
     @Query('concurrentUserCount') required int? concurrentUserCount,
     @Query('openLiveCount') required int? openLiveCount,
+    @Query('size') required int size,
   });
 
-  @GET('${ApiUrl.categoryLives}/{categoryType}/{categoryId}/lives')
+  @GET('${ChzzkServiceApi.categoryInfo}/{categoryType}/{categoryId}/info')
+  Future<Category?> getCategoryInfo({
+    @Path('categoryType') required String categoryType,
+    @Path('categoryId') required String categoryId,
+  });
+
+  @GET('${ChzzkServiceApi.categoryLives}/{categoryType}/{categoryId}/lives')
   Future<LiveResponse?> getCategoryLives({
     @Path('categoryType') required String categoryType,
     @Path('categoryId') required String categoryId,
-    @Query('size') required int size,
     @Query('concurrentUserCount') required int? concurrentUserCount,
     @Query('liveId') required int? liveId,
+    @Query('size') required int? size,
   });
 
-  @GET('${ApiUrl.categoryLives}/{categoryType}/{categoryId}/videos')
+  @GET('${ChzzkServiceApi.categoryVods}/{categoryType}/{categoryId}/videos')
   Future<CategoryVodResponse?> getCategoryVods({
     @Path('categoryType') required String categoryType,
     @Path('categoryId') required String categoryId,
-    @Query('size') required int size,
     @Query('publishDateAt') required int? publishDateAt,
     @Query('readCount') required int? readCount,
+    @Query('size') required int? size,
   });
 
-  @GET(ApiUrl.followingCategories)
+  @GET(ChzzkServiceApi.followingCategories)
   Future<FollowingCategoryResponse?> getFollowingCategories();
 
-  @POST('${ApiUrl.category}/{categoryType}/{categoryId}/follow')
+  @POST('${ChzzkServiceApi.categoryFollow}/{categoryType}/{categoryId}/follow')
   Future<void> follow({
     @Path('categoryType') required String categoryType,
     @Path('categoryId') required String categoryId,
   });
 
-  @DELETE('${ApiUrl.category}/{categoryType}/{categoryId}/follow')
-  Future<void> unfollow({
+  @DELETE(
+    '${ChzzkServiceApi.categoryFollow}/{categoryType}/{categoryId}/follow',
+  )
+  Future<void> unFollow({
     @Path('categoryType') required String categoryType,
     @Path('categoryId') required String categoryId,
   });

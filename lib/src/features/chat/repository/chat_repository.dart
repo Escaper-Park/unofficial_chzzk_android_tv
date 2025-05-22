@@ -1,72 +1,20 @@
 import 'dart:convert';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../common/constants/api.dart';
-import '../../../utils/dio/dio_client.dart';
+import '../../../common/constants/enums.dart' show ChatCmd;
 import '../model/access_token.dart';
 
-part 'chat_repository.g.dart';
-
-enum ChatCmd {
-  ping(0),
-  pong(10000),
-  connect(100),
-  connected(10100),
-  requestRecentChat(5101),
-  recentChat(15101),
-  event(93006),
-  chat(93101),
-  donation(93102),
-  kick(94005),
-  block(94006),
-  blind(94008),
-  notice(94010),
-  penalty(94015),
-  sendChat(3101);
-
-  final int value;
-
-  const ChatCmd(this.value);
-}
-
-enum MsgTypeCode {
-  text(1),
-  image(2),
-  sticker(3),
-  video(4),
-  rich(5),
-  donation(10),
-  subscription(11),
-  systemMsg(30);
-
-  final int value;
-
-  const MsgTypeCode(this.value);
-}
-
-@riverpod
-ChatRepository chatRepository(
-  ChatRepositoryRef ref, {
-  required WebSocketChannel wsChannel,
-  required String chatChannelId,
-  required Dio dio,
-}) =>
-    ChatRepository(
-      wsChannel: wsChannel,
-      chatChannelId: chatChannelId,
-      dio: dio,
-    );
-
 class ChatRepository {
-  final WebSocketChannel wsChannel;
   final String chatChannelId;
+  final WebSocketChannel wsChannel;
   final Dio dio;
 
   ChatRepository({
-    required this.wsChannel,
     required this.chatChannelId,
+    required this.wsChannel,
     required this.dio,
   });
 
@@ -75,11 +23,11 @@ class ChatRepository {
   }
 
   Future<AccessToken?> _getAccessToken() async {
-    const String apiUrl = ApiUrl.accessToken;
+    const String accessTokenUrl = NaverGameApi.accessToken;
 
     try {
       final response = await dio.get(
-        apiUrl,
+        accessTokenUrl,
         queryParameters: {
           'channelId': chatChannelId,
           'chatType': 'STREAMING',
@@ -116,7 +64,11 @@ class ChatRepository {
     });
   }
 
-  /// After connect, get sid from connect response and use in.
+  Future<void> disconnect() async {
+    await wsChannel.sink.close();
+  }
+
+  /// Get sid from connect response and use in, after connection.
   void requestRecentChat({required String? sid}) {
     _send({
       'bdy': {"recentMessageCount": 50},
@@ -141,9 +93,5 @@ class ChatRepository {
       'cmd': ChatCmd.pong.value,
       'ver': "3",
     });
-  }
-
-  Future<void> disconnect() async {
-    await wsChannel.sink.close();
   }
 }

@@ -1,93 +1,196 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'clip.freezed.dart';
 part 'clip.g.dart';
 
 @freezed
+@JsonSerializable(createToJson: true, explicitToJson: true)
 class NaverClip with _$NaverClip {
-  const factory NaverClip({
-    required String clipUID,
-    required String? videoId,
-    required String clipTitle,
-    required String ownerChannelId,
-    required OwnerChannel ownerChannel,
-    required String? thumbnailImageUrl,
-    required String? categoryType,
-    required String? clipCategory,
-    required int duration,
-    required bool adult,
-    required String createdDate,
-    required String recId,
-    required int readCount,
-    // required Object? blindType,
-    required bool? privateUserBlock,
-  }) = _NaverClip;
+  final String clipUID;
+  final String? videoId;
+  final String clipTitle;
+  final String ownerChannelId;
+  final OwnerChannel? ownerChannel;
+  final String? thumbnailImageUrl;
+  final int duration;
+  final bool adult;
+  final String? blindType;
+  final String? categoryType;
+  final String? clipCategory;
+  final String? categoryValue;
+  final String createdDate;
+  final int readCount;
+  @RecIdConverter()
+  final RecId? recId;
+  @ContentLineageConverter()
+  final ContentLineage? contentLineage;
+
+  final bool? privateUserBlock;
+
+  NaverClip({
+    required this.clipUID,
+    this.videoId,
+    required this.clipTitle,
+    required this.ownerChannelId,
+    required this.ownerChannel,
+    this.thumbnailImageUrl,
+    required this.duration,
+    required this.adult,
+    this.blindType,
+    this.categoryType,
+    this.clipCategory,
+    this.categoryValue,
+    required this.createdDate,
+    required this.readCount,
+    @RecIdConverter() required this.recId,
+    @ContentLineageConverter() required this.contentLineage,
+    this.privateUserBlock,
+  });
 
   factory NaverClip.fromJson(Map<String, dynamic> json) =>
       _$NaverClipFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NaverClipToJson(this);
 }
 
 @freezed
+@JsonSerializable()
 class OwnerChannel with _$OwnerChannel {
-  const factory OwnerChannel({
-    required String channelId,
-    required String channelName,
-    required String? channelImageUrl,
-    required bool verifiedMark,
-  }) = _OwnerChannel;
+  final String channelId;
+  final String channelName;
+  final String? channelImageUrl;
+  final bool verifiedMark;
 
-  factory OwnerChannel.fromJson(Map<String, dynamic> json) => _$OwnerChannelFromJson(json);
+  OwnerChannel({
+    required this.channelId,
+    required this.channelName,
+    this.channelImageUrl,
+    required this.verifiedMark,
+  });
+
+  factory OwnerChannel.fromJson(Map<String, dynamic> json) =>
+      _$OwnerChannelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OwnerChannelToJson(this);
 }
 
 @freezed
-class ClipResponse with _$ClipResponse {
-  const factory ClipResponse({
-    required int? size,
-    @JsonKey(name: 'page', fromJson: _clipPageFromJson) required ClipPage? next,
-    required List<NaverClip> data,
-  }) = _ClipResponse;
+@JsonSerializable(explicitToJson: true)
+class RecId with _$RecId {
+  final String? seedClipUID;
+  final String? fromType;
+  final String? listType;
+  final String? orderType;
+  final String? filterType;
+  final String? recommendRecId;
 
-  factory ClipResponse.fromJson(Map<String, dynamic> json) =>
-      _$ClipResponseFromJson(json);
+  RecId({
+    this.seedClipUID,
+    this.fromType,
+    this.listType,
+    this.recommendRecId,
+    this.orderType,
+    this.filterType,
+  });
+
+  factory RecId.fromJson(Map<String, dynamic> json) => _$RecIdFromJson(json);
+  Map<String, dynamic> toJson() => _$RecIdToJson(this);
 }
 
 @freezed
-class ClipPage with _$ClipPage {
-  const factory ClipPage({
-    required String? clipUID,
-    required int? readCount,
-  }) = _ClipPage;
+@JsonSerializable(explicitToJson: true)
+class ContentLineage with _$ContentLineage {
+  final String? contentSource;
+  final String? contentType;
+  final ContentTag? contentTag;
 
-  factory ClipPage.fromJson(Map<String, dynamic> json) =>
-      _$ClipPageFromJson(json);
-}
+  ContentLineage({
+    this.contentSource,
+    this.contentType,
+    this.contentTag,
+  });
 
-ClipPage _clipPageFromJson(Map<String, dynamic> json) =>
-    ClipPage.fromJson(json['next']);
+  factory ContentLineage.fromJson(Map<String, dynamic> json) =>
+      _$ContentLineageFromJson(json);
 
-@freezed
-class PopularClipResponse with _$PopularClipResponse {
-  const factory PopularClipResponse({
-    required int size,
-    @JsonKey(name: 'page', fromJson: _popularClipPageFromJson)
-    required PopularClipPage? next,
-    required List<NaverClip> data,
-  }) = _PopularClipResponse;
-
-  factory PopularClipResponse.fromJson(Map<String, dynamic> json) =>
-      _$PopularClipResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ContentLineageToJson(this);
 }
 
 @freezed
-class PopularClipPage with _$PopularClipPage {
-  const factory PopularClipPage({
-    required String? next,
-  }) = _PopularClipPage;
+@JsonSerializable(explicitToJson: true)
+class ContentTag with _$ContentTag {
+  final String? internal;
 
-  factory PopularClipPage.fromJson(Map<String, dynamic> json) =>
-      _$PopularClipPageFromJson(json);
+  @JsonKey(name: 'external')
+  final External? externalTag;
+
+  ContentTag({
+    this.internal,
+    @JsonKey(name: 'external') this.externalTag,
+  });
+
+  factory ContentTag.fromJson(Map<String, dynamic> json) =>
+      _$ContentTagFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ContentTagToJson(this);
 }
 
-PopularClipPage _popularClipPageFromJson(Map<String, dynamic> json) =>
-    PopularClipPage.fromJson(json['next']);
+@freezed
+@JsonSerializable(explicitToJson: true)
+class External with _$External {
+  final String? rqt;
+  final String? apiRequestKey;
+
+  External({
+    this.rqt,
+    this.apiRequestKey,
+  });
+
+  factory External.fromJson(Map<String, dynamic> json) =>
+      _$ExternalFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExternalToJson(this);
+}
+
+class RecIdConverter implements JsonConverter<RecId, String> {
+  const RecIdConverter();
+
+  @override
+  RecId fromJson(String json) {
+    final recIdJson = jsonDecode(json);
+
+    return RecId.fromJson(recIdJson);
+  }
+
+  @override
+  String toJson(RecId object) {
+    final jsonMap = object.toJson();
+
+    return jsonEncode(jsonMap);
+  }
+}
+
+class ContentLineageConverter implements JsonConverter<ContentLineage, String> {
+  const ContentLineageConverter();
+
+  @override
+  ContentLineage fromJson(String json) {
+    final contentLineageJson = jsonDecode(json);
+
+    if (contentLineageJson['contentTag'] is String) {
+      contentLineageJson['contentTag'] =
+          jsonDecode(contentLineageJson['contentTag']);
+    }
+
+    return ContentLineage.fromJson(contentLineageJson);
+  }
+
+  @override
+  String toJson(ContentLineage object) {
+    final jsonMap = object.toJson();
+
+    return jsonEncode(jsonMap);
+  }
+}

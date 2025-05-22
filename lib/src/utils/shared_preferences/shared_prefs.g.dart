@@ -6,7 +6,7 @@ part of 'shared_prefs.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharedPrefsHash() => r'1f53b07b2e4dd53a1a1bbf40c0b672175e99b7ab';
+String _$sharedPrefsHash() => r'039302db95b1c89f0415082eca60a12d64465474';
 
 /// See also [sharedPrefs].
 @ProviderFor(sharedPrefs)
@@ -19,6 +19,8 @@ final sharedPrefsProvider = AutoDisposeProvider<SharedPreferences>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SharedPrefsRef = AutoDisposeProviderRef<SharedPreferences>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -4,19 +4,25 @@ part 'user.freezed.dart';
 part 'user.g.dart';
 
 @freezed
+@JsonSerializable()
 class User with _$User {
-  const factory User({
-    /// UID for chat service
-    required String? userIdHash,
-    required String? nickname,
-    required String? profileImageUrl,
-    required bool? hasProfile,
-    // required bool verifiedMark,
-    required bool? loggedIn,
-    // required List<dynamic> penalties,
-    // required bool officialNotiAgree,
-    // required String? officialNotiAgreeUpdatedDate,
-  }) = _User;
+  final bool hasProfile;
+
+  /// UID for chat service.
+  final String? userIdHash;
+  final String nickname;
+  final String? profileImageUrl;
+
+  /// partner streamer
+  final bool verifiedMark;
+
+  User({
+    required this.hasProfile,
+    this.userIdHash,
+    required this.nickname,
+    this.profileImageUrl,
+    required this.verifiedMark,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

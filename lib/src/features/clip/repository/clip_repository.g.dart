@@ -6,14 +6,10 @@ part of 'clip_repository.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _ClipRepository implements ClipRepository {
-  _ClipRepository(
-    this._dio, {
-    this.baseUrl,
-    this.errorLogger,
-  }) {
+  _ClipRepository(this._dio, {this.baseUrl, this.errorLogger}) {
     baseUrl ??= 'https://api.chzzk.naver.com/service';
   }
 
@@ -24,11 +20,11 @@ class _ClipRepository implements ClipRepository {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<ClipResponse?> getChannelClips({
+  Future<ChannelClipResponse?> getChannelClipResponse({
     required String channelId,
-    String filterType = 'ALL',
-    String orderType = 'POPULAR',
-    int size = 15,
+    required String filterType,
+    required String orderType,
+    required int size,
     String? clipUID,
     int? readCount,
   }) async {
@@ -43,27 +39,22 @@ class _ClipRepository implements ClipRepository {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ClipResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/v1/channels/${channelId}/clips',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<ChannelClipResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/channels/${channelId}/clips',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
-    late ClipResponse? _value;
+    late ChannelClipResponse? _value;
     try {
-      _value =
-          _result.data == null ? null : ClipResponse.fromJson(_result.data!);
+      _value = _result.data == null
+          ? null
+          : ChannelClipResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -72,12 +63,12 @@ class _ClipRepository implements ClipRepository {
   }
 
   @override
-  Future<ClipResponse?> getCategoryClips({
+  Future<CategoryClipResponse?> getCategoryClipResponse({
     required String categoryType,
     required String categoryId,
-    String filterType = 'ALL',
-    String orderType = 'POPULAR',
-    int size = 15,
+    required String filterType,
+    required String orderType,
+    required int size,
     String? clipUID,
     int? readCount,
   }) async {
@@ -92,27 +83,22 @@ class _ClipRepository implements ClipRepository {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ClipResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/v1/categories/${categoryType}/${categoryId}/clips',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<CategoryClipResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/categories/${categoryType}/${categoryId}/clips',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
-    late ClipResponse? _value;
+    late CategoryClipResponse? _value;
     try {
-      _value =
-          _result.data == null ? null : ClipResponse.fromJson(_result.data!);
+      _value = _result.data == null
+          ? null
+          : CategoryClipResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -121,28 +107,30 @@ class _ClipRepository implements ClipRepository {
   }
 
   @override
-  Future<PopularClipResponse?> getPopularClips({String? next}) async {
+  Future<PopularClipResponse?> getPopularClipResponse({
+    required String filterType,
+    required String orderType,
+    String? next,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'next': next};
+    final queryParameters = <String, dynamic>{
+      r'filtertType': filterType,
+      r'orderType': orderType,
+      r'next': next,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<PopularClipResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/v1/home/recommended/clips',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<PopularClipResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/home/recommended/clips',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
     late PopularClipResponse? _value;
     try {
@@ -169,10 +157,7 @@ class _ClipRepository implements ClipRepository {
     return requestOptions;
   }
 
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

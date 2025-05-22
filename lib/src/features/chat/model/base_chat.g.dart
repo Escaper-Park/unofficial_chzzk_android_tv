@@ -6,8 +6,7 @@ part of 'base_chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$BaseChatImpl _$$BaseChatImplFromJson(Map<String, dynamic> json) =>
-    _$BaseChatImpl(
+BaseChat _$BaseChatFromJson(Map<String, dynamic> json) => BaseChat(
       msg: json['msg'] as String,
       profile: json['profile'] == null
           ? null
@@ -18,8 +17,7 @@ _$BaseChatImpl _$$BaseChatImplFromJson(Map<String, dynamic> json) =>
       ctime: (json['ctime'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$BaseChatImplToJson(_$BaseChatImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$BaseChatToJson(BaseChat instance) => <String, dynamic>{
       'msg': instance.msg,
       'profile': instance.profile,
       'extras': instance.extras,

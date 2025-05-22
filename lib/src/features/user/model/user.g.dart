@@ -6,19 +6,18 @@ part of 'user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      hasProfile: json['hasProfile'] as bool,
       userIdHash: json['userIdHash'] as String?,
-      nickname: json['nickname'] as String?,
+      nickname: json['nickname'] as String,
       profileImageUrl: json['profileImageUrl'] as String?,
-      hasProfile: json['hasProfile'] as bool?,
-      loggedIn: json['loggedIn'] as bool?,
+      verifiedMark: json['verifiedMark'] as bool,
     );
 
-Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      'hasProfile': instance.hasProfile,
       'userIdHash': instance.userIdHash,
       'nickname': instance.nickname,
       'profileImageUrl': instance.profileImageUrl,
-      'hasProfile': instance.hasProfile,
-      'loggedIn': instance.loggedIn,
+      'verifiedMark': instance.verifiedMark,
     };

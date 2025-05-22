@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../../common/constants/styles.dart';
+import '../../../common/constants/styles.dart' show AppColors;
 
 class VirtualKeyboardCursorPointer extends HookWidget {
-  /// Blink-Animated cursor pointer for virtual keyboard input.
-  const VirtualKeyboardCursorPointer({super.key});
+  /// Blink-animated cursor pointer for the virtual keyboard input field.
+  const VirtualKeyboardCursorPointer({
+    super.key,
+    this.cursorWidth = 2.0,
+    this.cursorHeight = 20.0,
+  });
+
+  final double cursorWidth;
+  final double cursorHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +26,8 @@ class VirtualKeyboardCursorPointer extends HookWidget {
     return FadeTransition(
       opacity: animation,
       child: Container(
-        width: 2.0,
-        height: 20.0,
+        width: cursorWidth,
+        height: cursorHeight,
         color: AppColors.whiteColor,
       ),
     );
