@@ -184,12 +184,12 @@ GoRouter appRouter(Ref ref) {
         'categoryId',
         (context, state) {
           final fields = state.extra as Map<String, dynamic>;
-          final baseRoute = fields['baseRoute'] as String;
+          final baseRoute = fields['baseRoute'] as AppRoute;
 
           final String categoryId =
               state.pathParameters['categoryId'] as String;
 
-          final Category category = switch (baseRoute) {
+          final Category category = switch (baseRoute.routeName) {
             'home' => ref
                 .read(followingCategoryControllerProvider.notifier)
                 .findById(categoryId),

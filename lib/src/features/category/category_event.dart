@@ -17,7 +17,7 @@ mixin class CategoryEvent {
       context: context,
       currentLocation: currentLocation,
       appRoute: AppRoute.categoryDetail,
-      extra: {'baseRoute': currentLocation.routeName},
+      extra: {'baseRoute': currentLocation},
       pathParameters: {'categoryId': category.categoryId},
     );
   }
