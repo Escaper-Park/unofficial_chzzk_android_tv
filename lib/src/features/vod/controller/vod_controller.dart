@@ -3,12 +3,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../common/constants/api.dart';
 import '../../../utils/dio/dio_client.dart';
 import '../../auth/controller/auth_controller.dart';
-import '../../video_player/vod/controller/vod_chat_controller.dart';
-import '../../video_player/vod/controller/vod_playlist_controller.dart';
+import '../../vod_stream/controller/vod_playlist_controller.dart';
 import '../model/vod.dart';
 import '../repository/vod_repository.dart';
 
 part 'vod_controller.g.dart';
+
+// vod and vod path
 
 @riverpod
 class VodController extends _$VodController {
@@ -18,155 +19,64 @@ class VodController extends _$VodController {
   void build() {
     final Dio dio = ref.watch(dioClientProvider);
     _repository = VodRepository(dio);
-
     return;
   }
 
-  Future<void> play(VodPlay vodPlay) async {
-    // reset
+  Future<bool> addVodToPlaylist({required int videoNo}) async {
+    final vodPlay = await _getVodPlay(videoNo: videoNo);
+    // reset vod playlist
     ref.read(vodPlaylistControllerProvider.notifier).reset();
+
+    if (vodPlay == null) return false;
+
+    // add video to playlist
     ref.read(vodPlaylistControllerProvider.notifier).setVod(vodPlay: vodPlay);
-    await ref.read(vodChatQueueProvider.notifier).reset();
 
-    // add chat
-    if (vodPlay.$1.videoChatEnabled == true) {
-      await ref
-          .read(vodChatQueueProvider.notifier)
-          .fetchVodChatsWithPrevChatSize(playerMessageTime: 0);
-    }
+    return true;
   }
 
-  Future<Vod?> getVod({required int videoNo}) async {
-    return await _repository.getVod(videoNo: videoNo);
+  Future<Vod?> _getVodDetail({required int videoNo}) async {
+    return await _repository.getVodDetail(videoNo: videoNo);
   }
 
-  // Don't use repository for the unity of dio client.
-  // This request doesn't use response.data['content'] so can't use dio interceptor.
-  Future<VodPlay?> getVodPlay({required int videoNo}) async {
-    final Vod? vod = await getVod(videoNo: videoNo);
+  Future<VodPlay?> _getVodPlay({required int videoNo}) async {
+    final Vod? vod = await _getVodDetail(videoNo: videoNo);
 
-    if (vod != null) {
-      // Old version
-      if (vod.liveRewindPlaybackJson == null) {
-        try {
-          final auth = await ref.watch(authControllerProvider.future);
-          final dio = ref.read(dioClientProvider.notifier).getBaseDio();
+    if (vod == null) return null;
 
-          final response = await dio.get(
-            options: auth?.getOptions(),
-            '${ApiUrl.vodPlayback}/${vod.videoId}',
-            queryParameters: {
-              'key': vod.inKey,
-              'sid': 2099,
-              'env': 'real',
-              'st': 5,
-              'lc': 'ko_KR',
-              'cpl': 'ko_KR',
-            },
-          );
+    // Don't use repository for the unity of dio client.
+    // This request doesn't use response.data['content'] so can't use dio interceptor.
 
-          final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
-              ['otherAttributes']['m3u'] as String;
+    // classic
+    if (vod.liveRewindPlaybackJson == null) {
+      try {
+        final cookies = ref.read(authControllerProvider.notifier).getCookie();
+        final baseDio =
+            ref.read(dioClientProvider.notifier).getBaseDio(cookies);
 
-          return (vod, m3uAddress);
-        } catch (_) {
-          return null;
-        }
-      }
-      // New version (liveRewind and liveChat)
-      else {
-        try {
-          return (vod, vod.liveRewindPlaybackJson!.media.first.path);
-        } catch (_) {
-          return null;
-        }
+        final response = await baseDio.get(
+          '${BaseUrl.vodPlayback}/${vod.videoId}',
+          queryParameters: {
+            'key': '${vod.inKey}',
+            'sid': 2099,
+            'devt': 'html5_pc',
+            'st': 5,
+            'lc': 'ko_KR',
+            'cpl': 'ko_KR',
+          },
+        );
+
+        final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
+            ['otherAttributes']['m3u'] as String;
+
+        return (vod, m3uAddress);
+      } catch (_) {
+        return null;
       }
     }
-
-    return null;
-  }
-}
-
-@riverpod
-class FollowingVodController extends _$FollowingVodController {
-  late VodRepository _repository;
-  int? _next;
-
-  @override
-  FutureOr<List<Vod>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = VodRepository(dio);
-
-    return await _initFetchFollowingVods();
-  }
-
-  Future<List<Vod>?> _initFetchFollowingVods() async {
-    final followingVodResponse = await _repository.getFollowingVods(
-      size: 18,
-      nextNo: null,
-    );
-
-    _next = followingVodResponse?.next;
-
-    return followingVodResponse?.data.map((e) => e.vod).toList();
-  }
-
-  Future<void> fetchMore() async {
-    if (_next != null) {
-      ref.read(followingVodFetchMoreStateProvider.notifier).setState(true);
-      final prev = state.value;
-
-      state = await AsyncValue.guard(() async {
-        final followingVodResponse = await _repository
-            .getFollowingVods(
-          size: 18,
-          nextNo: _next,
-        )
-            .catchError((_) {
-          ref.read(followingVodFetchMoreStateProvider.notifier).setState(false);
-          return null;
-        });
-
-        _next = followingVodResponse?.next;
-
-        if (followingVodResponse?.data == null || _next == null) {
-          return [...prev!];
-        }
-
-        ref.read(followingVodFetchMoreStateProvider.notifier).setState(false);
-        return [...prev!, ...followingVodResponse!.data.map((e) => e.vod)];
-      });
+    // new (maybe the streamer used the time machine function)
+    else {
+      return (vod, vod.liveRewindPlaybackJson!.media.first.path);
     }
-  }
-}
-
-@riverpod
-class PopularVodController extends _$PopularVodController {
-  late VodRepository _repository;
-
-  @override
-  FutureOr<List<Vod>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = VodRepository(dio);
-
-    return await fetchPopularVodList();
-  }
-
-  Future<List<Vod>?> fetchPopularVodList() async {
-    final popularVodResponse = await _repository.getPopularVods(size: 60);
-
-    return popularVodResponse?.videos;
-  }
-}
-
-@riverpod
-class FollowingVodFetchMoreState extends _$FollowingVodFetchMoreState {
-  @override
-  bool build() {
-    return false;
-  }
-
-  void setState(bool value) {
-    state = value;
   }
 }

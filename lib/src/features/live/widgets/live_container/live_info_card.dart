@@ -1,25 +1,12 @@
-import 'package:flutter/material.dart';
+part of '../live_container.dart';
 
-import '../../../../common/constants/styles.dart';
-import '../../../../common/widgets/circle_avatar_profile_image.dart';
-import '../../../../common/widgets/rounded_container.dart';
+class _LiveInfoCard extends StatelessWidget {
+  /// A basic live information.
+  const _LiveInfoCard(
+    this.channel,
+    this.liveInfo,
+  );
 
-// import '../../../../utils/marquee/marquee.dart';
-import '../../../channel/model/channel.dart';
-import '../../../channel/widgets/channel_data/channel_name_with_verified_mark.dart';
-
-import '../../model/live.dart';
-
-class LiveInfoCard extends StatelessWidget {
-  /// Basic live information.
-  const LiveInfoCard({
-    super.key,
-    required this.hasFocus,
-    required this.channel,
-    required this.liveInfo,
-  });
-
-  final bool hasFocus;
   final Channel channel;
   final LiveInfo liveInfo;
 
@@ -28,41 +15,34 @@ class LiveInfoCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,
-        vertical: 5.0,
+        vertical: 8.0,
       ),
       child: Row(
         children: [
-          // ProfileImage
-          SizedBox(
-            width: 30.0,
-            child: CircleAvatarProfileImage(
-              radius: 15.0,
-              profileImageUrl: channel.channelImageUrl,
-              useBorder: channel.openLive ?? false,
-            ),
-          ),
+          // Profile Image
+          _channelImage(),
+          // padding
           const SizedBox(width: 15.0),
+          // info
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Live title
-                LiveTitle(
-                  hasFocus: hasFocus,
-                  liveTitle: liveInfo.liveTitle ?? '',
+                // live title
+                Expanded(
+                  child: _LiveTitle(liveInfo.liveTitle),
                 ),
-                const SizedBox(height: 3.0),
-                // Channel name
-                ChannelNameWithVerifiedMark(
-                  channel: channel,
-                  fontSize: 12.0,
-                ),
-                // Category
-                const SizedBox(height: 3.0),
-                LiveCategoryWithTags(
-                  hasFocus: hasFocus,
-                  liveInfo: liveInfo,
+                // padding
+                const SizedBox(height: 5.0),
+                // channel name
+                _LiveChannelName(channel),
+                // padding
+                const SizedBox(height: 5.0),
+                // tags
+                LiveTagsAll(
+                  categoryValue: liveInfo.liveCategoryValue,
+                  watchPartyTag: liveInfo.watchPartyTag,
+                  tags: liveInfo.tags,
                 ),
               ],
             ),
@@ -71,145 +51,17 @@ class LiveInfoCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class LiveTitle extends StatelessWidget {
-  const LiveTitle({
-    super.key,
-    required this.hasFocus,
-    required this.liveTitle,
-  });
+  Widget _channelImage() {
+    final radius = Dimensions.infoCardProfileImageRadius;
 
-  final bool hasFocus;
-  final String liveTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    // remove new line
-    final newlineRemovedTitle = liveTitle.replaceAll('\n', ' ');
-
-    // return Marquee(
-    //   behavior: MarqueeBehavior.scroll,
-    //   hasFocus: hasFocus,
-    //   items: [
-    //     Text(
-    //       newlineRemovedTitle,
-    //       style: const TextStyle(
-    //         fontSize: 13.0,
-    //         // overflow: TextOverflow.ellipsis,
-    //         color: AppColors.whiteColor,
-    //         fontWeight: FontWeight.w600,
-    //       ),
-    //     ),
-    //   ],
-    // );
-    return Text(
-      newlineRemovedTitle,
-      style: const TextStyle(
-        fontSize: 12.0,
-        overflow: TextOverflow.ellipsis,
-        color: AppColors.whiteColor,
-        fontWeight: FontWeight.w600,
+    return SizedBox(
+      width: radius * 2,
+      child: CircleAvatarProfileImage(
+        radius: radius,
+        profileImageUrl: channel.channelImageUrl,
+        useBorder: channel.openLive ?? false,
       ),
-    );
-  }
-}
-
-class LiveCategoryWithTags extends StatelessWidget {
-  /// Live category with tags.
-  const LiveCategoryWithTags({
-    super.key,
-    required this.hasFocus,
-    required this.liveInfo,
-  });
-
-  final bool hasFocus;
-  final LiveInfo liveInfo;
-
-  @override
-  Widget build(BuildContext context) {
-    final categoryValue = liveInfo.liveCategoryValue;
-    final tags = liveInfo.tags;
-
-    final List<Widget> items = [
-      LiveTagBadge(tag: categoryValue),
-      if (tags != null && tags.isNotEmpty) LiveTags(tags: tags),
-    ];
-
-    // return Marquee(
-    //   behavior: MarqueeBehavior.alternate,
-    //   velocity: 15,
-    //   hasFocus: hasFocus,
-    //   items: items,
-    // );
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: items,
-      ),
-    );
-  }
-}
-
-class LiveTagBadge extends StatelessWidget {
-  /// Live tag badge
-  const LiveTagBadge({
-    super.key,
-    required this.tag,
-    this.backgroundColor = Colors.black54,
-    this.textColor = AppColors.greyColor,
-  });
-
-  final Color backgroundColor;
-  final Color textColor;
-  final String? tag;
-
-  @override
-  Widget build(BuildContext context) {
-    return RoundedContainer(
-      margin: const EdgeInsets.only(right: 3.0),
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      borderRadius: 3.0,
-      backgroundColor: (tag == null) ? Colors.transparent : backgroundColor,
-      child: Text(
-        (tag == null || tag!.isEmpty) ? '?' : tag!,
-        maxLines: 1,
-        style: TextStyle(
-          fontSize: 11.0,
-          color: textColor,
-          overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
-class LiveTags extends StatelessWidget {
-  const LiveTags({super.key, required this.tags});
-
-  final List<String>? tags;
-
-  @override
-  Widget build(BuildContext context) {
-    if (tags == null || tags!.isEmpty) return const SizedBox.shrink();
-
-    final tagBadges = List.generate(
-      tags!.length,
-      (index) => LiveTagBadge(
-        tag: tags![index],
-        textColor: AppColors.whiteColor.withOpacity(0.7),
-        backgroundColor: AppColors.greyColor.withOpacity(0.5),
-      ),
-    );
-
-    // Add scroll view to prevent the overflow error.
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: tagBadges,
     );
   }
 }

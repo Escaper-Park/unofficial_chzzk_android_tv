@@ -1,183 +1,70 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../utils/freezed/freezed_utils.dart';
+import 'extras.dart';
+import 'profile.dart';
 
-part 'chat.freezed.dart';
 part 'chat.g.dart';
+part 'chat.freezed.dart';
 
 @freezed
+@JsonSerializable(explicitToJson: true)
 class Chat with _$Chat {
-  const factory Chat({
-    required String svcid,
-    required String ver,
-    required List<ChatBdy> bdy,
-    required int cmd,
-    required String? tid,
-    required String? cid,
-  }) = _Chat;
+  final String svcid;
+  final String ver;
+  final List<ChatBdy> bdy;
+  final int
+      cmd; // only use 93101, 93102. Don't accept 93006 to avoid duplicated displaying missions.
+  final String? tid;
+  final String? cid;
+
+  Chat({
+    required this.svcid,
+    required this.ver,
+    required this.bdy,
+    required this.cmd,
+    this.tid,
+    this.cid,
+  });
 
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
+  Map<String, dynamic> toJson() => _$ChatToJson(this);
 }
 
 @freezed
+@JsonSerializable(explicitToJson: true)
 class ChatBdy with _$ChatBdy {
-  const factory ChatBdy({
-    required String svcid,
-    required String cid,
-    required int mbrCnt,
-    required String uid,
-    @JsonKey(fromJson: profileFromJson) required Profile? profile,
-    required String msg,
-    required int msgTypeCode,
-    required String msgStatusType,
-    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
-    required int ctime,
-    required int utime,
-    required Object? msgTid,
-    required int msgTime,
-  }) = _ChatBdy;
+  final String svcid;
+  final String cid;
+  final int mbrCnt;
+  final String uid;
+  @ProfileConverter()
+  final Profile? profile;
+  final String msg;
+  final int msgTypeCode;
+  final String msgStatusType;
+  @ExtrasConverter()
+  final Extras? extras;
+  final int ctime;
+  final int utime;
+  final int msgTime;
+
+  ChatBdy({
+    required this.svcid,
+    required this.cid,
+    required this.mbrCnt,
+    required this.uid,
+    @ProfileConverter() this.profile,
+    required this.msg,
+    required this.msgTypeCode,
+    required this.msgStatusType,
+    @ExtrasConverter() this.extras,
+    required this.ctime,
+    required this.utime,
+    required this.msgTime,
+  });
 
   factory ChatBdy.fromJson(Map<String, dynamic> json) =>
       _$ChatBdyFromJson(json);
-}
 
-Profile? profileFromJson(String? jsonString) =>
-    decodeAndFromJson<Profile>(jsonString, Profile.fromJson);
-
-Extras? extrasFromJson(String? jsonString) =>
-    decodeAndFromJson<Extras>(jsonString, Extras.fromJson);
-
-@freezed
-class Profile with _$Profile {
-  const factory Profile({
-    required String? userIdHash,
-    required String? nickname,
-    required String? profileImageUrl,
-    required String?
-        userRoleCode, // "common-user", "streaming_channel_manager", "streaming_chat_manager",
-    required Badge? badge,
-    required ChatTitle? title,
-    required bool? verifiedMark,
-    required List<ActivityBadge>? activityBadges,
-    required StreamingProperty? streamingProperty,
-  }) = _Profile;
-
-  factory Profile.fromJson(Map<String, dynamic> json) =>
-      _$ProfileFromJson(json);
-}
-
-@freezed
-class Extras with _$Extras {
-  const factory Extras({
-    required String? chatType,
-    required String? osType,
-    required String? streamingChannelId,
-    required dynamic emojis,
-    required String? extraToken,
-    required int? durationTime,
-    required int? month,
-    required int? tierNo,
-
-    /// Donation
-    // required bool? isAnonymous,
-    // required String? payType,
-    // required int? payAmount,
-    // required String? nickname,
-    // required String? donationType,
-    // required List<WeeklyRank>? weeklyRankList,
-    // required WeeklyRank? donationUserWeeklyRank,
-  }) = _Extras;
-
-  factory Extras.fromJson(Map<String, dynamic> json) => _$ExtrasFromJson(json);
-}
-
-@freezed
-class ChatTitle with _$ChatTitle {
-  const factory ChatTitle({
-    required String name,
-    required String color,
-  }) = _ChatTitle;
-
-  factory ChatTitle.fromJson(Map<String, dynamic> json) =>
-      _$ChatTitleFromJson(json);
-}
-
-@freezed
-class Badge with _$Badge {
-  const factory Badge({
-    required String? imageUrl,
-  }) = _Badge;
-
-  factory Badge.fromJson(Map<String, dynamic> json) => _$BadgeFromJson(json);
-}
-
-@freezed
-class ActivityBadge with _$ActivityBadge {
-  const factory ActivityBadge({
-    required int badgeNo,
-    required String? badgeId, // "donation_newbie", "subscrption_founder"
-    required String? imageUrl,
-    required bool activated,
-  }) = _ActivityBadge;
-
-  factory ActivityBadge.fromJson(Map<String, dynamic> json) =>
-      _$ActivityBadgeFromJson(json);
-}
-
-@freezed
-class StreamingProperty with _$StreamingProperty {
-  const factory StreamingProperty({
-    required Subscription? subscription,
-    required NicknameColor nicknameColor,
-    required RealTimeDonationRanking? realTimeDonationRanking,
-  }) = _StreamingProperty;
-
-  factory StreamingProperty.fromJson(Map<String, dynamic> json) =>
-      _$StreamingPropertyFromJson(json);
-}
-
-@freezed
-class Subscription with _$Subscription {
-  const factory Subscription({
-    required int accumulativeMonth,
-    required int tier,
-    required Badge? badge,
-  }) = _Subscription;
-
-  factory Subscription.fromJson(Map<String, dynamic> json) =>
-      _$SubscriptionFromJson(json);
-}
-
-@freezed
-class NicknameColor with _$NicknameColor {
-  const factory NicknameColor({
-    required String colorCode,
-  }) = _NicknameColor;
-
-  factory NicknameColor.fromJson(Map<String, dynamic> json) =>
-      _$NicknameColorFromJson(json);
-}
-
-@freezed
-class RealTimeDonationRanking with _$RealTimeDonationRanking {
-  const factory RealTimeDonationRanking({
-    required Badge badge,
-  }) = _RealTimeDonationRanking;
-
-  factory RealTimeDonationRanking.fromJson(Map<String, dynamic> json) =>
-      _$RealTimeDonationRankingFromJson(json);
-}
-
-@freezed
-class WeeklyRank with _$WeeklyRank {
-  const factory WeeklyRank({
-    required String userIdHash,
-    required String nickName,
-    required bool verifiedMark,
-    required int donationAmount,
-    required int ranking,
-  }) = _WeeklyRank;
-
-  factory WeeklyRank.fromJson(Map<String, dynamic> json) =>
-      _$WeeklyRankFromJson(json);
+  Map<String, dynamic> toJson() => _$ChatBdyToJson(this);
 }

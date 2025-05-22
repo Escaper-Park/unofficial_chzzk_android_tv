@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+abstract class AppColors {
+  const AppColors._();
+
+  /* Common */
   static const Color chzzkColor = Color(0xFF00FFA3);
+  static const Color blackColor = Color(0xFF000000);
   static const Color whiteColor = Color(0xFFE1E3DE);
-  static const Color redColor = Color(0xFFFF0000);
+  static const Color backgroundColor = Color(0xFF141517);
+  static const Color backgroundBlack = Color(0xFF0E0F10);
+  static const Color fullWhiteColor = Color.fromRGBO(255, 255, 255, 1.0);
+
+  static const Color redColor = Color(0xFFE02020);
   static const Color lightRedColor = Color(0xFFFF5454);
-  static const Color blackColor = Color(0xFF020101);
-  static const Color indigoColor = Color(0xFF4e41db);
+
   static const Color greyContainerColor = Color(0xFF242528);
   static const Color greyColor = Color(0xFF9da5b6);
-  static const Color chatColor = Color(0xFFdfe2de);
+
+  /* Tags */
+  static const Color categoryTagBackgroundColor =
+      Color.fromRGBO(46, 48, 51, 0.6);
+  static const Color liveTagColor = Color.fromRGBO(255, 255, 255, 0.15);
+  static const Color watchPartyTagBorderColor =
+      Color.fromRGBO(0, 255, 163, 0.3);
+  static const Color watchPartyTagFontColor = Color.fromRGBO(0, 255, 163, 0.7);
+  static const Color replayTagBackgroundColor =
+      Color.fromRGBO(78, 65, 219, 1.0);
+
+  /* chat */
+  static const Color chatWhite = Color(0xFFFAFAFA);
+  static const Color donationContainer1000 = Color(0xFF473ACA);
+  static const Color donationContainer10000 = Color(0xFF2D7B8B);
+  static const Color donationContainer100000 = Color(0xFF23815A);
+  static const Color donationContainer500000 = Color(0xFFD18E3C);
+  static const Color donationContainer1000000 = Color(0xFFC54952);
+
+  static const Color donationNicknameWhite = Color(0xFFFFFFFF);
 
   static const List<Color> nicknameColors = [
     Color.fromRGBO(90, 144, 192, 1),
@@ -64,9 +90,11 @@ class AppColors {
     Color.fromRGBO(238, 160, 93, 1),
   ];
 
-  static const ColorScheme darkColorScheme = ColorScheme(
+  static final ColorScheme _colorScheme = ColorScheme.fromSeed(
+    seedColor: chzzkColor,
+    dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
     brightness: Brightness.dark,
-    primary: Color(0xFF00FFA3),
+    primary: chzzkColor,
     onPrimary: Color(0xFF003920),
     primaryContainer: Color(0xFF005231),
     onPrimaryContainer: Color(0xFFE1E3DE),
@@ -82,9 +110,7 @@ class AppColors {
     errorContainer: Color(0xFF93000A),
     onError: Color(0xFF690005),
     onErrorContainer: Color(0xFFFFDAD6),
-    // background: Color(0xFF191C1A), // Deprecated
-    // onBackground: Color(0xFFE1E3DE), // Deprecated
-    surface: Color(0xFF191C1A),
+    surface: backgroundColor,
     onSurface: Color(0xFFE1E3DE),
     onSurfaceVariant: Color(0xFFC0C9C0),
     outline: Color(0xFF8A938B),
@@ -94,14 +120,16 @@ class AppColors {
     shadow: Color(0xFF000000),
     surfaceTint: Color(0xFF00FFA3),
     outlineVariant: Color(0xFF404942),
-    scrim: Color(0xFF000000),
+    scrim: backgroundColor,
   );
 }
 
-class AppTheme {
-  static final basicThemeData = ThemeData(
+abstract class AppTheme {
+  const AppTheme._();
+
+  static final darkThemeData = ThemeData(
     useMaterial3: true,
-    colorScheme: AppColors.darkColorScheme,
+    colorScheme: AppColors._colorScheme,
     fontFamily: 'Pretendard',
   );
 }

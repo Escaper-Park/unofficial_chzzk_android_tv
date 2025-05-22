@@ -1,78 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemNavigator;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../common/widgets/pop_scope_screen.dart';
+import '../../common/constants/enums.dart' show DpadAction, AppRoute, DialogButtonType;
+import '../../common/constants/styles.dart' show AppColors;
+import '../../common/widgets/screen/screen_widgets.dart' show PopScopeScreen;
+import '../../common/constants/dimensions.dart' show Dimensions;
+import '../../common/widgets/dpad/dpad_widgets.dart'
+    show DpadFocusScopeNavigator;
+import '../../utils/extensions/custom_extensions.dart' show DimensionsX;
+
 import '../../utils/popup/popup_utils.dart';
-import './widgets/responsive_sidebar.dart';
+import 'dashboard_event.dart' show DashboardEvent;
+import 'widgets/dashboard_widgets.dart';
+
+part './widgets/screen/dashboard_body.dart';
+part './widgets/screen/responsive_sidebar.dart';
+part './widgets/screen/contents_area.dart';
 
 class DashboardScreen extends HookWidget {
-  /// A base [Scaffold] with the sidebar and contents area.
+  /// A base [Scaffold] with a sidebar and a content area.
   ///
-  /// All of screens that use this [DashboardScreen] must have sidebar [FocusScopeNode] and
-  /// content screen [FocusScopeNode].
+  /// All screens that use this [DashboardScreen] must have a sidebar
+  /// [FocusScopeNode] and a content area [FocusScopeNode].
   const DashboardScreen({
     super.key,
-    required this.sidebarFSN,
-    required this.contentScreenFSN,
-    required this.contentScreen,
+    required this.state,
+    required this.child,
   });
 
-  final FocusScopeNode sidebarFSN;
-  final FocusScopeNode contentScreenFSN;
+  /// This state is used to get the currently active screen name.
+  final GoRouterState state;
 
-  /// The area of contents next to sidebar.
-  final Widget contentScreen;
+  /// The contents area screen.
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    const int snackbarDisplaySeconds = 2;
-    DateTime? lastPressedBackButtonAt;
+    final currentLocationName = state.matchedLocation.replaceAll('/', '');
 
-    return PopScopeScreen(
-      onPopInvoked: (_) async {
-        if (sidebarFSN.hasFocus) {
-          final currentTime = DateTime.now();
+    final sidebarFSN = useFocusScopeNode();
+    final contentsFSN = useFocusScopeNode();
 
-          // Before [Snackbar] is visible
-          if (lastPressedBackButtonAt == null ||
-              currentTime.difference(lastPressedBackButtonAt!) >
-                  const Duration(seconds: snackbarDisplaySeconds)) {
-            lastPressedBackButtonAt = currentTime;
-
-            if (context.mounted) {
-              // Show Snackbar
-              const String msg = '뒤로 가기를 한 번 더 누르면 종료됩니다';
-              PopupUtils.showSnackbar(context, msg);
-            }
-          }
-          // While [Snackbar] is Visible
-          else {
-            // Exit
-            SystemNavigator.pop();
-          }
-        }
-        // Request focus to sidebar
-        else {
-          sidebarFSN.requestFocus();
-        }
-      },
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ResponsiveSidebar(
-              sidebarFSN: sidebarFSN,
-              contentScreenFSN: contentScreenFSN,
+    return InheritedSidebarFocusScope(
+      node: sidebarFSN,
+      child: PopScopeScreen(
+        onPopInvoked: (onPopInvokedHandler) {
+          onPopInvokedHandler.doubleBackExit(
+            context: context,
+            condition: sidebarFSN.hasFocus,
+            exitAction: () => SystemNavigator.pop(),
+            fallbackAction: () => sidebarFSN.requestFocus(),
+          );
+        },
+        child: _DashboardBody(
+          sidebar: _ResponsiveSidebar(
+            sidebarFSN: sidebarFSN,
+            contentsFSN: contentsFSN,
+            currentLocationName: currentLocationName,
+          ),
+          contents: _ContentsArea(
+            contentsFSN: contentsFSN,
+            child: SizedBox(
+              height: context.screenHeight,
+              child: child,
             ),
-            Expanded(
-              child: FocusScope(
-                child: contentScreen,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

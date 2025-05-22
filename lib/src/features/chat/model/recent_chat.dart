@@ -1,73 +1,90 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'chat.dart';
+import 'extras.dart';
+import 'profile.dart';
 
-part 'recent_chat.freezed.dart';
 part 'recent_chat.g.dart';
+part 'recent_chat.freezed.dart';
 
 @freezed
+@JsonSerializable()
 class RecentChat with _$RecentChat {
-  factory RecentChat({
-    required String svcid,
-    required RecentChatBdy bdy,
-    required int cmd,
-    required int retCode,
-    required String? retMsg,
-    required String? tid,
-    required String? cid,
-  }) = _RecentChat;
+  final String svcid;
+  final List<RecentChatBdy> bdy;
+  final int cmd;
+  final int retCode;
+  final String? retMsg;
+  final String? tid;
+  final String? cid;
 
+  RecentChat({
+    required this.svcid,
+    required this.bdy,
+    required this.cmd,
+    required this.retCode,
+    this.retMsg,
+    this.tid,
+    this.cid,
+  });
+  
   factory RecentChat.fromJson(Map<String, dynamic> json) =>
       _$RecentChatFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RecentChatToJson(this);
 }
 
 @freezed
+@JsonSerializable()
 class RecentChatBdy with _$RecentChatBdy {
-  factory RecentChatBdy({
-    required List<RecentChatMsg> messageList,
-    required int? userCount,
-    // required Notice? notice,
-  }) = _RecentChatBdy;
+  final List<RecentChatMsg> messageList;
+  final int? userCount;
+
+  RecentChatBdy({
+    required this.messageList,
+    this.userCount,
+  });
 
   factory RecentChatBdy.fromJson(Map<String, dynamic> json) =>
       _$RecentChatBdyFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RecentChatBdyToJson(this);
 }
 
 @freezed
+@JsonSerializable()
 class RecentChatMsg with _$RecentChatMsg {
-  factory RecentChatMsg({
-    required String serviceId,
-    required String channelId,
-    required int messageTime,
-    required String userId,
-    @JsonKey(fromJson: profileFromJson) required Profile? profile,
-    required String content,
-    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
-    required int memberCount,
-    required int messageTypeCode,
-    required String messageStatusType,
-    required int createTime,
-    required int updateTime,
-    required Object? msgTid,
-  }) = _RecentChatMsg;
+  final String serviceId;
+  final String channelId;
+  final int messageTime;
+  final String userId;
+  @ProfileConverter()
+  final Profile? profile;
+  final String content;
+  @ExtrasConverter()
+  final Extras? extras;
+  final int memberCount;
+  final int messageTypeCode;
+  final String messageStatusType;
+  final int createTime;
+  final int updateTime;
+
+  RecentChatMsg({
+    required this.serviceId,
+    required this.channelId,
+    required this.messageTime,
+    required this.userId,
+    this.profile,
+    required this.content,
+    this.extras,
+    required this.memberCount,
+    required this.messageTypeCode,
+    required this.messageStatusType,
+    required this.createTime,
+    required this.updateTime,
+  });
 
   factory RecentChatMsg.fromJson(Map<String, dynamic> json) =>
       _$RecentChatMsgFromJson(json);
-}
 
-@freezed
-class Notice with _$Notice {
-  factory Notice({
-    required String serviceId,
-    required String channelId,
-    required int messageTime,
-    required String userId,
-    required Profile profile,
-    required String content,
-    required Extras extras,
-    required int messageTypeCode,
-    required int createTime,
-  }) = _Notice;
-
-  factory Notice.fromJson(Map<String, dynamic> json) => _$NoticeFromJson(json);
+  Map<String, dynamic> toJson() => _$RecentChatMsgToJson(this);
 }

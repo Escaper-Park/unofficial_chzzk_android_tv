@@ -3,83 +3,88 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../common/constants/dimensions.dart';
-import '../../../common/constants/styles.dart';
-import '../../../common/widgets/rounded_container.dart';
-import '../../../common/widgets/focused_widget.dart';
+import '../../../common/constants/enums.dart' show DialogButtonType;
+import '../../../common/constants/styles.dart' show AppColors;
+import '../../../common/widgets/ui/ui_widgets.dart'
+    show
+        FocusedOutlinedButton,
+        IconElement,
+        PaddingElement,
+        RichIconText,
+        RoundedContainer,
+        TextElement;
 import '../../../utils/popup/popup_utils.dart';
 
 class FollowingButtonWithAsyncValue<T> extends HookWidget {
-  /// Following Button with Generic List of [AsyncValue].
+  /// Following button with generic list of AsyncValue to check current
+  /// following state.
   ///
-  /// Available Generic Types: [Following], [Category]
+  /// Available generic types: [Following], [Category]
   const FollowingButtonWithAsyncValue({
     super.key,
     required this.focusNode,
-    required this.asyncValue,
-    required this.checkIsFollowing,
-    required this.unfollowWarning,
+    required this.asyncFollowingList,
+    required this.containsFollowing,
+    required this.unFollowWarning,
     required this.onPressed,
   });
 
   final FocusNode focusNode;
 
-  /// To check already follow this channel or category in List<T>.
-  final AsyncValue<List<T>?> asyncValue;
+  final AsyncValue<List<T>?> asyncFollowingList;
 
-  /// Check current following state.
-  final bool Function(T object) checkIsFollowing;
+  /// Check already following.
+  final bool Function(T object) containsFollowing;
 
-  /// Show popup dialog to warn about unfollowing.
-  final String unfollowWarning;
+  /// Display popup dialog to warn about unfollowing if current state is `follow`.
+  final String unFollowWarning;
 
   /// If isFollowing is true, unfollow; otherwise, follow.
-  final void Function(bool isFollowing) onPressed;
+  final Future<void> Function(bool isFollowing) onPressed;
 
   @override
   Widget build(BuildContext context) {
-    // Prevent the button from beging pressed multiple times.
-    final isLoading = useState<bool>(false);
+    final isLoadingState = useState<bool>(false);
 
-    return asyncValue.when(
+    return asyncFollowingList.when(
       data: (data) {
-        // If the user is not logged in, show nothing.
+        // handle error.
         if (data == null) return const SizedBox.shrink();
 
-        bool isFollowing = data.any(checkIsFollowing);
+        bool isFollowing = data.any(containsFollowing);
 
-        return isLoading.value
+        return isLoadingState.value
             ? const SizedBox(
-                height: Dimensions.followingButtonHeight,
                 width: Dimensions.followingButtonWidth,
+                height: Dimensions.followingButtonHeight,
               )
             : FollowingButton(
                 focusNode: focusNode,
                 isFollowing: isFollowing,
                 onPressed: () async {
                   // deactivate button to prevent multiple pressed.
-                  isLoading.value = true;
+                  isLoadingState.value = true;
 
-                  // warning and do unfollow.
                   if (isFollowing && context.mounted) {
+                    // Unfollow Warning
                     await PopupUtils.showButtonDialog(
-                      context: context,
                       buttonType: DialogButtonType.doubleButton,
+                      context: context,
                       titleText: '팔로우 취소',
                       confirmText: '팔로우 취소',
+                      contentText: unFollowWarning,
                       cancelText: '닫기',
-                      contentText: unfollowWarning,
-                      confirmCallback: () {
-                        onPressed(isFollowing);
+                      confirmCallback: () async {
+                        // Do unFollow
+                        await onPressed(isFollowing);
                       },
                     );
-                  }
-                  // Do follow
-                  else {
-                    onPressed(isFollowing);
+                  } else {
+                    // Do Follow
+                    await onPressed(isFollowing);
                   }
 
-                  // activate button
-                  isLoading.value = false;
+                  isLoadingState.value = false;
                 },
               );
       },
@@ -89,63 +94,65 @@ class FollowingButtonWithAsyncValue<T> extends HookWidget {
   }
 }
 
-class FollowingButton extends HookWidget {
+class FollowingButton extends StatelessWidget {
   const FollowingButton({
     super.key,
-    this.height = Dimensions.followingButtonHeight,
-    this.width = Dimensions.followingButtonWidth,
-    this.padding = 10.0,
+    this.buttonWidth = Dimensions.followingButtonWidth,
+    this.buttonHeight = Dimensions.followingButtonHeight,
     this.iconSize = 20.0,
     this.fontSize = 14.0,
+    this.verticalPadding = 10.0,
+    this.horizontalPadding = 10.0,
+    this.autofocus = false,
     required this.focusNode,
     required this.isFollowing,
     required this.onPressed,
   });
 
-  final double height;
-  final double width;
-  final double padding;
+  final double buttonWidth;
+  final double buttonHeight;
   final double iconSize;
   final double fontSize;
+  final double verticalPadding;
+  final double horizontalPadding;
+  final bool autofocus;
   final FocusNode focusNode;
   final bool isFollowing;
-  final VoidCallback onPressed;
+  final Future<void> Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: width,
-      child: FocusedOutlinedButton(
-        focusNode: focusNode,
-        onPressed: onPressed,
-        child: (_) => RoundedContainer(
-          backgroundColor: AppColors.greyContainerColor,
-          padding: EdgeInsets.all(padding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                isFollowing
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                size: iconSize,
-                color: AppColors.chzzkColor,
-              ),
-              SizedBox(width: padding),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    '팔로잉',
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      color: AppColors.whiteColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+    return FocusedOutlinedButton(
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onPressed: () async {
+        await onPressed();
+      },
+      child: RoundedContainer(
+        width: buttonWidth,
+        height: buttonHeight,
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPadding,
+          horizontal: horizontalPadding,
+        ),
+        backgroundColor: AppColors.greyContainerColor,
+        child: RichIconText(
+          elements: [
+            IconElement(
+              icon: isFollowing
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              iconSize: iconSize,
+              iconColor: AppColors.chzzkColor,
+            ),
+            PaddingElement(),
+            TextElement(
+              text: '팔로잉',
+              fontSize: fontSize,
+              fontColor: AppColors.whiteColor,
+              fontWeight: FontWeight.w700,
+            ),
+          ],
         ),
       ),
     );

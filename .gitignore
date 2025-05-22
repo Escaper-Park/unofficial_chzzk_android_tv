@@ -30,7 +30,6 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-pubspec.lock
 
 # Symbolication related
 app.*.symbols
@@ -42,12 +41,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# TODO
-TODO.md
-test.json
-
-# FVM Version Cache
-.fvm/
-.fvmrc
-.vscode/

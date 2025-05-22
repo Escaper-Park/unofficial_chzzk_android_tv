@@ -1,15 +1,7 @@
-enum KeyboardCase {
-  lowerCase,
-  upperCase,
-}
+abstract class VirtualKeyboardData {
+  const VirtualKeyboardData._();
 
-enum KeyboardLanguage {
-  english,
-  korean,
-}
-
-class KeyboardKeyData {
-  static const List<String> lowerCaseKeys = [
+  static const List<String> qwertyLowerCaseKeys = [
     ..._lowerNumericKeys,
     ..._lowerTopRowKeys,
     ..._lowerMiddleRowKeys,
@@ -17,7 +9,7 @@ class KeyboardKeyData {
     '한/영',
   ];
 
-  static const List<String> upperCaseKeys = [
+  static const List<String> qwertyUpperCaseKeys = [
     ..._specialCharacterKeys,
     ..._upperTopRowKeys,
     ..._upperMiddleRowKeys,
@@ -25,7 +17,7 @@ class KeyboardKeyData {
     '한/영',
   ];
 
-  static const List<String> lowerCaseKoreanKeys = [
+  static const List<String> qwertyLowerCaseKoreanKeys = [
     ..._lowerNumericKeys,
     ..._lowerKoreanTopRowKeys,
     ..._lowerKoreanMiddleRowKeys,
@@ -33,7 +25,7 @@ class KeyboardKeyData {
     '한/영',
   ];
 
-  static const List<String> upperCaseKoreanKeys = [
+  static const List<String> qwertyUpperCaseKoreanKeys = [
     ..._specialCharacterKeys,
     ..._upperKoreanTopRowKeys,
     ..._upperKoreanMiddleRowKeys,
@@ -113,7 +105,7 @@ class KeyboardKeyData {
     ",",
     ".",
     "/",
-    "ENTER"
+    "ENTER",
   ];
 
   static const List<String> _upperTopRowKeys = [

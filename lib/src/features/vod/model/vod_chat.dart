@@ -1,36 +1,40 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../chat/model/chat.dart';
+import '../../chat/model/extras.dart';
+import '../../chat/model/profile.dart';
 
-part 'vod_chat.freezed.dart';
 part 'vod_chat.g.dart';
+part 'vod_chat.freezed.dart';
 
 @freezed
+@JsonSerializable()
 class VodChat with _$VodChat {
-  const factory VodChat({
-    required String chatChannelId,
-    required int messageTime,
-    required String userIdHash,
-    required String content,
-    @JsonKey(fromJson: extrasFromJson) required Extras? extras,
-    required int messageTypeCode,
-    required String messageStatusType,
-    @JsonKey(fromJson: profileFromJson) required Profile? profile,
-    required int playerMessageTime,
-  }) = _VodChat;
+  final String chatChannelId;
+  final int messageTime;
+  final String userIdHash;
+  final String content;
+  @ExtrasConverter()
+  final Extras? extras;
+  final int messageTypeCode;
+  final String messageStatusType;
+  @ProfileConverter()
+  final Profile? profile;
+  final int playerMessageTime;
+
+  VodChat({
+    required this.chatChannelId,
+    required this.messageTime,
+    required this.userIdHash,
+    required this.content,
+    required this.extras,
+    required this.messageTypeCode,
+    required this.messageStatusType,
+    required this.profile,
+    required this.playerMessageTime,
+  });
 
   factory VodChat.fromJson(Map<String, dynamic> json) =>
       _$VodChatFromJson(json);
-}
 
-@freezed
-class VodChatResponse with _$VodChatResponse {
-  const factory VodChatResponse({
-    required int? nextPlayerMessageTime,
-    required List<VodChat>? previousVideoChats,
-    required List<VodChat>? videoChats,
-  }) = _VodChatResponse;
-
-  factory VodChatResponse.fromJson(Map<String, dynamic> json) =>
-      _$VodChatResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$VodChatToJson(this);
 }

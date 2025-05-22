@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 
-extension ImageCacheX on num {
-  /// Use imageWidth.cacheSize(context), imageHeight.cacheSize(context) or both
-  int cacheSize(BuildContext context) =>
-      (this * MediaQuery.of(context).devicePixelRatio).round();
-}
+abstract class ImageUtils {
+  const ImageUtils._();
 
-class ImageUtils {
-  static double imageWidthByCrossAxisCount({
+  /// Used in GridView
+  static double calcImageWidthByCrossAxisCount(
+    BuildContext context, {
     double horizontalPadding = 0.0,
+    required double screenWidth,
     required int crossAxisCount,
     required double crossAxisSpacing,
-    required BuildContext context,
-  }) =>
-      (MediaQuery.of(context).size.width -
-          horizontalPadding * 2 -
-          (crossAxisCount - 1) * crossAxisSpacing) /
-      crossAxisCount;
+  }) {
+    final double availableGridWidth = screenWidth - horizontalPadding * 2;
 
-  static double imageHeightByRatio({
-    /// Ratio of Width
+    return (availableGridWidth - (crossAxisCount - 1) * crossAxisSpacing) /
+        crossAxisCount;
+  }
+
+  /// Used in GridView
+  static double calcImageHeightByRatio({
     required int w,
-
-    /// Ratio of Height
     required int h,
-
-    /// W : H image
     required double imageWidth,
   }) =>
       imageWidth / w * h;

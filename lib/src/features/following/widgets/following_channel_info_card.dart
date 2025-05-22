@@ -1,103 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/channel/widgets/channel_widgets.dart';
 
-import '../../../common/constants/styles.dart';
-import '../../../common/widgets/circle_avatar_profile_image.dart';
-import '../../../common/widgets/focused_widget.dart';
-import '../../../utils/formatter/formatter.dart';
-
+import '../../../common/constants/dimensions.dart';
+import '../../../utils/extensions/custom_extensions.dart';
+import '../../../common/constants/styles.dart' show AppColors;
+import '../../../common/widgets/ui/ui_widgets.dart'
+    show CircleAvatarProfileImage, FocusedOutlinedButton;
+import '../../channel/model/channel.dart';
+import '../../channel/widgets/channel_widgets.dart' show ChannelNameWithVerifiedMark;
 import '../model/following.dart';
 
+part 'following_channel_info_card/following_channel_info_card_body.dart';
+part 'following_channel_info_card/following_channel_profile_image.dart';
+part 'following_channel_info_card/following_channel_name.dart';
+part 'following_channel_info_card/following_channel_live_status.dart';
+
 class FollowingChannelInfoCard extends StatelessWidget {
-  /// Following channel's profile, name, and concurrent live status.
+  /// A ListView tile with the following channel's info and status.
   const FollowingChannelInfoCard({
     super.key,
-    this.autofocus = false,
+    required this.autofocus,
     required this.following,
     required this.onPressed,
   });
 
   final bool autofocus;
-
-  /// Following channel
   final Following following;
-
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    const double profileImageRadius = 15.0;
-    return FocusedOutlinedButton(
+    final bool openLive = following.streamer.openLive;
+    final Channel channel = following.channel;
+
+    return _FollowingChannelInfoCardBody(
       autofocus: autofocus,
+      openLive: openLive,
       onPressed: onPressed,
-      padding: const EdgeInsets.all(10.0),
-      child: (_) => Row(
-        children: [
-          // Profile image
-          SizedBox(
-            width: profileImageRadius * 2,
-            child: CircleAvatarProfileImage(
-              radius: profileImageRadius,
-              profileImageUrl: following.channel.channelImageUrl,
-              useBorder: following.streamer.openLive,
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          // Channel Name,
-          Expanded(
-            // If openLive is true, Divide the channel name and concurrent user count area
-            // in a 2:1 ratio.
-            flex: 2,
-            child: Text(
-              following.channel.channelName,
-              style: const TextStyle(
-                fontSize: 12.0,
-                color: AppColors.greyColor,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          const SizedBox(width: 5.0),
-          if (following.streamer.openLive) _concurrentUserCount(),
-        ],
+      profileImage: _FollowingChannelProfileImage(
+        openLive: openLive,
+        profileImageUrl: channel.channelImageUrl,
       ),
-    );
-  }
-
-  Widget _concurrentUserCount() {
-    final String concurrentUserCount =
-        following.liveInfo.concurrentUserCount.commaFormat();
-
-    return Expanded(
-      flex: 1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Icon(
-            Icons.circle,
-            size: 5.0,
-            color: AppColors.lightRedColor,
-          ),
-          const SizedBox(width: 5.0),
-          Expanded(
-            child: Align(
-              // Align to the right side.
-              alignment: Alignment.centerRight,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  concurrentUserCount,
-                  style: const TextStyle(
-                    fontSize: 11.0,
-                    color: AppColors.lightRedColor,
-                    // overflow: TextOverflow.visible,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+      channelName: _FollowingChannelName(channel: channel),
+      liveStatus: _FollowingChannelLiveStatus(
+        concurrentUserCount: following.liveInfo.concurrentUserCount,
       ),
     );
   }

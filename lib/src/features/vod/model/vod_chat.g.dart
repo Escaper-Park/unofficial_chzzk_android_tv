@@ -6,48 +6,42 @@ part of 'vod_chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$VodChatImpl _$$VodChatImplFromJson(Map<String, dynamic> json) =>
-    _$VodChatImpl(
+VodChat _$VodChatFromJson(Map<String, dynamic> json) => VodChat(
       chatChannelId: json['chatChannelId'] as String,
       messageTime: (json['messageTime'] as num).toInt(),
       userIdHash: json['userIdHash'] as String,
       content: json['content'] as String,
-      extras: extrasFromJson(json['extras'] as String?),
+      extras: _$JsonConverterFromJson<String, Extras>(
+          json['extras'], const ExtrasConverter().fromJson),
       messageTypeCode: (json['messageTypeCode'] as num).toInt(),
       messageStatusType: json['messageStatusType'] as String,
-      profile: profileFromJson(json['profile'] as String?),
+      profile: _$JsonConverterFromJson<String, Profile>(
+          json['profile'], const ProfileConverter().fromJson),
       playerMessageTime: (json['playerMessageTime'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$VodChatImplToJson(_$VodChatImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$VodChatToJson(VodChat instance) => <String, dynamic>{
       'chatChannelId': instance.chatChannelId,
       'messageTime': instance.messageTime,
       'userIdHash': instance.userIdHash,
       'content': instance.content,
-      'extras': instance.extras,
+      'extras': _$JsonConverterToJson<String, Extras>(
+          instance.extras, const ExtrasConverter().toJson),
       'messageTypeCode': instance.messageTypeCode,
       'messageStatusType': instance.messageStatusType,
-      'profile': instance.profile,
+      'profile': _$JsonConverterToJson<String, Profile>(
+          instance.profile, const ProfileConverter().toJson),
       'playerMessageTime': instance.playerMessageTime,
     };
 
-_$VodChatResponseImpl _$$VodChatResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$VodChatResponseImpl(
-      nextPlayerMessageTime: (json['nextPlayerMessageTime'] as num?)?.toInt(),
-      previousVideoChats: (json['previousVideoChats'] as List<dynamic>?)
-          ?.map((e) => VodChat.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      videoChats: (json['videoChats'] as List<dynamic>?)
-          ?.map((e) => VodChat.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
 
-Map<String, dynamic> _$$VodChatResponseImplToJson(
-        _$VodChatResponseImpl instance) =>
-    <String, dynamic>{
-      'nextPlayerMessageTime': instance.nextPlayerMessageTime,
-      'previousVideoChats': instance.previousVideoChats,
-      'videoChats': instance.videoChats,
-    };
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

@@ -1,45 +1,48 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'vod_event.freezed.dart';
 part 'vod_event.g.dart';
-
-enum WatchEventType {
-  watchStarted('WATCH_STARTED'),
-  watchContinued('WATCH_CONTINUED'),
-  watchPaused('WATCH_PAUSED'),
-  watchEnded('WATCH_ENDED');
-
-  final String value;
-
-  const WatchEventType(this.value);
-}
+part 'vod_event.freezed.dart';
 
 @freezed
+@JsonSerializable(explicitToJson: true)
 class VodEvent with _$VodEvent {
-  /// Vod Event to resume or continue watching
-  /// a prev viewed VOD from the point where it was last stopped.
-  ///
-  /// POST this when the VOD is paused or stopped.
-  const factory VodEvent({
-    required String channelId,
-    required int videoNo,
-    required Payload payload,
-    required int totalLength,
-  }) = _VodEvent;
+  final String channelId;
+  final int videoNo;
+  final Payload payload;
+  final int totalLength;
+
+  VodEvent({
+    required this.channelId,
+    required this.videoNo,
+    required this.payload,
+    required this.totalLength,
+  });
 
   factory VodEvent.fromJson(Map<String, dynamic> json) =>
       _$VodEventFromJson(json);
+
+  Map<String, Object?> toJson() => _$VodEventToJson(this);
 }
 
 @freezed
+@JsonSerializable()
 class Payload with _$Payload {
-  const factory Payload({
-    required String watchEventType,
-    required String sessionId,
-    required int duration,
-    required int positionAt,
-  }) = _Payload;
+  final String watchEventType;
+  final String sessionId; // uuid v4
+  final int duration;
+  final int positionAt;
+  final int? awt; // max : totalLength
+
+  Payload({
+    required this.watchEventType,
+    required this.sessionId,
+    required this.duration,
+    required this.positionAt,
+    required this.awt,
+  });
 
   factory Payload.fromJson(Map<String, dynamic> json) =>
       _$PayloadFromJson(json);
+
+  Map<String, Object?> toJson() => _$PayloadToJson(this);
 }

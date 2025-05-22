@@ -6,7 +6,7 @@ part of 'dio_client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioClientHash() => r'a6339693bbf1e7a12bfb41e7f3c1baab51f101dd';
+String _$dioClientHash() => r'0a29a215aa1868fbb9a815e00da07be7b72a5246';
 
 /// See also [DioClient].
 @ProviderFor(DioClient)
@@ -21,4 +21,4 @@ final dioClientProvider = NotifierProvider<DioClient, Dio>.internal(
 
 typedef _$DioClient = Notifier<Dio>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

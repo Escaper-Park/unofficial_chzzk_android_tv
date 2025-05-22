@@ -6,18 +6,27 @@ import '../model/channel.dart';
 
 part 'channel_repository.g.dart';
 
-@RestApi(baseUrl: ApiUrl.channel)
+@RestApi(baseUrl: BaseUrl.chzzkService)
 abstract class ChannelRepository {
   factory ChannelRepository(Dio dio, {String baseUrl}) = _ChannelRepository;
 
-  @GET('/{channelId}')
-  Future<Channel?> getChannel({@Path('channelId') required String channelId});
+  @GET('${ChzzkServiceApi.channels}/{channelId}')
+  Future<Channel?> getChannel({
+    @Path('channelId') required String channelId,
+  });
 
-  @POST('/{channelId}/follow')
-  Future<void> follow({@Path('channelId') required String channelId});
+  @POST('${ChzzkServiceApi.channelFollow}/{channelId}/follow')
+  Future<void> follow({
+    @Path('channelId') required String channelId,
+  });
 
-  @DELETE('/{channelId}/follow')
-  Future<void> unFollow({@Path('channelId') required String channelId});
+  @DELETE('${ChzzkServiceApi.channelFollow}/{channelId}/follow')
+  Future<void> unFollow({
+    @Path('channelId') required String channelId,
+  });
+
+  @DELETE('${ChzzkServiceApi.channelFollow}/{channelId}/notification')
+  Future<void> deleteNotification({
+    @Path('channelId') required String channelId,
+  });
 }
-
-// TODO : Category Controller

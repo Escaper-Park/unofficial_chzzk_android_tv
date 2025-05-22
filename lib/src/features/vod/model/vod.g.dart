@@ -6,7 +6,7 @@ part of 'vod.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
+Vod _$VodFromJson(Map<String, dynamic> json) => Vod(
       videoNo: (json['videoNo'] as num).toInt(),
       videoId: json['videoId'] as String?,
       videoTitle: json['videoTitle'] as String,
@@ -20,12 +20,15 @@ _$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
       categoryType: json['categoryType'] as String?,
       videoCategory: json['videoCategory'] as String?,
       videoCategoryValue: json['videoCategoryValue'] as String?,
-      exposure: json['exposure'] as bool,
+      exposure: json['exposure'] as bool?,
       adult: json['adult'] as bool,
-      clipActive: json['clipActive'] as bool,
-      channel: Channel.fromJson(json['channel'] as Map<String, dynamic>),
-      blindType: json['blindType'],
+      clipActive: json['clipActive'] as bool?,
       livePv: (json['livePv'] as num?)?.toInt(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      channel: json['channel'] == null
+          ? null
+          : Channel.fromJson(json['channel'] as Map<String, dynamic>),
+      blindType: json['blindType'] as String?,
       watchTimeline: (json['watchTimeline'] as num?)?.toInt(),
       paidPromotion: json['paidPromotion'] as bool?,
       inKey: json['inKey'] as String?,
@@ -40,7 +43,7 @@ _$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
       videoChatChannelId: json['videoChatChannelId'] as String?,
     );
 
-Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
+Map<String, dynamic> _$VodToJson(Vod instance) => <String, dynamic>{
       'videoNo': instance.videoNo,
       'videoId': instance.videoId,
       'videoTitle': instance.videoTitle,
@@ -57,9 +60,10 @@ Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
       'exposure': instance.exposure,
       'adult': instance.adult,
       'clipActive': instance.clipActive,
-      'channel': instance.channel,
-      'blindType': instance.blindType,
       'livePv': instance.livePv,
+      'tags': instance.tags,
+      'channel': instance.channel?.toJson(),
+      'blindType': instance.blindType,
       'watchTimeline': instance.watchTimeline,
       'paidPromotion': instance.paidPromotion,
       'inKey': instance.inKey,
@@ -85,101 +89,3 @@ Json? _$JsonConverterToJson<Json, Value>(
   Json? Function(Value value) toJson,
 ) =>
     value == null ? null : toJson(value);
-
-_$ChannelVodResponseImpl _$$ChannelVodResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ChannelVodResponseImpl(
-      page: (json['page'] as num).toInt(),
-      size: (json['size'] as num).toInt(),
-      totalCount: (json['totalCount'] as num).toInt(),
-      totalPages: (json['totalPages'] as num).toInt(),
-      data: (json['data'] as List<dynamic>)
-          .map((e) => Vod.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$ChannelVodResponseImplToJson(
-        _$ChannelVodResponseImpl instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-      'size': instance.size,
-      'totalCount': instance.totalCount,
-      'totalPages': instance.totalPages,
-      'data': instance.data,
-    };
-
-_$FollowingVodImpl _$$FollowingVodImplFromJson(Map<String, dynamic> json) =>
-    _$FollowingVodImpl(
-      type: json['type'] as String,
-      vod: Vod.fromJson(json['content'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$$FollowingVodImplToJson(_$FollowingVodImpl instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'content': instance.vod,
-    };
-
-_$FollowingVodResponseImpl _$$FollowingVodResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$FollowingVodResponseImpl(
-      size: (json['size'] as num).toInt(),
-      next: _followingVodPageFromJson(json['page'] as Map<String, dynamic>),
-      data: (json['data'] as List<dynamic>)
-          .map((e) => FollowingVod.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$FollowingVodResponseImplToJson(
-        _$FollowingVodResponseImpl instance) =>
-    <String, dynamic>{
-      'size': instance.size,
-      'page': instance.next,
-      'data': instance.data,
-    };
-
-_$PopularVodResponseImpl _$$PopularVodResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$PopularVodResponseImpl(
-      videos: (json['videos'] as List<dynamic>)
-          .map((e) => Vod.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$PopularVodResponseImplToJson(
-        _$PopularVodResponseImpl instance) =>
-    <String, dynamic>{
-      'videos': instance.videos,
-    };
-
-_$CategoryVodResponseImpl _$$CategoryVodResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CategoryVodResponseImpl(
-      size: (json['size'] as num).toInt(),
-      next: _categoryVodPageFromJson(json['page'] as Map<String, dynamic>),
-      data: (json['data'] as List<dynamic>)
-          .map((e) => Vod.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$CategoryVodResponseImplToJson(
-        _$CategoryVodResponseImpl instance) =>
-    <String, dynamic>{
-      'size': instance.size,
-      'page': instance.next,
-      'data': instance.data,
-    };
-
-_$CategoryVodPageImpl _$$CategoryVodPageImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CategoryVodPageImpl(
-      publishDateAt: (json['publishDateAt'] as num).toInt(),
-      readCount: (json['readCount'] as num).toInt(),
-    );
-
-Map<String, dynamic> _$$CategoryVodPageImplToJson(
-        _$CategoryVodPageImpl instance) =>
-    <String, dynamic>{
-      'publishDateAt': instance.publishDateAt,
-      'readCount': instance.readCount,
-    };

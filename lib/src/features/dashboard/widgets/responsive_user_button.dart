@@ -1,83 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../common/widgets/center_widgets.dart';
-import '../../../common/widgets/circle_avatar_profile_image.dart';
-import '../../user/controller/user_controller.dart';
-import '../../user/model/user.dart';
-import './responsive_sidebar_item_container.dart';
-import './responsive_sidebar_menu.dart';
+import '../../../common/widgets/ui/ui_widgets.dart'
+    show CenteredText, CircleAvatarProfileImage;
+import 'dashboard_widgets.dart'
+    show ResponsiveSidebarMenuItem, ResponsiveSidebarTile;
 
-class ResponsiveUserButton extends ConsumerWidget {
-  /// If you are logged in, it shows the icon and user name,
-  /// and if you are not logged in, it shows the login button.
+import '../dashboard_state.dart';
+import '../../user/model/user.dart';
+
+class ResponsiveUserButton extends ConsumerWidget with DashboardState {
+  /// If you are logged in, it displays the user profile image and the user name.
+  ///
+  /// otherwise, it displays the login button.
   const ResponsiveUserButton({
     super.key,
     required this.sidebarHasFocus,
-    required this.focusNode,
-    required this.currentScreenIndex,
-    required this.menuIndex,
     required this.onPressedSignInButton,
     required this.onPressedUserProfile,
   });
 
-  /// Sidebar's focus state.
   final bool sidebarHasFocus;
 
-  /// This item's focusNode.
-  final FocusNode focusNode;
-
-  /// Current content area's index to notice you what screen is currently activate.
-  final int currentScreenIndex;
-
-  /// This menu's index is used to highlight the sidebar item when this menu's screen is activated.
-  final int menuIndex;
-
-  /// Go to sign in page.
+  /// Go to the sign in screen.
   final VoidCallback onPressedSignInButton;
 
-  /// Go to user profile page.
+  /// Ask sign out.
   final VoidCallback onPressedUserProfile;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUser = ref.watch(userControllerProvider);
+    final asyncUser = getUserState(ref);
 
     return switch (asyncUser) {
-      AsyncData(:final value) =>
-        value == null ? _signInButton() : _userProfile(value),
-      AsyncError() => _signInButton(), // Fallback
+      AsyncData(:final value) => value == null
+          ? _signInButton()
+          : _UserProfile(
+              user: value,
+              sidebarHasFocus: sidebarHasFocus,
+              onPressedUserProfile: onPressedUserProfile,
+            ),
+      AsyncError() => _signInButton(),
       _ => const SizedBox.shrink(),
     };
   }
 
   Widget _signInButton() {
-    return ResponsiveSidebarMenu(
+    return _SignInButton(
       sidebarHasFocus: sidebarHasFocus,
-      focusNode: focusNode,
-      currentScreenIndex: currentScreenIndex,
-      menuIndex: menuIndex,
+      onPressedSignInButton: onPressedSignInButton,
+    );
+  }
+}
+
+class _SignInButton extends StatelessWidget {
+  const _SignInButton({
+    required this.sidebarHasFocus,
+    required this.onPressedSignInButton,
+  });
+
+  final bool sidebarHasFocus;
+  final VoidCallback onPressedSignInButton;
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveSidebarMenuItem(
+      sidebarHasFocus: sidebarHasFocus,
+      isCurrentScreen: false,
       iconData: Icons.login_rounded,
       menuText: '로그인',
       onPressed: onPressedSignInButton,
     );
   }
+}
 
-  Widget _userProfile(User user) {
-    return ResponsiveSidebarItemContainer(
-      focusNode: focusNode,
+class _UserProfile extends StatelessWidget {
+  const _UserProfile({
+    required this.user,
+    required this.sidebarHasFocus,
+    required this.onPressedUserProfile,
+  });
+
+  final User? user;
+  final bool sidebarHasFocus;
+  final VoidCallback onPressedUserProfile;
+
+  @override
+  Widget build(BuildContext context) {
+    final nickname = user == null ? '에러' : user!.nickname;
+
+    return ResponsiveSidebarTile(
+      autofocus: false,
       sidebarHasFocus: sidebarHasFocus,
-      onPressed: onPressedUserProfile,
-      // user profile image
       collapsedWidget: Align(
         alignment: Alignment.centerLeft,
         child: CircleAvatarProfileImage(
-          profileImageUrl: user.profileImageUrl,
           radius: 15.0,
+          profileImageUrl: user?.profileImageUrl,
         ),
       ),
-      // nickname
-      expandedWidget: CenteredText(text: user.nickname ?? 'error'),
+      expandedWidget: CenteredText(text: nickname),
+      onPressed: onPressedUserProfile,
     );
   }
 }

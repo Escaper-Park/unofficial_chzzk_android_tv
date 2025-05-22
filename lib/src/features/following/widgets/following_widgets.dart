@@ -1,2 +1,2 @@
-export 'following_list.dart';
-export 'following_channel_data.dart';
+export 'following_channel_info_card.dart';
+export 'following_button.dart';

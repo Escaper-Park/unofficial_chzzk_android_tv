@@ -7,12 +7,12 @@ part of 'following_controller.dart';
 // **************************************************************************
 
 String _$followingControllerHash() =>
-    r'3043945f5f434880ff2bb050c19495d31e26150d';
+    r'3a485314ff782d0cceec1f833b4fcafad1b73f8c';
 
 /// See also [FollowingController].
 @ProviderFor(FollowingController)
-final followingControllerProvider = AutoDisposeAsyncNotifierProvider<
-    FollowingController, List<Following>?>.internal(
+final followingControllerProvider =
+    AsyncNotifierProvider<FollowingController, List<Following>?>.internal(
   FollowingController.new,
   name: r'followingControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,23 +22,6 @@ final followingControllerProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$FollowingController = AutoDisposeAsyncNotifier<List<Following>?>;
-String _$followingLivesControllerHash() =>
-    r'0b1e06b106ed8ed6ab9e27864d3fe16c00a7c26d';
-
-/// See also [FollowingLivesController].
-@ProviderFor(FollowingLivesController)
-final followingLivesControllerProvider = AutoDisposeAsyncNotifierProvider<
-    FollowingLivesController, List<Following>?>.internal(
-  FollowingLivesController.new,
-  name: r'followingLivesControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$followingLivesControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$FollowingLivesController = AutoDisposeAsyncNotifier<List<Following>?>;
+typedef _$FollowingController = AsyncNotifier<List<Following>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
