@@ -20,6 +20,7 @@ part 'live_chat_controller.g.dart';
 class LiveChatController extends _$LiveChatController {
   final int _pingInterval = 20000;
   final int _maxChatItemLength = 200;
+  final int _dropChatCount = 150;
 
   late ChatRepository _repository;
   late WebSocketChannel _wsChannel;
@@ -161,7 +162,8 @@ class LiveChatController extends _$LiveChatController {
 
             allMessages = [...newChats, ...allMessages];
             if (allMessages.length > _maxChatItemLength) {
-              allMessages = allMessages.sublist(0, _maxChatItemLength);
+              final keepUpTo = allMessages.length - _dropChatCount;
+              allMessages = allMessages.sublist(0, keepUpTo);
             }
           } catch (_) {}
           yield allMessages;
@@ -180,8 +182,10 @@ class LiveChatController extends _$LiveChatController {
                 .toList();
 
             allMessages = [...newChats, ...allMessages];
+
             if (allMessages.length > _maxChatItemLength) {
-              allMessages = allMessages.sublist(0, _maxChatItemLength);
+              final keepUpTo = allMessages.length - _dropChatCount;
+              allMessages = allMessages.sublist(0, keepUpTo);
             }
           } catch (_) {}
           yield allMessages;
