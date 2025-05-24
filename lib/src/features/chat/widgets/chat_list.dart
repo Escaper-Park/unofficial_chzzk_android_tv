@@ -114,15 +114,18 @@ class ChatList extends StatelessWidget {
 
             // chat donation
             if (donationType == DonationType.chat.value) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  top: chatSettings.chatContainerVerticalMargin.toDouble(),
-                ),
-                child: DonationContainer(
-                  chat: chat,
-                  chatSettings: chatSettings,
-                ),
-              );
+              return chatSettings.showDonation == 1
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        top:
+                            chatSettings.chatContainerVerticalMargin.toDouble(),
+                      ),
+                      child: DonationContainer(
+                        chat: chat,
+                        chatSettings: chatSettings,
+                      ),
+                    )
+                  : const SizedBox.shrink();
             }
             // video, mission
             else {
