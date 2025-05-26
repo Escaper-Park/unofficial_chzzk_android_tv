@@ -4,10 +4,6 @@
 
 **비공식** [치지직] 안드로이드 스마트 TV 어플리케이션입니다. 이 어플리케이션은 네이버, 치지직과 관련이 없습니다.
 
-<a href="https://www.buymeacoffee.com/escaper.bgp" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-:arrow_up: 개발자에게 후원하기
-
 > [!NOTE]
 > 공식 어플리케이션이 출시될 때 까지 업데이트 예정입니다.
 >
