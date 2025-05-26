@@ -35,7 +35,6 @@ class _SettingsDetail extends StatelessWidget {
           licenseListViewFSN: detailScreenFSN,
           licenseDetailFSN: detailFSN,
         ),
-      5 => SettingsDetailDonation(),
       _ => Container(),
     };
 

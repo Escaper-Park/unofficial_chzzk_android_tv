@@ -26,7 +26,6 @@ class _SettingsMenuList extends StatelessWidget {
       (Icons.system_update_alt_rounded, '업데이트 확인'),
       (Icons.question_answer_rounded, 'FAQ'),
       (Icons.flutter_dash_rounded, '오픈소스 라이선스'),
-      (Icons.coffee_rounded, '후원하기'),
     ];
 
     return Column(

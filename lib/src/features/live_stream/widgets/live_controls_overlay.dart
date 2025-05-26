@@ -45,6 +45,7 @@ class LiveControlsOverlay extends HookConsumerWidget
           contentsFSN: contentsFSN,
         ),
       LiveStreamOverlayType.category => LiveStreamCategoryLives(
+          currentActivatedIndex: currentActivatedAudioIndex,
           liveMode: liveMode,
           showGroupInNavigators: showGroupInNavigators,
           videoFocusNode: videoFocusNode,
