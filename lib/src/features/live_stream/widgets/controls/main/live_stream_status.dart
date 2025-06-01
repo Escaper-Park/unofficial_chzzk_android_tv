@@ -45,7 +45,8 @@ class _LiveStreamStatusState extends State<LiveStreamStatus> {
     final nowDate = DateTime.now().toUtc().add(const Duration(hours: 9));
     final openDate = CustomFormatter.parseDateTimeFromDateTimeStr(
       widget.status!.openDate ?? '2025-05-01',
-    );
+    ).toUtc().add(const Duration(hours: 9));
+    
     final diff = nowDate.difference(openDate);
 
     _currentTimeIndicator = diff.paddedDuration();

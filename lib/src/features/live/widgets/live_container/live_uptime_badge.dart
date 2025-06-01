@@ -11,13 +11,15 @@ class _LiveUptimeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime nowDate = DateTime.now().toUtc().add(const Duration(hours: 9));
+    final DateTime nowDate =
+        DateTime.now().toUtc().add(const Duration(hours: 9));
 
     final DateTime openDate = dateTimeStr == null
         ? DateTime.now()
         : CustomFormatter.parseDateTimeFromDateTimeStr(dateTimeStr!);
 
-    final Duration diff = nowDate.difference(openDate);
+    final Duration diff =
+        nowDate.difference(openDate.toUtc().add(const Duration(hours: 9)));
     final String paddedDuration = diff.paddedDuration();
 
     return CustomBadge(
