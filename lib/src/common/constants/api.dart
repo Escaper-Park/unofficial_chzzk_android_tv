@@ -3,7 +3,7 @@ abstract class BaseUrl {
 
   /// `BaseUrl`: chzzk login page.
   static const String naverLogin =
-      'https://nid.naver.com/nidlogin.login?url=https%3A%2F%2Fchzzk.naver.com%2F';
+      'https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fchzzk.naver.com%2F&locale=ko_KR&svctype=1&disposable=';
 
   /// `BaseUrl`: naver game vi the user data.
   static const String naverGame = 'https://comm-api.game.naver.com/nng_main';
@@ -29,14 +29,14 @@ abstract class BaseUrl {
       'https://api.github.com/repos/Escaper-Park/unofficial_chzzk_android_tv/releases/latest';
 
   /// `BaseUrl`: Clip embed
-  /// 
+  ///
   /// @Path: `/$clipUID`
-  /// 
+  ///
   /// @Query: `int autoplay = 1`
   static const String clipEmbed = 'https://chzzk.naver.com/embed/clip';
 
   /// `BaseUrl`: chat server
-  /// 
+  ///
   /// Websocket chat server with randomly assigned from 1 to 5.
   static String chatServer(int serverNo) =>
       'wss://kr-ss$serverNo.chat.naver.com/chat';
@@ -78,8 +78,8 @@ abstract class ChzzkApi {
   static const String liveStatus = '/polling/v3/channels';
 
   /// Watching event to save last seen position
-  /// 
-  /// POST 
+  ///
+  /// POST
   static const String watchEvent = '/polling/v1/watch-event/video';
 }
 
