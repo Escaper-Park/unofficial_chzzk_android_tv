@@ -6,7 +6,8 @@ part of 'recent_chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RecentChat _$RecentChatFromJson(Map<String, dynamic> json) => RecentChat(
+_$RecentChatImpl _$$RecentChatImplFromJson(Map<String, dynamic> json) =>
+    _$RecentChatImpl(
       svcid: json['svcid'] as String,
       bdy: (json['bdy'] as List<dynamic>)
           .map((e) => RecentChatBdy.fromJson(e as Map<String, dynamic>))
@@ -18,7 +19,7 @@ RecentChat _$RecentChatFromJson(Map<String, dynamic> json) => RecentChat(
       cid: json['cid'] as String?,
     );
 
-Map<String, dynamic> _$RecentChatToJson(RecentChat instance) =>
+Map<String, dynamic> _$$RecentChatImplToJson(_$RecentChatImpl instance) =>
     <String, dynamic>{
       'svcid': instance.svcid,
       'bdy': instance.bdy,
@@ -29,22 +30,22 @@ Map<String, dynamic> _$RecentChatToJson(RecentChat instance) =>
       'cid': instance.cid,
     };
 
-RecentChatBdy _$RecentChatBdyFromJson(Map<String, dynamic> json) =>
-    RecentChatBdy(
+_$RecentChatBdyImpl _$$RecentChatBdyImplFromJson(Map<String, dynamic> json) =>
+    _$RecentChatBdyImpl(
       messageList: (json['messageList'] as List<dynamic>)
           .map((e) => RecentChatMsg.fromJson(e as Map<String, dynamic>))
           .toList(),
       userCount: (json['userCount'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$RecentChatBdyToJson(RecentChatBdy instance) =>
+Map<String, dynamic> _$$RecentChatBdyImplToJson(_$RecentChatBdyImpl instance) =>
     <String, dynamic>{
       'messageList': instance.messageList,
       'userCount': instance.userCount,
     };
 
-RecentChatMsg _$RecentChatMsgFromJson(Map<String, dynamic> json) =>
-    RecentChatMsg(
+_$RecentChatMsgImpl _$$RecentChatMsgImplFromJson(Map<String, dynamic> json) =>
+    _$RecentChatMsgImpl(
       serviceId: json['serviceId'] as String,
       channelId: json['channelId'] as String,
       messageTime: (json['messageTime'] as num).toInt(),
@@ -61,7 +62,7 @@ RecentChatMsg _$RecentChatMsgFromJson(Map<String, dynamic> json) =>
       updateTime: (json['updateTime'] as num).toInt(),
     );
 
-Map<String, dynamic> _$RecentChatMsgToJson(RecentChatMsg instance) =>
+Map<String, dynamic> _$$RecentChatMsgImplToJson(_$RecentChatMsgImpl instance) =>
     <String, dynamic>{
       'serviceId': instance.serviceId,
       'channelId': instance.channelId,

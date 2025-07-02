@@ -6,7 +6,8 @@ part of 'live_info.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LiveInfo _$LiveInfoFromJson(Map<String, dynamic> json) => LiveInfo(
+_$LiveInfoImpl _$$LiveInfoImplFromJson(Map<String, dynamic> json) =>
+    _$LiveInfoImpl(
       liveId: (json['liveId'] as num?)?.toInt(),
       liveTitle: json['liveTitle'] as String?,
       liveImageUrl: json['liveImageUrl'] as String?,
@@ -26,7 +27,8 @@ LiveInfo _$LiveInfoFromJson(Map<String, dynamic> json) => LiveInfo(
       blindType: json['blindType'] as String?,
     );
 
-Map<String, dynamic> _$LiveInfoToJson(LiveInfo instance) => <String, dynamic>{
+Map<String, dynamic> _$$LiveInfoImplToJson(_$LiveInfoImpl instance) =>
+    <String, dynamic>{
       'liveId': instance.liveId,
       'liveTitle': instance.liveTitle,
       'liveImageUrl': instance.liveImageUrl,

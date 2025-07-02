@@ -6,15 +6,15 @@ part of 'auto_complete_tag_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AutoCompleteTagResponse _$AutoCompleteTagResponseFromJson(
+_$AutoCompleteTagResponseImpl _$$AutoCompleteTagResponseImplFromJson(
         Map<String, dynamic> json) =>
-    AutoCompleteTagResponse(
+    _$AutoCompleteTagResponseImpl(
       keywords:
           (json['keywords'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$AutoCompleteTagResponseToJson(
-        AutoCompleteTagResponse instance) =>
+Map<String, dynamic> _$$AutoCompleteTagResponseImplToJson(
+        _$AutoCompleteTagResponseImpl instance) =>
     <String, dynamic>{
       'keywords': instance.keywords,
     };

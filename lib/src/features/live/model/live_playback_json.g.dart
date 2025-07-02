@@ -6,8 +6,9 @@ part of 'live_playback_json.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LivePlaybackJson _$LivePlaybackJsonFromJson(Map<String, dynamic> json) =>
-    LivePlaybackJson(
+_$LivePlaybackJsonImpl _$$LivePlaybackJsonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LivePlaybackJsonImpl(
       meta: Meta.fromJson(json['meta'] as Map<String, dynamic>),
       serviceMeta:
           ServiceMeta.fromJson(json['serviceMeta'] as Map<String, dynamic>),
@@ -21,7 +22,8 @@ LivePlaybackJson _$LivePlaybackJsonFromJson(Map<String, dynamic> json) =>
       thumbnail: Thumbnail.fromJson(json['thumbnail'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$LivePlaybackJsonToJson(LivePlaybackJson instance) =>
+Map<String, dynamic> _$$LivePlaybackJsonImplToJson(
+        _$LivePlaybackJsonImpl instance) =>
     <String, dynamic>{
       'meta': instance.meta,
       'serviceMeta': instance.serviceMeta,
@@ -31,7 +33,7 @@ Map<String, dynamic> _$LivePlaybackJsonToJson(LivePlaybackJson instance) =>
       'thumbnail': instance.thumbnail,
     };
 
-Meta _$MetaFromJson(Map<String, dynamic> json) => Meta(
+_$MetaImpl _$$MetaImplFromJson(Map<String, dynamic> json) => _$MetaImpl(
       videoId: json['videoId'] as String,
       streamSeq: (json['streamSeq'] as num).toInt(),
       liveId: json['liveId'] as String,
@@ -42,7 +44,8 @@ Meta _$MetaFromJson(Map<String, dynamic> json) => Meta(
       playbackAuthType: json['playbackAuthType'] as String?,
     );
 
-Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
+Map<String, dynamic> _$$MetaImplToJson(_$MetaImpl instance) =>
+    <String, dynamic>{
       'videoId': instance.videoId,
       'streamSeq': instance.streamSeq,
       'liveId': instance.liveId,
@@ -53,40 +56,42 @@ Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{
       'playbackAuthType': instance.playbackAuthType,
     };
 
-CdnInfo _$CdnInfoFromJson(Map<String, dynamic> json) => CdnInfo(
+_$CdnInfoImpl _$$CdnInfoImplFromJson(Map<String, dynamic> json) =>
+    _$CdnInfoImpl(
       cdnType: json['cdnType'] as String,
-      zeroRating: json['zeroRating'] as bool,
     );
 
-Map<String, dynamic> _$CdnInfoToJson(CdnInfo instance) => <String, dynamic>{
+Map<String, dynamic> _$$CdnInfoImplToJson(_$CdnInfoImpl instance) =>
+    <String, dynamic>{
       'cdnType': instance.cdnType,
-      'zeroRating': instance.zeroRating,
     };
 
-ServiceMeta _$ServiceMetaFromJson(Map<String, dynamic> json) => ServiceMeta(
+_$ServiceMetaImpl _$$ServiceMetaImplFromJson(Map<String, dynamic> json) =>
+    _$ServiceMetaImpl(
       contentType: json['contentType'] as String,
     );
 
-Map<String, dynamic> _$ServiceMetaToJson(ServiceMeta instance) =>
+Map<String, dynamic> _$$ServiceMetaImplToJson(_$ServiceMetaImpl instance) =>
     <String, dynamic>{
       'contentType': instance.contentType,
     };
 
-Live _$LiveFromJson(Map<String, dynamic> json) => Live(
+_$LiveImpl _$$LiveImplFromJson(Map<String, dynamic> json) => _$LiveImpl(
       start: json['start'] as String,
       open: json['open'] as String,
       timeMachine: json['timeMachine'] as bool,
       status: json['status'] as String,
     );
 
-Map<String, dynamic> _$LiveToJson(Live instance) => <String, dynamic>{
+Map<String, dynamic> _$$LiveImplToJson(_$LiveImpl instance) =>
+    <String, dynamic>{
       'start': instance.start,
       'open': instance.open,
       'timeMachine': instance.timeMachine,
       'status': instance.status,
     };
 
-Media _$MediaFromJson(Map<String, dynamic> json) => Media(
+_$MediaImpl _$$MediaImplFromJson(Map<String, dynamic> json) => _$MediaImpl(
       mediaId: json['mediaId'] as String,
       protocol: json['protocol'] as String,
       path: json['path'] as String,
@@ -96,7 +101,8 @@ Media _$MediaFromJson(Map<String, dynamic> json) => Media(
           .toList(),
     );
 
-Map<String, dynamic> _$MediaToJson(Media instance) => <String, dynamic>{
+Map<String, dynamic> _$$MediaImplToJson(_$MediaImpl instance) =>
+    <String, dynamic>{
       'mediaId': instance.mediaId,
       'protocol': instance.protocol,
       'path': instance.path,
@@ -104,8 +110,8 @@ Map<String, dynamic> _$MediaToJson(Media instance) => <String, dynamic>{
       'encodingTrack': instance.encodingTrack,
     };
 
-EncodingTrack _$EncodingTrackFromJson(Map<String, dynamic> json) =>
-    EncodingTrack(
+_$EncodingTrackImpl _$$EncodingTrackImplFromJson(Map<String, dynamic> json) =>
+    _$EncodingTrackImpl(
       encodingTrackId: json['encodingTrackId'] as String?,
       videoProfile: json['videoProfile'] as String?,
       audioProfile: json['audioProfile'] as String?,
@@ -126,7 +132,7 @@ EncodingTrack _$EncodingTrackFromJson(Map<String, dynamic> json) =>
       audioOnly: json['audioOnly'] as bool?,
     );
 
-Map<String, dynamic> _$EncodingTrackToJson(EncodingTrack instance) =>
+Map<String, dynamic> _$$EncodingTrackImplToJson(_$EncodingTrackImpl instance) =>
     <String, dynamic>{
       'encodingTrackId': instance.encodingTrackId,
       'videoProfile': instance.videoProfile,
@@ -148,12 +154,14 @@ Map<String, dynamic> _$EncodingTrackToJson(EncodingTrack instance) =>
       'audioOnly': instance.audioOnly,
     };
 
-Thumbnail _$ThumbnailFromJson(Map<String, dynamic> json) => Thumbnail(
+_$ThumbnailImpl _$$ThumbnailImplFromJson(Map<String, dynamic> json) =>
+    _$ThumbnailImpl(
       snapshotThumbnailTemplate: json['snapshotThumbnailTemplate'] as String,
       types: (json['types'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$ThumbnailToJson(Thumbnail instance) => <String, dynamic>{
+Map<String, dynamic> _$$ThumbnailImplToJson(_$ThumbnailImpl instance) =>
+    <String, dynamic>{
       'snapshotThumbnailTemplate': instance.snapshotThumbnailTemplate,
       'types': instance.types,
     };

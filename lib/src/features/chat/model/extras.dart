@@ -6,28 +6,18 @@ part 'extras.g.dart';
 part 'extras.freezed.dart';
 
 @freezed
-@JsonSerializable()
 class Extras with _$Extras {
-  final String? chatType;
-  final Map<String, String>? emojis;
-  final String? streamingChannelId;
-  final bool? isAnonymous;
-  final String? nickname;
-  final int? payAmount;
-  final String? donationType;
-
-  Extras({
-    required this.chatType,
-    required this.emojis,
-    required this.streamingChannelId,
-    required this.isAnonymous,
-    required this.nickname,
-    required this.payAmount,
-    required this.donationType,
-  });
+  const factory Extras({
+    String? chatType,
+    Map<String, String>? emojis,
+    String? streamingChannelId,
+    bool? isAnonymous,
+    String? nickname,
+    int? payAmount,
+    String? donationType,
+  }) = _Extras;
 
   factory Extras.fromJson(Map<String, dynamic> json) => _$ExtrasFromJson(json);
-  Map<String, dynamic> toJson() => _$ExtrasToJson(this);
 }
 
 class ExtrasConverter implements JsonConverter<Extras, String> {
@@ -47,3 +37,4 @@ class ExtrasConverter implements JsonConverter<Extras, String> {
     return jsonEncode(jsonMap);
   }
 }
+

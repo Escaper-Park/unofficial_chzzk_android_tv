@@ -6,7 +6,8 @@ part of 'profile.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
+_$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
+    _$ProfileImpl(
       userIdHash: json['userIdHash'] as String?,
       nickname: json['nickname'] as String?,
       userRoleCode: json['userRoleCode'] as String?,
@@ -16,7 +17,8 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
       verifiedMark: json['verifiedMark'] as bool?,
     );
 
-Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
+Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
+    <String, dynamic>{
       'userIdHash': instance.userIdHash,
       'nickname': instance.nickname,
       'userRoleCode': instance.userRoleCode,
@@ -24,11 +26,12 @@ Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'verifiedMark': instance.verifiedMark,
     };
 
-ChzzkBadge _$ChzzkBadgeFromJson(Map<String, dynamic> json) => ChzzkBadge(
+_$ChzzkBadgeImpl _$$ChzzkBadgeImplFromJson(Map<String, dynamic> json) =>
+    _$ChzzkBadgeImpl(
       imageUrl: json['imageUrl'] as String?,
     );
 
-Map<String, dynamic> _$ChzzkBadgeToJson(ChzzkBadge instance) =>
+Map<String, dynamic> _$$ChzzkBadgeImplToJson(_$ChzzkBadgeImpl instance) =>
     <String, dynamic>{
       'imageUrl': instance.imageUrl,
     };

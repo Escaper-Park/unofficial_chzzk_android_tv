@@ -6,8 +6,9 @@ part of 'following_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FollowingResponse _$FollowingResponseFromJson(Map<String, dynamic> json) =>
-    FollowingResponse(
+_$FollowingResponseImpl _$$FollowingResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$FollowingResponseImpl(
       totalCount: (json['totalCount'] as num?)?.toInt(),
       totalPage: (json['totalPage'] as num?)?.toInt(),
       followingList: (json['followingList'] as List<dynamic>)
@@ -15,7 +16,8 @@ FollowingResponse _$FollowingResponseFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$FollowingResponseToJson(FollowingResponse instance) =>
+Map<String, dynamic> _$$FollowingResponseImplToJson(
+        _$FollowingResponseImpl instance) =>
     <String, dynamic>{
       'totalCount': instance.totalCount,
       'totalPage': instance.totalPage,

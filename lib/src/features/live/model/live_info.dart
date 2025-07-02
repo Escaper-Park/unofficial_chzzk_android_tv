@@ -6,45 +6,25 @@ part 'live_info.g.dart';
 part 'live_info.freezed.dart';
 
 @freezed
-@JsonSerializable()
 class LiveInfo with _$LiveInfo {
-  final int? liveId;
-  final String? liveTitle;
-  final String? liveImageUrl;
-  final String? defaultThumbnailImageUrl;
-  final int concurrentUserCount;
-  final int? accumulateCount;
-  final String? openDate;
-  final bool? adult;
-  final List<String>? tags;
-  final String? categoryType;
-  final String? liveCategory;
-  final String? liveCategoryValue;
-  final String? watchPartyTag;
-  final Channel? channel;
-  final String? blindType;
-
-  LiveInfo({
-    this.liveId,
-    this.liveTitle,
-    this.liveImageUrl,
-    this.defaultThumbnailImageUrl,
-    this.concurrentUserCount = 0,
-    this.accumulateCount,
-    this.openDate,
-    this.adult,
-    this.tags,
-    this.categoryType,
-    this.liveCategory,
-    this.liveCategoryValue,
-    this.watchPartyTag,
-    this.channel,
-    this.blindType,
-  });
+  const factory LiveInfo({
+    int? liveId,
+    String? liveTitle,
+    String? liveImageUrl,
+    String? defaultThumbnailImageUrl,
+    @Default(0) int concurrentUserCount,
+    int? accumulateCount,
+    String? openDate,
+    bool? adult,
+    List<String>? tags,
+    String? categoryType,
+    String? liveCategory,
+    String? liveCategoryValue,
+    String? watchPartyTag,
+    Channel? channel,
+    String? blindType,
+  }) = _LiveInfo;
 
   factory LiveInfo.fromJson(Map<String, dynamic> json) =>
       _$LiveInfoFromJson(json);
-
-  Map<String, Object?> toJson() => _$LiveInfoToJson(this);
 }
-

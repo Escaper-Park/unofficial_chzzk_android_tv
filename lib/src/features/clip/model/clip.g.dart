@@ -6,7 +6,8 @@ part of 'clip.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NaverClip _$NaverClipFromJson(Map<String, dynamic> json) => NaverClip(
+_$NaverClipImpl _$$NaverClipImplFromJson(Map<String, dynamic> json) =>
+    _$NaverClipImpl(
       clipUID: json['clipUID'] as String,
       videoId: json['videoId'] as String?,
       clipTitle: json['clipTitle'] as String,
@@ -30,12 +31,13 @@ NaverClip _$NaverClipFromJson(Map<String, dynamic> json) => NaverClip(
       privateUserBlock: json['privateUserBlock'] as bool?,
     );
 
-Map<String, dynamic> _$NaverClipToJson(NaverClip instance) => <String, dynamic>{
+Map<String, dynamic> _$$NaverClipImplToJson(_$NaverClipImpl instance) =>
+    <String, dynamic>{
       'clipUID': instance.clipUID,
       'videoId': instance.videoId,
       'clipTitle': instance.clipTitle,
       'ownerChannelId': instance.ownerChannelId,
-      'ownerChannel': instance.ownerChannel?.toJson(),
+      'ownerChannel': instance.ownerChannel,
       'thumbnailImageUrl': instance.thumbnailImageUrl,
       'duration': instance.duration,
       'adult': instance.adult,
@@ -64,14 +66,15 @@ Json? _$JsonConverterToJson<Json, Value>(
 ) =>
     value == null ? null : toJson(value);
 
-OwnerChannel _$OwnerChannelFromJson(Map<String, dynamic> json) => OwnerChannel(
+_$OwnerChannelImpl _$$OwnerChannelImplFromJson(Map<String, dynamic> json) =>
+    _$OwnerChannelImpl(
       channelId: json['channelId'] as String,
       channelName: json['channelName'] as String,
       channelImageUrl: json['channelImageUrl'] as String?,
       verifiedMark: json['verifiedMark'] as bool,
     );
 
-Map<String, dynamic> _$OwnerChannelToJson(OwnerChannel instance) =>
+Map<String, dynamic> _$$OwnerChannelImplToJson(_$OwnerChannelImpl instance) =>
     <String, dynamic>{
       'channelId': instance.channelId,
       'channelName': instance.channelName,
@@ -79,16 +82,17 @@ Map<String, dynamic> _$OwnerChannelToJson(OwnerChannel instance) =>
       'verifiedMark': instance.verifiedMark,
     };
 
-RecId _$RecIdFromJson(Map<String, dynamic> json) => RecId(
+_$RecIdImpl _$$RecIdImplFromJson(Map<String, dynamic> json) => _$RecIdImpl(
       seedClipUID: json['seedClipUID'] as String?,
       fromType: json['fromType'] as String?,
       listType: json['listType'] as String?,
-      recommendRecId: json['recommendRecId'] as String?,
       orderType: json['orderType'] as String?,
       filterType: json['filterType'] as String?,
+      recommendRecId: json['recommendRecId'] as String?,
     );
 
-Map<String, dynamic> _$RecIdToJson(RecId instance) => <String, dynamic>{
+Map<String, dynamic> _$$RecIdImplToJson(_$RecIdImpl instance) =>
+    <String, dynamic>{
       'seedClipUID': instance.seedClipUID,
       'fromType': instance.fromType,
       'listType': instance.listType,
@@ -97,8 +101,8 @@ Map<String, dynamic> _$RecIdToJson(RecId instance) => <String, dynamic>{
       'recommendRecId': instance.recommendRecId,
     };
 
-ContentLineage _$ContentLineageFromJson(Map<String, dynamic> json) =>
-    ContentLineage(
+_$ContentLineageImpl _$$ContentLineageImplFromJson(Map<String, dynamic> json) =>
+    _$ContentLineageImpl(
       contentSource: json['contentSource'] as String?,
       contentType: json['contentType'] as String?,
       contentTag: json['contentTag'] == null
@@ -106,32 +110,36 @@ ContentLineage _$ContentLineageFromJson(Map<String, dynamic> json) =>
           : ContentTag.fromJson(json['contentTag'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ContentLineageToJson(ContentLineage instance) =>
+Map<String, dynamic> _$$ContentLineageImplToJson(
+        _$ContentLineageImpl instance) =>
     <String, dynamic>{
       'contentSource': instance.contentSource,
       'contentType': instance.contentType,
-      'contentTag': instance.contentTag?.toJson(),
+      'contentTag': instance.contentTag,
     };
 
-ContentTag _$ContentTagFromJson(Map<String, dynamic> json) => ContentTag(
+_$ContentTagImpl _$$ContentTagImplFromJson(Map<String, dynamic> json) =>
+    _$ContentTagImpl(
       internal: json['internal'] as String?,
       externalTag: json['external'] == null
           ? null
           : External.fromJson(json['external'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ContentTagToJson(ContentTag instance) =>
+Map<String, dynamic> _$$ContentTagImplToJson(_$ContentTagImpl instance) =>
     <String, dynamic>{
       'internal': instance.internal,
-      'external': instance.externalTag?.toJson(),
+      'external': instance.externalTag,
     };
 
-External _$ExternalFromJson(Map<String, dynamic> json) => External(
+_$ExternalImpl _$$ExternalImplFromJson(Map<String, dynamic> json) =>
+    _$ExternalImpl(
       rqt: json['rqt'] as String?,
       apiRequestKey: json['apiRequestKey'] as String?,
     );
 
-Map<String, dynamic> _$ExternalToJson(External instance) => <String, dynamic>{
+Map<String, dynamic> _$$ExternalImplToJson(_$ExternalImpl instance) =>
+    <String, dynamic>{
       'rqt': instance.rqt,
       'apiRequestKey': instance.apiRequestKey,
     };

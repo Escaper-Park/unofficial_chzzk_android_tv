@@ -6,7 +6,8 @@ part of 'live_detail.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LiveDetail _$LiveDetailFromJson(Map<String, dynamic> json) => LiveDetail(
+_$LiveDetailImpl _$$LiveDetailImplFromJson(Map<String, dynamic> json) =>
+    _$LiveDetailImpl(
       liveId: (json['liveId'] as num).toInt(),
       liveTitle: json['liveTitle'] as String,
       status: json['status'] as String,
@@ -46,7 +47,7 @@ LiveDetail _$LiveDetailFromJson(Map<String, dynamic> json) => LiveDetail(
       watchPartyTag: json['watchPartyTag'] as String?,
     );
 
-Map<String, dynamic> _$LiveDetailToJson(LiveDetail instance) =>
+Map<String, dynamic> _$$LiveDetailImplToJson(_$LiveDetailImpl instance) =>
     <String, dynamic>{
       'liveId': instance.liveId,
       'liveTitle': instance.liveTitle,
@@ -77,7 +78,7 @@ Map<String, dynamic> _$LiveDetailToJson(LiveDetail instance) =>
       'p2pQuality': instance.p2pQuality,
       'timeMachineActive': instance.timeMachineActive,
       'timeMachinePlayback': instance.timeMachinePlayback,
-      'channel': instance.channel.toJson(),
+      'channel': instance.channel,
       'userAdultStatus': instance.userAdultStatus,
       'blindType': instance.blindType,
       'watchPartyNo': instance.watchPartyNo,

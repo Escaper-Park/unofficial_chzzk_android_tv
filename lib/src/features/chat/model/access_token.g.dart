@@ -6,13 +6,14 @@ part of 'access_token.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AccessToken _$AccessTokenFromJson(Map<String, dynamic> json) => AccessToken(
+_$AccessTokenImpl _$$AccessTokenImplFromJson(Map<String, dynamic> json) =>
+    _$AccessTokenImpl(
       accessToken: json['accessToken'] as String,
       realNameAuth: json['realNameAuth'] as bool,
       extraToken: json['extraToken'] as String,
     );
 
-Map<String, dynamic> _$AccessTokenToJson(AccessToken instance) =>
+Map<String, dynamic> _$$AccessTokenImplToJson(_$AccessTokenImpl instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,
       'realNameAuth': instance.realNameAuth,

@@ -6,7 +6,7 @@ part of 'chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Chat _$ChatFromJson(Map<String, dynamic> json) => Chat(
+_$ChatImpl _$$ChatImplFromJson(Map<String, dynamic> json) => _$ChatImpl(
       svcid: json['svcid'] as String,
       ver: json['ver'] as String,
       bdy: (json['bdy'] as List<dynamic>)
@@ -17,16 +17,18 @@ Chat _$ChatFromJson(Map<String, dynamic> json) => Chat(
       cid: json['cid'] as String?,
     );
 
-Map<String, dynamic> _$ChatToJson(Chat instance) => <String, dynamic>{
+Map<String, dynamic> _$$ChatImplToJson(_$ChatImpl instance) =>
+    <String, dynamic>{
       'svcid': instance.svcid,
       'ver': instance.ver,
-      'bdy': instance.bdy.map((e) => e.toJson()).toList(),
+      'bdy': instance.bdy,
       'cmd': instance.cmd,
       'tid': instance.tid,
       'cid': instance.cid,
     };
 
-ChatBdy _$ChatBdyFromJson(Map<String, dynamic> json) => ChatBdy(
+_$ChatBdyImpl _$$ChatBdyImplFromJson(Map<String, dynamic> json) =>
+    _$ChatBdyImpl(
       svcid: json['svcid'] as String,
       cid: json['cid'] as String,
       mbrCnt: (json['mbrCnt'] as num).toInt(),
@@ -43,7 +45,8 @@ ChatBdy _$ChatBdyFromJson(Map<String, dynamic> json) => ChatBdy(
       msgTime: (json['msgTime'] as num).toInt(),
     );
 
-Map<String, dynamic> _$ChatBdyToJson(ChatBdy instance) => <String, dynamic>{
+Map<String, dynamic> _$$ChatBdyImplToJson(_$ChatBdyImpl instance) =>
+    <String, dynamic>{
       'svcid': instance.svcid,
       'cid': instance.cid,
       'mbrCnt': instance.mbrCnt,

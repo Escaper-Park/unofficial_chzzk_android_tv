@@ -1,3 +1,4 @@
 {
-    "markdown.validate.enabled": false
+  "markdown.validate.enabled": false,
+  "dart.flutterSdkPath": ".fvm/versions/3.24.5"
 }

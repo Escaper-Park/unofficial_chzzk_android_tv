@@ -7,7 +7,7 @@ part of 'live_chat_controller.dart';
 // **************************************************************************
 
 String _$liveChatControllerHash() =>
-    r'222611ad934a2a5c70d17a478e988810522361ef';
+    r'df086bb437c7af51ff4528621913943398f7bb7b';
 
 /// Copied from Dart SDK
 class _SystemHash {

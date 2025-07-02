@@ -6,8 +6,9 @@ part of 'clip_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PopularClipResponse _$PopularClipResponseFromJson(Map<String, dynamic> json) =>
-    PopularClipResponse(
+_$PopularClipResponseImpl _$$PopularClipResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PopularClipResponseImpl(
       size: (json['size'] as num).toInt(),
       page: json['page'] == null
           ? null
@@ -17,39 +18,43 @@ PopularClipResponse _$PopularClipResponseFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$PopularClipResponseToJson(
-        PopularClipResponse instance) =>
+Map<String, dynamic> _$$PopularClipResponseImplToJson(
+        _$PopularClipResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'page': instance.page,
       'data': instance.data,
     };
 
-PopularClipPage _$PopularClipPageFromJson(Map<String, dynamic> json) =>
-    PopularClipPage(
+_$PopularClipPageImpl _$$PopularClipPageImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PopularClipPageImpl(
       next: json['next'] == null
           ? null
           : PopularClipNext.fromJson(json['next'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PopularClipPageToJson(PopularClipPage instance) =>
+Map<String, dynamic> _$$PopularClipPageImplToJson(
+        _$PopularClipPageImpl instance) =>
     <String, dynamic>{
       'next': instance.next,
     };
 
-PopularClipNext _$PopularClipNextFromJson(Map<String, dynamic> json) =>
-    PopularClipNext(
+_$PopularClipNextImpl _$$PopularClipNextImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PopularClipNextImpl(
       next: json['next'] as String?,
     );
 
-Map<String, dynamic> _$PopularClipNextToJson(PopularClipNext instance) =>
+Map<String, dynamic> _$$PopularClipNextImplToJson(
+        _$PopularClipNextImpl instance) =>
     <String, dynamic>{
       'next': instance.next,
     };
 
-CategoryClipResponse _$CategoryClipResponseFromJson(
+_$CategoryClipResponseImpl _$$CategoryClipResponseImplFromJson(
         Map<String, dynamic> json) =>
-    CategoryClipResponse(
+    _$CategoryClipResponseImpl(
       size: (json['size'] as num).toInt(),
       page: json['page'] == null
           ? null
@@ -59,40 +64,45 @@ CategoryClipResponse _$CategoryClipResponseFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$CategoryClipResponseToJson(
-        CategoryClipResponse instance) =>
+Map<String, dynamic> _$$CategoryClipResponseImplToJson(
+        _$CategoryClipResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'page': instance.page,
       'data': instance.data,
     };
 
-CategoryClipPage _$CategoryClipPageFromJson(Map<String, dynamic> json) =>
-    CategoryClipPage(
+_$CategoryClipPageImpl _$$CategoryClipPageImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CategoryClipPageImpl(
       next: json['next'] == null
           ? null
           : CategoryClipNext.fromJson(json['next'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$CategoryClipPageToJson(CategoryClipPage instance) =>
+Map<String, dynamic> _$$CategoryClipPageImplToJson(
+        _$CategoryClipPageImpl instance) =>
     <String, dynamic>{
       'next': instance.next,
     };
 
-CategoryClipNext _$CategoryClipNextFromJson(Map<String, dynamic> json) =>
-    CategoryClipNext(
+_$CategoryClipNextImpl _$$CategoryClipNextImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CategoryClipNextImpl(
       clipUID: json['clipUID'] as String?,
       readCount: (json['readCount'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$CategoryClipNextToJson(CategoryClipNext instance) =>
+Map<String, dynamic> _$$CategoryClipNextImplToJson(
+        _$CategoryClipNextImpl instance) =>
     <String, dynamic>{
       'clipUID': instance.clipUID,
       'readCount': instance.readCount,
     };
 
-ChannelClipResponse _$ChannelClipResponseFromJson(Map<String, dynamic> json) =>
-    ChannelClipResponse(
+_$ChannelClipResponseImpl _$$ChannelClipResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChannelClipResponseImpl(
       size: (json['size'] as num).toInt(),
       page: json['page'] == null
           ? null
@@ -103,8 +113,8 @@ ChannelClipResponse _$ChannelClipResponseFromJson(Map<String, dynamic> json) =>
       hasStreamerClips: json['hasStreamerClips'] as bool?,
     );
 
-Map<String, dynamic> _$ChannelClipResponseToJson(
-        ChannelClipResponse instance) =>
+Map<String, dynamic> _$$ChannelClipResponseImplToJson(
+        _$ChannelClipResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'page': instance.page,
@@ -112,25 +122,29 @@ Map<String, dynamic> _$ChannelClipResponseToJson(
       'hasStreamerClips': instance.hasStreamerClips,
     };
 
-ChannelClipPage _$ChannelClipPageFromJson(Map<String, dynamic> json) =>
-    ChannelClipPage(
+_$ChannelClipPageImpl _$$ChannelClipPageImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChannelClipPageImpl(
       next: json['next'] == null
           ? null
           : ChannelClipNext.fromJson(json['next'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ChannelClipPageToJson(ChannelClipPage instance) =>
+Map<String, dynamic> _$$ChannelClipPageImplToJson(
+        _$ChannelClipPageImpl instance) =>
     <String, dynamic>{
       'next': instance.next,
     };
 
-ChannelClipNext _$ChannelClipNextFromJson(Map<String, dynamic> json) =>
-    ChannelClipNext(
+_$ChannelClipNextImpl _$$ChannelClipNextImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChannelClipNextImpl(
       clipUID: json['clipUID'] as String?,
       readCount: (json['readCount'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$ChannelClipNextToJson(ChannelClipNext instance) =>
+Map<String, dynamic> _$$ChannelClipNextImplToJson(
+        _$ChannelClipNextImpl instance) =>
     <String, dynamic>{
       'clipUID': instance.clipUID,
       'readCount': instance.readCount,

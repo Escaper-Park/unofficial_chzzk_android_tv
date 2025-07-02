@@ -6,8 +6,9 @@ part of 'watching_history.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WatchingHistory _$WatchingHistoryFromJson(Map<String, dynamic> json) =>
-    WatchingHistory(
+_$WatchingHistoryImpl _$$WatchingHistoryImplFromJson(
+        Map<String, dynamic> json) =>
+    _$WatchingHistoryImpl(
       historyNo: json['historyNo'] as String,
       channelId: json['channelId'] as String,
       videoNo: (json['videoNo'] as num).toInt(),
@@ -18,7 +19,8 @@ WatchingHistory _$WatchingHistoryFromJson(Map<String, dynamic> json) =>
           Vod.fromJson(json['videoResponse'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$WatchingHistoryToJson(WatchingHistory instance) =>
+Map<String, dynamic> _$$WatchingHistoryImplToJson(
+        _$WatchingHistoryImpl instance) =>
     <String, dynamic>{
       'historyNo': instance.historyNo,
       'channelId': instance.channelId,

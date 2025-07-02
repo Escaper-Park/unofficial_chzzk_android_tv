@@ -6,12 +6,13 @@ part of 'auth.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Auth _$AuthFromJson(Map<String, dynamic> json) => _Auth(
+_$AuthImpl _$$AuthImplFromJson(Map<String, dynamic> json) => _$AuthImpl(
       nidAuth: json['nidAuth'] as String,
       nidSession: json['nidSession'] as String,
     );
 
-Map<String, dynamic> _$AuthToJson(_Auth instance) => <String, dynamic>{
+Map<String, dynamic> _$$AuthImplToJson(_$AuthImpl instance) =>
+    <String, dynamic>{
       'nidAuth': instance.nidAuth,
       'nidSession': instance.nidSession,
     };

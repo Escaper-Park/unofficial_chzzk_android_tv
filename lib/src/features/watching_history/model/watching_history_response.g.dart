@@ -6,9 +6,9 @@ part of 'watching_history_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WatchingHistoryResponse _$WatchingHistoryResponseFromJson(
+_$WatchingHistoryResponseImpl _$$WatchingHistoryResponseImplFromJson(
         Map<String, dynamic> json) =>
-    WatchingHistoryResponse(
+    _$WatchingHistoryResponseImpl(
       size: (json['size'] as num).toInt(),
       page: json['page'] == null
           ? null
@@ -18,34 +18,36 @@ WatchingHistoryResponse _$WatchingHistoryResponseFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$WatchingHistoryResponseToJson(
-        WatchingHistoryResponse instance) =>
+Map<String, dynamic> _$$WatchingHistoryResponseImplToJson(
+        _$WatchingHistoryResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'page': instance.page,
       'data': instance.data,
     };
 
-WatchingHistoryPage _$WatchingHistoryPageFromJson(Map<String, dynamic> json) =>
-    WatchingHistoryPage(
+_$WatchingHistoryPageImpl _$$WatchingHistoryPageImplFromJson(
+        Map<String, dynamic> json) =>
+    _$WatchingHistoryPageImpl(
       next: json['next'] == null
           ? null
           : WatchingHistoryNext.fromJson(json['next'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$WatchingHistoryPageToJson(
-        WatchingHistoryPage instance) =>
+Map<String, dynamic> _$$WatchingHistoryPageImplToJson(
+        _$WatchingHistoryPageImpl instance) =>
     <String, dynamic>{
       'next': instance.next,
     };
 
-WatchingHistoryNext _$WatchingHistoryNextFromJson(Map<String, dynamic> json) =>
-    WatchingHistoryNext(
+_$WatchingHistoryNextImpl _$$WatchingHistoryNextImplFromJson(
+        Map<String, dynamic> json) =>
+    _$WatchingHistoryNextImpl(
       lastTime: (json['lastTime'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$WatchingHistoryNextToJson(
-        WatchingHistoryNext instance) =>
+Map<String, dynamic> _$$WatchingHistoryNextImplToJson(
+        _$WatchingHistoryNextImpl instance) =>
     <String, dynamic>{
       'lastTime': instance.lastTime,
     };

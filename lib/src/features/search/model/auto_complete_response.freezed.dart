@@ -1,4 +1,3 @@
-// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -10,69 +9,56 @@ part of 'auto_complete_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
-// dart format off
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+AutoCompleteSearchChannelResponse _$AutoCompleteSearchChannelResponseFromJson(
+    Map<String, dynamic> json) {
+  return _AutoCompleteSearchChannelResponse.fromJson(json);
+}
 
 /// @nodoc
 mixin _$AutoCompleteSearchChannelResponse {
-  int get page;
-  int get size;
-  int get totalCount;
-  int get totalPages;
-  List<String> get data;
+  int get page => throw _privateConstructorUsedError;
+  int get size => throw _privateConstructorUsedError;
+  int get totalCount => throw _privateConstructorUsedError;
+  int get totalPages => throw _privateConstructorUsedError;
+  List<String> get data => throw _privateConstructorUsedError;
+
+  /// Serializes this AutoCompleteSearchChannelResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of AutoCompleteSearchChannelResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
   $AutoCompleteSearchChannelResponseCopyWith<AutoCompleteSearchChannelResponse>
-      get copyWith => _$AutoCompleteSearchChannelResponseCopyWithImpl<
-              AutoCompleteSearchChannelResponse>(
-          this as AutoCompleteSearchChannelResponse, _$identity);
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is AutoCompleteSearchChannelResponse &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.size, size) || other.size == size) &&
-            (identical(other.totalCount, totalCount) ||
-                other.totalCount == totalCount) &&
-            (identical(other.totalPages, totalPages) ||
-                other.totalPages == totalPages) &&
-            const DeepCollectionEquality().equals(other.data, data));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, page, size, totalCount,
-      totalPages, const DeepCollectionEquality().hash(data));
-
-  @override
-  String toString() {
-    return 'AutoCompleteSearchChannelResponse(page: $page, size: $size, totalCount: $totalCount, totalPages: $totalPages, data: $data)';
-  }
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract mixin class $AutoCompleteSearchChannelResponseCopyWith<$Res> {
+abstract class $AutoCompleteSearchChannelResponseCopyWith<$Res> {
   factory $AutoCompleteSearchChannelResponseCopyWith(
           AutoCompleteSearchChannelResponse value,
-          $Res Function(AutoCompleteSearchChannelResponse) _then) =
-      _$AutoCompleteSearchChannelResponseCopyWithImpl;
+          $Res Function(AutoCompleteSearchChannelResponse) then) =
+      _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res,
+          AutoCompleteSearchChannelResponse>;
   @useResult
   $Res call(
       {int page, int size, int totalCount, int totalPages, List<String> data});
 }
 
 /// @nodoc
-class _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res>
+class _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res,
+        $Val extends AutoCompleteSearchChannelResponse>
     implements $AutoCompleteSearchChannelResponseCopyWith<$Res> {
-  _$AutoCompleteSearchChannelResponseCopyWithImpl(this._self, this._then);
+  _$AutoCompleteSearchChannelResponseCopyWithImpl(this._value, this._then);
 
-  final AutoCompleteSearchChannelResponse _self;
-  final $Res Function(AutoCompleteSearchChannelResponse) _then;
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
   /// Create a copy of AutoCompleteSearchChannelResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -85,25 +71,84 @@ class _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res>
     Object? totalPages = null,
     Object? data = null,
   }) {
-    return _then(AutoCompleteSearchChannelResponse(
+    return _then(_value.copyWith(
       page: null == page
-          ? _self.page
+          ? _value.page
           : page // ignore: cast_nullable_to_non_nullable
               as int,
       size: null == size
-          ? _self.size
+          ? _value.size
           : size // ignore: cast_nullable_to_non_nullable
               as int,
       totalCount: null == totalCount
-          ? _self.totalCount
+          ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
       totalPages: null == totalPages
-          ? _self.totalPages
+          ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
               as int,
       data: null == data
-          ? _self.data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AutoCompleteSearchChannelResponseImplCopyWith<$Res>
+    implements $AutoCompleteSearchChannelResponseCopyWith<$Res> {
+  factory _$$AutoCompleteSearchChannelResponseImplCopyWith(
+          _$AutoCompleteSearchChannelResponseImpl value,
+          $Res Function(_$AutoCompleteSearchChannelResponseImpl) then) =
+      __$$AutoCompleteSearchChannelResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int page, int size, int totalCount, int totalPages, List<String> data});
+}
+
+/// @nodoc
+class __$$AutoCompleteSearchChannelResponseImplCopyWithImpl<$Res>
+    extends _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res,
+        _$AutoCompleteSearchChannelResponseImpl>
+    implements _$$AutoCompleteSearchChannelResponseImplCopyWith<$Res> {
+  __$$AutoCompleteSearchChannelResponseImplCopyWithImpl(
+      _$AutoCompleteSearchChannelResponseImpl _value,
+      $Res Function(_$AutoCompleteSearchChannelResponseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AutoCompleteSearchChannelResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? page = null,
+    Object? size = null,
+    Object? totalCount = null,
+    Object? totalPages = null,
+    Object? data = null,
+  }) {
+    return _then(_$AutoCompleteSearchChannelResponseImpl(
+      page: null == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      size: null == size
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -111,60 +156,158 @@ class _$AutoCompleteSearchChannelResponseCopyWithImpl<$Res>
 }
 
 /// @nodoc
-mixin _$AutoCompleteSearchCategoryResponse {
-  Paging? get paging;
-  int get totalCount;
-  List<String> get data;
+@JsonSerializable()
+class _$AutoCompleteSearchChannelResponseImpl
+    implements _AutoCompleteSearchChannelResponse {
+  const _$AutoCompleteSearchChannelResponseImpl(
+      {required this.page,
+      required this.size,
+      required this.totalCount,
+      required this.totalPages,
+      required final List<String> data})
+      : _data = data;
 
-  /// Create a copy of AutoCompleteSearchCategoryResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $AutoCompleteSearchCategoryResponseCopyWith<
-          AutoCompleteSearchCategoryResponse>
-      get copyWith => _$AutoCompleteSearchCategoryResponseCopyWithImpl<
-              AutoCompleteSearchCategoryResponse>(
-          this as AutoCompleteSearchCategoryResponse, _$identity);
+  factory _$AutoCompleteSearchChannelResponseImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$AutoCompleteSearchChannelResponseImplFromJson(json);
+
+  @override
+  final int page;
+  @override
+  final int size;
+  @override
+  final int totalCount;
+  @override
+  final int totalPages;
+  final List<String> _data;
+  @override
+  List<String> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  @override
+  String toString() {
+    return 'AutoCompleteSearchChannelResponse(page: $page, size: $size, totalCount: $totalCount, totalPages: $totalPages, data: $data)';
+  }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is AutoCompleteSearchCategoryResponse &&
-            (identical(other.paging, paging) || other.paging == paging) &&
+            other is _$AutoCompleteSearchChannelResponseImpl &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.size, size) || other.size == size) &&
             (identical(other.totalCount, totalCount) ||
                 other.totalCount == totalCount) &&
-            const DeepCollectionEquality().equals(other.data, data));
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages) &&
+            const DeepCollectionEquality().equals(other._data, _data));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, paging, totalCount,
-      const DeepCollectionEquality().hash(data));
+  int get hashCode => Object.hash(runtimeType, page, size, totalCount,
+      totalPages, const DeepCollectionEquality().hash(_data));
+
+  /// Create a copy of AutoCompleteSearchChannelResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AutoCompleteSearchChannelResponseImplCopyWith<
+          _$AutoCompleteSearchChannelResponseImpl>
+      get copyWith => __$$AutoCompleteSearchChannelResponseImplCopyWithImpl<
+          _$AutoCompleteSearchChannelResponseImpl>(this, _$identity);
 
   @override
-  String toString() {
-    return 'AutoCompleteSearchCategoryResponse(paging: $paging, totalCount: $totalCount, data: $data)';
+  Map<String, dynamic> toJson() {
+    return _$$AutoCompleteSearchChannelResponseImplToJson(
+      this,
+    );
   }
 }
 
-/// @nodoc
-abstract mixin class $AutoCompleteSearchCategoryResponseCopyWith<$Res> {
-  factory $AutoCompleteSearchCategoryResponseCopyWith(
-          AutoCompleteSearchCategoryResponse value,
-          $Res Function(AutoCompleteSearchCategoryResponse) _then) =
-      _$AutoCompleteSearchCategoryResponseCopyWithImpl;
-  @useResult
-  $Res call({Paging? paging, int totalCount, List<String> data});
+abstract class _AutoCompleteSearchChannelResponse
+    implements AutoCompleteSearchChannelResponse {
+  const factory _AutoCompleteSearchChannelResponse(
+          {required final int page,
+          required final int size,
+          required final int totalCount,
+          required final int totalPages,
+          required final List<String> data}) =
+      _$AutoCompleteSearchChannelResponseImpl;
+
+  factory _AutoCompleteSearchChannelResponse.fromJson(
+          Map<String, dynamic> json) =
+      _$AutoCompleteSearchChannelResponseImpl.fromJson;
+
+  @override
+  int get page;
+  @override
+  int get size;
+  @override
+  int get totalCount;
+  @override
+  int get totalPages;
+  @override
+  List<String> get data;
+
+  /// Create a copy of AutoCompleteSearchChannelResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AutoCompleteSearchChannelResponseImplCopyWith<
+          _$AutoCompleteSearchChannelResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+AutoCompleteSearchCategoryResponse _$AutoCompleteSearchCategoryResponseFromJson(
+    Map<String, dynamic> json) {
+  return _AutoCompleteSearchCategoryResponse.fromJson(json);
 }
 
 /// @nodoc
-class _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res>
-    implements $AutoCompleteSearchCategoryResponseCopyWith<$Res> {
-  _$AutoCompleteSearchCategoryResponseCopyWithImpl(this._self, this._then);
+mixin _$AutoCompleteSearchCategoryResponse {
+  Paging? get paging => throw _privateConstructorUsedError;
+  int get totalCount => throw _privateConstructorUsedError;
+  List<String> get data => throw _privateConstructorUsedError;
 
-  final AutoCompleteSearchCategoryResponse _self;
-  final $Res Function(AutoCompleteSearchCategoryResponse) _then;
+  /// Serializes this AutoCompleteSearchCategoryResponse to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of AutoCompleteSearchCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AutoCompleteSearchCategoryResponseCopyWith<
+          AutoCompleteSearchCategoryResponse>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AutoCompleteSearchCategoryResponseCopyWith<$Res> {
+  factory $AutoCompleteSearchCategoryResponseCopyWith(
+          AutoCompleteSearchCategoryResponse value,
+          $Res Function(AutoCompleteSearchCategoryResponse) then) =
+      _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res,
+          AutoCompleteSearchCategoryResponse>;
+  @useResult
+  $Res call({Paging? paging, int totalCount, List<String> data});
+
+  $PagingCopyWith<$Res>? get paging;
+}
+
+/// @nodoc
+class _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res,
+        $Val extends AutoCompleteSearchCategoryResponse>
+    implements $AutoCompleteSearchCategoryResponseCopyWith<$Res> {
+  _$AutoCompleteSearchCategoryResponseCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
   /// Create a copy of AutoCompleteSearchCategoryResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -175,17 +318,82 @@ class _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res>
     Object? totalCount = null,
     Object? data = null,
   }) {
-    return _then(AutoCompleteSearchCategoryResponse(
+    return _then(_value.copyWith(
       paging: freezed == paging
-          ? _self.paging
+          ? _value.paging
           : paging // ignore: cast_nullable_to_non_nullable
               as Paging?,
       totalCount: null == totalCount
-          ? _self.totalCount
+          ? _value.totalCount
           : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
       data: null == data
-          ? _self.data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ) as $Val);
+  }
+
+  /// Create a copy of AutoCompleteSearchCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PagingCopyWith<$Res>? get paging {
+    if (_value.paging == null) {
+      return null;
+    }
+
+    return $PagingCopyWith<$Res>(_value.paging!, (value) {
+      return _then(_value.copyWith(paging: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$AutoCompleteSearchCategoryResponseImplCopyWith<$Res>
+    implements $AutoCompleteSearchCategoryResponseCopyWith<$Res> {
+  factory _$$AutoCompleteSearchCategoryResponseImplCopyWith(
+          _$AutoCompleteSearchCategoryResponseImpl value,
+          $Res Function(_$AutoCompleteSearchCategoryResponseImpl) then) =
+      __$$AutoCompleteSearchCategoryResponseImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({Paging? paging, int totalCount, List<String> data});
+
+  @override
+  $PagingCopyWith<$Res>? get paging;
+}
+
+/// @nodoc
+class __$$AutoCompleteSearchCategoryResponseImplCopyWithImpl<$Res>
+    extends _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res,
+        _$AutoCompleteSearchCategoryResponseImpl>
+    implements _$$AutoCompleteSearchCategoryResponseImplCopyWith<$Res> {
+  __$$AutoCompleteSearchCategoryResponseImplCopyWithImpl(
+      _$AutoCompleteSearchCategoryResponseImpl _value,
+      $Res Function(_$AutoCompleteSearchCategoryResponseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AutoCompleteSearchCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? paging = freezed,
+    Object? totalCount = null,
+    Object? data = null,
+  }) {
+    return _then(_$AutoCompleteSearchCategoryResponseImpl(
+      paging: freezed == paging
+          ? _value.paging
+          : paging // ignore: cast_nullable_to_non_nullable
+              as Paging?,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      data: null == data
+          ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -193,23 +401,231 @@ class _$AutoCompleteSearchCategoryResponseCopyWithImpl<$Res>
 }
 
 /// @nodoc
-mixin _$Paging {
-  String get pagingType;
-  int get currentPageNo;
-  bool get lastPage;
+@JsonSerializable()
+class _$AutoCompleteSearchCategoryResponseImpl
+    implements _AutoCompleteSearchCategoryResponse {
+  const _$AutoCompleteSearchCategoryResponseImpl(
+      {this.paging, required this.totalCount, required final List<String> data})
+      : _data = data;
 
-  /// Create a copy of Paging
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $PagingCopyWith<Paging> get copyWith =>
-      _$PagingCopyWithImpl<Paging>(this as Paging, _$identity);
+  factory _$AutoCompleteSearchCategoryResponseImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$AutoCompleteSearchCategoryResponseImplFromJson(json);
+
+  @override
+  final Paging? paging;
+  @override
+  final int totalCount;
+  final List<String> _data;
+  @override
+  List<String> get data {
+    if (_data is EqualUnmodifiableListView) return _data;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_data);
+  }
+
+  @override
+  String toString() {
+    return 'AutoCompleteSearchCategoryResponse(paging: $paging, totalCount: $totalCount, data: $data)';
+  }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is Paging &&
+            other is _$AutoCompleteSearchCategoryResponseImpl &&
+            (identical(other.paging, paging) || other.paging == paging) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            const DeepCollectionEquality().equals(other._data, _data));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, paging, totalCount,
+      const DeepCollectionEquality().hash(_data));
+
+  /// Create a copy of AutoCompleteSearchCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AutoCompleteSearchCategoryResponseImplCopyWith<
+          _$AutoCompleteSearchCategoryResponseImpl>
+      get copyWith => __$$AutoCompleteSearchCategoryResponseImplCopyWithImpl<
+          _$AutoCompleteSearchCategoryResponseImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AutoCompleteSearchCategoryResponseImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AutoCompleteSearchCategoryResponse
+    implements AutoCompleteSearchCategoryResponse {
+  const factory _AutoCompleteSearchCategoryResponse(
+          {final Paging? paging,
+          required final int totalCount,
+          required final List<String> data}) =
+      _$AutoCompleteSearchCategoryResponseImpl;
+
+  factory _AutoCompleteSearchCategoryResponse.fromJson(
+          Map<String, dynamic> json) =
+      _$AutoCompleteSearchCategoryResponseImpl.fromJson;
+
+  @override
+  Paging? get paging;
+  @override
+  int get totalCount;
+  @override
+  List<String> get data;
+
+  /// Create a copy of AutoCompleteSearchCategoryResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AutoCompleteSearchCategoryResponseImplCopyWith<
+          _$AutoCompleteSearchCategoryResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+Paging _$PagingFromJson(Map<String, dynamic> json) {
+  return _Paging.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Paging {
+  String get pagingType => throw _privateConstructorUsedError;
+  int get currentPageNo => throw _privateConstructorUsedError;
+  bool get lastPage => throw _privateConstructorUsedError;
+
+  /// Serializes this Paging to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of Paging
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PagingCopyWith<Paging> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PagingCopyWith<$Res> {
+  factory $PagingCopyWith(Paging value, $Res Function(Paging) then) =
+      _$PagingCopyWithImpl<$Res, Paging>;
+  @useResult
+  $Res call({String pagingType, int currentPageNo, bool lastPage});
+}
+
+/// @nodoc
+class _$PagingCopyWithImpl<$Res, $Val extends Paging>
+    implements $PagingCopyWith<$Res> {
+  _$PagingCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of Paging
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? pagingType = null,
+    Object? currentPageNo = null,
+    Object? lastPage = null,
+  }) {
+    return _then(_value.copyWith(
+      pagingType: null == pagingType
+          ? _value.pagingType
+          : pagingType // ignore: cast_nullable_to_non_nullable
+              as String,
+      currentPageNo: null == currentPageNo
+          ? _value.currentPageNo
+          : currentPageNo // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastPage: null == lastPage
+          ? _value.lastPage
+          : lastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PagingImplCopyWith<$Res> implements $PagingCopyWith<$Res> {
+  factory _$$PagingImplCopyWith(
+          _$PagingImpl value, $Res Function(_$PagingImpl) then) =
+      __$$PagingImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String pagingType, int currentPageNo, bool lastPage});
+}
+
+/// @nodoc
+class __$$PagingImplCopyWithImpl<$Res>
+    extends _$PagingCopyWithImpl<$Res, _$PagingImpl>
+    implements _$$PagingImplCopyWith<$Res> {
+  __$$PagingImplCopyWithImpl(
+      _$PagingImpl _value, $Res Function(_$PagingImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Paging
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? pagingType = null,
+    Object? currentPageNo = null,
+    Object? lastPage = null,
+  }) {
+    return _then(_$PagingImpl(
+      pagingType: null == pagingType
+          ? _value.pagingType
+          : pagingType // ignore: cast_nullable_to_non_nullable
+              as String,
+      currentPageNo: null == currentPageNo
+          ? _value.currentPageNo
+          : currentPageNo // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastPage: null == lastPage
+          ? _value.lastPage
+          : lastPage // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PagingImpl implements _Paging {
+  const _$PagingImpl(
+      {required this.pagingType,
+      required this.currentPageNo,
+      required this.lastPage});
+
+  factory _$PagingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PagingImplFromJson(json);
+
+  @override
+  final String pagingType;
+  @override
+  final int currentPageNo;
+  @override
+  final bool lastPage;
+
+  @override
+  String toString() {
+    return 'Paging(pagingType: $pagingType, currentPageNo: $currentPageNo, lastPage: $lastPage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PagingImpl &&
             (identical(other.pagingType, pagingType) ||
                 other.pagingType == pagingType) &&
             (identical(other.currentPageNo, currentPageNo) ||
@@ -223,51 +639,41 @@ mixin _$Paging {
   int get hashCode =>
       Object.hash(runtimeType, pagingType, currentPageNo, lastPage);
 
+  /// Create a copy of Paging
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  String toString() {
-    return 'Paging(pagingType: $pagingType, currentPageNo: $currentPageNo, lastPage: $lastPage)';
+  @pragma('vm:prefer-inline')
+  _$$PagingImplCopyWith<_$PagingImpl> get copyWith =>
+      __$$PagingImplCopyWithImpl<_$PagingImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PagingImplToJson(
+      this,
+    );
   }
 }
 
-/// @nodoc
-abstract mixin class $PagingCopyWith<$Res> {
-  factory $PagingCopyWith(Paging value, $Res Function(Paging) _then) =
-      _$PagingCopyWithImpl;
-  @useResult
-  $Res call({String pagingType, int currentPageNo, bool lastPage});
-}
+abstract class _Paging implements Paging {
+  const factory _Paging(
+      {required final String pagingType,
+      required final int currentPageNo,
+      required final bool lastPage}) = _$PagingImpl;
 
-/// @nodoc
-class _$PagingCopyWithImpl<$Res> implements $PagingCopyWith<$Res> {
-  _$PagingCopyWithImpl(this._self, this._then);
+  factory _Paging.fromJson(Map<String, dynamic> json) = _$PagingImpl.fromJson;
 
-  final Paging _self;
-  final $Res Function(Paging) _then;
+  @override
+  String get pagingType;
+  @override
+  int get currentPageNo;
+  @override
+  bool get lastPage;
 
   /// Create a copy of Paging
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? pagingType = null,
-    Object? currentPageNo = null,
-    Object? lastPage = null,
-  }) {
-    return _then(Paging(
-      pagingType: null == pagingType
-          ? _self.pagingType
-          : pagingType // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentPageNo: null == currentPageNo
-          ? _self.currentPageNo
-          : currentPageNo // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastPage: null == lastPage
-          ? _self.lastPage
-          : lastPage // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PagingImplCopyWith<_$PagingImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
-
-// dart format on

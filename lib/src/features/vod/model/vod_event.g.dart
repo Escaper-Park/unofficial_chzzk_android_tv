@@ -6,21 +6,24 @@ part of 'vod_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VodEvent _$VodEventFromJson(Map<String, dynamic> json) => VodEvent(
+_$VodEventImpl _$$VodEventImplFromJson(Map<String, dynamic> json) =>
+    _$VodEventImpl(
       channelId: json['channelId'] as String,
       videoNo: (json['videoNo'] as num).toInt(),
       payload: Payload.fromJson(json['payload'] as Map<String, dynamic>),
       totalLength: (json['totalLength'] as num).toInt(),
     );
 
-Map<String, dynamic> _$VodEventToJson(VodEvent instance) => <String, dynamic>{
+Map<String, dynamic> _$$VodEventImplToJson(_$VodEventImpl instance) =>
+    <String, dynamic>{
       'channelId': instance.channelId,
       'videoNo': instance.videoNo,
-      'payload': instance.payload.toJson(),
+      'payload': instance.payload,
       'totalLength': instance.totalLength,
     };
 
-Payload _$PayloadFromJson(Map<String, dynamic> json) => Payload(
+_$PayloadImpl _$$PayloadImplFromJson(Map<String, dynamic> json) =>
+    _$PayloadImpl(
       watchEventType: json['watchEventType'] as String,
       sessionId: json['sessionId'] as String,
       duration: (json['duration'] as num).toInt(),
@@ -28,7 +31,8 @@ Payload _$PayloadFromJson(Map<String, dynamic> json) => Payload(
       awt: (json['awt'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$PayloadToJson(Payload instance) => <String, dynamic>{
+Map<String, dynamic> _$$PayloadImplToJson(_$PayloadImpl instance) =>
+    <String, dynamic>{
       'watchEventType': instance.watchEventType,
       'sessionId': instance.sessionId,
       'duration': instance.duration,

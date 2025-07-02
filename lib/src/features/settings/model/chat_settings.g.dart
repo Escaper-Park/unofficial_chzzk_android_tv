@@ -6,7 +6,8 @@ part of 'chat_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChatSettings _$ChatSettingsFromJson(Map<String, dynamic> json) => ChatSettings(
+_$ChatSettingsImpl _$$ChatSettingsImplFromJson(Map<String, dynamic> json) =>
+    _$ChatSettingsImpl(
       chatPositionX: (json['chatPositionX'] as num).toInt(),
       chatPositionY: (json['chatPositionY'] as num).toInt(),
       chatContainerHeight: (json['chatContainerHeight'] as num).toInt(),
@@ -27,7 +28,7 @@ ChatSettings _$ChatSettingsFromJson(Map<String, dynamic> json) => ChatSettings(
       useBadgeCollector: (json['useBadgeCollector'] as num).toInt(),
     );
 
-Map<String, dynamic> _$ChatSettingsToJson(ChatSettings instance) =>
+Map<String, dynamic> _$$ChatSettingsImplToJson(_$ChatSettingsImpl instance) =>
     <String, dynamic>{
       'chatPositionX': instance.chatPositionX,
       'chatPositionY': instance.chatPositionY,

@@ -2,13 +2,17 @@
 
 
 ## [v0.3.4](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.4)
+### HotFix
+#### v0.3.4+1
+* 치지직 API 업데이트로 인한 재생 불가능 현상 수정
+
 ### 주요 업데이트 내용
 마지막 업데이트 입니다.
 
 * UI 변경
 * 커스텀 그룹 추가
 * 검색 자동완성 추가
-* 기타 기능 추가 및 오류 수정정
+* 기타 기능 추가 및 오류 수정
 
 ## [v0.3.3](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.3)
 ### Hotfix

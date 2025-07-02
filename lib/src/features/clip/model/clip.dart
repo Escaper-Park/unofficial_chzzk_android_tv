@@ -6,152 +6,90 @@ part 'clip.freezed.dart';
 part 'clip.g.dart';
 
 @freezed
-@JsonSerializable(createToJson: true, explicitToJson: true)
 class NaverClip with _$NaverClip {
-  final String clipUID;
-  final String? videoId;
-  final String clipTitle;
-  final String ownerChannelId;
-  final OwnerChannel? ownerChannel;
-  final String? thumbnailImageUrl;
-  final int duration;
-  final bool adult;
-  final String? blindType;
-  final String? categoryType;
-  final String? clipCategory;
-  final String? categoryValue;
-  final String createdDate;
-  final int readCount;
-  @RecIdConverter()
-  final RecId? recId;
-  @ContentLineageConverter()
-  final ContentLineage? contentLineage;
-
-  final bool? privateUserBlock;
-
-  NaverClip({
-    required this.clipUID,
-    this.videoId,
-    required this.clipTitle,
-    required this.ownerChannelId,
-    required this.ownerChannel,
-    this.thumbnailImageUrl,
-    required this.duration,
-    required this.adult,
-    this.blindType,
-    this.categoryType,
-    this.clipCategory,
-    this.categoryValue,
-    required this.createdDate,
-    required this.readCount,
-    @RecIdConverter() required this.recId,
-    @ContentLineageConverter() required this.contentLineage,
-    this.privateUserBlock,
-  });
+  const factory NaverClip({
+    required String clipUID,
+    String? videoId,
+    required String clipTitle,
+    required String ownerChannelId,
+    OwnerChannel? ownerChannel,
+    String? thumbnailImageUrl,
+    required int duration,
+    required bool adult,
+    String? blindType,
+    String? categoryType,
+    String? clipCategory,
+    String? categoryValue,
+    required String createdDate,
+    required int readCount,
+    @RecIdConverter() RecId? recId,
+    @ContentLineageConverter() ContentLineage? contentLineage,
+    bool? privateUserBlock,
+  }) = _NaverClip;
 
   factory NaverClip.fromJson(Map<String, dynamic> json) =>
       _$NaverClipFromJson(json);
-
-  Map<String, dynamic> toJson() => _$NaverClipToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class OwnerChannel with _$OwnerChannel {
-  final String channelId;
-  final String channelName;
-  final String? channelImageUrl;
-  final bool verifiedMark;
-
-  OwnerChannel({
-    required this.channelId,
-    required this.channelName,
-    this.channelImageUrl,
-    required this.verifiedMark,
-  });
+  const factory OwnerChannel({
+    required String channelId,
+    required String channelName,
+    String? channelImageUrl,
+    required bool verifiedMark,
+  }) = _OwnerChannel;
 
   factory OwnerChannel.fromJson(Map<String, dynamic> json) =>
       _$OwnerChannelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OwnerChannelToJson(this);
 }
 
 @freezed
-@JsonSerializable(explicitToJson: true)
 class RecId with _$RecId {
-  final String? seedClipUID;
-  final String? fromType;
-  final String? listType;
-  final String? orderType;
-  final String? filterType;
-  final String? recommendRecId;
-
-  RecId({
-    this.seedClipUID,
-    this.fromType,
-    this.listType,
-    this.recommendRecId,
-    this.orderType,
-    this.filterType,
-  });
+  const factory RecId({
+    String? seedClipUID,
+    String? fromType,
+    String? listType,
+    String? orderType,
+    String? filterType,
+    String? recommendRecId,
+  }) = _RecId;
 
   factory RecId.fromJson(Map<String, dynamic> json) => _$RecIdFromJson(json);
-  Map<String, dynamic> toJson() => _$RecIdToJson(this);
 }
 
 @freezed
-@JsonSerializable(explicitToJson: true)
 class ContentLineage with _$ContentLineage {
-  final String? contentSource;
-  final String? contentType;
-  final ContentTag? contentTag;
-
-  ContentLineage({
-    this.contentSource,
-    this.contentType,
-    this.contentTag,
-  });
+  const factory ContentLineage({
+    String? contentSource,
+    String? contentType,
+    ContentTag? contentTag,
+  }) = _ContentLineage;
 
   factory ContentLineage.fromJson(Map<String, dynamic> json) =>
       _$ContentLineageFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContentLineageToJson(this);
 }
 
 @freezed
-@JsonSerializable(explicitToJson: true)
 class ContentTag with _$ContentTag {
-  final String? internal;
-
-  @JsonKey(name: 'external')
-  final External? externalTag;
-
-  ContentTag({
-    this.internal,
-    @JsonKey(name: 'external') this.externalTag,
-  });
+  const factory ContentTag({
+    String? internal,
+    @JsonKey(name: 'external') External? externalTag,
+  }) = _ContentTag;
 
   factory ContentTag.fromJson(Map<String, dynamic> json) =>
       _$ContentTagFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContentTagToJson(this);
 }
 
 @freezed
-@JsonSerializable(explicitToJson: true)
 class External with _$External {
-  final String? rqt;
-  final String? apiRequestKey;
-
-  External({
-    this.rqt,
-    this.apiRequestKey,
-  });
+  const factory External({
+    String? rqt,
+    String? apiRequestKey,
+  }) = _External;
 
   factory External.fromJson(Map<String, dynamic> json) =>
       _$ExternalFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ExternalToJson(this);
 }
 
 class RecIdConverter implements JsonConverter<RecId, String> {
@@ -194,3 +132,4 @@ class ContentLineageConverter implements JsonConverter<ContentLineage, String> {
     return jsonEncode(jsonMap);
   }
 }
+

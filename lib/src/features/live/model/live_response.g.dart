@@ -6,7 +6,8 @@ part of 'live_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LiveResponse _$LiveResponseFromJson(Map<String, dynamic> json) => LiveResponse(
+_$LiveResponseImpl _$$LiveResponseImplFromJson(Map<String, dynamic> json) =>
+    _$LiveResponseImpl(
       size: (json['size'] as num).toInt(),
       page: json['page'] == null
           ? null
@@ -16,29 +17,33 @@ LiveResponse _$LiveResponseFromJson(Map<String, dynamic> json) => LiveResponse(
           .toList(),
     );
 
-Map<String, dynamic> _$LiveResponseToJson(LiveResponse instance) =>
+Map<String, dynamic> _$$LiveResponseImplToJson(_$LiveResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'page': instance.page,
       'data': instance.data,
     };
 
-LivePage _$LivePageFromJson(Map<String, dynamic> json) => LivePage(
+_$LivePageImpl _$$LivePageImplFromJson(Map<String, dynamic> json) =>
+    _$LivePageImpl(
       next: json['next'] == null
           ? null
           : LiveNext.fromJson(json['next'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$LivePageToJson(LivePage instance) => <String, dynamic>{
+Map<String, dynamic> _$$LivePageImplToJson(_$LivePageImpl instance) =>
+    <String, dynamic>{
       'next': instance.next,
     };
 
-LiveNext _$LiveNextFromJson(Map<String, dynamic> json) => LiveNext(
+_$LiveNextImpl _$$LiveNextImplFromJson(Map<String, dynamic> json) =>
+    _$LiveNextImpl(
       concurrentUserCount: (json['concurrentUserCount'] as num).toInt(),
       liveId: (json['liveId'] as num).toInt(),
     );
 
-Map<String, dynamic> _$LiveNextToJson(LiveNext instance) => <String, dynamic>{
+Map<String, dynamic> _$$LiveNextImplToJson(_$LiveNextImpl instance) =>
+    <String, dynamic>{
       'concurrentUserCount': instance.concurrentUserCount,
       'liveId': instance.liveId,
     };

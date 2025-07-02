@@ -7,84 +7,50 @@ part 'recent_chat.g.dart';
 part 'recent_chat.freezed.dart';
 
 @freezed
-@JsonSerializable()
 class RecentChat with _$RecentChat {
-  final String svcid;
-  final List<RecentChatBdy> bdy;
-  final int cmd;
-  final int retCode;
-  final String? retMsg;
-  final String? tid;
-  final String? cid;
+  const factory RecentChat({
+    required String svcid,
+    required List<RecentChatBdy> bdy,
+    required int cmd,
+    required int retCode,
+    String? retMsg,
+    String? tid,
+    String? cid,
+  }) = _RecentChat;
 
-  RecentChat({
-    required this.svcid,
-    required this.bdy,
-    required this.cmd,
-    required this.retCode,
-    this.retMsg,
-    this.tid,
-    this.cid,
-  });
-  
   factory RecentChat.fromJson(Map<String, dynamic> json) =>
       _$RecentChatFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RecentChatToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class RecentChatBdy with _$RecentChatBdy {
-  final List<RecentChatMsg> messageList;
-  final int? userCount;
-
-  RecentChatBdy({
-    required this.messageList,
-    this.userCount,
-  });
+  const factory RecentChatBdy({
+    required List<RecentChatMsg> messageList,
+    int? userCount,
+  }) = _RecentChatBdy;
 
   factory RecentChatBdy.fromJson(Map<String, dynamic> json) =>
       _$RecentChatBdyFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RecentChatBdyToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class RecentChatMsg with _$RecentChatMsg {
-  final String serviceId;
-  final String channelId;
-  final int messageTime;
-  final String userId;
-  @ProfileConverter()
-  final Profile? profile;
-  final String content;
-  @ExtrasConverter()
-  final Extras? extras;
-  final int memberCount;
-  final int messageTypeCode;
-  final String messageStatusType;
-  final int createTime;
-  final int updateTime;
-
-  RecentChatMsg({
-    required this.serviceId,
-    required this.channelId,
-    required this.messageTime,
-    required this.userId,
-    this.profile,
-    required this.content,
-    this.extras,
-    required this.memberCount,
-    required this.messageTypeCode,
-    required this.messageStatusType,
-    required this.createTime,
-    required this.updateTime,
-  });
+  const factory RecentChatMsg({
+    required String serviceId,
+    required String channelId,
+    required int messageTime,
+    required String userId,
+    @ProfileConverter() Profile? profile,
+    required String content,
+    @ExtrasConverter() Extras? extras,
+    required int memberCount,
+    required int messageTypeCode,
+    required String messageStatusType,
+    required int createTime,
+    required int updateTime,
+  }) = _RecentChatMsg;
 
   factory RecentChatMsg.fromJson(Map<String, dynamic> json) =>
       _$RecentChatMsgFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RecentChatMsgToJson(this);
 }
+

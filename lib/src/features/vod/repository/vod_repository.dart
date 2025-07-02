@@ -4,7 +4,7 @@ import 'package:retrofit/retrofit.dart';
 import '../../../common/constants/api.dart';
 import '../model/vod.dart';
 import '../model/vod_chat_response.dart';
-import '../model/vod_event.dart';
+// import '../model/vod_event.dart';
 import '../model/vod_response.dart';
 
 part 'vod_repository.g.dart';
@@ -56,9 +56,8 @@ abstract class VodRepository {
     @Query('previousVideoChatSize') required int? previousVideoChatSize,
   });
 
-  @POST(ChzzkApi.watchEvent)
-  Future<void> postWatchingEvent({
-    @Body() required VodEvent event,
-  });
-
+  // @POST(ChzzkApi.watchEvent)
+  // Future<void> postWatchingEvent({
+  //   @Body() required VodEvent event,
+  // });
 }

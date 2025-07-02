@@ -6,7 +6,8 @@ part of 'live_status.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LiveStatus _$LiveStatusFromJson(Map<String, dynamic> json) => LiveStatus(
+_$LiveStatusImpl _$$LiveStatusImplFromJson(Map<String, dynamic> json) =>
+    _$LiveStatusImpl(
       liveTitle: json['liveTitle'] as String,
       status: json['status'] as String,
       concurrentUserCount: (json['concurrentUserCount'] as num).toInt(),
@@ -41,7 +42,7 @@ LiveStatus _$LiveStatusFromJson(Map<String, dynamic> json) => LiveStatus(
       channelId: json['channelId'] as String,
     );
 
-Map<String, dynamic> _$LiveStatusToJson(LiveStatus instance) =>
+Map<String, dynamic> _$$LiveStatusImplToJson(_$LiveStatusImpl instance) =>
     <String, dynamic>{
       'liveTitle': instance.liveTitle,
       'status': instance.status,

@@ -6,39 +6,43 @@ part of 'search_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SearchChannelResponse _$SearchChannelResponseFromJson(
+_$SearchChannelResponseImpl _$$SearchChannelResponseImplFromJson(
         Map<String, dynamic> json) =>
-    SearchChannelResponse(
+    _$SearchChannelResponseImpl(
       size: (json['size'] as num).toInt(),
       data: json['data'] as List<dynamic>,
     );
 
-Map<String, dynamic> _$SearchChannelResponseToJson(
-        SearchChannelResponse instance) =>
+Map<String, dynamic> _$$SearchChannelResponseImplToJson(
+        _$SearchChannelResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'data': instance.data,
     };
 
-SearchVodResponse _$SearchVodResponseFromJson(Map<String, dynamic> json) =>
-    SearchVodResponse(
+_$SearchVodResponseImpl _$$SearchVodResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SearchVodResponseImpl(
       size: (json['size'] as num).toInt(),
       data: json['data'] as List<dynamic>,
     );
 
-Map<String, dynamic> _$SearchVodResponseToJson(SearchVodResponse instance) =>
+Map<String, dynamic> _$$SearchVodResponseImplToJson(
+        _$SearchVodResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'data': instance.data,
     };
 
-SearchLiveResponse _$SearchLiveResponseFromJson(Map<String, dynamic> json) =>
-    SearchLiveResponse(
+_$SearchLiveResponseImpl _$$SearchLiveResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SearchLiveResponseImpl(
       size: (json['size'] as num).toInt(),
       data: json['data'] as List<dynamic>,
     );
 
-Map<String, dynamic> _$SearchLiveResponseToJson(SearchLiveResponse instance) =>
+Map<String, dynamic> _$$SearchLiveResponseImplToJson(
+        _$SearchLiveResponseImpl instance) =>
     <String, dynamic>{
       'size': instance.size,
       'data': instance.data,

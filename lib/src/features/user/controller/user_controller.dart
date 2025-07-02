@@ -23,7 +23,7 @@ class UserController extends _$UserController {
     final User? user = await _repository.getUser();
 
     // Error handling
-    if (user == null) {
+    if (user == null || user.userIdHash == null) {
       await ref.watch(authRepositoryProvider).deleteCookies();
       return null;
     }

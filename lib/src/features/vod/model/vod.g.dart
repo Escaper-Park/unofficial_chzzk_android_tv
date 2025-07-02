@@ -6,7 +6,7 @@ part of 'vod.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Vod _$VodFromJson(Map<String, dynamic> json) => Vod(
+_$VodImpl _$$VodImplFromJson(Map<String, dynamic> json) => _$VodImpl(
       videoNo: (json['videoNo'] as num).toInt(),
       videoId: json['videoId'] as String?,
       videoTitle: json['videoTitle'] as String,
@@ -43,7 +43,7 @@ Vod _$VodFromJson(Map<String, dynamic> json) => Vod(
       videoChatChannelId: json['videoChatChannelId'] as String?,
     );
 
-Map<String, dynamic> _$VodToJson(Vod instance) => <String, dynamic>{
+Map<String, dynamic> _$$VodImplToJson(_$VodImpl instance) => <String, dynamic>{
       'videoNo': instance.videoNo,
       'videoId': instance.videoId,
       'videoTitle': instance.videoTitle,
@@ -62,7 +62,7 @@ Map<String, dynamic> _$VodToJson(Vod instance) => <String, dynamic>{
       'clipActive': instance.clipActive,
       'livePv': instance.livePv,
       'tags': instance.tags,
-      'channel': instance.channel?.toJson(),
+      'channel': instance.channel,
       'blindType': instance.blindType,
       'watchTimeline': instance.watchTimeline,
       'paidPromotion': instance.paidPromotion,

@@ -7,149 +7,96 @@ part 'clip_response.g.dart';
 
 /* Popular clips */
 @freezed
-@JsonSerializable()
 class PopularClipResponse with _$PopularClipResponse {
-  final int size;
-  final PopularClipPage? page;
-  final List<NaverClip> data;
-
-  PopularClipResponse({
-    required this.size,
-    this.page,
-    required this.data,
-  });
+  const factory PopularClipResponse({
+    required int size,
+    PopularClipPage? page,
+    required List<NaverClip> data,
+  }) = _PopularClipResponse;
 
   factory PopularClipResponse.fromJson(Map<String, dynamic> json) =>
       _$PopularClipResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PopularClipResponseToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class PopularClipPage with _$PopularClipPage {
-  final PopularClipNext? next;
-
-  PopularClipPage({this.next});
+  const factory PopularClipPage({PopularClipNext? next}) = _PopularClipPage;
 
   factory PopularClipPage.fromJson(Map<String, dynamic> json) =>
       _$PopularClipPageFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PopularClipPageToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class PopularClipNext with _$PopularClipNext {
-  final String? next;
-
-  PopularClipNext({this.next});
+  const factory PopularClipNext({String? next}) = _PopularClipNext;
 
   factory PopularClipNext.fromJson(Map<String, dynamic> json) =>
       _$PopularClipNextFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PopularClipNextToJson(this);
 }
 
 /* Category clips */
 
 @freezed
-@JsonSerializable()
 class CategoryClipResponse with _$CategoryClipResponse {
-  final int size;
-  final CategoryClipPage? page;
-  final List<NaverClip> data;
-
-  CategoryClipResponse({
-    required this.size,
-    this.page,
-    required this.data,
-  });
+  const factory CategoryClipResponse({
+    required int size,
+    CategoryClipPage? page,
+    required List<NaverClip> data,
+  }) = _CategoryClipResponse;
 
   factory CategoryClipResponse.fromJson(Map<String, dynamic> json) =>
       _$CategoryClipResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CategoryClipResponseToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class CategoryClipPage with _$CategoryClipPage {
-  final CategoryClipNext? next;
-
-  CategoryClipPage({this.next});
+  const factory CategoryClipPage({CategoryClipNext? next}) =
+      _CategoryClipPage;
 
   factory CategoryClipPage.fromJson(Map<String, dynamic> json) =>
       _$CategoryClipPageFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CategoryClipPageToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class CategoryClipNext with _$CategoryClipNext {
-  final String? clipUID;
-  final int? readCount;
-
-  CategoryClipNext({
-    this.clipUID,
-    this.readCount,
-  });
+  const factory CategoryClipNext({
+    String? clipUID,
+    int? readCount,
+  }) = _CategoryClipNext;
 
   factory CategoryClipNext.fromJson(Map<String, dynamic> json) =>
       _$CategoryClipNextFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CategoryClipNextToJson(this);
 }
 
 /* Channel Clips */
 @freezed
-@JsonSerializable()
 class ChannelClipResponse with _$ChannelClipResponse {
-  final int size;
-  final ChannelClipPage? page;
-  final List<NaverClip> data;
-  final bool? hasStreamerClips;
-
-  ChannelClipResponse( {
-    required this.size,
-    this.page,
-    required this.data,
-    this.hasStreamerClips,
-  });
+  const factory ChannelClipResponse({
+    required int size,
+    ChannelClipPage? page,
+    required List<NaverClip> data,
+    bool? hasStreamerClips,
+  }) = _ChannelClipResponse;
 
   factory ChannelClipResponse.fromJson(Map<String, dynamic> json) =>
       _$ChannelClipResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChannelClipResponseToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class ChannelClipPage with _$ChannelClipPage {
-  final ChannelClipNext? next;
-
-  ChannelClipPage({this.next});
+  const factory ChannelClipPage({ChannelClipNext? next}) = _ChannelClipPage;
 
   factory ChannelClipPage.fromJson(Map<String, dynamic> json) =>
       _$ChannelClipPageFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChannelClipPageToJson(this);
 }
 
 @freezed
-@JsonSerializable()
 class ChannelClipNext with _$ChannelClipNext {
-  final String? clipUID;
-  final int? readCount;
-
-  ChannelClipNext({
-    this.clipUID,
-    this.readCount,
-  });
+  const factory ChannelClipNext({
+    String? clipUID,
+    int? readCount,
+  }) = _ChannelClipNext;
 
   factory ChannelClipNext.fromJson(Map<String, dynamic> json) =>
       _$ChannelClipNextFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChannelClipNextToJson(this);
 }

@@ -6,8 +6,9 @@ part of 'vod_chat_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VodChatResponse _$VodChatResponseFromJson(Map<String, dynamic> json) =>
-    VodChatResponse(
+_$VodChatResponseImpl _$$VodChatResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VodChatResponseImpl(
       nextPlayerMessageTime: (json['nextPlayerMessageTime'] as num?)?.toInt(),
       previousVideoChats: (json['previousVideoChats'] as List<dynamic>?)
           ?.map((e) => VodChat.fromJson(e as Map<String, dynamic>))
@@ -17,7 +18,8 @@ VodChatResponse _$VodChatResponseFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$VodChatResponseToJson(VodChatResponse instance) =>
+Map<String, dynamic> _$$VodChatResponseImplToJson(
+        _$VodChatResponseImpl instance) =>
     <String, dynamic>{
       'nextPlayerMessageTime': instance.nextPlayerMessageTime,
       'previousVideoChats': instance.previousVideoChats,

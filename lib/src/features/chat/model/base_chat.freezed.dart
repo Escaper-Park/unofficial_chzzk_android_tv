@@ -1,4 +1,3 @@
-// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -10,58 +9,52 @@ part of 'base_chat.dart';
 // FreezedGenerator
 // **************************************************************************
 
-// dart format off
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+BaseChat _$BaseChatFromJson(Map<String, dynamic> json) {
+  return _BaseChat.fromJson(json);
+}
 
 /// @nodoc
 mixin _$BaseChat {
-  String get msg;
-  Profile? get profile;
-  Extras? get extras;
-  int get ctime;
+  String get msg => throw _privateConstructorUsedError;
+  Profile? get profile => throw _privateConstructorUsedError;
+  Extras? get extras => throw _privateConstructorUsedError;
+  int get ctime => throw _privateConstructorUsedError;
+
+  /// Serializes this BaseChat to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of BaseChat
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
   $BaseChatCopyWith<BaseChat> get copyWith =>
-      _$BaseChatCopyWithImpl<BaseChat>(this as BaseChat, _$identity);
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is BaseChat &&
-            (identical(other.msg, msg) || other.msg == msg) &&
-            (identical(other.profile, profile) || other.profile == profile) &&
-            (identical(other.extras, extras) || other.extras == extras) &&
-            (identical(other.ctime, ctime) || other.ctime == ctime));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, msg, profile, extras, ctime);
-
-  @override
-  String toString() {
-    return 'BaseChat(msg: $msg, profile: $profile, extras: $extras, ctime: $ctime)';
-  }
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract mixin class $BaseChatCopyWith<$Res> {
-  factory $BaseChatCopyWith(BaseChat value, $Res Function(BaseChat) _then) =
-      _$BaseChatCopyWithImpl;
+abstract class $BaseChatCopyWith<$Res> {
+  factory $BaseChatCopyWith(BaseChat value, $Res Function(BaseChat) then) =
+      _$BaseChatCopyWithImpl<$Res, BaseChat>;
   @useResult
   $Res call({String msg, Profile? profile, Extras? extras, int ctime});
+
+  $ProfileCopyWith<$Res>? get profile;
+  $ExtrasCopyWith<$Res>? get extras;
 }
 
 /// @nodoc
-class _$BaseChatCopyWithImpl<$Res> implements $BaseChatCopyWith<$Res> {
-  _$BaseChatCopyWithImpl(this._self, this._then);
+class _$BaseChatCopyWithImpl<$Res, $Val extends BaseChat>
+    implements $BaseChatCopyWith<$Res> {
+  _$BaseChatCopyWithImpl(this._value, this._then);
 
-  final BaseChat _self;
-  final $Res Function(BaseChat) _then;
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
   /// Create a copy of BaseChat
   /// with the given fields replaced by the non-null parameter values.
@@ -73,25 +66,190 @@ class _$BaseChatCopyWithImpl<$Res> implements $BaseChatCopyWith<$Res> {
     Object? extras = freezed,
     Object? ctime = null,
   }) {
-    return _then(BaseChat(
+    return _then(_value.copyWith(
       msg: null == msg
-          ? _self.msg
+          ? _value.msg
           : msg // ignore: cast_nullable_to_non_nullable
               as String,
       profile: freezed == profile
-          ? _self.profile
+          ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
               as Profile?,
       extras: freezed == extras
-          ? _self.extras
+          ? _value.extras
           : extras // ignore: cast_nullable_to_non_nullable
               as Extras?,
       ctime: null == ctime
-          ? _self.ctime
+          ? _value.ctime
+          : ctime // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileCopyWith<$Res>? get profile {
+    if (_value.profile == null) {
+      return null;
+    }
+
+    return $ProfileCopyWith<$Res>(_value.profile!, (value) {
+      return _then(_value.copyWith(profile: value) as $Val);
+    });
+  }
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ExtrasCopyWith<$Res>? get extras {
+    if (_value.extras == null) {
+      return null;
+    }
+
+    return $ExtrasCopyWith<$Res>(_value.extras!, (value) {
+      return _then(_value.copyWith(extras: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$BaseChatImplCopyWith<$Res>
+    implements $BaseChatCopyWith<$Res> {
+  factory _$$BaseChatImplCopyWith(
+          _$BaseChatImpl value, $Res Function(_$BaseChatImpl) then) =
+      __$$BaseChatImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String msg, Profile? profile, Extras? extras, int ctime});
+
+  @override
+  $ProfileCopyWith<$Res>? get profile;
+  @override
+  $ExtrasCopyWith<$Res>? get extras;
+}
+
+/// @nodoc
+class __$$BaseChatImplCopyWithImpl<$Res>
+    extends _$BaseChatCopyWithImpl<$Res, _$BaseChatImpl>
+    implements _$$BaseChatImplCopyWith<$Res> {
+  __$$BaseChatImplCopyWithImpl(
+      _$BaseChatImpl _value, $Res Function(_$BaseChatImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? msg = null,
+    Object? profile = freezed,
+    Object? extras = freezed,
+    Object? ctime = null,
+  }) {
+    return _then(_$BaseChatImpl(
+      msg: null == msg
+          ? _value.msg
+          : msg // ignore: cast_nullable_to_non_nullable
+              as String,
+      profile: freezed == profile
+          ? _value.profile
+          : profile // ignore: cast_nullable_to_non_nullable
+              as Profile?,
+      extras: freezed == extras
+          ? _value.extras
+          : extras // ignore: cast_nullable_to_non_nullable
+              as Extras?,
+      ctime: null == ctime
+          ? _value.ctime
           : ctime // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
 }
 
-// dart format on
+/// @nodoc
+@JsonSerializable()
+class _$BaseChatImpl implements _BaseChat {
+  const _$BaseChatImpl(
+      {required this.msg,
+      required this.profile,
+      required this.extras,
+      required this.ctime});
+
+  factory _$BaseChatImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BaseChatImplFromJson(json);
+
+  @override
+  final String msg;
+  @override
+  final Profile? profile;
+  @override
+  final Extras? extras;
+  @override
+  final int ctime;
+
+  @override
+  String toString() {
+    return 'BaseChat(msg: $msg, profile: $profile, extras: $extras, ctime: $ctime)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BaseChatImpl &&
+            (identical(other.msg, msg) || other.msg == msg) &&
+            (identical(other.profile, profile) || other.profile == profile) &&
+            (identical(other.extras, extras) || other.extras == extras) &&
+            (identical(other.ctime, ctime) || other.ctime == ctime));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, msg, profile, extras, ctime);
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BaseChatImplCopyWith<_$BaseChatImpl> get copyWith =>
+      __$$BaseChatImplCopyWithImpl<_$BaseChatImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$BaseChatImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _BaseChat implements BaseChat {
+  const factory _BaseChat(
+      {required final String msg,
+      required final Profile? profile,
+      required final Extras? extras,
+      required final int ctime}) = _$BaseChatImpl;
+
+  factory _BaseChat.fromJson(Map<String, dynamic> json) =
+      _$BaseChatImpl.fromJson;
+
+  @override
+  String get msg;
+  @override
+  Profile? get profile;
+  @override
+  Extras? get extras;
+  @override
+  int get ctime;
+
+  /// Create a copy of BaseChat
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BaseChatImplCopyWith<_$BaseChatImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

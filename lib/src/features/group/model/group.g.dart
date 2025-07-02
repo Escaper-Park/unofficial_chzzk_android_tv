@@ -6,26 +6,28 @@ part of 'group.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Groups _$GroupsFromJson(Map<String, dynamic> json) => Groups(
+_$GroupsImpl _$$GroupsImplFromJson(Map<String, dynamic> json) => _$GroupsImpl(
       groups: (json['groups'] as List<dynamic>)
           .map((e) => Group.fromJson(e as Map<String, dynamic>))
           .toList(),
       lastActivatedGroupIndex: (json['lastActivatedGroupIndex'] as num).toInt(),
     );
 
-Map<String, dynamic> _$GroupsToJson(Groups instance) => <String, dynamic>{
-      'groups': instance.groups.map((e) => e.toJson()).toList(),
+Map<String, dynamic> _$$GroupsImplToJson(_$GroupsImpl instance) =>
+    <String, dynamic>{
+      'groups': instance.groups,
       'lastActivatedGroupIndex': instance.lastActivatedGroupIndex,
     };
 
-Group _$GroupFromJson(Map<String, dynamic> json) => Group(
+_$GroupImpl _$$GroupImplFromJson(Map<String, dynamic> json) => _$GroupImpl(
       id: json['id'] as String,
       groupName: json['groupName'] as String,
       members:
           (json['members'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
+Map<String, dynamic> _$$GroupImplToJson(_$GroupImpl instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'groupName': instance.groupName,
       'members': instance.members,

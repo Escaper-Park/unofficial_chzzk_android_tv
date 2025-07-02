@@ -6,8 +6,8 @@ part of 'stream_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StreamSettings _$StreamSettingsFromJson(Map<String, dynamic> json) =>
-    StreamSettings(
+_$StreamSettingsImpl _$$StreamSettingsImplFromJson(Map<String, dynamic> json) =>
+    _$StreamSettingsImpl(
       resolutionIndex: (json['resolutionIndex'] as num).toInt(),
       multiviewResolutionIndex:
           (json['multiviewResolutionIndex'] as num).toInt(),
@@ -22,7 +22,8 @@ StreamSettings _$StreamSettingsFromJson(Map<String, dynamic> json) =>
       showGroupInVideoPlayer: (json['showGroupInVideoPlayer'] as num).toInt(),
     );
 
-Map<String, dynamic> _$StreamSettingsToJson(StreamSettings instance) =>
+Map<String, dynamic> _$$StreamSettingsImplToJson(
+        _$StreamSettingsImpl instance) =>
     <String, dynamic>{
       'resolutionIndex': instance.resolutionIndex,
       'multiviewResolutionIndex': instance.multiviewResolutionIndex,

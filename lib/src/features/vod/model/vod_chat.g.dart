@@ -6,7 +6,8 @@ part of 'vod_chat.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VodChat _$VodChatFromJson(Map<String, dynamic> json) => VodChat(
+_$VodChatImpl _$$VodChatImplFromJson(Map<String, dynamic> json) =>
+    _$VodChatImpl(
       chatChannelId: json['chatChannelId'] as String,
       messageTime: (json['messageTime'] as num).toInt(),
       userIdHash: json['userIdHash'] as String,
@@ -20,7 +21,8 @@ VodChat _$VodChatFromJson(Map<String, dynamic> json) => VodChat(
       playerMessageTime: (json['playerMessageTime'] as num).toInt(),
     );
 
-Map<String, dynamic> _$VodChatToJson(VodChat instance) => <String, dynamic>{
+Map<String, dynamic> _$$VodChatImplToJson(_$VodChatImpl instance) =>
+    <String, dynamic>{
       'chatChannelId': instance.chatChannelId,
       'messageTime': instance.messageTime,
       'userIdHash': instance.userIdHash,

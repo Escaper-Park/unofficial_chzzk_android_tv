@@ -57,7 +57,7 @@ class LiveStreamCategoryLives extends ConsumerWidget
           ),
           listViewFSN: contentsFSN,
           emptyText: '카테고리에 방송 중인 채널이 없습니다',
-          errorText: '카테고리가 설정되지 않았습니다다',
+          errorText: '카테고리가 설정되지 않았습니다',
           itemBuilder: (index, node, item) {
             return LiveStreamLiveContainer(
               autofocus: index == 0,
