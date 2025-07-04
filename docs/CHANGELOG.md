@@ -4,7 +4,8 @@
 ## [v0.3.4](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.4)
 ### HotFix
 #### v0.3.4+1
-* 치지직 API 업데이트로 인한 재생 불가능 현상 수정
+* 치지직 API 업데이트로 인한 재생 불가능 현상 수정 (2025-07-02)
+* 그룹 라이브 목록이 보이지 않는 현상 수정 (2025-07-05)
 
 ### 주요 업데이트 내용
 마지막 업데이트 입니다.
