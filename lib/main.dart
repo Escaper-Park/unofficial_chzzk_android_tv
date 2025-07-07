@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart' show SystemChrome, SystemUiMode;
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +12,9 @@ import 'src/utils/shared_preferences/shared_prefs.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Add Immersive Mode
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   // Get local database for settings
   final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();

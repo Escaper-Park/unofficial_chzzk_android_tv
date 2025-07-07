@@ -15,6 +15,7 @@ class LivePlayer extends ConsumerWidget with LiveStreamState {
     final screenHeight = context.screenHeight;
 
     return GridView.builder(
+      padding: EdgeInsets.zero,
       addAutomaticKeepAlives: false,
       addRepaintBoundaries: false,
       addSemanticIndexes: false,
