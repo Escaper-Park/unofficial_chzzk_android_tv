@@ -131,5 +131,6 @@ abstract class AppTheme {
     useMaterial3: true,
     colorScheme: AppColors._colorScheme,
     fontFamily: 'Pretendard',
+    scaffoldBackgroundColor: Colors.black,
   );
 }
