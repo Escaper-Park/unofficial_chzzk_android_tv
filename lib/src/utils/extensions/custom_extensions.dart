@@ -71,7 +71,7 @@ extension FetchMoreIndicatorX on Ref {
 }
 
 extension AppRouteX on AppRoute {
-  // routeName으로 AppRoute 찾기
+  // find AppRoute by routeName
   static AppRoute? fromRouteName(String routeName) {
     try {
       return AppRoute.values.firstWhere(
