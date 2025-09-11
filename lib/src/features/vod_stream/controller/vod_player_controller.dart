@@ -36,6 +36,9 @@ class VodPlayerController extends _$VodPlayerController {
   // bool _isPaused = false;
   // bool _isSeeking = false;
 
+  Timer? _seekDebouncer;
+  bool _isSeekingGesture = false;
+
   @override
   FutureOr<Raw<VideoPlayerController?>> build() async {
     // final Dio dio = ref.watch(dioClientProvider);
@@ -63,6 +66,10 @@ class VodPlayerController extends _$VodPlayerController {
     );
 
     _vodPlay = ref.read(vodPlaylistControllerProvider);
+
+    ref.onDispose(() {
+      _seekDebouncer?.cancel();
+    });
 
     return await init();
   }
@@ -247,63 +254,35 @@ class VodPlayerController extends _$VodPlayerController {
     // _isSeeking = true;
     // _stopWatchContinuedTimer();
     // _updateAwt();
-
-    final chatQueueNotifier = ref.read(
-      vodChatQueueControllerProvider(videoNo: _vodPlay!.$1.videoNo).notifier,
-    );
-
-    chatQueueNotifier.toggleIsSeeking(true);
-
-    ref
-        .read(
-          vodChatControllerProvider(
-            controller: state.value!,
-            videoNo: _vodPlay!.$1.videoNo,
-          ).notifier,
-        )
-        .clearChatBufer();
-
     final value = state.value?.value;
     final int playbackInterval =
         _getPlaybackIntervalByIndex(_playbackIntervalIndex);
 
     if (value != null) {
       final currentPos = value.position;
-
+      Duration newPos;
       switch (direction) {
         case PlaybackDirection.forward:
-          final newPos = currentPos + Duration(seconds: playbackInterval);
-          if (newPos <= value.duration) {
-            ref
-                .read(vodSeekIndicatorControllerProvider.notifier)
-                .startTimer(direction);
-
-            await state.value!.seekTo(newPos);
-            if (endSeek) {
-              await chatQueueNotifier.endSeekAndUpdateChat(
-                direction,
-                newPos.inMilliseconds,
-              );
-            }
-          }
-          break;
-        case PlaybackDirection.backward:
-          final newPos = currentPos - Duration(seconds: playbackInterval);
+          newPos = currentPos + Duration(seconds: playbackInterval);
+          if (newPos > value.duration) newPos = value.duration;
           ref
               .read(vodSeekIndicatorControllerProvider.notifier)
               .startTimer(direction);
-          await state.value!.seekTo(newPos);
-
-          if (endSeek) {
-            await chatQueueNotifier.endSeekAndUpdateChat(
-              direction,
-              newPos.inMilliseconds,
-            );
-          }
+          break;
+        case PlaybackDirection.backward:
+          newPos = currentPos - Duration(seconds: playbackInterval);
+          if (newPos < Duration.zero) newPos = Duration.zero;
+          ref
+              .read(vodSeekIndicatorControllerProvider.notifier)
+              .startTimer(direction);
           break;
       }
+      await seekTo(
+        endSeek: endSeek,
+        direction: direction,
+        duration: newPos,
+      );
     }
-    chatQueueNotifier.toggleIsSeeking(false);
     // _isSeeking = false;
     // if (!_isPaused) {
     //   _lastPlayTimestamp = DateTime.now();
@@ -316,30 +295,42 @@ class VodPlayerController extends _$VodPlayerController {
     required PlaybackDirection direction,
     required Duration duration,
   }) async {
-    final chatQueueNotifier = ref.read(
-      vodChatQueueControllerProvider(videoNo: _vodPlay!.$1.videoNo).notifier,
-    );
-
-    chatQueueNotifier.toggleIsSeeking(true);
-    // _isSeeking = true;
-
-    ref
-        .read(
-          vodChatControllerProvider(
-            controller: state.value!,
-            videoNo: _vodPlay!.$1.videoNo,
-          ).notifier,
-        )
-        .clearChatBufer();
-    await state.value!.seekTo(duration);
-    if (endSeek) {
-      await chatQueueNotifier.endSeekAndUpdateChat(
-        direction,
-        duration.inMilliseconds,
+    if (!_isSeekingGesture) {
+      _isSeekingGesture = true;
+      final chatQueueNotifier = ref.read(
+        vodChatQueueControllerProvider(videoNo: _vodPlay!.$1.videoNo).notifier,
       );
+      chatQueueNotifier.toggleIsSeeking(true);
+      chatQueueNotifier.clearQueue();
+      ref
+          .read(
+            vodChatControllerProvider(
+              controller: state.value!,
+              videoNo: _vodPlay!.$1.videoNo,
+            ).notifier,
+          )
+          .clearChatBufer();
     }
-    chatQueueNotifier.toggleIsSeeking(false);
-    // _isSeeking = false;
+
+    state.value!.seekTo(duration);
+
+    _seekDebouncer?.cancel();
+
+    if (endSeek) {
+      _seekDebouncer = Timer(const Duration(milliseconds: 500), () {
+        final latestPosition = state.value?.value.position.inMilliseconds ?? 0;
+        final chatQueueNotifier = ref.read(
+          vodChatQueueControllerProvider(videoNo: _vodPlay!.$1.videoNo)
+              .notifier,
+        );
+        chatQueueNotifier.endSeekAndUpdateChat(
+          direction,
+          latestPosition,
+        );
+        _isSeekingGesture = false;
+      });
+      // _isSeeking = false;
+    }
   }
 
   Future<void> dispose() async {

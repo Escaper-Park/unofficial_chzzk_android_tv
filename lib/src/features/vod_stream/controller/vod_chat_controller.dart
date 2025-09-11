@@ -48,8 +48,10 @@ class VodChatQueueController extends _$VodChatQueueController {
     _nextPlayerMessageTime = response?.nextPlayerMessageTime;
 
     final newChats = response?.videoChats ?? [];
-    _lastPlayerMessageTime = newChats.last.playerMessageTime;
-    _queue.addAll(newChats);
+    if (newChats.isNotEmpty) {
+      _lastPlayerMessageTime = newChats.last.playerMessageTime;
+      _queue.addAll(newChats);
+    }
 
     state = AsyncValue.data(ListQueue<VodChat>()..addAll(_queue));
   }
@@ -70,7 +72,9 @@ class VodChatQueueController extends _$VodChatQueueController {
       _lastPlayerMessageTime = null;
     } else {
       _nextPlayerMessageTime = response?.nextPlayerMessageTime;
-      _lastPlayerMessageTime = newChats.last.playerMessageTime;
+      if (newChats.isNotEmpty) {
+        _lastPlayerMessageTime = newChats.last.playerMessageTime;
+      }
       _queue.addAll(newChats);
     }
 
@@ -91,39 +95,23 @@ class VodChatQueueController extends _$VodChatQueueController {
 
   VodChat? peek() => _queue.isNotEmpty ? _queue.first : null;
 
+  void clearQueue() {
+    _queue.clear();
+    state = AsyncValue.data(ListQueue<VodChat>());
+  }
+
   void toggleIsSeeking(bool value) {
     _isSeeking = value;
   }
 
   Future<void> endSeekAndUpdateChat(
-    PlaybackDirection direction,
-    int targetPos,
-  ) async {
-    // seek
-    if (direction == PlaybackDirection.backward) {
-      _queue.clear();
-      _nextPlayerMessageTime = targetPos < 0 ? 0 : targetPos;
-      await fetchMore();
-    }
-    // forward
-    else {
-      if (_lastPlayerMessageTime == null) {
-        _isSeeking = false;
-        return;
-      }
+      PlaybackDirection direction,
+      int targetPos,
+      ) async {
+    _queue.clear();
+    _nextPlayerMessageTime = targetPos < 0 ? 0 : targetPos;
+    await fetchMore();
 
-      // find new
-      if (targetPos < _lastPlayerMessageTime!) {
-        _queue.removeWhere((c) => c.playerMessageTime <= targetPos);
-        state = AsyncValue.data(ListQueue<VodChat>()..addAll(_queue));
-      }
-      // fetch new
-      else {
-        _queue.clear();
-        _nextPlayerMessageTime = targetPos;
-        await fetchMore();
-      }
-    }
     _isSeeking = false;
   }
 
@@ -150,31 +138,41 @@ class VodChatController extends _$VodChatController {
     required VideoPlayerController controller,
     required int videoNo,
   }) {
-    _streamController = StreamController<List<VodChat>>();
+    _streamController = StreamController<List<VodChat>>.broadcast();
 
     final queueNotifier = ref.read(
       vodChatQueueControllerProvider(videoNo: videoNo).notifier,
     );
 
-    _listener = () {
+    _listener = () async {
+      if (!controller.value.isInitialized) return;
+
       final pos = controller.value.position.inMilliseconds;
+      bool hasMoreOnServer = queueNotifier.getNextPlayerMessageTime() != null;
+      bool chatsAddedInThisCycle = false;
 
-      final nextChat = queueNotifier.peek();
-      final hasMoreOnServer = queueNotifier.getNextPlayerMessageTime() != null;
+      while (true) {
+        final nextChat = queueNotifier.peek();
 
-      if (nextChat != null) {
+        if (nextChat == null) break;
+
         final chatTime = nextChat.playerMessageTime;
-        if (pos + _tolerance >= chatTime) {
-          queueNotifier.dequeue().then((chat) {
-            if (chat != null && !_streamController.isClosed) {
-              _chatBuffer.insert(0, chat);
-              _streamController.add(List<VodChat>.from(_chatBuffer));
-            }
-          });
+
+        if (pos + _tolerance < chatTime) break;
+
+        final chat = await queueNotifier.dequeue();
+        if (chat != null) {
+          _chatBuffer.insert(0, chat);
+          chatsAddedInThisCycle = true;
         }
       }
 
-      if (nextChat == null && !hasMoreOnServer) {
+      if (chatsAddedInThisCycle && !_streamController.isClosed) {
+        _streamController.add(List<VodChat>.from(_chatBuffer));
+      }
+
+      hasMoreOnServer = queueNotifier.getNextPlayerMessageTime() != null;
+      if (queueNotifier.peek() == null && !hasMoreOnServer) {
         controller.removeListener(_listener);
         if (!_streamController.isClosed) {
           _streamController.close();
@@ -190,7 +188,9 @@ class VodChatController extends _$VodChatController {
 
     ref.onDispose(() {
       controller.removeListener(_listener);
-      _streamController.close();
+      if (!_streamController.isClosed) {
+        _streamController.close();
+      }
     });
 
     return _streamController.stream;
