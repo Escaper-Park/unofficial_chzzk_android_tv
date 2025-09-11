@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../utils/shared_preferences/shared_prefs.dart';
 import '../model/stream_settings.dart';
 import '../repository/stream_settings_repository.dart';
+import '../../../common/constants/playback_speed.dart';
 
 part 'stream_setting_controller.g.dart';
 
@@ -71,6 +72,15 @@ class StreamSettingsController extends _$StreamSettingsController {
       0,
       1,
       state.copyWith(showGroupInVideoPlayer: value),
+    );
+  }
+
+  Future<void> setVodPlaybackSpeed(int value) async {
+    await _updateInt(
+      value,
+      0,
+      PlaybackSpeed.values.length - 1,
+      state.copyWith(vodPlaybackSpeedIndex: value),
     );
   }
 

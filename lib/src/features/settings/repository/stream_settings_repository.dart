@@ -20,6 +20,7 @@ class StreamSettingsRepository extends SharedPrefsRepository<StreamSettings> {
       latencyIndex: 1, // LLHLS
       vodPlaybackIntervalIndex: 1, // 10s
       showGroupInVideoPlayer: 0, // false
+      vodPlaybackSpeedIndex: 2, // 1.0x
     );
 
     return settings;

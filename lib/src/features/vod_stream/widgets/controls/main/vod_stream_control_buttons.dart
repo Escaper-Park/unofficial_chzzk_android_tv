@@ -26,6 +26,7 @@ class VodStreamControlButtons extends HookWidget {
     required this.toggleViewMode,
     required this.changeOverlayToChatSettings,
     required this.changeOverlayToResolutionSetting,
+    required this.changeOverlayToPlaybackSpeedSetting,
   });
 
   final StreamSettings streamSettings;
@@ -41,6 +42,7 @@ class VodStreamControlButtons extends HookWidget {
   final VoidCallback toggleViewMode;
   final VoidCallback changeOverlayToChatSettings;
   final VoidCallback changeOverlayToResolutionSetting;
+  final VoidCallback changeOverlayToPlaybackSpeedSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +84,12 @@ class VodStreamControlButtons extends HookWidget {
         playbackIconData.$2,
         '빨리감기',
         () => seekToByButton(PlaybackDirection.forward),
+      ),
+      // vod playback speed
+      _controlIconButton(
+        Icons.speed_rounded,
+        '배속설정',
+        changeOverlayToPlaybackSpeedSetting,
       ),
       // show chat
       _controlIconButton(

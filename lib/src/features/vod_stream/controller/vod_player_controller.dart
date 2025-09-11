@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../common/constants/enums.dart' show PlaybackDirection;
+import '../../../common/constants/playback_speed.dart';
 // import '../../../utils/dio/dio_client.dart';
 import '../../../utils/hls_parser/hls_parser.dart';
 import '../../../utils/wakelock/wakelock_controller.dart';
@@ -23,6 +24,7 @@ class VodPlayerController extends _$VodPlayerController {
   late VodPlay? _vodPlay;
   late int _resolutionIndex;
   late int _playbackIntervalIndex;
+  late int _playbackSpeedIndex;
   bool _wakelockEnabled = false;
   // late String _sessionId;
   // late VodRepository _repository;
@@ -51,6 +53,12 @@ class VodPlayerController extends _$VodPlayerController {
     _resolutionIndex = ref.read(
       streamSettingsControllerProvider.select(
         (setting) => setting.vodResolutionIndex,
+      ),
+    );
+
+    _playbackSpeedIndex = ref.read(
+      streamSettingsControllerProvider.select(
+            (setting) => setting.vodPlaybackSpeedIndex,
       ),
     );
 
@@ -90,6 +98,8 @@ class VodPlayerController extends _$VodPlayerController {
 
       final controller = _getVideoPlayerController(mediaTrackUri!, queryParams);
       await controller.initialize();
+
+      await controller.setPlaybackSpeed(PlaybackSpeed.values[_playbackSpeedIndex]);
 
       if (startPos == null) {
         final watchTimeline = _vodPlay!.$1.watchTimeline;
@@ -391,6 +401,12 @@ class VodPlayerController extends _$VodPlayerController {
         await ref.read(wakelockControllerProvider.notifier).enable();
         _wakelockEnabled = true;
       }
+    }
+  }
+
+  Future<void> setPlaybackSpeed(double speed) async {
+    if (state.value != null) {
+      await state.value!.setPlaybackSpeed(speed);
     }
   }
 

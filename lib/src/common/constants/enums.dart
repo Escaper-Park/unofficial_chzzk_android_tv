@@ -197,6 +197,7 @@ enum VodStreamOverlayType {
   channel,
   chatSettings,
   resolutionSettings,
+  playbackSpeedSettings,
 }
 
 enum LiveStreamOverlayType {

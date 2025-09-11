@@ -10,6 +10,7 @@ import '../../streaming/widgets/screen/stream_overlay_base.dart';
 import '../vod_stream_event.dart';
 import '../vod_stream_state.dart';
 import 'vod_stream_widgets.dart';
+import 'controls/playback_speed/vod_stream_playback_speed_control.dart';
 
 class VodControlsOverlay extends HookConsumerWidget
     with VodStreamState, VodStreamEvent {
@@ -39,7 +40,11 @@ class VodControlsOverlay extends HookConsumerWidget
       VodStreamOverlayType.resolutionSettings => VodStreamResolutionControl(
           vod: vod,
           videoFocusNode: videoFocusNode,
-        )
+        ),
+      VodStreamOverlayType.playbackSpeedSettings => VodStreamPlaybackSpeedControl(
+          vod: vod,
+          videoFocusNode: videoFocusNode,
+        ),
     };
 
     return StreamOverlayBase(

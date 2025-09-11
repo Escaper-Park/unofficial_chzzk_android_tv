@@ -46,6 +46,11 @@ class StreamSettings with _$StreamSettings {
     /// 
     /// 0: false, 1: true
     required int showGroupInVideoPlayer,
+
+    /// Default playback speed for VOD.
+    ///
+    /// See `PlaybackSpeeds` in `lib/src/common/constants/playback_speeds.dart` for actual values.
+    required int vodPlaybackSpeedIndex,
   }) = _StreamSettings;
 
   factory StreamSettings.fromJson(Map<String, dynamic> json) =>

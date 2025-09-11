@@ -61,6 +61,11 @@ mixin _$StreamSettings {
   /// 0: false, 1: true
   int get showGroupInVideoPlayer => throw _privateConstructorUsedError;
 
+  /// Default playback speed for VOD.
+  ///
+  /// See `PlaybackSpeeds` in `lib/src/common/constants/playback_speeds.dart` for actual values.
+  int get vodPlaybackSpeedIndex => throw _privateConstructorUsedError;
+
   /// Serializes this StreamSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -86,7 +91,8 @@ abstract class $StreamSettingsCopyWith<$Res> {
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex,
-      int showGroupInVideoPlayer});
+      int showGroupInVideoPlayer,
+      int vodPlaybackSpeedIndex});
 }
 
 /// @nodoc
@@ -113,6 +119,7 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
     Object? showGroupInVideoPlayer = null,
+    Object? vodPlaybackSpeedIndex = null,
   }) {
     return _then(_value.copyWith(
       resolutionIndex: null == resolutionIndex
@@ -151,6 +158,10 @@ class _$StreamSettingsCopyWithImpl<$Res, $Val extends StreamSettings>
           ? _value.showGroupInVideoPlayer
           : showGroupInVideoPlayer // ignore: cast_nullable_to_non_nullable
               as int,
+      vodPlaybackSpeedIndex: null == vodPlaybackSpeedIndex
+          ? _value.vodPlaybackSpeedIndex
+          : vodPlaybackSpeedIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -172,7 +183,8 @@ abstract class _$$StreamSettingsImplCopyWith<$Res>
       int latencyIndex,
       int overlayControlsDisplayTime,
       int vodPlaybackIntervalIndex,
-      int showGroupInVideoPlayer});
+      int showGroupInVideoPlayer,
+      int vodPlaybackSpeedIndex});
 }
 
 /// @nodoc
@@ -197,6 +209,7 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
     Object? overlayControlsDisplayTime = null,
     Object? vodPlaybackIntervalIndex = null,
     Object? showGroupInVideoPlayer = null,
+    Object? vodPlaybackSpeedIndex = null,
   }) {
     return _then(_$StreamSettingsImpl(
       resolutionIndex: null == resolutionIndex
@@ -235,6 +248,10 @@ class __$$StreamSettingsImplCopyWithImpl<$Res>
           ? _value.showGroupInVideoPlayer
           : showGroupInVideoPlayer // ignore: cast_nullable_to_non_nullable
               as int,
+      vodPlaybackSpeedIndex: null == vodPlaybackSpeedIndex
+          ? _value.vodPlaybackSpeedIndex
+          : vodPlaybackSpeedIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -251,7 +268,8 @@ class _$StreamSettingsImpl implements _StreamSettings {
       required this.latencyIndex,
       required this.overlayControlsDisplayTime,
       required this.vodPlaybackIntervalIndex,
-      required this.showGroupInVideoPlayer});
+      required this.showGroupInVideoPlayer,
+      required this.vodPlaybackSpeedIndex});
 
   factory _$StreamSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$StreamSettingsImplFromJson(json);
@@ -306,9 +324,15 @@ class _$StreamSettingsImpl implements _StreamSettings {
   @override
   final int showGroupInVideoPlayer;
 
+  /// Default playback speed for VOD.
+  ///
+  /// See `PlaybackSpeeds` in `lib/src/common/constants/playback_speeds.dart` for actual values.
+  @override
+  final int vodPlaybackSpeedIndex;
+
   @override
   String toString() {
-    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, vodResolutionIndex: $vodResolutionIndex, liveChatWindowIndex: $liveChatWindowIndex, vodChatWindowIndex: $vodChatWindowIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex, showGroupInVideoPlayer: $showGroupInVideoPlayer)';
+    return 'StreamSettings(resolutionIndex: $resolutionIndex, multiviewResolutionIndex: $multiviewResolutionIndex, vodResolutionIndex: $vodResolutionIndex, liveChatWindowIndex: $liveChatWindowIndex, vodChatWindowIndex: $vodChatWindowIndex, latencyIndex: $latencyIndex, overlayControlsDisplayTime: $overlayControlsDisplayTime, vodPlaybackIntervalIndex: $vodPlaybackIntervalIndex, showGroupInVideoPlayer: $showGroupInVideoPlayer, vodPlaybackSpeedIndex: $vodPlaybackSpeedIndex)';
   }
 
   @override
@@ -337,7 +361,9 @@ class _$StreamSettingsImpl implements _StreamSettings {
                     other.vodPlaybackIntervalIndex, vodPlaybackIntervalIndex) ||
                 other.vodPlaybackIntervalIndex == vodPlaybackIntervalIndex) &&
             (identical(other.showGroupInVideoPlayer, showGroupInVideoPlayer) ||
-                other.showGroupInVideoPlayer == showGroupInVideoPlayer));
+                other.showGroupInVideoPlayer == showGroupInVideoPlayer) &&
+            (identical(other.vodPlaybackSpeedIndex, vodPlaybackSpeedIndex) ||
+                other.vodPlaybackSpeedIndex == vodPlaybackSpeedIndex));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -352,7 +378,8 @@ class _$StreamSettingsImpl implements _StreamSettings {
       latencyIndex,
       overlayControlsDisplayTime,
       vodPlaybackIntervalIndex,
-      showGroupInVideoPlayer);
+      showGroupInVideoPlayer,
+      vodPlaybackSpeedIndex);
 
   /// Create a copy of StreamSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -381,7 +408,8 @@ abstract class _StreamSettings implements StreamSettings {
       required final int latencyIndex,
       required final int overlayControlsDisplayTime,
       required final int vodPlaybackIntervalIndex,
-      required final int showGroupInVideoPlayer}) = _$StreamSettingsImpl;
+      required final int showGroupInVideoPlayer,
+      required final int vodPlaybackSpeedIndex}) = _$StreamSettingsImpl;
 
   factory _StreamSettings.fromJson(Map<String, dynamic> json) =
       _$StreamSettingsImpl.fromJson;
@@ -435,6 +463,12 @@ abstract class _StreamSettings implements StreamSettings {
   /// 0: false, 1: true
   @override
   int get showGroupInVideoPlayer;
+
+  /// Default playback speed for VOD.
+  ///
+  /// See `PlaybackSpeeds` in `lib/src/common/constants/playback_speeds.dart` for actual values.
+  @override
+  int get vodPlaybackSpeedIndex;
 
   /// Create a copy of StreamSettings
   /// with the given fields replaced by the non-null parameter values.

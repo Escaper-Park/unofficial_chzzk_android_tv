@@ -20,6 +20,7 @@ _$StreamSettingsImpl _$$StreamSettingsImplFromJson(Map<String, dynamic> json) =>
       vodPlaybackIntervalIndex:
           (json['vodPlaybackIntervalIndex'] as num).toInt(),
       showGroupInVideoPlayer: (json['showGroupInVideoPlayer'] as num).toInt(),
+      vodPlaybackSpeedIndex: (json['vodPlaybackSpeedIndex'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$StreamSettingsImplToJson(
@@ -34,4 +35,5 @@ Map<String, dynamic> _$$StreamSettingsImplToJson(
       'overlayControlsDisplayTime': instance.overlayControlsDisplayTime,
       'vodPlaybackIntervalIndex': instance.vodPlaybackIntervalIndex,
       'showGroupInVideoPlayer': instance.showGroupInVideoPlayer,
+      'vodPlaybackSpeedIndex': instance.vodPlaybackSpeedIndex,
     };

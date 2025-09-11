@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../common/constants/enums.dart' show SettingItemType;
+import '../../../../common/constants/playback_speed.dart';
 import '../../../../common/widgets/dpad/dpad_widgets.dart' show DpadListView;
 import '../../controller/stream_setting_controller.dart';
 import '../../settings_event.dart';
@@ -133,6 +134,16 @@ class SettingsDetailStreaming extends ConsumerWidget
           minValue: 0,
           maxValue: 2,
           onUpdate: (value) => controller.setVodPlaybackIntervalIndex(value),
+        ),
+        SettingValueItem(
+          settingMenuFSN: settingMenuFSN,
+          headerText: 'VOD 기본 배속',
+          itemType: SettingItemType.limited,
+          displayTextList: PlaybackSpeed.texts,
+          currentValue: currentStreamSettings.vodPlaybackSpeedIndex,
+          minValue: 0,
+          maxValue: PlaybackSpeed.values.length - 1,
+          onUpdate: (value) => controller.setVodPlaybackSpeed(value),
         ),
       ];
 }

@@ -100,6 +100,13 @@ class VodStreamMainControl extends HookConsumerWidget
                                           .resolutionSettings,
                                       videoFocusNode: videoFocusNode,
                                     ),
+                                    changeOverlayToPlaybackSpeedSetting: () =>
+                                        changeOverlay(
+                                      ref,
+                                      overlayType: VodStreamOverlayType
+                                          .playbackSpeedSettings,
+                                      videoFocusNode: videoFocusNode,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 5.0),
