@@ -127,6 +127,9 @@ class VodControlsOverlay extends HookConsumerWidget
       case "Select": // select
         dpadActionCallbacks[DpadAction.select]?.call();
         break;
+      case "Enter": // enter
+        dpadActionCallbacks[DpadAction.select]?.call();
+        break;
       default:
         break;
     }

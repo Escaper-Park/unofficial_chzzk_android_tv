@@ -110,6 +110,9 @@ void onKeyEvent(KeyEvent event, DpadActionCallbacks dpadActionCallbacks) {
     case "Select": // select
       dpadActionCallbacks[DpadAction.select]?.call();
       break;
+    case "Enter": // enter
+      dpadActionCallbacks[DpadAction.select]?.call();
+      break;
     default:
       break;
   }
