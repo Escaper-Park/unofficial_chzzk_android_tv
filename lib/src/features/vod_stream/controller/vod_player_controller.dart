@@ -37,7 +37,7 @@ class VodPlayerController extends _$VodPlayerController {
   // int _accumulatedAwtSec = 0;
   // DateTime? _lastPlayTimestamp;
   // bool _isPaused = false;
-  // bool _isSeeking = false;
+  bool _isSeeking = false;
 
   Timer? _seekDebouncer;
 
@@ -48,6 +48,7 @@ class VodPlayerController extends _$VodPlayerController {
 
     // final uuid = Uuid();
     // _sessionId = uuid.v4();
+    _isSeeking = false;
 
     _playbackIntervalIndex = ref.read(
       streamSettingsControllerProvider.select(
@@ -116,19 +117,43 @@ class VodPlayerController extends _$VodPlayerController {
 
       await controller.setPlaybackSpeed(PlaybackSpeed.values[_playbackSpeedIndex]);
 
-      if (startPos == null) {
-        final watchTimeline = _vodPlay!.$1.watchTimeline;
-        if (watchTimeline != null) {
-          await controller.seekTo(Duration(seconds: watchTimeline));
+      final timeline = startPos ?? _vodPlay!.$1.watchTimeline;
+
+      if (timeline != null && timeline > 0) {
+        final seekPosition = Duration(seconds: timeline);
+        await controller.seekTo(seekPosition);
+
+        final completer = Completer<void>();
+        void listener() {
+          if (controller.value.position >= seekPosition) {
+            if (!completer.isCompleted) {
+              completer.complete();
+            }
+          }
         }
-      } else {
-        await controller.seekTo(Duration(seconds: startPos));
+        controller.addListener(listener);
+
+        await completer.future.timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            if (!completer.isCompleted) {
+              completer.complete();
+            }
+          },
+        );
+
+        controller.removeListener(listener);
       }
 
-      await controller.play();
+      await ref
+          .read(vodChatQueueControllerProvider(videoNo: _vodPlay!.$1.videoNo)
+          .notifier)
+          .init();
+
       controller.addListener(_checkVideoEnds);
 
       await ref.read(wakelockControllerProvider.notifier).enable();
+      await controller.play();
 
       // await postEvent(
       //   controller,
@@ -313,6 +338,7 @@ class VodPlayerController extends _$VodPlayerController {
       return;
     }
 
+    _isSeeking = true;
     chatQueueNotifier.toggleIsSeeking(true);
     chatQueueNotifier.clearQueue();
     ref
@@ -336,6 +362,7 @@ class VodPlayerController extends _$VodPlayerController {
           direction,
           latestPosition,
         );
+        _isSeeking = false;
       });
     }
   }
@@ -404,6 +431,8 @@ class VodPlayerController extends _$VodPlayerController {
   }
 
   Future<void> _checkVideoEnds() async {
+    if (_isSeeking) return;
+
     final controller = state.value!;
     final ended = _isVideoEnded(controller);
 
@@ -452,7 +481,7 @@ class VodPlayerController extends _$VodPlayerController {
     }
 
     const threshold = Duration(milliseconds: 200);
-    if (duration - position <= threshold) {
+    if (duration.inMilliseconds > 0 && duration - position <= threshold) {
       return true;
     }
 
