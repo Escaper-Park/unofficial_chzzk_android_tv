@@ -47,4 +47,8 @@ class LocalWatchingHistoryRepository
 
     await updateValue(histories);
   }
+
+  Future<void> clearAll() async {
+    await updateValue(initValue());
+  }
 }

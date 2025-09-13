@@ -25,7 +25,7 @@ class SettingsDetailStreaming extends ConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStreamSettings = getCurrentStreamSettings(ref);
     final controller = getStreamSettingsController(ref);
-    final settingItems = _getItems(currentStreamSettings, controller);
+    final settingItems = _getItems(context, ref, currentStreamSettings, controller);
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -40,6 +40,8 @@ class SettingsDetailStreaming extends ConsumerWidget
   }
 
   List<SettingValueItem> _getItems(
+    BuildContext context,
+    WidgetRef ref,
     StreamSettings currentStreamSettings,
     StreamSettingsController controller,
   ) =>
@@ -144,6 +146,16 @@ class SettingsDetailStreaming extends ConsumerWidget
           minValue: 0,
           maxValue: PlaybackSpeed.values.length - 1,
           onUpdate: (value) => controller.setVodPlaybackSpeed(value),
+        ),
+        SettingValueItem(
+          settingMenuFSN: settingMenuFSN,
+          headerText: '시청기록 전체삭제',
+          itemType: SettingItemType.limited,
+          displayTextList: const ['실행'],
+          currentValue: 0,
+          minValue: 0,
+          maxValue: 0,
+          onUpdate: (_) => controller.deleteAllWatchingHistory(context: context),
         ),
       ];
 }

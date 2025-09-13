@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../common/constants/enums.dart';
+import '../../../utils/popup/popup_utils.dart';
 import '../../../utils/shared_preferences/shared_prefs.dart';
+import '../../watching_history/controller/local_watching_history_controller.dart';
 import '../model/stream_settings.dart';
 import '../repository/stream_settings_repository.dart';
 import '../../../common/constants/playback_speed.dart';
@@ -81,6 +85,29 @@ class StreamSettingsController extends _$StreamSettingsController {
       0,
       PlaybackSpeed.values.length - 1,
       state.copyWith(vodPlaybackSpeedIndex: value),
+    );
+  }
+
+  Future<void> deleteAllWatchingHistory({required BuildContext context}) async {
+    await PopupUtils.showButtonDialog(
+      context: context,
+      titleText: '기록 삭제',
+      contentText: '정말로 모든 시청 기록을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
+      buttonType: DialogButtonType.doubleButton,
+      confirmText: '삭제',
+      cancelText: '취소',
+      confirmCallback: () async {
+        await ref
+            .read(localWatchingHistoryControllerProvider.notifier)
+            .removeAllWatchingHistory();
+
+        if (context.mounted) {
+          PopupUtils.showSnackBar(
+            context: context,
+            content: '모든 시청 기록이 삭제되었습니다.',
+          );
+        }
+      },
     );
   }
 

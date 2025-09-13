@@ -41,4 +41,9 @@ class LocalWatchingHistoryController extends _$LocalWatchingHistoryController {
     await _repository.removeWatchingHistory(videoNo);
     ref.invalidateSelf();
   }
+
+  Future<void> removeAllWatchingHistory() async {
+    await _repository.clearAll();
+    ref.invalidateSelf();
+  }
 }
