@@ -16,6 +16,9 @@ import 'vod_chat_controller.dart';
 import 'vod_playlist_controller.dart';
 import 'vod_seek_indicator_controller.dart';
 
+import '../../watching_history/controller/local_watching_history_controller.dart';
+import '../../watching_history/model/watching_history.dart';
+
 part 'vod_player_controller.g.dart';
 
 @riverpod
@@ -70,7 +73,13 @@ class VodPlayerController extends _$VodPlayerController {
       _seekDebouncer?.cancel();
     });
 
-    return await init();
+    final history = ref
+        .read(localWatchingHistoryControllerProvider.notifier)
+        .getWatchingHistoryByVideoNo(_vodPlay!.$1.videoNo);
+
+    final startAt = history?.timeline;
+
+    return await init(startPos: startAt);
   }
 
   Future<VideoPlayerController?> init({int? startPos}) async {
@@ -340,6 +349,27 @@ class VodPlayerController extends _$VodPlayerController {
     // );
     // _stopWatchContinuedTimer();
 
+    if (_vodPlay != null && state.value?.value.isInitialized == true) {
+      final lastPosition = state.value!.value.position.inSeconds;
+      final vod = _vodPlay!.$1;
+
+      if (lastPosition > 30) {
+        final newHistory = WatchingHistory(
+          historyNo: vod.videoNo.toString(),
+          channelId: vod.channel!.channelId,
+          videoNo: vod.videoNo,
+          contentType: vod.videoType,
+          timeline: lastPosition,
+          date: DateTime.now().toIso8601String(),
+          videoResponse: vod,
+        );
+
+        ref
+            .read(localWatchingHistoryControllerProvider.notifier)
+            .addWatchingHistory(newHistory);
+      }
+    }
+
     state.value?.removeListener(_checkVideoEnds);
     await ref.read(wakelockControllerProvider.notifier).disable();
     await state.value?.dispose();
@@ -378,6 +408,12 @@ class VodPlayerController extends _$VodPlayerController {
     final ended = _isVideoEnded(controller);
 
     if (ended) {
+      if (_vodPlay != null) {
+        await ref
+            .read(localWatchingHistoryControllerProvider.notifier)
+            .removeWatchingHistory(_vodPlay!.$1.videoNo);
+      }
+
       if (_wakelockEnabled) {
         await ref.read(wakelockControllerProvider.notifier).disable();
         _wakelockEnabled = false;

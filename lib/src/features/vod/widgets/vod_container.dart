@@ -20,6 +20,8 @@ import '../../channel/widgets/channel_widgets.dart'
 import '../controller/vod_controller.dart';
 import '../model/vod.dart';
 import 'vod_widgets.dart';
+import '../../watching_history/controller/local_watching_history_controller.dart';
+import '../../watching_history/model/watching_history.dart';
 
 part 'vod_container/vod_container_body.dart';
 part 'vod_container/vod_info_card.dart';
@@ -45,6 +47,14 @@ class VodContainer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoadingState = useState<bool>(false);
+    final watchingHistory = ref.watch(localWatchingHistoryControllerProvider);
+
+    WatchingHistory? history;
+    try {
+      history = watchingHistory.firstWhere((h) => h.videoNo == vod.videoNo);
+    } catch (e) {
+      history = null;
+    }
 
     return RoundedContainer(
       width: Dimensions.videoContainerWidth,
@@ -63,7 +73,11 @@ class VodContainer extends HookConsumerWidget {
               }
             : () {},
         child: _VodContainerBody(
-          vodThumbnail: VodThumbnail(vod: vod),
+          vodThumbnail: VodThumbnail(
+            vod: vod,
+            timeline: history?.timeline,
+            duration: vod.duration,
+          ),
           vodStatusBadge: _VodStatusBadges(vod: vod),
           vodInfoCard: _VodInfoCard(
             vod: vod,

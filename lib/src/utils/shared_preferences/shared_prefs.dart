@@ -20,4 +20,7 @@ abstract class SharedPrefsDBKey {
 
   // group
   static const String group = 'group';
+
+  // watching history
+  static const String watchingHistory = 'watching_history';
 }
