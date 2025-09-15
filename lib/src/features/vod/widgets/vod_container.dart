@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../utils/extensions/custom_extensions.dart';
@@ -20,8 +21,6 @@ import '../../channel/widgets/channel_widgets.dart'
 import '../controller/vod_controller.dart';
 import '../model/vod.dart';
 import 'vod_widgets.dart';
-import '../../watching_history/controller/local_watching_history_controller.dart';
-import '../../watching_history/model/watching_history.dart';
 
 part 'vod_container/vod_container_body.dart';
 part 'vod_container/vod_info_card.dart';
@@ -36,6 +35,7 @@ class VodContainer extends HookConsumerWidget {
     this.displayChannelData = true,
     required this.focusNode,
     required this.vod,
+    this.onVideoPop,
   });
 
   final AppRoute appRoute;
@@ -43,18 +43,11 @@ class VodContainer extends HookConsumerWidget {
   final bool displayChannelData;
   final FocusNode focusNode;
   final Vod vod;
+  final VoidCallback? onVideoPop;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoadingState = useState<bool>(false);
-    final watchingHistory = ref.watch(localWatchingHistoryControllerProvider);
-
-    WatchingHistory? history;
-    try {
-      history = watchingHistory.firstWhere((h) => h.videoNo == vod.videoNo);
-    } catch (e) {
-      history = null;
-    }
 
     return RoundedContainer(
       width: Dimensions.videoContainerWidth,
@@ -75,7 +68,7 @@ class VodContainer extends HookConsumerWidget {
         child: _VodContainerBody(
           vodThumbnail: VodThumbnail(
             vod: vod,
-            timeline: history?.timeline,
+            timeline: vod.watchTimeline,
             duration: vod.duration,
           ),
           vodStatusBadge: _VodStatusBadges(vod: vod),
@@ -139,11 +132,8 @@ class VodContainer extends HookConsumerWidget {
     }
 
     if (context.mounted) {
-      context.pushTo(
-        context: context,
-        currentLocation: appRoute,
-        appRoute: AppRoute.vodStream,
-      );
+      await GoRouter.of(context).push('/${AppRoute.vodStream.name}');
+      onVideoPop?.call();
     }
   }
 }

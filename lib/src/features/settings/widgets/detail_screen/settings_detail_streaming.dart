@@ -147,15 +147,5 @@ class SettingsDetailStreaming extends ConsumerWidget
           maxValue: PlaybackSpeed.values.length - 1,
           onUpdate: (value) => controller.setVodPlaybackSpeed(value),
         ),
-        SettingValueItem(
-          settingMenuFSN: settingMenuFSN,
-          headerText: '시청기록 전체삭제',
-          itemType: SettingItemType.limited,
-          displayTextList: const ['실행'],
-          currentValue: 0,
-          minValue: 0,
-          maxValue: 0,
-          onUpdate: (_) => controller.deleteAllWatchingHistory(context: context),
-        ),
       ];
 }

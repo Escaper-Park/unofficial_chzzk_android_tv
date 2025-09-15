@@ -1,23 +1,20 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-// import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../common/constants/enums.dart' show PlaybackDirection;
+import '../../../common/constants/enums.dart' show PlaybackDirection, WatchEventType;
 import '../../../common/constants/playback_speed.dart';
-// import '../../../utils/dio/dio_client.dart';
+import '../../../utils/dio/dio_client.dart';
 import '../../../utils/hls_parser/hls_parser.dart';
 import '../../../utils/wakelock/wakelock_controller.dart';
 import '../../settings/controller/stream_setting_controller.dart';
-// import '../../vod/model/vod_event.dart';
-// import '../../vod/repository/vod_repository.dart';
+import '../../vod/model/vod_event.dart';
+import '../../vod/repository/vod_repository.dart';
 import 'vod_chat_controller.dart';
 import 'vod_playlist_controller.dart';
 import 'vod_seek_indicator_controller.dart';
-
-import '../../watching_history/controller/local_watching_history_controller.dart';
-import '../../watching_history/model/watching_history.dart';
 
 part 'vod_player_controller.g.dart';
 
@@ -29,36 +26,36 @@ class VodPlayerController extends _$VodPlayerController {
   late int _playbackIntervalIndex;
   late int _playbackSpeedIndex;
   bool _wakelockEnabled = false;
-  // late String _sessionId;
-  // late VodRepository _repository;
+  late String _sessionId;
+  late VodRepository _repository;
 
   /* vod event */
-  // Timer? _watchContinuedTimer;
-  // int _accumulatedAwtSec = 0;
-  // DateTime? _lastPlayTimestamp;
-  // bool _isPaused = false;
+  Timer? _watchContinuedTimer;
+  int _accumulatedAwtSec = 0;
+  DateTime? _lastPlayTimestamp;
+  bool _isPaused = false;
   bool _isSeeking = false;
 
   Timer? _seekDebouncer;
 
   @override
   FutureOr<Raw<VideoPlayerController?>> build() async {
-    // final Dio dio = ref.watch(dioClientProvider);
-    // _repository = VodRepository(dio);
+    final Dio dio = ref.watch(dioClientProvider);
+    _repository = VodRepository(dio);
 
-    // final uuid = Uuid();
-    // _sessionId = uuid.v4();
+    final uuid = Uuid();
+    _sessionId = uuid.v4();
     _isSeeking = false;
 
     _playbackIntervalIndex = ref.read(
       streamSettingsControllerProvider.select(
-        (setting) => setting.vodPlaybackIntervalIndex,
+            (setting) => setting.vodPlaybackIntervalIndex,
       ),
     );
 
     _resolutionIndex = ref.read(
       streamSettingsControllerProvider.select(
-        (setting) => setting.vodResolutionIndex,
+            (setting) => setting.vodResolutionIndex,
       ),
     );
 
@@ -74,13 +71,7 @@ class VodPlayerController extends _$VodPlayerController {
       _seekDebouncer?.cancel();
     });
 
-    final history = ref
-        .read(localWatchingHistoryControllerProvider.notifier)
-        .getWatchingHistoryByVideoNo(_vodPlay!.$1.videoNo);
-
-    final startAt = history?.timeline;
-
-    return await init(startPos: startAt);
+    return await init();
   }
 
   Future<VideoPlayerController?> init({int? startPos}) async {
@@ -117,7 +108,7 @@ class VodPlayerController extends _$VodPlayerController {
 
       await controller.setPlaybackSpeed(PlaybackSpeed.values[_playbackSpeedIndex]);
 
-      final timeline = startPos ?? _vodPlay!.$1.watchTimeline;
+      final timeline = _vodPlay!.$1.watchTimeline;
 
       if (timeline != null && timeline > 0) {
         final seekPosition = Duration(seconds: timeline);
@@ -155,15 +146,15 @@ class VodPlayerController extends _$VodPlayerController {
       await ref.read(wakelockControllerProvider.notifier).enable();
       await controller.play();
 
-      // await postEvent(
-      //   controller,
-      //   WatchEventType.watchStarted,
-      //   null,
-      // );
+      await postEvent(
+        controller,
+        WatchEventType.watchStarted,
+        null,
+      );
 
-      // _lastPlayTimestamp = DateTime.now();
-      // _isPaused = false;
-      // _startWatchContinuedTimer();
+      _lastPlayTimestamp = DateTime.now();
+      _isPaused = false;
+      _startWatchContinuedTimer();
 
       return controller;
     } catch (_) {
@@ -171,109 +162,109 @@ class VodPlayerController extends _$VodPlayerController {
     }
   }
 
-  // void _updateAwt() {
-  //   if (_lastPlayTimestamp != null) {
-  //     final now = DateTime.now();
-  //     final deltaSec = now.difference(_lastPlayTimestamp!).inSeconds;
-  //     _accumulatedAwtSec += deltaSec;
-  //     final total = _vodPlay!.$1.duration;
-  //     if (_accumulatedAwtSec > total) {
-  //       _accumulatedAwtSec = total;
-  //     }
-  //     _lastPlayTimestamp = now;
-  //   }
-  // }
+  void _updateAwt() {
+    if (_lastPlayTimestamp != null) {
+      final now = DateTime.now();
+      final deltaSec = now.difference(_lastPlayTimestamp!).inSeconds;
+      _accumulatedAwtSec += deltaSec;
+      final total = _vodPlay!.$1.duration;
+      if (_accumulatedAwtSec > total) {
+        _accumulatedAwtSec = total;
+      }
+      _lastPlayTimestamp = now;
+    }
+  }
 
-  // void _startWatchContinuedTimer() {
-  //   _watchContinuedTimer?.cancel();
-  //   _watchContinuedTimer = Timer.periodic(
-  //     const Duration(seconds: 10),
-  //     (timer) async {
-  //       if (!_isPaused && !_isSeeking) {
-  //         _updateAwt();
-  //         await postEvent(
-  //           state.value,
-  //           WatchEventType.watchContinued,
-  //           _accumulatedAwtSec,
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
+  void _startWatchContinuedTimer() {
+    _watchContinuedTimer?.cancel();
+    _watchContinuedTimer = Timer.periodic(
+      const Duration(seconds: 10),
+          (timer) async {
+        if (!_isPaused && !_isSeeking) {
+          _updateAwt();
+          await postEvent(
+            state.value,
+            WatchEventType.watchContinued,
+            _accumulatedAwtSec,
+          );
+        }
+      },
+    );
+  }
 
-  // void _stopWatchContinuedTimer() {
-  //   _watchContinuedTimer?.cancel();
-  //   _watchContinuedTimer = null;
-  // }
+  void _stopWatchContinuedTimer() {
+    _watchContinuedTimer?.cancel();
+    _watchContinuedTimer = null;
+  }
 
   // awt: actual watching time
-  // Future<void> postEvent(
-  //   VideoPlayerController? controller,
-  //   WatchEventType eventType,
-  //   int? awt, {
-  //   bool init = false,
-  // }) async {
-  //   if (controller != null) {
-  //     final totalLength = _vodPlay!.$1.duration;
-  //     final fixedAwt = awt == null
-  //         ? null
-  //         : awt > totalLength
-  //             ? totalLength
-  //             : awt;
+  Future<void> postEvent(
+      VideoPlayerController? controller,
+      WatchEventType eventType,
+      int? awt, {
+        bool init = false,
+      }) async {
+    if (controller != null) {
+      final totalLength = _vodPlay!.$1.duration;
+      final fixedAwt = awt == null
+          ? null
+          : awt > totalLength
+          ? totalLength
+          : awt;
 
-  //     final watchEvent = VodEvent(
-  //       channelId: _vodPlay!.$1.channel!.channelId,
-  //       videoNo: _vodPlay!.$1.videoNo,
-  //       payload: Payload(
-  //         watchEventType: eventType.value,
-  //         sessionId: _sessionId,
-  //         duration: 10,
-  //         positionAt: controller.value.position.inSeconds,
-  //         awt: fixedAwt,
-  //       ),
-  //       totalLength: _vodPlay!.$1.duration,
-  //     );
-  //     try {
+      final watchEvent = VodEvent(
+        channelId: _vodPlay!.$1.channel!.channelId,
+        videoNo: _vodPlay!.$1.videoNo,
+        payload: Payload(
+          watchEventType: eventType.value,
+          sessionId: _sessionId,
+          duration: 10,
+          positionAt: controller.value.position.inSeconds,
+          awt: fixedAwt,
+        ),
+        totalLength: _vodPlay!.$1.duration,
+      );
+      try {
 
-  //     await _repository.postWatchingEvent(event: watchEvent);
-  //     }catch (e) {
-  //       print('test $e');
-  //     }
-  //     print('test ${eventType.value} awt $fixedAwt');
-  //   }
-  // }
+        await _repository.postWatchingEvent(event: watchEvent);
+      }catch (e) {
+        print('test $e');
+      }
+      print('test ${eventType.value} awt $fixedAwt');
+    }
+  }
 
   int getCurrentResolutionIndex() => _resolutionIndex;
 
   Future<void> pause() async {
-    // if (_isPaused) return;
+    if (_isPaused) return;
 
-    // _updateAwt();
-    // await postEvent(
-    //   state.value,
-    //   WatchEventType.watchPaused,
-    //   _accumulatedAwtSec,
-    // );
-    // _stopWatchContinuedTimer();
-    // _isPaused = true;
+    _updateAwt();
+    await postEvent(
+      state.value,
+      WatchEventType.watchPaused,
+      _accumulatedAwtSec,
+    );
+    _stopWatchContinuedTimer();
+    _isPaused = true;
 
     await state.value?.pause();
     await ref.read(wakelockControllerProvider.notifier).disable();
   }
 
   Future<void> resume() async {
-    // if (!_isPaused) return;
+    if (!_isPaused) return;
 
     if (state.value?.value.isPlaying == false) {
-      // _lastPlayTimestamp = DateTime.now();
-      // await postEvent(
-      //   state.value,
-      //   WatchEventType.watchResumed,
-      //   _accumulatedAwtSec,
-      // );
+      _lastPlayTimestamp = DateTime.now();
+      await postEvent(
+        state.value,
+        WatchEventType.watchResumed,
+        _accumulatedAwtSec,
+      );
 
-      // _isPaused = false;
-      // _startWatchContinuedTimer();
+      _isPaused = false;
+      _startWatchContinuedTimer();
 
       await state.value?.play();
       await ref.read(wakelockControllerProvider.notifier).enable();
@@ -284,12 +275,12 @@ class VodPlayerController extends _$VodPlayerController {
     required PlaybackDirection direction,
     required bool endSeek,
   }) async {
-    // _isSeeking = true;
-    // _stopWatchContinuedTimer();
-    // _updateAwt();
+    _isSeeking = true;
+    _stopWatchContinuedTimer();
+    _updateAwt();
     final value = state.value?.value;
     final int playbackInterval =
-        _getPlaybackIntervalByIndex(_playbackIntervalIndex);
+    _getPlaybackIntervalByIndex(_playbackIntervalIndex);
 
     if (value != null) {
       final currentPos = value.position;
@@ -316,11 +307,6 @@ class VodPlayerController extends _$VodPlayerController {
         duration: newPos,
       );
     }
-    // _isSeeking = false;
-    // if (!_isPaused) {
-    //   _lastPlayTimestamp = DateTime.now();
-    //   _startWatchContinuedTimer();
-    // }
   }
 
   Future<void> seekTo({
@@ -343,11 +329,11 @@ class VodPlayerController extends _$VodPlayerController {
     chatQueueNotifier.clearQueue();
     ref
         .read(
-          vodChatControllerProvider(
-            controller: state.value!,
-            videoNo: _vodPlay!.$1.videoNo,
-          ).notifier,
-        )
+      vodChatControllerProvider(
+        controller: state.value!,
+        videoNo: _vodPlay!.$1.videoNo,
+      ).notifier,
+    )
         .clearChatBufer();
 
     state.value!.seekTo(duration);
@@ -363,39 +349,24 @@ class VodPlayerController extends _$VodPlayerController {
           latestPosition,
         );
         _isSeeking = false;
+
+        // ✨ [수정] 탐색이 완전히 끝난 후 타이머를 다시 시작합니다.
+        if (!_isPaused) {
+          _lastPlayTimestamp = DateTime.now();
+          _startWatchContinuedTimer();
+        }
       });
     }
   }
 
   Future<void> dispose() async {
-    // _updateAwt();
-    // await postEvent(
-    //   state.value,
-    //   WatchEventType.watchEnded,
-    //   _accumulatedAwtSec,
-    // );
-    // _stopWatchContinuedTimer();
-
-    if (_vodPlay != null && state.value?.value.isInitialized == true) {
-      final lastPosition = state.value!.value.position.inSeconds;
-      final vod = _vodPlay!.$1;
-
-      if (lastPosition > 30) {
-        final newHistory = WatchingHistory(
-          historyNo: vod.videoNo.toString(),
-          channelId: vod.channel!.channelId,
-          videoNo: vod.videoNo,
-          contentType: vod.videoType,
-          timeline: lastPosition,
-          date: DateTime.now().toIso8601String(),
-          videoResponse: vod,
-        );
-
-        ref
-            .read(localWatchingHistoryControllerProvider.notifier)
-            .addWatchingHistory(newHistory);
-      }
-    }
+    _updateAwt();
+    await postEvent(
+      state.value,
+      WatchEventType.watchEnded,
+      _accumulatedAwtSec,
+    );
+    _stopWatchContinuedTimer();
 
     state.value?.removeListener(_checkVideoEnds);
     await ref.read(wakelockControllerProvider.notifier).disable();
@@ -420,9 +391,9 @@ class VodPlayerController extends _$VodPlayerController {
   }
 
   VideoPlayerController _getVideoPlayerController(
-    Uri uri,
-    Map<String, String> queryParams,
-  ) {
+      Uri uri,
+      Map<String, String> queryParams,
+      ) {
     return VideoPlayerController.networkUrl(
       uri,
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false),
@@ -437,12 +408,6 @@ class VodPlayerController extends _$VodPlayerController {
     final ended = _isVideoEnded(controller);
 
     if (ended) {
-      if (_vodPlay != null) {
-        await ref
-            .read(localWatchingHistoryControllerProvider.notifier)
-            .removeWatchingHistory(_vodPlay!.$1.videoNo);
-      }
-
       if (_wakelockEnabled) {
         await ref.read(wakelockControllerProvider.notifier).disable();
         _wakelockEnabled = false;

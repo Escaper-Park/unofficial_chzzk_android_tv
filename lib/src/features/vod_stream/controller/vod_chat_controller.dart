@@ -9,7 +9,6 @@ import '../../../common/constants/enums.dart' show PlaybackDirection;
 import '../../../utils/dio/dio_client.dart';
 import '../../vod/model/vod_chat.dart';
 import '../../vod/repository/vod_repository.dart';
-import '../../watching_history/controller/local_watching_history_controller.dart';
 import 'vod_playlist_controller.dart';
 
 part 'vod_chat_controller.g.dart';
@@ -40,18 +39,11 @@ class VodChatQueueController extends _$VodChatQueueController {
   }
 
   Future<void> init() async {
-    final history = ref
-        .read(localWatchingHistoryControllerProvider.notifier)
-        .getWatchingHistoryByVideoNo(_vodPlay!.$1.videoNo);
-
-    final startPos = history?.timeline;
-
-    final timeline = startPos ?? _vodPlay!.$1.watchTimeline;
-    final playerMessageTime = timeline != null ? (timeline * 1000) : 0;
-
     final response = await _repository.getVodChat(
       videoNo: _vodPlay!.$1.videoNo,
-      playerMessageTime: playerMessageTime,
+      playerMessageTime: _vodPlay!.$1.watchTimeline == null
+          ? 0
+          : (_vodPlay!.$1.watchTimeline! * 1000),
       previousVideoChatSize: null,
     );
 

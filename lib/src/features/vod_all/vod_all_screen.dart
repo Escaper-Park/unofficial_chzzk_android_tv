@@ -9,9 +9,12 @@ import '../../common/widgets/ui/ui_widgets.dart' show HeaderText;
 import '../vod/model/vod.dart';
 import '../vod/widgets/vod_widgets.dart';
 
+import '../watching_history/controller/watching_history_controller.dart';
 import '../watching_history/model/watching_history.dart';
+import 'controller/following_vod_controller.dart';
 import 'vod_all_event.dart';
 import 'vod_all_state.dart';
+import 'controller/vod_all_controller.dart';
 
 class VodAllScreen extends ConsumerWidget with VodAllEvent, VodAllState {
   const VodAllScreen({super.key});
@@ -36,6 +39,7 @@ class VodAllScreen extends ConsumerWidget with VodAllEvent, VodAllState {
           autofocus: index == 0,
           focusNode: node,
           vod: item as Vod,
+          onVideoPop: () => ref.invalidate(followingVodControllerProvider),
         );
       },
     );
@@ -47,32 +51,55 @@ class VodAllScreen extends ConsumerWidget with VodAllEvent, VodAllState {
         return switch (sortType) {
           VideoSortType.following => baseSection,
           VideoSortType.popular => baseSection.copyWith(
-              getAsyncValue: (sortType) =>
-                  getAsyncVodsSortBy(ref, sortType: sortType),
-              fetchMore: (sortType) async =>
-                  await vodAllFetchMore(ref, sortType: sortType),
-            ),
+            getAsyncValue: (sortType) =>
+                getAsyncVodsSortBy(ref, sortType: sortType),
+            fetchMore: (sortType) async =>
+            await vodAllFetchMore(ref, sortType: sortType),
+            itemBuilder: (context, index, node, item) {
+              return VodContainer(
+                appRoute: AppRoute.vodAll,
+                autofocus: index == 0,
+                focusNode: node,
+                vod: item as Vod,
+                onVideoPop: () => ref.invalidate(
+                  vodAllControllerProvider(sortType: sortType),
+                ),
+              );
+            },
+          ),
           VideoSortType.latest => baseSection.copyWith(
-              getAsyncValue: (sortType) =>
-                  getAsyncVodsSortBy(ref, sortType: sortType),
-              fetchMore: (sortType) async =>
-                  await vodAllFetchMore(ref, sortType: sortType),
-            ),
+            getAsyncValue: (sortType) =>
+                getAsyncVodsSortBy(ref, sortType: sortType),
+            fetchMore: (sortType) async =>
+            await vodAllFetchMore(ref, sortType: sortType),
+            itemBuilder: (context, index, node, item) {
+              return VodContainer(
+                appRoute: AppRoute.vodAll,
+                autofocus: index == 0,
+                focusNode: node,
+                vod: item as Vod,
+                onVideoPop: () => ref.invalidate(
+                  vodAllControllerProvider(sortType: sortType),
+                ),
+              );
+            },
+          ),
           VideoSortType.watchingHistory => baseSection.copyWith(
-              getAsyncValue: (sortType) => getAsyncWatchingHistories(ref),
-              fetchMore: (sortType) async =>
-                  await watchingHistoryFetchMore(ref),
-              itemBuilder: (context, index, node, item) {
-                final WatchingHistory history = item as WatchingHistory;
+            getAsyncValue: (sortType) => getAsyncWatchingHistories(ref),
+            fetchMore: (sortType) async =>
+            await watchingHistoryFetchMore(ref),
+            itemBuilder: (context, index, node, item) {
+              final WatchingHistory history = item as WatchingHistory;
 
-                return VodContainer(
-                  appRoute: AppRoute.vodAll,
-                  autofocus: index == 0,
-                  focusNode: node,
-                  vod: history.videoResponse,
-                );
-              },
-            ),
+              return VodContainer(
+                appRoute: AppRoute.vodAll,
+                autofocus: index == 0,
+                focusNode: node,
+                vod: history.videoResponse,
+                onVideoPop: () => ref.invalidate(watchingHistoryControllerProvider),
+              );
+            },
+          ),
           _ => throw UnimplementedError(),
         };
       },
