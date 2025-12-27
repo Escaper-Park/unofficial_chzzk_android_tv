@@ -4,17 +4,70 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (예: 0.3.5)'
+        required: true
+        type: string
+      version_code:
+        description: 'Version Code (예: 1)'
+        required: true
+        default: '1'
+        type: string
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
-    name: Build and Release
+  create-tag:
+    name: Create Tag
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    outputs:
+      tag: v${{ inputs.version }}+${{ inputs.version_code }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Update pubspec.yaml version
+        run: |
+          sed -i "s/^version: .*/version: ${{ inputs.version }}+${{ inputs.version_code }}/" pubspec.yaml
+
+      - name: Commit version change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore: bump version to ${{ inputs.version }}+${{ inputs.version_code }}" || echo "No changes to commit"
+          git push
+
+      - name: Create and push tag
+        run: |
+          git tag v${{ inputs.version }}+${{ inputs.version_code }}
+          git push origin v${{ inputs.version }}+${{ inputs.version_code }}
+
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    needs: [create-tag]
+    if: always() && (github.event_name == 'push' || needs.create-tag.result == 'success')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('v{0}+{1}', inputs.version, inputs.version_code) || github.ref }}
+
+      - name: Set version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "tag=v${{ inputs.version }}+${{ inputs.version_code }}" >> $GITHUB_OUTPUT
+            echo "name=v${{ inputs.version }}+${{ inputs.version_code }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -61,7 +114,7 @@ jobs:
 
       - name: Rename APKs
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${{ steps.version.outputs.name }}
           mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk build/app/outputs/flutter-apk/chzzk-tv-${VERSION}-armeabi-v7a.apk
           mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/chzzk-tv-${VERSION}-arm64-v8a.apk
           mv build/app/outputs/flutter-apk/app-x86_64-release.apk build/app/outputs/flutter-apk/chzzk-tv-${VERSION}-x86_64.apk
@@ -69,10 +122,12 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.name }}
           files: |
             build/app/outputs/flutter-apk/chzzk-tv-*.apk
           generate_release_notes: true
           draft: false
-          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+          prerelease: ${{ contains(steps.version.outputs.tag, 'alpha') || contains(steps.version.outputs.tag, 'beta') || contains(steps.version.outputs.tag, 'rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
