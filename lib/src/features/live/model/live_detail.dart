@@ -47,4 +47,3 @@ class LiveDetail with _$LiveDetail {
   factory LiveDetail.fromJson(Map<String, dynamic> json) =>
       _$LiveDetailFromJson(json);
 }
-

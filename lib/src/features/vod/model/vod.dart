@@ -35,7 +35,8 @@ class Vod with _$Vod {
     String? inKey,
     String? liveOpenDate,
     String? vodStatus,
-    @LiveRewindPlaybackConverter() LiveRewindPlaybackJson? liveRewindPlaybackJson,
+    @LiveRewindPlaybackConverter()
+    LiveRewindPlaybackJson? liveRewindPlaybackJson,
     String? userAdultStatus,
     bool? videoChatEnabled,
     String? videoChatChannelId,

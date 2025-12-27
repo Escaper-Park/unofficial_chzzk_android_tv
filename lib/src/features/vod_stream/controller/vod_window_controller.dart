@@ -8,7 +8,7 @@ part 'vod_window_controller.g.dart';
 @riverpod
 class VodWindowController extends _$VodWindowController {
   late ChatWindowMode _lastSelectedMode;
-  
+
   @override
   ChatWindowMode build() {
     final chatWindowModeStateIndex = ref.read(

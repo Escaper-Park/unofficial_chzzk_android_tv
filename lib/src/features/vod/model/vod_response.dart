@@ -67,8 +67,7 @@ class FollowingVodResponse with _$FollowingVodResponse {
 
 @freezed
 class FollowingVodPage with _$FollowingVodPage {
-  const factory FollowingVodPage({FollowingVodNext? next}) =
-      _FollowingVodPage;
+  const factory FollowingVodPage({FollowingVodNext? next}) = _FollowingVodPage;
 
   factory FollowingVodPage.fromJson(Map<String, dynamic> json) =>
       _$FollowingVodPageFromJson(json);

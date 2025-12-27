@@ -37,4 +37,3 @@ class ExtrasConverter implements JsonConverter<Extras, String> {
     return jsonEncode(jsonMap);
   }
 }
-

@@ -31,7 +31,8 @@ class SearchLiveController extends _$SearchLiveController {
 
     final data = response?.data.map(
       (e) {
-        final channel = Channel.fromJson((e as Map<String, dynamic>)['channel']); 
+        final channel =
+            Channel.fromJson((e as Map<String, dynamic>)['channel']);
         final liveInfo = (e)['live'];
 
         return LiveInfo.fromJson(liveInfo).copyWith(channel: channel);

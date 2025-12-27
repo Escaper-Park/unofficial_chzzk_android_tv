@@ -42,4 +42,3 @@ class LiveStatus with _$LiveStatus {
   factory LiveStatus.fromJson(Map<String, dynamic> json) =>
       _$LiveStatusFromJson(json);
 }
-

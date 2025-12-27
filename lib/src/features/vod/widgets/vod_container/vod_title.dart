@@ -12,7 +12,7 @@ class _VodTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final newlineRemovedTitle = title.replaceAll('\n', ' ');
-    
+
     return Text(
       newlineRemovedTitle,
       maxLines: maxLines,

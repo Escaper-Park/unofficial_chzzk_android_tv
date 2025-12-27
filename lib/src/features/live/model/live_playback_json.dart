@@ -137,4 +137,3 @@ class LivePlaybackConverter implements JsonConverter<LivePlaybackJson, String> {
     return jsonEncode(jsonMap);
   }
 }
-

@@ -47,4 +47,3 @@ class Paging with _$Paging {
 
   factory Paging.fromJson(Map<String, dynamic> json) => _$PagingFromJson(json);
 }
-

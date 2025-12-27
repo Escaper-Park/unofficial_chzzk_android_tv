@@ -132,4 +132,3 @@ class ContentLineageConverter implements JsonConverter<ContentLineage, String> {
     return jsonEncode(jsonMap);
   }
 }
-

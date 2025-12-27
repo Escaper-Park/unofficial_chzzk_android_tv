@@ -54,7 +54,7 @@ class ChatSettings with _$ChatSettings {
     required int showNickname,
 
     /// Show donation in chat
-    /// 
+    ///
     /// 0: false, 1: true
     required int showDonation,
 

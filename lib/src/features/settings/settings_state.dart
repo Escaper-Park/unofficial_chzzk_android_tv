@@ -18,7 +18,8 @@ mixin class SettingsState {
       ref.watch(streamSettingsControllerProvider);
 
   /* detail-screen: chat settings */
-  ChatSettings getCurrentChatSettings(WidgetRef ref) => ref.watch(chatSettingsControllerProvider);
+  ChatSettings getCurrentChatSettings(WidgetRef ref) =>
+      ref.watch(chatSettingsControllerProvider);
 
   /* detail-screen: update */
   AsyncValue<(String, String)?> getAsyncUpdate(WidgetRef ref) =>

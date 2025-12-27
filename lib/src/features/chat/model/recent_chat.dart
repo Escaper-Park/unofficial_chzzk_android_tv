@@ -53,4 +53,3 @@ class RecentChatMsg with _$RecentChatMsg {
   factory RecentChatMsg.fromJson(Map<String, dynamic> json) =>
       _$RecentChatMsgFromJson(json);
 }
-

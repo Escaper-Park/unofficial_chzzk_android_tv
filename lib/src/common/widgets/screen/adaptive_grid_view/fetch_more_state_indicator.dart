@@ -11,8 +11,8 @@ class SidebarFetchMoreStateIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loadingState =
-        ref.watch(fetchMoreStateIndicatorControllerProvider(screenId: screenId));
+    final loadingState = ref
+        .watch(fetchMoreStateIndicatorControllerProvider(screenId: screenId));
 
     return Padding(
       padding: EdgeInsets.all(10.0),

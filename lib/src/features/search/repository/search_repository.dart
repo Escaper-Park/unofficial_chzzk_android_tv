@@ -44,7 +44,8 @@ abstract class SearchRepository {
 
 @RestApi(baseUrl: BaseUrl.naverGame)
 abstract class CategorySearchRepository {
-  factory CategorySearchRepository(Dio dio, {String baseUrl}) = _CategorySearchRepository;
+  factory CategorySearchRepository(Dio dio, {String baseUrl}) =
+      _CategorySearchRepository;
 
   @GET(NaverGameApi.autoCompleteSearchCategories)
   Future<AutoCompleteSearchCategoryResponse?>

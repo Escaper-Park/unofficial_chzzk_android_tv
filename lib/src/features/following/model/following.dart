@@ -26,5 +26,3 @@ class Streamer with _$Streamer {
   factory Streamer.fromJson(Map<String, dynamic> json) =>
       _$StreamerFromJson(json);
 }
-
-

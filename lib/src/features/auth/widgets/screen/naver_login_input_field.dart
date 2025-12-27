@@ -10,6 +10,9 @@ class _NaverLoginInputField extends ConsumerWidget with AuthState {
     final isObscure =
         loginStep == LoginStep.password || loginStep == LoginStep.passwordAgain;
 
-    return VirtualKeyboardInputField(isObscure: isObscure, routeName: AppRoute.auth.routeName,);
+    return VirtualKeyboardInputField(
+      isObscure: isObscure,
+      routeName: AppRoute.auth.routeName,
+    );
   }
 }

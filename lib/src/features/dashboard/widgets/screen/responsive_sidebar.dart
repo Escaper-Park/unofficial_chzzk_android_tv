@@ -40,16 +40,15 @@ class _ResponsiveSidebar extends HookConsumerWidget with DashboardEvent {
           onPressed: () {
             if (index == 0) {
               pushSearch(context);
-            } else if (index ==1) {
+            } else if (index == 1) {
               goHome(ref, context, currentLocationName: currentLocationName);
             } else {
               goTo(
-                    context,
-                    currentLocationName: currentLocationName,
-                    appRoute: item.$3,
-                  );
+                context,
+                currentLocationName: currentLocationName,
+                appRoute: item.$3,
+              );
             }
-           
           },
         );
       },
@@ -70,8 +69,7 @@ class _ResponsiveSidebar extends HookConsumerWidget with DashboardEvent {
           padding: EdgeInsets.symmetric(vertical: 10.0),
           decoration: BoxDecoration(
             gradient: hasFocus.value ? _expandedGradient : null,
-            color:
-                hasFocus.value ? null : _backgroundColor.withOpacity(0.7),
+            color: hasFocus.value ? null : _backgroundColor.withOpacity(0.7),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

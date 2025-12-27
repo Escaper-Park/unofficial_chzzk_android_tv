@@ -36,19 +36,21 @@ class SearchScreenBase extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: SearchBody(
         searchHeader: HeaderText(text: headerText),
-        searchField: VirtualKeyboardInputField(isObscure: false, routeName: routeName,),
+        searchField: VirtualKeyboardInputField(
+          isObscure: false,
+          routeName: routeName,
+        ),
         keyboard: SearchKeyboard(
           routeName: routeName,
           keyboardFSN: keyboardFSN,
           autoCompleteFSN: autoCompleteFSN,
           onNormalKeyPressed: onNormalKeyPressed,
           onEnterPressed: (keyword) => onEnterPressed(keyword),
-          
         ),
         autoComplete: Consumer(
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
             final asyncAutoComplete = getAsyncAutoComplete(ref);
-      
+
             return AutoCompleteList(
               asyncAutoComplete: asyncAutoComplete,
               itemNode: autoCompleteFSN,

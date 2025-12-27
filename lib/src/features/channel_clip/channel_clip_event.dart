@@ -12,7 +12,6 @@ mixin class ChannelClipEvent {
     context.pop();
   }
 
-
   Future<void> channelClipFetchMore(
     WidgetRef ref, {
     required String channelId,

@@ -31,7 +31,7 @@ class HomeFollowingCategoryItem extends StatelessWidget {
       autofocus: false,
       focusNode: focusNode,
       onPressed: onPressed,
-      child:  SizedBox(
+      child: SizedBox(
         width: Dimensions.homeCategoryContainerWidth,
         height: Dimensions.homeCategoryContainerHeight,
         child: Stack(

@@ -50,3 +50,19 @@ pubspec.lock
 
 # TODO
 TODO.md
+
+# Release signing - DO NOT COMMIT
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+*.jks
+*.keystore
+
+# Local configuration
+local.properties
+
+# Coverage
+coverage/
+
+# Windows artifacts
+nul

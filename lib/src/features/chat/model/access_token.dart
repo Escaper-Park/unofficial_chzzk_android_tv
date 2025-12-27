@@ -14,4 +14,3 @@ class AccessToken with _$AccessToken {
   factory AccessToken.fromJson(Map<String, dynamic> json) =>
       _$AccessTokenFromJson(json);
 }
-

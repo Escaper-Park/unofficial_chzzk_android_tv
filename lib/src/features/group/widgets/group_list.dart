@@ -51,7 +51,8 @@ class GroupList extends StatelessWidget {
                     horizontal: 20.0,
                     vertical: 10.0,
                   ),
-                  backgroundColor: AppColors.greyContainerColor.withOpacity(0.7),
+                  backgroundColor:
+                      AppColors.greyContainerColor.withOpacity(0.7),
                   onPressed: () => selectGroup(group),
                   child: CenteredText(
                     text: group.groupName,

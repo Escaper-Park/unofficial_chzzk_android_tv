@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../common/widgets/ui/ui_widgets.dart'
-    show HeaderText;
+import '../../../../common/widgets/ui/ui_widgets.dart' show HeaderText;
 
 class SettingsDetailFaq extends StatelessWidget {
   const SettingsDetailFaq({super.key});

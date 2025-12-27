@@ -104,7 +104,7 @@ class CustomLicenseList extends StatelessWidget {
           autofocus: index == 0,
           padding: const EdgeInsets.all(10.0),
           onPressed: () => onPressed(index),
-          child:  Align(
+          child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
               packages[index],

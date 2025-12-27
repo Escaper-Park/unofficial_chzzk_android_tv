@@ -50,8 +50,7 @@ class CategoryClipResponse with _$CategoryClipResponse {
 
 @freezed
 class CategoryClipPage with _$CategoryClipPage {
-  const factory CategoryClipPage({CategoryClipNext? next}) =
-      _CategoryClipPage;
+  const factory CategoryClipPage({CategoryClipNext? next}) = _CategoryClipPage;
 
   factory CategoryClipPage.fromJson(Map<String, dynamic> json) =>
       _$CategoryClipPageFromJson(json);

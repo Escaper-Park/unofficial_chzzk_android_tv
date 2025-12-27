@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../common/constants/enums.dart'
-    show FilterType, ClipOrderType;
+import '../../../common/constants/enums.dart' show FilterType, ClipOrderType;
 import '../../../utils/dio/dio_client.dart';
 import '../../clip/model/clip.dart';
 import '../../clip/repository/clip_repository.dart';

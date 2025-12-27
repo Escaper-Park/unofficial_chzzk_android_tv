@@ -58,7 +58,8 @@ class SearchResultScreen extends HookConsumerWidget
           asyncChannelList: asyncChannel,
           itemNode: nodes[0],
           belowFSN: nodes[1],
-          onPressedChannelCard: (channel) => pushSearchResultChannel(context, channel: channel),
+          onPressedChannelCard: (channel) =>
+              pushSearchResultChannel(context, channel: channel),
         ),
         searchLives: _SearchResultLive(
           asyncLive: asyncLive,

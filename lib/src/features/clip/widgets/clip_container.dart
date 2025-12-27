@@ -102,7 +102,7 @@ class ClipContainer extends HookConsumerWidget {
       }
       return;
     }
-    
+
     final String clipEmbedUrl =
         ref.read(clipControllerProvider.notifier).getPlayUrl(clip: clip);
 

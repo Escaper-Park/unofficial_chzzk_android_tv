@@ -115,8 +115,10 @@ class StreamControlIconButtonWithDpad extends StatelessWidget {
     required this.resetOverlayTimer,
     this.onPressed,
     required this.onUpdate,
-  }) : assert(itemType != SettingItemType.limited || displayTextList != null,
-            'displayText cannot be null when itemType is SettingItemType.limited',);
+  }) : assert(
+          itemType != SettingItemType.limited || displayTextList != null,
+          'displayText cannot be null when itemType is SettingItemType.limited',
+        );
 
   /// Type of the setting value.
   ///

@@ -18,6 +18,7 @@ class VirtualKeyboardInputField extends ConsumerWidget
   });
 
   final String routeName;
+
   /// Hide text when input password.
   final bool isObscure;
 

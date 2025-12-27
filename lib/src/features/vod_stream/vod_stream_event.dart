@@ -19,7 +19,7 @@ mixin class VodStreamEvent {
     ref
         .read(vodChatQueueControllerProvider(videoNo: videoNo).notifier)
         .disposeQueue();
-    
+
     ref.invalidate(vodChatQueueControllerProvider(videoNo: videoNo));
   }
 

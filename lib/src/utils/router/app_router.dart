@@ -71,7 +71,7 @@ GoRouter appRouter(Ref ref) {
         AppRoute.search,
         (context, state) {
           final fields = state.extra as Map<String, dynamic>;
-          final fromHome = fields['fromHome'] as bool? ;
+          final fromHome = fields['fromHome'] as bool?;
 
           return NoTransitionPage(
             child: SearchScreen(
@@ -229,7 +229,7 @@ GoRouter appRouter(Ref ref) {
         AppRoute.liveStream,
         (context, state) {
           final fields = state.extra as Map<String, dynamic>;
-          final fromHome = fields['fromHome'] as bool? ;
+          final fromHome = fields['fromHome'] as bool?;
 
           return NoTransitionPage(
             child: LiveStreamScreen(

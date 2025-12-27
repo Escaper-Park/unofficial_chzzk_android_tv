@@ -17,8 +17,7 @@ class LiveTagsAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryTagbadge =
-        CategoryTagBadge(categoryValue: categoryValue);
+    final categoryTagbadge = CategoryTagBadge(categoryValue: categoryValue);
     final watchpartyTagBadges =
         WatchPartyTagBadges(watchPartyTag: watchPartyTag);
     final streamerTags = StreamerTagBadges(tags: tags);

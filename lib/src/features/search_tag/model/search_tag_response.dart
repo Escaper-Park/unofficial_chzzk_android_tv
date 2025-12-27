@@ -54,8 +54,7 @@ class SearchTagVodResponse with _$SearchTagVodResponse {
 
 @freezed
 class SearchTagVodPage with _$SearchTagVodPage {
-  const factory SearchTagVodPage({SearchTagVodNext? next}) =
-      _SearchTagVodPage;
+  const factory SearchTagVodPage({SearchTagVodNext? next}) = _SearchTagVodPage;
 
   factory SearchTagVodPage.fromJson(Map<String, dynamic> json) =>
       _$SearchTagVodPageFromJson(json);

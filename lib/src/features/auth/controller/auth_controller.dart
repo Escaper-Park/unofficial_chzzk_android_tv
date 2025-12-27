@@ -59,9 +59,7 @@ class AuthController extends _$AuthController {
     );
   }
 
-
   Set? getCookie() => state.value?.getCookie();
-  
 }
 
 @riverpod

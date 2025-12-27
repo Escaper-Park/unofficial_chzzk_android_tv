@@ -31,7 +31,7 @@ class LiveScreen extends ConsumerWidget with LiveStreamState {
               ),
         isChatExist: true,
       );
-    } 
+    }
     // focused
     else {
       return LiveMultiviewFocusedPlayer(

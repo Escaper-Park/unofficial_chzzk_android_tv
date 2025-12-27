@@ -31,8 +31,7 @@ class LiveStreamPopularLives extends ConsumerWidget
           resetOverlayTimer(ref, videoFocusNode: videoFocusNode),
       asyncValue: getPopularLives(ref),
       useFetchMore: true,
-      fetchMore: () async =>
-          await popularLivesFetchMore(ref),
+      fetchMore: () async => await popularLivesFetchMore(ref),
       changeToAboveContents: () => changeOverlay(
         ref,
         overlayType: LiveStreamOverlayType.category,

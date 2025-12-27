@@ -4,7 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../common/constants/enums.dart' show DpadAction, AppRoute, DialogButtonType;
+import '../../common/constants/enums.dart'
+    show DpadAction, AppRoute, DialogButtonType;
 import '../../common/constants/styles.dart' show AppColors;
 import '../../common/widgets/screen/screen_widgets.dart' show PopScopeScreen;
 import '../../common/constants/dimensions.dart' show Dimensions;

@@ -181,7 +181,7 @@ class LiveStreamGroupLivesController extends _$LiveStreamGroupLivesController {
     if (_channelsInGroup == null || _channelsInGroup!.isEmpty) return null;
 
     List<Future<LiveDetail?>> liveDetailFutures = [];
-    
+
     for (int i = 0; i < _channelsInGroup!.length; i++) {
       if (_channelsInGroup![i].openLive == true) {
         final future = _repository.getLiveDetail(

@@ -41,4 +41,3 @@ class ChatBdy with _$ChatBdy {
   factory ChatBdy.fromJson(Map<String, dynamic> json) =>
       _$ChatBdyFromJson(json);
 }
-

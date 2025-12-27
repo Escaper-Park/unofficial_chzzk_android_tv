@@ -35,4 +35,3 @@ class SearchLiveResponse with _$SearchLiveResponse {
   factory SearchLiveResponse.fromJson(Map<String, dynamic> json) =>
       _$SearchLiveResponseFromJson(json);
 }
-

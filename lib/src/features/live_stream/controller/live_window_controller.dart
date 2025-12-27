@@ -83,4 +83,3 @@ class LiveWindowController extends _$LiveWindowController {
         .setLiveChatWindowIndex(chatWindowIndex);
   }
 }
-

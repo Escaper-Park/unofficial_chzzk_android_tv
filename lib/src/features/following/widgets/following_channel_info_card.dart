@@ -7,7 +7,8 @@ import '../../../common/constants/styles.dart' show AppColors;
 import '../../../common/widgets/ui/ui_widgets.dart'
     show CircleAvatarProfileImage, FocusedOutlinedButton;
 import '../../channel/model/channel.dart';
-import '../../channel/widgets/channel_widgets.dart' show ChannelNameWithVerifiedMark;
+import '../../channel/widgets/channel_widgets.dart'
+    show ChannelNameWithVerifiedMark;
 import '../model/following.dart';
 
 part 'following_channel_info_card/following_channel_info_card_body.dart';

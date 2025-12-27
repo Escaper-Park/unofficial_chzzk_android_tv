@@ -20,8 +20,8 @@ class HomeFollowingLivesController extends _$HomeFollowingLivesController {
   }
 
   Future<List<Following>?> _fetch() async {
-    final followingResponse =
-        await _repository.getFollowingLives(sortType: VideoSortType.popular.value);
+    final followingResponse = await _repository.getFollowingLives(
+        sortType: VideoSortType.popular.value);
 
     return followingResponse?.followingList;
   }

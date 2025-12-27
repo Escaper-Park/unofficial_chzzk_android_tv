@@ -27,8 +27,7 @@ class LiveStreamResolutionControl extends ConsumerWidget
         return StreamSettingsControlItem(
           autofocus: index == 0,
           channel: liveDetail.channel,
-          currentValue:
-              getCurrentResolutionIndex(ref, controllerIndex: index),
+          currentValue: getCurrentResolutionIndex(ref, controllerIndex: index),
           maxValue: 4,
           resetOverlayTimer: () => resetOverlayTimer(
             ref,

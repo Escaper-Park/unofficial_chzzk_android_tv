@@ -43,7 +43,7 @@ class StreamSettings with _$StreamSettings {
     required int vodPlaybackIntervalIndex,
 
     /// Show custom group in video player overlay to navigate other videos.
-    /// 
+    ///
     /// 0: false, 1: true
     required int showGroupInVideoPlayer,
   }) = _StreamSettings;
