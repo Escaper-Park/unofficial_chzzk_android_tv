@@ -6,7 +6,7 @@ part of 'channel_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$channelControllerHash() => r'f45b191e4503142d031decce53724bd665b12751';
+String _$channelControllerHash() => r'f4f5fe654f886917280bcee0bb650cc918896310';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -38,22 +38,34 @@ abstract class _$ChannelController
   });
 }
 
-/// Channe screen's current selected channel.
+/// Channel screen's current selected channel.
+///
+/// Uses Result pattern for proper error handling and provides
+/// follow/unfollow functionality with error feedback.
 ///
 /// Copied from [ChannelController].
 @ProviderFor(ChannelController)
 const channelControllerProvider = ChannelControllerFamily();
 
-/// Channe screen's current selected channel.
+/// Channel screen's current selected channel.
+///
+/// Uses Result pattern for proper error handling and provides
+/// follow/unfollow functionality with error feedback.
 ///
 /// Copied from [ChannelController].
 class ChannelControllerFamily extends Family<AsyncValue<Channel?>> {
-  /// Channe screen's current selected channel.
+  /// Channel screen's current selected channel.
+  ///
+  /// Uses Result pattern for proper error handling and provides
+  /// follow/unfollow functionality with error feedback.
   ///
   /// Copied from [ChannelController].
   const ChannelControllerFamily();
 
-  /// Channe screen's current selected channel.
+  /// Channel screen's current selected channel.
+  ///
+  /// Uses Result pattern for proper error handling and provides
+  /// follow/unfollow functionality with error feedback.
   ///
   /// Copied from [ChannelController].
   ChannelControllerProvider call({
@@ -88,12 +100,18 @@ class ChannelControllerFamily extends Family<AsyncValue<Channel?>> {
   String? get name => r'channelControllerProvider';
 }
 
-/// Channe screen's current selected channel.
+/// Channel screen's current selected channel.
+///
+/// Uses Result pattern for proper error handling and provides
+/// follow/unfollow functionality with error feedback.
 ///
 /// Copied from [ChannelController].
 class ChannelControllerProvider
     extends AutoDisposeAsyncNotifierProviderImpl<ChannelController, Channel?> {
-  /// Channe screen's current selected channel.
+  /// Channel screen's current selected channel.
+  ///
+  /// Uses Result pattern for proper error handling and provides
+  /// follow/unfollow functionality with error feedback.
   ///
   /// Copied from [ChannelController].
   ChannelControllerProvider({

@@ -24,7 +24,8 @@
 |---------|------|------|
 | UserController | ✅ 완료 | Result 패턴 적용, AuthException 처리 |
 | LiveController | ✅ 완료 | Result 패턴 적용, StreamingException 처리 |
-| ChannelController | ❌ 미적용 | |
+| ChannelController | ✅ 완료 | Result 패턴 적용, follow/unfollow 지원 |
+| ChannelLiveController | ✅ 완료 | LiveRepositoryWrapper 재사용 |
 | FollowingController | ❌ 미적용 | |
 | CategoryController | ❌ 미적용 | |
 | SearchController | ❌ 미적용 | |
@@ -232,9 +233,9 @@ Future<Result<T>> handleApiCallWithRetry<T>(
 ## 🎯 마이그레이션 우선순위
 
 ### 높음 (핵심 기능)
-1. **LiveController** - 라이브 스트리밍 (앱의 핵심 기능)
-2. **ChannelController** - 채널 정보 조회
-3. **FollowingController** - 팔로잉 목록
+1. **LiveController** ✅ - 라이브 스트리밍 (앱의 핵심 기능)
+2. **ChannelController** ✅ - 채널 정보 조회, follow/unfollow 지원
+3. **FollowingController** - 팔로잉 목록 (다음 마이그레이션 대상)
 
 ### 중간 (주요 기능)
 4. **CategoryController** - 카테고리 브라우징
