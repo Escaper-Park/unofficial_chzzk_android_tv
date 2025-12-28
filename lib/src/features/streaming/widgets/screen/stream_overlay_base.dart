@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common/constants/enums.dart' show DpadAction;
 import '../../../../common/widgets/dpad/dpad_widgets.dart';
 import '../../../../common/widgets/screen/pop_scope_screen.dart';
 
@@ -57,15 +58,23 @@ class StreamOverlayBase extends StatelessWidget {
       },
       child: Stack(
         children: [
-          DpadActionWidget(
-            autofocus: true,
-            focusNode: overlayFocusNode,
-            useFocusedBorder: false,
-            useKeyRepeatEvent: useKeyReapeatEvent,
-            customOnKeyEvent: customOnKeyEvent,
-            borderRadius: 0.0,
-            dpadActionCallbacks: dpadActionCallbacks,
-            child: const SizedBox(),
+          // GestureDetector for touch support (phones/tablets)
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              // Trigger the same action as D-pad select button
+              dpadActionCallbacks[DpadAction.select]?.call();
+            },
+            child: DpadActionWidget(
+              autofocus: true,
+              focusNode: overlayFocusNode,
+              useFocusedBorder: false,
+              useKeyRepeatEvent: useKeyReapeatEvent,
+              customOnKeyEvent: customOnKeyEvent,
+              borderRadius: 0.0,
+              dpadActionCallbacks: dpadActionCallbacks,
+              child: const SizedBox.expand(),
+            ),
           ),
           FocusScope(
             node: controlsFSN,
