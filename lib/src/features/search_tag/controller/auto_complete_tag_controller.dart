@@ -1,18 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
-import '../repository/search_tag_repository.dart';
+import '../repository/search_tag_repository_wrapper.dart';
 
 part 'auto_complete_tag_controller.g.dart';
 
 @riverpod
 class AutoCompleteTagController extends _$AutoCompleteTagController {
-  late SearchTagRepository _repository;
+  late SearchTagRepositoryWrapper _repository;
 
   @override
   FutureOr<List<String>> build() {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = SearchTagRepository(dio);
+    _repository = ref.watch(searchTagRepositoryWrapperProvider);
     return [];
   }
 
@@ -22,12 +20,15 @@ class AutoCompleteTagController extends _$AutoCompleteTagController {
     state = await AsyncValue.guard(() async {
       if (keyword.isEmpty) return [];
 
-      final response = await _repository.getAutoCompleteTagResponse(
+      final result = await _repository.getAutoCompleteTagResponse(
         keyword: keyword,
         size: 50,
       );
 
-      return response?.keywords ?? [];
+      return result.when(
+        success: (response) => response?.keywords ?? [],
+        failure: (_) => [],
+      );
     });
   }
 }

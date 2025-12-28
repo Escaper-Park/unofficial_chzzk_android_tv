@@ -1,20 +1,18 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
 import '../../channel/model/channel.dart';
-import '../../channel/repository/channel_repository.dart';
+import '../../channel/repository/channel_repository_wrapper.dart';
 import '../model/group.dart';
 
 part 'group_detail_controller.g.dart';
 
 @riverpod
 class GroupDetailController extends _$GroupDetailController {
-  late ChannelRepository _channelRepository;
+  late ChannelRepositoryWrapper _channelRepository;
 
   @override
   FutureOr<List<Channel>?> build({required Group group}) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _channelRepository = ChannelRepository(dio);
+    _channelRepository = ref.watch(channelRepositoryWrapperProvider);
 
     return await getChannels(group);
   }
@@ -23,9 +21,14 @@ class GroupDetailController extends _$GroupDetailController {
     if (group == null || group.members.isEmpty) return [];
 
     final List<Channel?> fetched = await Future.wait(
-      group.members.map(
-        (channelId) => _channelRepository.getChannel(channelId: channelId),
-      ),
+      group.members.map((channelId) async {
+        final result =
+            await _channelRepository.getChannel(channelId: channelId);
+        return result.when(
+          success: (channel) => channel,
+          failure: (_) => null,
+        );
+      }),
     );
 
     return fetched.whereType<Channel>().toList();

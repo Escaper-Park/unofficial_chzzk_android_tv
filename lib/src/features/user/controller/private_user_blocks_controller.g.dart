@@ -7,7 +7,7 @@ part of 'private_user_blocks_controller.dart';
 // **************************************************************************
 
 String _$privateUserBlocksControllerHash() =>
-    r'da23c57af9e3f2b193695fa5e0068a5a1cfc912b';
+    r'b66a042b7d98da9de1ee43cd6ba86f50dca41f65';
 
 /// See also [PrivateUserBlocksController].
 @ProviderFor(PrivateUserBlocksController)

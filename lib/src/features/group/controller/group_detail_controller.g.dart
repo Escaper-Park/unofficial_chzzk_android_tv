@@ -7,7 +7,7 @@ part of 'group_detail_controller.dart';
 // **************************************************************************
 
 String _$groupDetailControllerHash() =>
-    r'dd1e0be5a4f77e04c7c48aa13fdd1bb2bf238e24';
+    r'36458e101589b089ea2625096c065bda9beedbf6';
 
 /// Copied from Dart SDK
 class _SystemHash {
