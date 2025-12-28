@@ -1,26 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
-
+import '../../../common/exceptions/exceptions.dart';
+import '../../channel/repository/channel_repository_wrapper.dart';
 import '../model/following.dart';
-import '../model/following_response.dart';
-
-import '../repository/following_repository.dart';
-import '../../channel/repository/channel_repository.dart';
+import '../repository/following_repository_wrapper.dart';
 
 part 'following_controller.g.dart';
 
 @Riverpod(keepAlive: true)
 class FollowingController extends _$FollowingController {
-  late FollowingRepository _followingRepository;
-  late ChannelRepository _channelRepository;
-
   @override
   FutureOr<List<Following>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _followingRepository = FollowingRepository(dio);
-    _channelRepository = ChannelRepository(dio);
-
     return await _fetch();
   }
 
@@ -28,25 +18,40 @@ class FollowingController extends _$FollowingController {
     int size = 505,
     int page = 0,
   }) async {
-    final FollowingResponse? response =
-        await _followingRepository.getFollowings(
-      size: size,
-      page: page,
+    final wrapper = ref.read(followingRepositoryWrapperProvider);
+    final result = await wrapper.getFollowings(size: size, page: page);
+
+    return result.when(
+      success: (response) {
+        if (response != null && response.followingList.isNotEmpty) {
+          List<Following> followingList = List.from(response.followingList);
+
+          // sort by concurrentUserCount
+          followingList.sort(
+            (a, b) => b.liveInfo.concurrentUserCount
+                .compareTo(a.liveInfo.concurrentUserCount),
+          );
+
+          return followingList;
+        }
+
+        return null;
+      },
+      failure: (exception) {
+        // Debug logging
+        assert(() {
+          print('FollowingController._fetch error: ${exception.message}');
+          return true;
+        }());
+
+        // AuthException means not logged in - return null (expected state)
+        if (exception is AuthException) {
+          return null;
+        }
+
+        return null;
+      },
     );
-
-    if (response != null && response.followingList.isNotEmpty) {
-      List<Following>? followingList = List.from(response.followingList);
-
-      // sort by concurrentUserCount
-      followingList.sort(
-        (a, b) => b.liveInfo.concurrentUserCount
-            .compareTo(a.liveInfo.concurrentUserCount),
-      );
-
-      return followingList;
-    }
-
-    return null;
   }
 
   Future<void> toggleFollow({
@@ -66,30 +71,44 @@ class FollowingController extends _$FollowingController {
 
   /// Follow channel and remove notification.
   Future<bool> _follow(String channelId) async {
+    final wrapper = ref.read(channelRepositoryWrapperProvider);
+
     // follow
-    final res = await _channelRepository
-        .follow(channelId: channelId)
-        .then((_) => true)
-        .catchError((_) => false);
+    final followResult = await wrapper.follow(channelId: channelId);
 
-    // remove notification
-    if (res) {
-      await _channelRepository.deleteNotification(channelId: channelId);
-    }
-
-    return res;
+    return followResult.when(
+      success: (_) async {
+        // remove notification on success
+        await wrapper.deleteNotification(channelId: channelId);
+        return true;
+      },
+      failure: (exception) {
+        // Debug logging
+        assert(() {
+          print('FollowingController._follow error: ${exception.message}');
+          return true;
+        }());
+        return false;
+      },
+    );
   }
 
   /// UnFollow channel
   Future<bool> _unFollow(String channelId) async {
-    // unFollow
-    final res = await _channelRepository
-        .unFollow(channelId: channelId)
-        .then((_) => true)
-        .catchError((e) {
-      return false;
-    });
+    final wrapper = ref.read(channelRepositoryWrapperProvider);
 
-    return res;
+    final result = await wrapper.unFollow(channelId: channelId);
+
+    return result.when(
+      success: (_) => true,
+      failure: (exception) {
+        // Debug logging
+        assert(() {
+          print('FollowingController._unFollow error: ${exception.message}');
+          return true;
+        }());
+        return false;
+      },
+    );
   }
 }

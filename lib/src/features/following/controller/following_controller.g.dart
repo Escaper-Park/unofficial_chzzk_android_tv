@@ -7,7 +7,7 @@ part of 'following_controller.dart';
 // **************************************************************************
 
 String _$followingControllerHash() =>
-    r'3a485314ff782d0cceec1f833b4fcafad1b73f8c';
+    r'43dfc953ab913a0ba457d14dfd9f9ab3bdfd40e3';
 
 /// See also [FollowingController].
 @ProviderFor(FollowingController)
