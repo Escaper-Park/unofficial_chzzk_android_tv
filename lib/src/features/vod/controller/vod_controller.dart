@@ -1,11 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../common/constants/api.dart';
-import '../../../utils/dio/dio_client.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../vod_stream/controller/vod_playlist_controller.dart';
 import '../model/vod.dart';
-import '../repository/vod_repository.dart';
+import '../repository/vod_repository_wrapper.dart';
 
 part 'vod_controller.g.dart';
 
@@ -13,12 +11,11 @@ part 'vod_controller.g.dart';
 
 @riverpod
 class VodController extends _$VodController {
-  late VodRepository _repository;
+  late VodRepositoryWrapper _repository;
 
   @override
   void build() {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = VodRepository(dio);
+    _repository = ref.watch(vodRepositoryWrapperProvider);
     return;
   }
 
@@ -36,7 +33,11 @@ class VodController extends _$VodController {
   }
 
   Future<Vod?> _getVodDetail({required int videoNo}) async {
-    return await _repository.getVodDetail(videoNo: videoNo);
+    final result = await _repository.getVodDetail(videoNo: videoNo);
+    return result.when(
+      success: (vod) => vod,
+      failure: (_) => null,
+    );
   }
 
   Future<VodPlay?> _getVodPlay({required int videoNo}) async {
@@ -44,35 +45,23 @@ class VodController extends _$VodController {
 
     if (vod == null) return null;
 
-    // Don't use repository for the unity of dio client.
-    // This request doesn't use response.data['content'] so can't use dio interceptor.
-
-    // classic
+    // classic - VOD without liveRewindPlaybackJson needs playback URL fetch
     if (vod.liveRewindPlaybackJson == null) {
-      try {
-        final cookies = ref.read(authControllerProvider.notifier).getCookie();
-        final baseDio =
-            ref.read(dioClientProvider.notifier).getBaseDio(cookies);
+      // videoId and inKey are required for classic VOD playback
+      if (vod.videoId == null || vod.inKey == null) return null;
 
-        final response = await baseDio.get(
-          '${BaseUrl.vodPlayback}/${vod.videoId}',
-          queryParameters: {
-            'key': '${vod.inKey}',
-            'sid': 2099,
-            'devt': 'html5_pc',
-            'st': 5,
-            'lc': 'ko_KR',
-            'cpl': 'ko_KR',
-          },
-        );
+      final cookies = ref.read(authControllerProvider.notifier).getCookie();
 
-        final m3uAddress = response.data?['period'][0]['adaptationSet'][0]
-            ['otherAttributes']['m3u'] as String;
+      final result = await _repository.getVodPlaybackUrl(
+        videoId: vod.videoId!,
+        inKey: vod.inKey!,
+        cookies: cookies,
+      );
 
-        return (vod, m3uAddress);
-      } catch (_) {
-        return null;
-      }
+      return result.when(
+        success: (m3uAddress) => (vod, m3uAddress),
+        failure: (_) => null,
+      );
     }
     // new (maybe the streamer used the time machine function)
     else {
