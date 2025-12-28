@@ -6,7 +6,7 @@ part of 'vod_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vodControllerHash() => r'd67b20b847995e78942f30fb9bfad7572b63b2f0';
+String _$vodControllerHash() => r'7f56db3a32bfd084e95cc9c227f3fd7c834397d6';
 
 /// See also [VodController].
 @ProviderFor(VodController)

@@ -7,7 +7,7 @@ part of 'search_live_controller.dart';
 // **************************************************************************
 
 String _$searchLiveControllerHash() =>
-    r'0cc98386bf9a07da9f7576f3a5b839f66cb37750';
+    r'b2201e0c57e6366cbcaf266c2073a13c26b22523';
 
 /// Copied from Dart SDK
 class _SystemHash {

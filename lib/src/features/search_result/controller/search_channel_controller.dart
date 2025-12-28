@@ -1,22 +1,19 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
-
 import '../../channel/model/channel.dart';
-import '../../search/repository/search_repository.dart';
+import '../../search/repository/search_repository_wrapper.dart';
 import '../../user/controller/private_user_blocks_controller.dart';
 
 part 'search_channel_controller.g.dart';
 
 @riverpod
 class SearchChannelController extends _$SearchChannelController {
-  late SearchRepository _repository;
+  late SearchRepositoryWrapper _repository;
   late List<String> _privateUserBlocks;
 
   @override
   FutureOr<List<Channel>?> build({required String keyword}) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = SearchRepository(dio);
+    _repository = ref.watch(searchRepositoryWrapperProvider);
     _privateUserBlocks =
         await ref.watch(privateUserBlocksControllerProvider.future);
 
@@ -26,22 +23,27 @@ class SearchChannelController extends _$SearchChannelController {
   Future<List<Channel>?> _getSearchChannelResponse({
     required String keyword,
   }) async {
-    final response = await _repository.getSearchChannelResponse(
+    final result = await _repository.searchChannels(
       keyword: keyword,
       offset: 0,
       size: 18,
       withFirstChannelContent: false,
     );
 
-    final searchResult = response?.data
-        .map(
-          (e) => Channel.fromJson(
-            (e as Map<String, dynamic>)['channel'],
-          ),
-        )
-        .toList();
+    return result.when(
+      success: (response) {
+        final searchResult = response?.data
+            .map(
+              (e) => Channel.fromJson(
+                (e as Map<String, dynamic>)['channel'],
+              ),
+            )
+            .toList();
 
-    return _filterBlockedChannels(searchResult);
+        return _filterBlockedChannels(searchResult);
+      },
+      failure: (_) => null,
+    );
   }
 
   List<Channel>? _filterBlockedChannels(List<Channel>? channels) {

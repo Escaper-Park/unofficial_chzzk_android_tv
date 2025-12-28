@@ -7,7 +7,7 @@ part of 'search_channel_controller.dart';
 // **************************************************************************
 
 String _$searchChannelControllerHash() =>
-    r'17d27c37fda456167646d7076f5a7c13a2a1575c';
+    r'7b372860a0d939f00bcd0f998c39c7aba61551dc';
 
 /// Copied from Dart SDK
 class _SystemHash {
