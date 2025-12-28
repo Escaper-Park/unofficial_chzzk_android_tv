@@ -23,8 +23,8 @@
 | 컨트롤러 | 상태 | 비고 |
 |---------|------|------|
 | UserController | ✅ 완료 | Result 패턴 적용, AuthException 처리 |
+| LiveController | ✅ 완료 | Result 패턴 적용, StreamingException 처리 |
 | ChannelController | ❌ 미적용 | |
-| LiveController | ❌ 미적용 | |
 | FollowingController | ❌ 미적용 | |
 | CategoryController | ❌ 미적용 | |
 | SearchController | ❌ 미적용 | |

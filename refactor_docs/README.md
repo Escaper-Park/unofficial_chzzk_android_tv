@@ -76,6 +76,7 @@
 | 컨트롤러 | 상태 |
 |---------|------|
 | UserController | ✅ 완료 |
+| LiveController | ✅ 완료 |
 | 기타 컨트롤러 | ⏳ 대기 |
 
 👉 상세 현황: [07_implementation_status.md](07_implementation_status.md)
@@ -89,9 +90,10 @@
 
 ### Phase 2: 컨트롤러 마이그레이션 (진행중)
 1. **UserController** ✅ - Result 패턴 적용 완료
-2. **LiveController** ⏳ - 핵심 기능, 우선 마이그레이션 권장
-3. **ChannelController** ⏳ - 채널 정보 조회
-4. **기타 컨트롤러** ⏳ - 순차적 마이그레이션
+2. **LiveController** ✅ - Result 패턴 적용 완료, StreamingException 처리
+3. **ChannelController** ⏳ - 채널 정보 조회, 우선 마이그레이션 권장
+4. **FollowingController** ⏳ - 팔로잉 목록
+5. **기타 컨트롤러** ⏳ - 순차적 마이그레이션
 
 ### Phase 3: UI 통합 (대기)
 1. **AppErrorWidget 적용** - 화면별 에러 표시
