@@ -7,7 +7,7 @@ part of 'user_repository_wrapper.dart';
 // **************************************************************************
 
 String _$userRepositoryWrapperHash() =>
-    r'f749970a2fec0406a999c0a07de042c956036990';
+    r'357a7d0e9e8276f8a0c0d4c5c8ccb7c5fc4df4f4';
 
 /// Provider for [UserRepositoryWrapper].
 ///

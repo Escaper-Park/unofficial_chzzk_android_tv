@@ -7,7 +7,7 @@ part of 'following_repository_wrapper.dart';
 // **************************************************************************
 
 String _$followingRepositoryWrapperHash() =>
-    r'ad2c9450d52b24fe6ed064efbdf54539aae120cd';
+    r'28528d5fde32d56b539d54fc5d8a8ffe8006ab8d';
 
 /// Provider for [FollowingRepositoryWrapper].
 ///

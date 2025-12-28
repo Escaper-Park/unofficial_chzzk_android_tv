@@ -18,7 +18,8 @@ void main() {
       }
 
       stopwatch.stop();
-      print('포맷터 ${iterations}회 실행 시간: ${stopwatch.elapsedMilliseconds}ms');
+      // ignore: avoid_print
+      print('포맷터 $iterations회 실행 시간: ${stopwatch.elapsedMilliseconds}ms');
       
       // 평균 1ms 이하로 실행되어야 함
       expect(stopwatch.elapsedMilliseconds / iterations, lessThan(1.0));
@@ -45,7 +46,8 @@ void main() {
       );
 
       stopwatch.stop();
-      print('${widgetCount}개 위젯 렌더링 시간: ${stopwatch.elapsedMilliseconds}ms');
+      // ignore: avoid_print
+      print('$widgetCount개 위젯 렌더링 시간: ${stopwatch.elapsedMilliseconds}ms');
       
       // 위젯이 정상적으로 렌더링되었는지 확인 (처음 몇 개만)
       expect(find.text('테스트 위젯 0'), findsOneWidget);
@@ -81,11 +83,12 @@ void main() {
                 'formatted_value': CustomFormatter.formatIntToCommaStr(
                   (item['value'] as double).round(),
                 ),
-              })
+              },)
           .toList();
 
       stopwatch.stop();
-      print('${dataSize}개 데이터 처리 시간: ${stopwatch.elapsedMilliseconds}ms');
+      // ignore: avoid_print
+      print('$dataSize개 데이터 처리 시간: ${stopwatch.elapsedMilliseconds}ms');
       
       expect(filteredData.length, dataSize ~/ 2);
       expect(stopwatch.elapsedMilliseconds, lessThan(5000)); // 5초 이하
@@ -122,7 +125,8 @@ void main() {
       final results = await Future.wait(futures);
 
       stopwatch.stop();
-      print('${concurrentTasks}개 동시 작업 완료 시간: ${stopwatch.elapsedMilliseconds}ms');
+      // ignore: avoid_print
+      print('$concurrentTasks개 동시 작업 완료 시간: ${stopwatch.elapsedMilliseconds}ms');
       
       expect(results.length, concurrentTasks);
       expect(results[0], '0');

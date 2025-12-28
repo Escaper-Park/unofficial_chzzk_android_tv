@@ -7,7 +7,7 @@ part of 'search_tag_repository_wrapper.dart';
 // **************************************************************************
 
 String _$searchTagRepositoryWrapperHash() =>
-    r'efe575cca5206426225a0b9640bc524e553105a5';
+    r'b56baf2247ef2110d744d999f83b9306fc3445c3';
 
 /// Provider for [SearchTagRepositoryWrapper].
 ///

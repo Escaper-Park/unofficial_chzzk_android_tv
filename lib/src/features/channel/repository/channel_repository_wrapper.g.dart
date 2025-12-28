@@ -7,7 +7,7 @@ part of 'channel_repository_wrapper.dart';
 // **************************************************************************
 
 String _$channelRepositoryWrapperHash() =>
-    r'61f7d9409b8d941d886c73da9b1cf76b97feca9c';
+    r'371060118486b78a9c411025a59533a83df0ef10';
 
 /// Provider for [ChannelRepositoryWrapper].
 ///

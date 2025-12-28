@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/result/results.dart';
@@ -171,9 +172,7 @@ class CategoryRepositoryWrapper extends BaseRepository {
 /// This provider creates a new wrapper instance using the DioClient,
 /// ensuring proper dependency injection and lifecycle management.
 @riverpod
-CategoryRepositoryWrapper categoryRepositoryWrapper(
-  CategoryRepositoryWrapperRef ref,
-) {
+CategoryRepositoryWrapper categoryRepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final repository = CategoryRepository(dio);
   return CategoryRepositoryWrapper(repository);

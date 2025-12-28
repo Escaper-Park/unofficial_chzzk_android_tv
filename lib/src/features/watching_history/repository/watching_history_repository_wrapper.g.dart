@@ -7,7 +7,7 @@ part of 'watching_history_repository_wrapper.dart';
 // **************************************************************************
 
 String _$watchingHistoryRepositoryWrapperHash() =>
-    r'cfe0129b8dd7c74000c563a6389a9ddc6dd54511';
+    r'203083fd3ea488855e792294fe13bf69569abfc2';
 
 /// Provider for [WatchingHistoryRepositoryWrapper].
 ///

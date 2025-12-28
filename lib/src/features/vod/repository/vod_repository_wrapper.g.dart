@@ -7,7 +7,7 @@ part of 'vod_repository_wrapper.dart';
 // **************************************************************************
 
 String _$vodRepositoryWrapperHash() =>
-    r'9041d9d9d3b5e6d161668b6859859bd42ac6ddd3';
+    r'718e2d50ae18e83bf4b2bc49e5c674b7baf303e7';
 
 /// Provider for [VodRepositoryWrapper].
 ///

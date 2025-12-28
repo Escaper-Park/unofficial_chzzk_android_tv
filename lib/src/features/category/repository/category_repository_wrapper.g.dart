@@ -7,7 +7,7 @@ part of 'category_repository_wrapper.dart';
 // **************************************************************************
 
 String _$categoryRepositoryWrapperHash() =>
-    r'9984e46512f8c889b4811aaf38a19ed6358fae25';
+    r'da8193bd95223d3a799f686f18567faec6a34049';
 
 /// Provider for [CategoryRepositoryWrapper].
 ///

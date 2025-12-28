@@ -7,7 +7,7 @@ part of 'vod_player_controller.dart';
 // **************************************************************************
 
 String _$vodPlayerControllerHash() =>
-    r'fcf27e6480ab416e93a1c87ad4bc563d5883852e';
+    r'7e846eb4938c527bd8bba97f1e91d70d161cfed3';
 
 /// See also [VodPlayerController].
 @ProviderFor(VodPlayerController)

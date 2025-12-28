@@ -7,7 +7,7 @@ part of 'live_repository_wrapper.dart';
 // **************************************************************************
 
 String _$liveRepositoryWrapperHash() =>
-    r'6a47b9348e74acab2ebbaf15838e31e83b348fc3';
+    r'0b26afb0e2b2d689a3e1c3d2bee1fc2790036777';
 
 /// Provider for [LiveRepositoryWrapper].
 ///

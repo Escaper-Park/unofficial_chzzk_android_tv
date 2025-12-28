@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/result/results.dart';
@@ -41,9 +42,7 @@ class WatchingHistoryRepositoryWrapper extends BaseRepository {
 /// This provider creates a new wrapper instance using the DioClient,
 /// ensuring proper dependency injection and lifecycle management.
 @riverpod
-WatchingHistoryRepositoryWrapper watchingHistoryRepositoryWrapper(
-  WatchingHistoryRepositoryWrapperRef ref,
-) {
+WatchingHistoryRepositoryWrapper watchingHistoryRepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final repository = WatchingHistoryRepository(dio);
   return WatchingHistoryRepositoryWrapper(repository);

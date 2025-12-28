@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/result/results.dart';
@@ -91,7 +92,7 @@ class LiveRepositoryWrapper extends BaseRepository {
 /// This provider creates a new wrapper instance using the DioClient,
 /// ensuring proper dependency injection and lifecycle management.
 @riverpod
-LiveRepositoryWrapper liveRepositoryWrapper(LiveRepositoryWrapperRef ref) {
+LiveRepositoryWrapper liveRepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final liveRepository = LiveRepository(dio);
   final statusRepository = LiveStatusRepository(dio);

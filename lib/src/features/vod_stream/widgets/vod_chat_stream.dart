@@ -20,8 +20,9 @@ class VodChatStream extends ConsumerWidget with VodStreamState {
 
     return asyncController.when(
       data: (controller) {
-        if (controller == null || vodPlay == null)
+        if (controller == null || vodPlay == null) {
           return const SizedBox.shrink();
+        }
 
         final chatStream = getChatStream(
           ref,

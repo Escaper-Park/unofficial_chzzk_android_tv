@@ -38,8 +38,9 @@ class FollowingController extends _$FollowingController {
         return null;
       },
       failure: (exception) {
-        // Debug logging
+        // Debug logging (only in debug mode)
         assert(() {
+          // ignore: avoid_print
           print('FollowingController._fetch error: ${exception.message}');
           return true;
         }());
@@ -83,8 +84,9 @@ class FollowingController extends _$FollowingController {
         return true;
       },
       failure: (exception) {
-        // Debug logging
+        // Debug logging (only in debug mode)
         assert(() {
+          // ignore: avoid_print
           print('FollowingController._follow error: ${exception.message}');
           return true;
         }());
@@ -102,8 +104,9 @@ class FollowingController extends _$FollowingController {
     return result.when(
       success: (_) => true,
       failure: (exception) {
-        // Debug logging
+        // Debug logging (only in debug mode)
         assert(() {
+          // ignore: avoid_print
           print('FollowingController._unFollow error: ${exception.message}');
           return true;
         }());

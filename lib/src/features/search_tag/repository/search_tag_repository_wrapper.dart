@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/result/results.dart';
@@ -85,9 +86,7 @@ class SearchTagRepositoryWrapper extends BaseRepository {
 /// This provider creates a new wrapper instance using the DioClient,
 /// ensuring proper dependency injection and lifecycle management.
 @riverpod
-SearchTagRepositoryWrapper searchTagRepositoryWrapper(
-  SearchTagRepositoryWrapperRef ref,
-) {
+SearchTagRepositoryWrapper searchTagRepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final repository = SearchTagRepository(dio);
   return SearchTagRepositoryWrapper(repository);

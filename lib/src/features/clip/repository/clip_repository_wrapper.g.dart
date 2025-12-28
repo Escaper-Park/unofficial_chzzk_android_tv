@@ -7,7 +7,7 @@ part of 'clip_repository_wrapper.dart';
 // **************************************************************************
 
 String _$clipRepositoryWrapperHash() =>
-    r'd90deb93fe9e8d2592f96abfd2e372648663bdc1';
+    r'35617daf3308c2367de36486f49ffaca6a12c9c4';
 
 /// Provider for [ClipRepositoryWrapper].
 ///

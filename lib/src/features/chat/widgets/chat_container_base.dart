@@ -191,10 +191,14 @@ class ChatContainerBase extends StatelessWidget {
 
   /// cheese donation
   Widget _cheeseAmount(int payAmount) {
+    // Use new color accessors (Flutter 3.27+)
+    final int r = (backgroundColor.r * 255.0).round() & 0xff;
+    final int g = (backgroundColor.g * 255.0).round() & 0xff;
+    final int b = (backgroundColor.b * 255.0).round() & 0xff;
     final Color color = Color.fromRGBO(
-      (backgroundColor.red * 0.85).round(),
-      (backgroundColor.green * 0.85).round(),
-      (backgroundColor.blue * 0.85).round(),
+      (r * 0.85).round(),
+      (g * 0.85).round(),
+      (b * 0.85).round(),
       (100 - chatSettings.singleChatContainerTransparency) * 0.01,
     );
 

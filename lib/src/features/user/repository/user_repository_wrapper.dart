@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/exceptions/exceptions.dart';
@@ -52,7 +53,7 @@ class UserRepositoryWrapper extends BaseRepository {
 /// This provider creates a new wrapper instance using the DioClient,
 /// ensuring proper dependency injection and lifecycle management.
 @riverpod
-UserRepositoryWrapper userRepositoryWrapper(UserRepositoryWrapperRef ref) {
+UserRepositoryWrapper userRepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final repository = UserRepository(dio);
   return UserRepositoryWrapper(repository);
