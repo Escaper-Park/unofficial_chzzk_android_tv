@@ -6,7 +6,7 @@ part of 'live_all_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$liveAllControllerHash() => r'78c71102a2b7da1416d24064fdfdab0046bcc7ed';
+String _$liveAllControllerHash() => r'b36a2a2cbd031228e7bf503d3b653abc0b40953d';
 
 /// Copied from Dart SDK
 class _SystemHash {

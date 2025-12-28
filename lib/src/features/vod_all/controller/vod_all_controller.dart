@@ -1,26 +1,24 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/extensions/custom_extensions.dart';
 import '../../../common/constants/enums.dart' show AppRoute, VideoSortType;
-import '../../../utils/dio/dio_client.dart';
+import '../../../utils/extensions/custom_extensions.dart';
 import '../../user/controller/private_user_blocks_controller.dart';
 import '../../vod/model/vod.dart';
 import '../../vod/model/vod_response.dart';
-import '../../vod/repository/vod_repository.dart';
+import '../../vod/repository/vod_repository_wrapper.dart';
 
 part 'vod_all_controller.g.dart';
 
 @riverpod
 class VodAllController extends _$VodAllController {
-  late VodRepository _repository;
+  late VodRepositoryWrapper _repository;
   late List<String> _privateUserBlocks;
 
   VodNext? _next;
 
   @override
   FutureOr<List<Vod>?> build({required VideoSortType sortType}) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = VodRepository(dio);
+    _repository = ref.watch(vodRepositoryWrapperProvider);
     _privateUserBlocks =
         await ref.watch(privateUserBlocksControllerProvider.future);
 
@@ -28,16 +26,20 @@ class VodAllController extends _$VodAllController {
   }
 
   Future<List<Vod>?> _fetch() async {
-    final response = await _repository.getAllVods(
+    final result = await _repository.getAllVods(
       size: 30,
       sortType: sortType.value,
       publishDateAt: null,
       readCount: null,
     );
 
-    _next = response?.page?.next;
-
-    return _filterBlockedVods(response?.data);
+    return result.when(
+      success: (response) {
+        _next = response?.page?.next;
+        return _filterBlockedVods(response?.data);
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -47,20 +49,26 @@ class VodAllController extends _$VodAllController {
     final prev = state.value;
 
     state = await AsyncValue.guard(() async {
-      final response = await _repository.getAllVods(
+      final result = await _repository.getAllVods(
         size: 30,
         sortType: sortType.value,
         publishDateAt: _next!.publishDateAt,
         readCount: _next!.readCount,
       );
 
-      _next = response?.page?.next;
-
-      if (response?.data == null) return [...prev!];
-      final filteredNewVods = _filterBlockedVods(response!.data) ?? [];
-
-      ref.setFetchMoreLoading(AppRoute.vodAll.routeName, false);
-      return [...prev!, ...filteredNewVods];
+      return result.when(
+        success: (response) {
+          _next = response?.page?.next;
+          ref.setFetchMoreLoading(AppRoute.vodAll.routeName, false);
+          if (response?.data == null) return [...prev!];
+          final filteredNewVods = _filterBlockedVods(response!.data) ?? [];
+          return [...prev!, ...filteredNewVods];
+        },
+        failure: (_) {
+          ref.setFetchMoreLoading(AppRoute.vodAll.routeName, false);
+          return [...prev!];
+        },
+      );
     });
   }
 

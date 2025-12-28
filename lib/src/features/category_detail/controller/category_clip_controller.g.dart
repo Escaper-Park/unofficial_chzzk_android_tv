@@ -7,7 +7,7 @@ part of 'category_clip_controller.dart';
 // **************************************************************************
 
 String _$categoryClipControllerHash() =>
-    r'7adbe70ff1ab4c61fa41c48695fef5d0c8bf2e19';
+    r'c34dbd6bfcb4c1741eb8387bf39eef3923dd5726';
 
 /// Copied from Dart SDK
 class _SystemHash {

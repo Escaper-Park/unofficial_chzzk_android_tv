@@ -1,16 +1,15 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/extensions/custom_extensions.dart';
 import '../../../common/constants/enums.dart';
-import '../../../utils/dio/dio_client.dart';
+import '../../../utils/extensions/custom_extensions.dart';
 import '../../vod/model/vod.dart';
-import '../../vod/repository/vod_repository.dart';
+import '../../vod/repository/vod_repository_wrapper.dart';
 
 part 'channel_vod_all_controller.g.dart';
 
 @riverpod
 class ChannelVodAllController extends _$ChannelVodAllController {
-  late VodRepository _repository;
+  late VodRepositoryWrapper _repository;
 
   // for infinite scrolling(or paging).
   int _next = 0;
@@ -21,8 +20,7 @@ class ChannelVodAllController extends _$ChannelVodAllController {
     required String channelId,
     required VideoSortType sortType,
   }) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = VodRepository(dio);
+    _repository = ref.watch(vodRepositoryWrapperProvider);
 
     return await _fetch();
   }
@@ -32,7 +30,7 @@ class ChannelVodAllController extends _$ChannelVodAllController {
     int page = 0,
     int size = 18,
   }) async {
-    final channelVodResponse = await _repository.getChannelVods(
+    final result = await _repository.getChannelVods(
       channelId: channelId,
       sortType: sortType.value,
       pagingType: pagingType,
@@ -42,12 +40,16 @@ class ChannelVodAllController extends _$ChannelVodAllController {
       videoType: null,
     );
 
-    if (channelVodResponse != null) {
-      _totalPages = channelVodResponse.totalPages;
-      _next = 1; // first page: 0
-    }
-
-    return channelVodResponse?.data;
+    return result.when(
+      success: (response) {
+        if (response != null) {
+          _totalPages = response.totalPages;
+          _next = 1; // first page: 0
+        }
+        return response?.data;
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -57,7 +59,7 @@ class ChannelVodAllController extends _$ChannelVodAllController {
 
       state = await AsyncValue.guard(
         () async {
-          final response = await _repository.getChannelVods(
+          final result = await _repository.getChannelVods(
             channelId: channelId,
             sortType: sortType.value,
             pagingType: 'PAGE',
@@ -67,14 +69,20 @@ class ChannelVodAllController extends _$ChannelVodAllController {
             videoType: null,
           );
 
-          _next += 1;
-
-          if (response?.data == null || response!.data.isEmpty) {
-            return [...prev!];
-          }
-
-          ref.setFetchMoreLoading(AppRoute.channelVod.routeName, false);
-          return [...prev!, ...response.data];
+          return result.when(
+            success: (response) {
+              _next += 1;
+              ref.setFetchMoreLoading(AppRoute.channelVod.routeName, false);
+              if (response?.data == null || response!.data.isEmpty) {
+                return [...prev!];
+              }
+              return [...prev!, ...response.data];
+            },
+            failure: (_) {
+              ref.setFetchMoreLoading(AppRoute.channelVod.routeName, false);
+              return [...prev!];
+            },
+          );
         },
       );
     }

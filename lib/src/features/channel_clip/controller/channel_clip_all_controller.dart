@@ -1,18 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/extensions/custom_extensions.dart';
 import '../../../common/constants/enums.dart'
     show AppRoute, FilterType, ClipOrderType;
-import '../../../utils/dio/dio_client.dart';
+import '../../../utils/extensions/custom_extensions.dart';
 import '../../clip/model/clip.dart';
 import '../../clip/model/clip_response.dart';
-import '../../clip/repository/clip_repository.dart';
+import '../../clip/repository/clip_repository_wrapper.dart';
 
 part 'channel_clip_all_controller.g.dart';
 
 @riverpod
 class ChannelClipAllController extends _$ChannelClipAllController {
-  late ClipRepository _repository;
+  late ClipRepositoryWrapper _repository;
 
   ChannelClipNext? _next;
 
@@ -22,14 +21,13 @@ class ChannelClipAllController extends _$ChannelClipAllController {
     required FilterType filterType,
     required ClipOrderType orderType,
   }) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = ClipRepository(dio);
+    _repository = ref.watch(clipRepositoryWrapperProvider);
 
     return await _fetch();
   }
 
   Future<List<NaverClip>?> _fetch() async {
-    final response = await _repository.getChannelClipResponse(
+    final result = await _repository.getChannelClips(
       channelId: channelId,
       filterType: filterType.value,
       orderType: orderType.value,
@@ -38,9 +36,13 @@ class ChannelClipAllController extends _$ChannelClipAllController {
       readCount: null,
     );
 
-    _next = response?.page?.next;
-
-    return response?.data;
+    return result.when(
+      success: (response) {
+        _next = response?.page?.next;
+        return response?.data;
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -51,7 +53,7 @@ class ChannelClipAllController extends _$ChannelClipAllController {
 
     state = await AsyncValue.guard(
       () async {
-        final response = await _repository.getChannelClipResponse(
+        final result = await _repository.getChannelClips(
           channelId: channelId,
           filterType: filterType.value,
           orderType: orderType.value,
@@ -60,12 +62,18 @@ class ChannelClipAllController extends _$ChannelClipAllController {
           readCount: _next!.readCount,
         );
 
-        _next = response?.page?.next;
-
-        if (response?.data == null) return [...prev!];
-
-        ref.setFetchMoreLoading(AppRoute.channelClip.routeName, false);
-        return [...prev!, ...response!.data];
+        return result.when(
+          success: (response) {
+            _next = response?.page?.next;
+            ref.setFetchMoreLoading(AppRoute.channelClip.routeName, false);
+            if (response?.data == null) return [...prev!];
+            return [...prev!, ...response!.data];
+          },
+          failure: (_) {
+            ref.setFetchMoreLoading(AppRoute.channelClip.routeName, false);
+            return [...prev!];
+          },
+        );
       },
     );
   }

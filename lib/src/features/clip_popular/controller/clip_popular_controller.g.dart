@@ -7,7 +7,7 @@ part of 'clip_popular_controller.dart';
 // **************************************************************************
 
 String _$clipPopularControllerHash() =>
-    r'213696e9d960c426b923ea60a478286d78379c35';
+    r'88e5922730932b110161914a8603f6416847cd4a';
 
 /// Copied from Dart SDK
 class _SystemHash {
