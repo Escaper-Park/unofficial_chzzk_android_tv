@@ -2,9 +2,11 @@
 
 이 문서는 에러 핸들링 인프라의 구현 현황과 컨트롤러 마이그레이션 가이드를 제공합니다.
 
+> **최종 업데이트**: 2025-12-28
+
 ## 📊 구현 현황
 
-### 인프라스트럭처 (완료)
+### 인프라스트럭처 (✅ 완료)
 
 | 컴포넌트 | 파일 경로 | 상태 | 설명 |
 |---------|---------|------|------|
@@ -14,31 +16,169 @@
 | BaseRepository | `lib/src/utils/dio/base_repository.dart` | ✅ 완료 | handleApiCall() 제공 |
 | AppErrorWidget | `lib/src/common/widgets/error/app_error_widget.dart` | ✅ 완료 | 에러 UI 컴포넌트 |
 | RequestDeduplicator | `lib/src/utils/network/request_deduplicator.dart` | ✅ 완료 | 중복 요청 방지 |
-| OptimizedCachedImage | `lib/src/utils/image/optimized_cached_image.dart` | ✅ 완료 | 최적화된 이미지 위젯 |
+| OptimizedNetworkImage | `lib/src/utils/image/optimized_cached_image.dart` | ✅ 완료 | 최적화된 이미지 위젯 |
 | InputValidator | `lib/src/utils/security/input_validator.dart` | ✅ 완료 | 입력 검증/새니타이징 |
 | DioClient 수정 | `lib/src/utils/dio/dio_client.dart` | ✅ 완료 | 에러 전파 활성화 |
 
-### 컨트롤러 마이그레이션 현황
+### Repository Wrapper 현황 (✅ 완료 - 10개)
 
+| Wrapper | 파일 경로 | 상태 |
+|---------|---------|------|
+| UserRepositoryWrapper | `lib/src/features/user/repository/` | ✅ 완료 |
+| LiveRepositoryWrapper | `lib/src/features/live/repository/` | ✅ 완료 |
+| ChannelRepositoryWrapper | `lib/src/features/channel/repository/` | ✅ 완료 |
+| CategoryRepositoryWrapper | `lib/src/features/category/repository/` | ✅ 완료 |
+| VodRepositoryWrapper | `lib/src/features/vod/repository/` | ✅ 완료 |
+| ClipRepositoryWrapper | `lib/src/features/clip/repository/` | ✅ 완료 |
+| FollowingRepositoryWrapper | `lib/src/features/following/repository/` | ✅ 완료 |
+| SearchRepositoryWrapper | `lib/src/features/search/repository/` | ✅ 완료 |
+| SearchTagRepositoryWrapper | `lib/src/features/search_tag/repository/` | ✅ 완료 |
+| WatchingHistoryRepositoryWrapper | `lib/src/features/watching_history/repository/` | ✅ 완료 |
+
+### 컨트롤러 마이그레이션 현황 (✅ 완료 - 31개)
+
+모든 네트워크 API를 호출하는 컨트롤러가 Result 패턴으로 마이그레이션되었습니다.
+
+#### User 관련
 | 컨트롤러 | 상태 | 비고 |
 |---------|------|------|
 | UserController | ✅ 완료 | Result 패턴 적용, AuthException 처리 |
+| PrivateUserBlocksController | ✅ 완료 | Result 패턴 적용 |
+
+#### Live 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
 | LiveController | ✅ 완료 | Result 패턴 적용, StreamingException 처리 |
+| LiveAllController | ✅ 완료 | Result 패턴 적용, 페이지네이션 지원 |
+
+#### Channel 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
 | ChannelController | ✅ 완료 | Result 패턴 적용, follow/unfollow 지원 |
 | ChannelLiveController | ✅ 완료 | LiveRepositoryWrapper 재사용 |
-| FollowingController | ✅ 완료 | Result 패턴 적용, ChannelRepositoryWrapper 재사용 |
-| FollowingCategoryController | ✅ 완료 | CategoryRepositoryWrapper 재사용 |
-| CategoryController | ✅ 완료 | Result 패턴 적용, CategoryRepositoryWrapper |
-| SearchController | ❌ 미적용 | |
-| VodController | ❌ 미적용 | |
-| 기타 컨트롤러 | ❌ 미적용 | |
+| ChannelVodController | ✅ 완료 | VodRepositoryWrapper 사용 |
+| ChannelClipController | ✅ 완료 | ClipRepositoryWrapper 사용 |
+| ChannelVodAllController | ✅ 완료 | 페이지네이션 지원 |
+| ChannelClipAllController | ✅ 완료 | 페이지네이션 지원 |
 
-### UI 통합 현황
-
-| 컴포넌트 | 상태 | 비고 |
+#### Following 관련
+| 컨트롤러 | 상태 | 비고 |
 |---------|------|------|
-| AppErrorWidget | ❌ 미적용 | 화면에 아직 사용되지 않음 |
-| OptimizedCachedImage | ❌ 미적용 | 썸네일에 아직 사용되지 않음 |
+| FollowingController | ✅ 완료 | ChannelRepositoryWrapper 재사용 |
+| FollowingCategoryController | ✅ 완료 | CategoryRepositoryWrapper 재사용 |
+| FollowingVodController | ✅ 완료 | VodRepositoryWrapper 사용 |
+
+#### Category 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| CategoryController | ✅ 완료 | CategoryRepositoryWrapper 사용 |
+| CategoryLiveController | ✅ 완료 | 페이지네이션 지원 |
+| CategoryVodController | ✅ 완료 | 페이지네이션 지원 |
+| CategoryClipController | ✅ 완료 | 페이지네이션 지원 |
+
+#### VOD 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| VodController | ✅ 완료 | VodRepositoryWrapper 사용 |
+| VodAllController | ✅ 완료 | 페이지네이션 지원 |
+
+#### Clip 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| ClipPopularController | ✅ 완료 | ClipRepositoryWrapper 사용 |
+
+#### Home 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| HomeFollowingLivesController | ✅ 완료 | FollowingRepositoryWrapper 사용 |
+| HomePopularLivesController | ✅ 완료 | LiveRepositoryWrapper 사용 |
+
+#### Search 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| AutoCompleteController | ✅ 완료 | SearchRepositoryWrapper 사용 |
+| AutoCompleteTagController | ✅ 완료 | SearchTagRepositoryWrapper 사용 |
+| SearchChannelController | ✅ 완료 | 블록 사용자 필터링 |
+| SearchLiveController | ✅ 완료 | Channel 매핑 처리 |
+| SearchVodController | ✅ 완료 | 블록 사용자 필터링 |
+| SearchTagResultLiveController | ✅ 완료 | 페이지네이션 지원 |
+| SearchTagResultVodController | ✅ 완료 | 페이지네이션 지원 |
+
+#### History 관련
+| 컨트롤러 | 상태 | 비고 |
+|---------|------|------|
+| WatchingHistoryController | ✅ 완료 | 페이지네이션 지원 |
+
+### 마이그레이션 불필요 컨트롤러 (네트워크 API 미사용)
+
+다음 컨트롤러들은 네트워크 API를 호출하지 않으므로 Result 패턴 마이그레이션이 불필요합니다:
+
+#### 상태 관리 전용 컨트롤러
+| 컨트롤러 | 용도 |
+|---------|------|
+| LiveModeController | 라이브 모드 상태 |
+| LiveOverlayController | 오버레이 UI 상태 |
+| LiveWindowController | 윈도우 레이아웃 상태 |
+| LivePlaylistController | 재생목록 상태 |
+| LiveStreamNavigatorController | 네비게이션 상태 |
+| LiveStreamStatusController | 스트림 상태 |
+| VodOverlayController | VOD 오버레이 상태 |
+| VodWindowController | VOD 윈도우 상태 |
+| VodPlaylistController | VOD 재생목록 상태 |
+| VodSeekIndicatorController | 탐색 인디케이터 상태 |
+| HomeRefreshController | 새로고침 상태 |
+| PauseTimer | 타이머 상태 |
+
+#### SharedPreferences 컨트롤러
+| 컨트롤러 | 용도 |
+|---------|------|
+| StreamSettingsController | 스트림 설정 |
+| ChatSettingController | 채팅 설정 |
+| GroupController | 그룹 관리 |
+| GroupDetailController | 그룹 상세 |
+| SettingsScreenController | 설정 화면 |
+
+#### 특수 목적 컨트롤러
+| 컨트롤러 | 용도 |
+|---------|------|
+| AuthController | WebView 인증 처리 |
+| LiveChatController | WebSocket 채팅 |
+| VodChatController | WebSocket 채팅 |
+| LivePlayerController | VideoPlayer 생명주기 |
+| VodPlayerController | VideoPlayer 생명주기 |
+| ClipController | 클립 URL 생성 |
+| UpdateController | GitHub API (추후 마이그레이션 가능) |
+
+### UI 통합 현황 (✅ Phase 3 완료)
+
+| 컴포넌트 | 상태 | 사용처 |
+|---------|------|------|
+| OptimizedNetworkImage | ✅ 사용중 | 썸네일, 프로필 이미지, 카테고리 포스터, 채팅 이미지, 홈 카테고리 |
+| AsyncValueErrorWidget | ✅ 적용됨 | AdaptiveGridViewWithAsyncValue, DpadListViewWithAsyncValue |
+| AppErrorWidget | ✅ 적용됨 | AsyncValueErrorWidget을 통해 간접 사용 (AppException 타입에서 자동 활성화) |
+| InputValidator | ✅ 적용됨 | 검색 입력 sanitization (SearchEvent, SearchTagEvent) |
+
+#### Phase 3 구현 상세
+
+1. **AsyncValueErrorWidget** (`lib/src/common/widgets/error/async_value_error_widget.dart`)
+   - AsyncValue 에러 상태를 처리하는 브릿지 위젯
+   - AppException인 경우 AppErrorWidget 사용 (아이콘, 재시도 버튼 포함)
+   - 일반 에러인 경우 fallback 메시지 표시
+   - compact 모드 지원
+
+2. **AdaptiveGridViewWithAsyncValue 업데이트**
+   - 에러 시 AsyncValueErrorWidget 사용
+   - 시각적으로 향상된 에러 표시
+
+3. **DpadListViewWithAsyncValue 업데이트**
+   - useExceptionFallbackWidget=false일 때 AsyncValueErrorWidget 사용
+   - onRetry 콜백 지원
+
+4. **InputValidator 통합**
+   - `SearchEvent.pushSearchResultWithKeyword()` - 검색어 sanitization
+   - `SearchEvent.updateAutoComplete()` - 자동완성 입력 sanitization
+   - `SearchTagEvent.pushSearchTagResult()` - 태그 검색어 sanitization
+   - `SearchTagEvent.updateAutoComplete()` - 태그 자동완성 입력 sanitization
 
 ---
 
@@ -231,25 +371,6 @@ Future<Result<T>> handleApiCallWithRetry<T>(
 
 ---
 
-## 🎯 마이그레이션 우선순위
-
-### 높음 (핵심 기능)
-1. **LiveController** ✅ - 라이브 스트리밍 (앱의 핵심 기능)
-2. **ChannelController** ✅ - 채널 정보 조회, follow/unfollow 지원
-3. **FollowingController** ✅ - 팔로잉 목록
-
-### 중간 (주요 기능)
-4. **CategoryController** ✅ - 카테고리 브라우징
-5. **FollowingCategoryController** ✅ - 팔로잉 카테고리
-6. **SearchController** - 검색 기능
-7. **VodController** - VOD 재생
-
-### 낮음 (부가 기능)
-8. **SettingsController** - 설정
-9. **WatchingHistoryController** - 시청 기록
-
----
-
 ## ⚠️ 주의사항
 
 ### 하위 호환성 유지
@@ -272,7 +393,7 @@ Future<Result<T>> handleApiCallWithRetry<T>(
 ```
 lib/src/features/channel/
 ├── controller/
-│   ├── channel_controller.dart      # 수정됨
+│   ├── channel_controller.dart      # Result 패턴 적용됨
 │   └── channel_controller.g.dart    # 생성됨
 ├── model/
 │   ├── channel.dart
@@ -281,7 +402,7 @@ lib/src/features/channel/
 ├── repository/
 │   ├── channel_repository.dart      # 기존 Retrofit 인터페이스
 │   ├── channel_repository.g.dart
-│   ├── channel_repository_wrapper.dart   # 새로 추가
+│   ├── channel_repository_wrapper.dart   # Result 패턴 wrapper
 │   └── channel_repository_wrapper.g.dart # 생성됨
 └── widgets/
     └── ...
