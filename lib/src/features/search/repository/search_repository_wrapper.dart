@@ -57,8 +57,8 @@ class SearchRepositoryWrapper extends BaseRepository {
   /// Returns:
   /// - [Success<AutoCompleteSearchCategoryResponse?>] with keyword list
   /// - [Failure] with [NetworkException] if network error occurs
-  Future<Result<AutoCompleteSearchCategoryResponse?>> getAutoCompleteCategories(
-      {
+  Future<Result<AutoCompleteSearchCategoryResponse?>>
+      getAutoCompleteCategories({
     required String keyword,
     required int offset,
     required int limit,
