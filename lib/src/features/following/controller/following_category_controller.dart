@@ -1,27 +1,31 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
 import '../../category/model/category.dart';
-import '../../category/repository/category_repository.dart';
+import '../../category/repository/category_repository_wrapper.dart';
 
 part 'following_category_controller.g.dart';
 
 @riverpod
 class FollowingCategoryController extends _$FollowingCategoryController {
-  late CategoryRepository _repository;
+  late CategoryRepositoryWrapper _repository;
 
   @override
   FutureOr<List<Category>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = CategoryRepository(dio);
+    _repository = ref.watch(categoryRepositoryWrapperProvider);
 
     return await _fetch();
   }
 
   Future<List<Category>?> _fetch() async {
-    final response = await _repository.getFollowingCategories();
+    final result = await _repository.getFollowingCategories();
 
-    return response?.followingList;
+    return result.when(
+      success: (response) => response?.followingList,
+      failure: (exception) {
+        // Log error or handle appropriately
+        return null;
+      },
+    );
   }
 
   Future<void> refresh() async {
@@ -51,26 +55,26 @@ class FollowingCategoryController extends _$FollowingCategoryController {
   }
 
   Future<bool> _follow(Category category) async {
-    final res = await _repository
-        .follow(
-          categoryType: category.categoryType,
-          categoryId: category.categoryId,
-        )
-        .then((_) => true)
-        .catchError((_) => false);
+    final result = await _repository.follow(
+      categoryType: category.categoryType,
+      categoryId: category.categoryId,
+    );
 
-    return res;
+    return result.when(
+      success: (_) => true,
+      failure: (_) => false,
+    );
   }
 
   Future<bool> _unFollow(Category category) async {
-    final res = await _repository
-        .unFollow(
-          categoryType: category.categoryType,
-          categoryId: category.categoryId,
-        )
-        .then((_) => true)
-        .catchError((_) => false);
+    final result = await _repository.unFollow(
+      categoryType: category.categoryType,
+      categoryId: category.categoryId,
+    );
 
-    return res;
+    return result.when(
+      success: (_) => true,
+      failure: (_) => false,
+    );
   }
 }

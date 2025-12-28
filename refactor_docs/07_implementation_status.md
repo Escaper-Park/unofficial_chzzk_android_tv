@@ -27,7 +27,8 @@
 | ChannelController | ✅ 완료 | Result 패턴 적용, follow/unfollow 지원 |
 | ChannelLiveController | ✅ 완료 | LiveRepositoryWrapper 재사용 |
 | FollowingController | ✅ 완료 | Result 패턴 적용, ChannelRepositoryWrapper 재사용 |
-| CategoryController | ❌ 미적용 | |
+| FollowingCategoryController | ✅ 완료 | CategoryRepositoryWrapper 재사용 |
+| CategoryController | ✅ 완료 | Result 패턴 적용, CategoryRepositoryWrapper |
 | SearchController | ❌ 미적용 | |
 | VodController | ❌ 미적용 | |
 | 기타 컨트롤러 | ❌ 미적용 | |
@@ -238,13 +239,14 @@ Future<Result<T>> handleApiCallWithRetry<T>(
 3. **FollowingController** ✅ - 팔로잉 목록
 
 ### 중간 (주요 기능)
-4. **CategoryController** - 카테고리 브라우징
-5. **SearchController** - 검색 기능
-6. **VodController** - VOD 재생
+4. **CategoryController** ✅ - 카테고리 브라우징
+5. **FollowingCategoryController** ✅ - 팔로잉 카테고리
+6. **SearchController** - 검색 기능
+7. **VodController** - VOD 재생
 
 ### 낮음 (부가 기능)
-7. **SettingsController** - 설정
-8. **WatchingHistoryController** - 시청 기록
+8. **SettingsController** - 설정
+9. **WatchingHistoryController** - 시청 기록
 
 ---
 

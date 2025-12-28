@@ -80,6 +80,8 @@
 | ChannelController | ✅ 완료 |
 | ChannelLiveController | ✅ 완료 |
 | FollowingController | ✅ 완료 |
+| FollowingCategoryController | ✅ 완료 |
+| CategoryController | ✅ 완료 |
 | 기타 컨트롤러 | ⏳ 대기 |
 
 👉 상세 현황: [07_implementation_status.md](07_implementation_status.md)
@@ -97,7 +99,9 @@
 3. **ChannelController** ✅ - Result 패턴 적용 완료, follow/unfollow 지원
 4. **ChannelLiveController** ✅ - LiveRepositoryWrapper 재사용
 5. **FollowingController** ✅ - Result 패턴 적용 완료, ChannelRepositoryWrapper 재사용
-6. **기타 컨트롤러** ⏳ - 순차적 마이그레이션
+6. **CategoryController** ✅ - Result 패턴 적용 완료, CategoryRepositoryWrapper
+7. **FollowingCategoryController** ✅ - CategoryRepositoryWrapper 재사용
+8. **기타 컨트롤러** ⏳ - 순차적 마이그레이션
 
 ### Phase 3: UI 통합 (대기)
 1. **AppErrorWidget 적용** - 화면별 에러 표시
