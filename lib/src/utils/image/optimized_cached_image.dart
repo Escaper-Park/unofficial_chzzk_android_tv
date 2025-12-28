@@ -116,7 +116,7 @@ class OptimizedNetworkImage extends StatelessWidget {
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
-              AppColors.chzzkColor.withOpacity(0.5),
+              AppColors.chzzkColor.withValues(alpha: 0.5),
             ),
           ),
         ),

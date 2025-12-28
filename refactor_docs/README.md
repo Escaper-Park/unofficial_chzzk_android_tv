@@ -1,6 +1,6 @@
 # 치지직 Android TV 리팩토링 가이드
 
-에러 핸들링 인프라 구현과 사용 가이드입니다.
+에러 핸들링 인프라, UX 개선, 성능 최적화 구현 가이드입니다.
 
 > **최종 업데이트**: 2025-12-28
 
@@ -25,6 +25,21 @@
 | OptimizedNetworkImage | TV 최적화 이미지 캐싱 |
 | InputValidator | 입력 검증 및 새니타이징 |
 
+### UX 개선
+
+| 구성요소 | 설명 |
+|---------|------|
+| ToastService | Riverpod 기반 토스트 알림 서비스 (success/error/info) |
+| ToastOverlay | 애니메이션(slide+fade) 토스트 오버레이 위젯 |
+
+### 성능 & 안정성
+
+| 구성요소 | 설명 |
+|---------|------|
+| VideoPlayer 생명주기 | `ref.onDispose()` 보장된 정리 콜백 |
+| LivePlayerController | 초기화 실패 시 부분 정리, dispose 보장 |
+| VodPlayerController | 초기화 실패 시 부분 정리, dispose 보장 |
+
 ### 컨트롤러 마이그레이션
 
 - **31개** 컨트롤러 Result 패턴 적용 완료
@@ -37,6 +52,7 @@
 | AsyncValueErrorWidget | AdaptiveGridView, DpadListView 에러 표시 |
 | AppErrorWidget | AppException 타입에서 자동 활성화 |
 | InputValidator | 검색 입력 sanitization |
+| ToastService | 채널 팔로우/언팔로우 피드백 |
 
 ### 테스트
 

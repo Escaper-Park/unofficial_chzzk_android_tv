@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/exceptions/exceptions.dart';
+import '../../../common/widgets/toast/toast_service.dart';
 import '../model/channel.dart';
 import '../repository/channel_repository_wrapper.dart';
 
@@ -50,12 +51,16 @@ class ChannelController extends _$ChannelController {
   ///
   /// Returns true if follow succeeded, false otherwise.
   /// On auth error, the UI should prompt for login.
+  /// Shows toast feedback on success/failure.
   Future<bool> followChannel({required String channelId}) async {
     final wrapper = ref.read(channelRepositoryWrapperProvider);
+    final toastService = ref.read(toastServiceProvider.notifier);
     final result = await wrapper.follow(channelId: channelId);
 
     return result.when(
       success: (_) {
+        // Show success feedback
+        toastService.showSuccess('팔로우했습니다');
         // Refresh channel data to update follow state
         _refreshChannelData(channelId);
         return true;
@@ -67,9 +72,11 @@ class ChannelController extends _$ChannelController {
           return true;
         }());
 
-        // Auth errors should be handled specially by the UI
+        // Auth errors should prompt for login
         if (exception is AuthException) {
-          // Could trigger a login prompt here
+          toastService.showError('로그인이 필요합니다');
+        } else {
+          toastService.showError('팔로우에 실패했습니다');
         }
 
         return false;
@@ -80,12 +87,16 @@ class ChannelController extends _$ChannelController {
   /// Unfollows the current channel.
   ///
   /// Returns true if unfollow succeeded, false otherwise.
+  /// Shows toast feedback on success/failure.
   Future<bool> unfollowChannel({required String channelId}) async {
     final wrapper = ref.read(channelRepositoryWrapperProvider);
+    final toastService = ref.read(toastServiceProvider.notifier);
     final result = await wrapper.unFollow(channelId: channelId);
 
     return result.when(
       success: (_) {
+        // Show success feedback
+        toastService.showSuccess('팔로우를 해제했습니다');
         // Refresh channel data to update follow state
         _refreshChannelData(channelId);
         return true;
@@ -98,6 +109,7 @@ class ChannelController extends _$ChannelController {
           );
           return true;
         }());
+        toastService.showError('팔로우 해제에 실패했습니다');
         return false;
       },
     );

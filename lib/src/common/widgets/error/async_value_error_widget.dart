@@ -99,7 +99,7 @@ class AsyncValueErrorWidget extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppColors.lightRedColor.withOpacity(0.15),
+                color: AppColors.lightRedColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(

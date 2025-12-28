@@ -219,7 +219,7 @@ class AppErrorWidget extends StatelessWidget {
 
   Color _getIconBackgroundColor() {
     final color = _getIconColor();
-    return color.withOpacity(0.15);
+    return color.withValues(alpha: 0.15);
   }
 
   String _getTitle() {

@@ -67,8 +67,8 @@ class ChatContainerBase extends StatelessWidget {
 
     return RoundedContainer(
       borderRadius: 10.0,
-      backgroundColor: backgroundColor.withOpacity(
-        (100 - chatSettings.singleChatContainerTransparency) * 0.01,
+      backgroundColor: backgroundColor.withValues(
+        alpha: (100 - chatSettings.singleChatContainerTransparency) * 0.01,
       ),
       padding: chatSettings.singleChatContainerTransparency == 100
           ? EdgeInsets.zero

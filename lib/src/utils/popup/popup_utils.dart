@@ -28,7 +28,7 @@ abstract class PopupUtils {
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(bottom: bottomMargin),
         elevation: 0.0,
-        backgroundColor: AppColors.blackColor.withOpacity(alpha),
+        backgroundColor: AppColors.blackColor.withValues(alpha: alpha),
         duration: Duration(milliseconds: displayDuration),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

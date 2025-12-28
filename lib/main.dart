@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/common/constants/styles.dart';
+import 'src/common/widgets/toast/toast.dart';
 import 'src/features/auth/controller/auth_controller.dart';
 import 'src/utils/router/app_router.dart';
 import 'src/utils/shared_preferences/shared_prefs.dart';
@@ -34,10 +35,12 @@ class ChzzkTV extends ConsumerWidget with MainEvent {
     final appRouter = ref.watch(appRouterProvider);
     eagerInitialize(ref);
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
-      theme: AppTheme.darkThemeData,
+    return ToastOverlay(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: appRouter,
+        theme: AppTheme.darkThemeData,
+      ),
     );
   }
 }

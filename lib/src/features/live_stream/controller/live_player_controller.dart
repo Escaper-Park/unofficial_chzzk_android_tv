@@ -38,11 +38,28 @@ class LivePlayerController extends _$LivePlayerController {
 
     _liveDetail = liveDetails[index];
 
+    // Ensure cleanup when provider is disposed
+    ref.onDispose(() async {
+      await _cleanupController();
+    });
+
     return await init();
+  }
+
+  /// Cleans up controller resources.
+  Future<void> _cleanupController() async {
+    final controller = state.valueOrNull;
+    if (controller != null) {
+      controller.removeListener(_checkVideoEnds);
+      await controller.dispose();
+    }
+    await ref.read(wakelockControllerProvider.notifier).disable();
   }
 
   Future<VideoPlayerController?> init({bool mute = true}) async {
     int resolutionIndex = _resolutionIndex;
+    VideoPlayerController? controller;
+
     try {
       // find media by latency
       final media = _liveDetail.livePlaybackJson.media.firstWhere(
@@ -70,7 +87,7 @@ class LivePlayerController extends _$LivePlayerController {
         mediaTrackUri = mediaList[resolutionIndex];
       }
 
-      final controller = _getVideoPlayerController(mediaTrackUri!);
+      controller = _getVideoPlayerController(mediaTrackUri!);
       await controller.initialize();
 
       if (index != 0 && mute) controller.setVolume(0.0);
@@ -82,6 +99,8 @@ class LivePlayerController extends _$LivePlayerController {
 
       return controller;
     } catch (_) {
+      // Clean up partially initialized controller on error
+      await controller?.dispose();
       return null;
     }
   }

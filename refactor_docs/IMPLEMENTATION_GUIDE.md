@@ -1,6 +1,6 @@
 # 구현 가이드 (Implementation Guide)
 
-에러 핸들링 인프라의 구현 현황과 컨트롤러 마이그레이션 가이드입니다.
+에러 핸들링 인프라, UX 개선, 성능 최적화의 구현 현황과 가이드입니다.
 
 > **최종 업데이트**: 2025-12-28
 
@@ -19,6 +19,20 @@
 | OptimizedNetworkImage | `lib/src/utils/image/optimized_cached_image.dart` | ✅ 완료 | 최적화된 이미지 위젯 |
 | InputValidator | `lib/src/utils/security/input_validator.dart` | ✅ 완료 | 입력 검증/새니타이징 |
 | DioClient 수정 | `lib/src/utils/dio/dio_client.dart` | ✅ 완료 | 에러 전파 활성화 |
+
+### UX 개선 (✅ 완료)
+
+| 컴포넌트 | 파일 경로 | 상태 | 설명 |
+|---------|---------|------|------|
+| ToastService | `lib/src/common/widgets/toast/toast_service.dart` | ✅ 완료 | Riverpod 기반 토스트 서비스 |
+| ToastOverlay | `lib/src/common/widgets/toast/toast_overlay.dart` | ✅ 완료 | 애니메이션 토스트 오버레이 |
+
+### 성능 & 안정성 (✅ 완료)
+
+| 컴포넌트 | 파일 경로 | 상태 | 설명 |
+|---------|---------|------|------|
+| LivePlayerController | `lib/src/features/live_stream/controller/` | ✅ 완료 | ref.onDispose() 보장된 정리 |
+| VodPlayerController | `lib/src/features/vod_stream/controller/` | ✅ 완료 | ref.onDispose() 보장된 정리 |
 
 ### Repository Wrapper 현황 (✅ 완료 - 10개)
 
@@ -144,8 +158,8 @@
 | AuthController | WebView 인증 처리 |
 | LiveChatController | WebSocket 채팅 |
 | VodChatController | WebSocket 채팅 |
-| LivePlayerController | VideoPlayer 생명주기 |
-| VodPlayerController | VideoPlayer 생명주기 |
+| LivePlayerController | VideoPlayer 생명주기 (✅ dispose 보장) |
+| VodPlayerController | VideoPlayer 생명주기 (✅ dispose 보장) |
 | ClipController | 클립 URL 생성 |
 | UpdateController | GitHub API (추후 마이그레이션 가능) |
 
@@ -179,6 +193,58 @@
    - `SearchEvent.updateAutoComplete()` - 자동완성 입력 sanitization
    - `SearchTagEvent.pushSearchTagResult()` - 태그 검색어 sanitization
    - `SearchTagEvent.updateAutoComplete()` - 태그 자동완성 입력 sanitization
+
+### Toast 알림 시스템 (✅ Phase 4 완료)
+
+사용자에게 즉각적인 피드백을 제공하는 토스트 알림 시스템입니다.
+
+| 컴포넌트 | 상태 | 설명 |
+|---------|------|------|
+| ToastService | ✅ 완료 | Riverpod 기반 토스트 상태 관리 |
+| ToastOverlay | ✅ 완료 | 애니메이션(slide+fade) 오버레이 |
+| ChannelController 통합 | ✅ 완료 | 팔로우/언팔로우 피드백 |
+
+#### Phase 4 구현 상세
+
+1. **ToastService** (`lib/src/common/widgets/toast/toast_service.dart`)
+   - `showSuccess(message)` - 성공 메시지 (녹색)
+   - `showError(message)` - 에러 메시지 (빨간색)
+   - `showInfo(message)` - 정보 메시지 (회색)
+   - 자동 3초 후 사라짐
+
+2. **ToastOverlay** (`lib/src/common/widgets/toast/toast_overlay.dart`)
+   - `MaterialApp`을 감싸는 오버레이 위젯
+   - Slide + Fade 애니메이션
+   - TV 화면 하단 중앙에 표시
+
+3. **ChannelController 통합**
+   - 팔로우 성공: "팔로우했습니다"
+   - 언팔로우 성공: "팔로우를 해제했습니다"
+   - 실패: "팔로우에 실패했습니다" / "팔로우 해제에 실패했습니다"
+
+### VideoPlayer 생명주기 개선 (✅ Phase 5 완료)
+
+VideoPlayer 리소스 누수를 방지하는 보장된 정리 메커니즘입니다.
+
+| 컴포넌트 | 상태 | 설명 |
+|---------|------|------|
+| LivePlayerController | ✅ 완료 | ref.onDispose() 보장된 정리 |
+| VodPlayerController | ✅ 완료 | ref.onDispose() 보장된 정리 |
+
+#### Phase 5 구현 상세
+
+1. **ref.onDispose() 콜백**
+   - Provider가 폐기될 때 항상 실행되는 정리 콜백
+   - VideoPlayerController.dispose() 보장
+   - 부분 초기화 상태에서도 안전하게 정리
+
+2. **_cleanupController() 메서드**
+   - 컨트롤러 정리 로직 중앙화
+   - null 체크 후 안전하게 dispose
+
+3. **init() 에러 복구**
+   - 초기화 중 에러 발생 시 부분적으로 생성된 리소스 정리
+   - VideoPlayerController 생성 후 에러 시 즉시 dispose
 
 ---
 
@@ -407,6 +473,102 @@ lib/src/features/channel/
 └── widgets/
     └── ...
 ```
+
+---
+
+## 🔔 Toast 사용 가이드
+
+### 기본 사용법
+
+```dart
+// Controller나 Widget에서 사용
+final toastService = ref.read(toastServiceProvider.notifier);
+
+// 성공 메시지
+toastService.showSuccess('팔로우했습니다');
+
+// 에러 메시지
+toastService.showError('팔로우에 실패했습니다');
+
+// 정보 메시지
+toastService.showInfo('새로운 알림이 있습니다');
+```
+
+### 설정 (main.dart)
+
+```dart
+// ToastOverlay로 MaterialApp 감싸기
+ProviderScope(
+  child: ToastOverlay(
+    child: MaterialApp.router(...),
+  ),
+)
+```
+
+### 새로운 기능에 Toast 추가하기
+
+```dart
+@riverpod
+class MyController extends _$MyController {
+  Future<void> doSomething() async {
+    final result = await wrapper.doSomething();
+    
+    result.when(
+      success: (_) {
+        ref.read(toastServiceProvider.notifier).showSuccess('완료되었습니다');
+      },
+      failure: (e) {
+        ref.read(toastServiceProvider.notifier).showError('실패했습니다');
+      },
+    );
+  }
+}
+```
+
+---
+
+## 🎮 VideoPlayer 생명주기 가이드
+
+### ref.onDispose() 패턴
+
+```dart
+@riverpod
+class PlayerController extends _$PlayerController {
+  VideoPlayerController? _controller;
+
+  @override
+  FutureOr<VideoPlayerValue> build() async {
+    // 보장된 정리 콜백 등록
+    ref.onDispose(_cleanupController);
+    
+    return await init();
+  }
+
+  void _cleanupController() {
+    _controller?.dispose();
+    _controller = null;
+  }
+
+  Future<VideoPlayerValue> init() async {
+    try {
+      _controller = VideoPlayerController.networkUrl(uri);
+      await _controller!.initialize();
+      return _controller!.value;
+    } catch (e) {
+      // 부분 초기화 상태 정리
+      _cleanupController();
+      rethrow;
+    }
+  }
+}
+```
+
+### 핵심 원칙
+
+1. **ref.onDispose() 먼저 등록**: build() 시작 시 정리 콜백 등록
+2. **null 체크**: 컨트롤러가 null일 수 있으므로 안전하게 처리
+3. **에러 시 정리**: try-catch에서 에러 발생 시 부분 리소스 정리
+4. **중앙화된 정리**: _cleanupController() 메서드로 정리 로직 통합
 
 ---
 

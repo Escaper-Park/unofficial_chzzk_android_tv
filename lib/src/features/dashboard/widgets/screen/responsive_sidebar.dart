@@ -69,7 +69,8 @@ class _ResponsiveSidebar extends HookConsumerWidget with DashboardEvent {
           padding: EdgeInsets.symmetric(vertical: 10.0),
           decoration: BoxDecoration(
             gradient: hasFocus.value ? _expandedGradient : null,
-            color: hasFocus.value ? null : _backgroundColor.withOpacity(0.7),
+            color:
+                hasFocus.value ? null : _backgroundColor.withValues(alpha: 0.7),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,8 +125,8 @@ class _ResponsiveSidebar extends HookConsumerWidget with DashboardEvent {
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         colors: [
-          _backgroundColor.withOpacity(1.0),
-          _backgroundColor.withOpacity(0.95),
+          _backgroundColor.withValues(alpha: 1.0),
+          _backgroundColor.withValues(alpha: 0.95),
         ],
         stops: [
           0.0,

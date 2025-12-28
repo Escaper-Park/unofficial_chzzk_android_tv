@@ -54,7 +54,7 @@ class _VodPlaybackTimeIndicatorState extends State<VodPlaybackTimeIndicator> {
 
     return RoundedContainer(
       width: Dimensions.vodPlaybackTimeIndicatorWidth,
-      backgroundColor: AppColors.greyContainerColor.withOpacity(0.85),
+      backgroundColor: AppColors.greyContainerColor.withValues(alpha: 0.85),
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
       child: Text(

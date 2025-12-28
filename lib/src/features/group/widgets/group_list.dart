@@ -52,7 +52,7 @@ class GroupList extends StatelessWidget {
                     vertical: 10.0,
                   ),
                   backgroundColor:
-                      AppColors.greyContainerColor.withOpacity(0.7),
+                      AppColors.greyContainerColor.withValues(alpha: 0.7),
                   onPressed: () => selectGroup(group),
                   child: CenteredText(
                     text: group.groupName,

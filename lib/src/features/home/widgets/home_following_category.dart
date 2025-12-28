@@ -77,7 +77,7 @@ class HomeFollowingCategoryItem extends StatelessWidget {
     return CustomBadge(
       margin: const EdgeInsets.all(5.0),
       alignment: Alignment.topLeft,
-      backgroundColor: AppColors.greyContainerColor.withOpacity(0.9),
+      backgroundColor: AppColors.greyContainerColor.withValues(alpha: 0.9),
       elements: [TextElement(text: text)],
     );
   }
@@ -86,7 +86,7 @@ class HomeFollowingCategoryItem extends StatelessWidget {
     return CustomBadge(
       margin: const EdgeInsets.all(5.0),
       alignment: Alignment.bottomRight,
-      backgroundColor: AppColors.greyContainerColor.withOpacity(0.9),
+      backgroundColor: AppColors.greyContainerColor.withValues(alpha: 0.9),
       elements: [
         IconElement(icon: Icons.live_tv_rounded),
         TextElement(text: openLive),

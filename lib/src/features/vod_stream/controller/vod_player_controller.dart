@@ -56,11 +56,27 @@ class VodPlayerController extends _$VodPlayerController {
 
     _vodPlay = ref.read(vodPlaylistControllerProvider);
 
+    // Ensure cleanup when provider is disposed
+    ref.onDispose(() async {
+      await _cleanupController();
+    });
+
     return await init();
+  }
+
+  /// Cleans up controller resources.
+  Future<void> _cleanupController() async {
+    final controller = state.valueOrNull;
+    if (controller != null) {
+      controller.removeListener(_checkVideoEnds);
+      await controller.dispose();
+    }
+    await ref.read(wakelockControllerProvider.notifier).disable();
   }
 
   Future<VideoPlayerController?> init({int? startPos}) async {
     int resolutionIndex = _resolutionIndex;
+    VideoPlayerController? controller;
 
     try {
       if (_vodPlay?.$2 == null) return null;
@@ -88,7 +104,7 @@ class VodPlayerController extends _$VodPlayerController {
         mediaTrackUri = mediaList[resolutionIndex];
       }
 
-      final controller = _getVideoPlayerController(mediaTrackUri!, queryParams);
+      controller = _getVideoPlayerController(mediaTrackUri!, queryParams);
       await controller.initialize();
 
       if (startPos == null) {
@@ -117,6 +133,8 @@ class VodPlayerController extends _$VodPlayerController {
 
       return controller;
     } catch (_) {
+      // Clean up partially initialized controller on error
+      await controller?.dispose();
       return null;
     }
   }

@@ -34,7 +34,7 @@ class ChatList extends StatelessWidget {
     return RoundedContainer(
       backgroundColor: transparencyPercent == 100
           ? Colors.transparent
-          : AppColors.blackColor.withOpacity(opacity),
+          : AppColors.blackColor.withValues(alpha: opacity),
       padding: transparencyPercent == 100
           ? EdgeInsets.zero
           : const EdgeInsets.all(3.0),

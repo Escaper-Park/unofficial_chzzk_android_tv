@@ -61,7 +61,7 @@ class StreamOverlayContainer extends StatelessWidget {
         margin: margin,
         padding: padding,
         decoration: BoxDecoration(
-          color: backgroundColor.withOpacity(backgroundOpacity),
+          color: backgroundColor.withValues(alpha: backgroundOpacity),
           borderRadius: BorderRadius.vertical(
             top: useTopBorder ? Radius.circular(borderRadius) : Radius.zero,
             bottom:
