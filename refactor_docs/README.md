@@ -54,9 +54,19 @@
 | InputValidator | 검색 입력 sanitization |
 | ToastService | 채널 팔로우/언팔로우 피드백 |
 
+### 코드 품질 & Riverpod 3.0 준비
+
+| 항목 | 상태 | 설명 |
+|------|------|------|
+| Deprecated Ref 타입 교체 | ✅ 완료 | 10개 repository wrapper에서 `*Ref` → `Ref` |
+| Deprecated Color 접근자 수정 | ✅ 완료 | Flutter 3.27+ 호환 (`.r`, `.g`, `.b`) |
+| Lint 이슈 정리 | ✅ 완료 | 26개 → 0개 (info-level 포함) |
+| 코드 스타일 통일 | ✅ 완료 | curly braces, trailing commas |
+
 ### 테스트
 
 - **100개** 테스트 통과 (unit, widget, integration, accessibility, performance)
+- `flutter analyze --no-fatal-infos` → **No issues found!**
 
 ---
 

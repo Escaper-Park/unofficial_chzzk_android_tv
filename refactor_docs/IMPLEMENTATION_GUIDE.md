@@ -257,6 +257,7 @@ VideoPlayer 리소스 누수를 방지하는 보장된 정리 메커니즘입니
 ```dart
 // lib/src/features/<feature>/repository/<feature>_repository_wrapper.dart
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/result/results.dart';
@@ -285,8 +286,9 @@ class <Feature>RepositoryWrapper extends BaseRepository {
 }
 
 /// Provider for repository wrapper
+/// NOTE: Ref 타입 사용 (Riverpod 3.0 호환)
 @riverpod
-<Feature>RepositoryWrapper <feature>RepositoryWrapper(<Feature>RepositoryWrapperRef ref) {
+<Feature>RepositoryWrapper <feature>RepositoryWrapper(Ref ref) {
   final dio = ref.watch(dioClientProvider);
   final repository = <Feature>Repository(dio);
   return <Feature>RepositoryWrapper(repository);
@@ -569,6 +571,86 @@ class PlayerController extends _$PlayerController {
 2. **null 체크**: 컨트롤러가 null일 수 있으므로 안전하게 처리
 3. **에러 시 정리**: try-catch에서 에러 발생 시 부분 리소스 정리
 4. **중앙화된 정리**: _cleanupController() 메서드로 정리 로직 통합
+
+---
+
+## 🔄 Riverpod 3.0 준비 (✅ Phase 6 완료)
+
+Riverpod 3.0 업그레이드를 위한 사전 준비 작업입니다.
+
+### 변경 사항
+
+| 항목 | 변경 전 | 변경 후 | 파일 수 |
+|------|--------|--------|--------|
+| Provider Ref 타입 | `*RepositoryWrapperRef` | `Ref` | 10개 |
+| Color 접근자 | `.red`, `.green`, `.blue` | `.r`, `.g`, `.b` | 1개 |
+| 코드 스타일 | 불일치 | 통일 | 4개 |
+
+### Deprecated Ref 타입 교체
+
+Riverpod 2.x에서 자동 생성되는 `*Ref` 타입은 3.0에서 제거됩니다.
+
+```dart
+// ❌ Before (deprecated in Riverpod 3.0)
+@riverpod
+UserRepositoryWrapper userRepositoryWrapper(UserRepositoryWrapperRef ref) {
+  // ...
+}
+
+// ✅ After (Riverpod 3.0 compatible)
+@riverpod
+UserRepositoryWrapper userRepositoryWrapper(Ref ref) {
+  // ...
+}
+```
+
+**수정된 파일 (10개):**
+- `category_repository_wrapper.dart`
+- `channel_repository_wrapper.dart`
+- `clip_repository_wrapper.dart`
+- `following_repository_wrapper.dart`
+- `live_repository_wrapper.dart`
+- `search_repository_wrapper.dart`
+- `search_tag_repository_wrapper.dart`
+- `user_repository_wrapper.dart`
+- `vod_repository_wrapper.dart`
+- `watching_history_repository_wrapper.dart`
+
+### Flutter 3.27+ Color 접근자
+
+```dart
+// ❌ Before (deprecated)
+final int r = backgroundColor.red;
+final int g = backgroundColor.green;
+final int b = backgroundColor.blue;
+
+// ✅ After (Flutter 3.27+)
+final int r = (backgroundColor.r * 255.0).round() & 0xff;
+final int g = (backgroundColor.g * 255.0).round() & 0xff;
+final int b = (backgroundColor.b * 255.0).round() & 0xff;
+```
+
+### Lint 이슈 정리
+
+| 이슈 유형 | 수정 전 | 수정 후 |
+|----------|--------|--------|
+| `deprecated_member_use` | 13개 | 0개 |
+| `avoid_print` | 7개 | 0개 (ignore 처리) |
+| `curly_braces_in_flow_control_structures` | 1개 | 0개 |
+| `require_trailing_commas` | 1개 | 0개 |
+| `unnecessary_brace_in_string_interps` | 4개 | 0개 |
+| **총합** | **26개** | **0개** |
+
+### 검증 결과
+
+```bash
+$ flutter analyze --no-fatal-infos
+Analyzing unofficial_chzzk_android_tv...
+No issues found! (ran in 7.1s)
+
+$ flutter test
+00:08 +100: All tests passed!
+```
 
 ---
 
