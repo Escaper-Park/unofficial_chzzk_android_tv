@@ -6,7 +6,7 @@ part of 'vod_all_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vodAllControllerHash() => r'e3b8962baeff5c22285d760a0c3b63ea7ab56418';
+String _$vodAllControllerHash() => r'c7e544e8e65bd5a643d1efeae79ab2fca0e280ef';
 
 /// Copied from Dart SDK
 class _SystemHash {

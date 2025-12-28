@@ -7,7 +7,7 @@ part of 'home_following_lives_controller.dart';
 // **************************************************************************
 
 String _$homeFollowingLivesControllerHash() =>
-    r'eba1c124d78fec14781c03ac862f16d805b90b86';
+    r'45a57301419e2b34b4c8184440b0b0863a9ffbdd';
 
 /// See also [HomeFollowingLivesController].
 @ProviderFor(HomeFollowingLivesController)

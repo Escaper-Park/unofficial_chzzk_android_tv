@@ -2,20 +2,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/constants/enums.dart'
     show AppRoute, FilterType, ClipOrderType;
-import '../../../utils/dio/dio_client.dart';
 import '../../../utils/extensions/custom_extensions.dart';
-
 import '../../category/model/category.dart';
 import '../../clip/model/clip.dart';
 import '../../clip/model/clip_response.dart';
-import '../../clip/repository/clip_repository.dart';
+import '../../clip/repository/clip_repository_wrapper.dart';
 import '../../user/controller/private_user_blocks_controller.dart';
 
 part 'category_clip_controller.g.dart';
 
 @riverpod
 class CategoryClipController extends _$CategoryClipController {
-  late ClipRepository _repository;
+  late ClipRepositoryWrapper _repository;
   late List<String> _privateUserBlocks;
 
   CategoryClipNext? _next;
@@ -26,8 +24,7 @@ class CategoryClipController extends _$CategoryClipController {
     required FilterType filterType,
     required ClipOrderType orderType,
   }) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = ClipRepository(dio);
+    _repository = ref.watch(clipRepositoryWrapperProvider);
     _privateUserBlocks =
         await ref.watch(privateUserBlocksControllerProvider.future);
 
@@ -35,7 +32,7 @@ class CategoryClipController extends _$CategoryClipController {
   }
 
   Future<List<NaverClip>?> _fetch() async {
-    final response = await _repository.getCategoryClipResponse(
+    final result = await _repository.getCategoryClips(
       categoryType: category.categoryType,
       categoryId: category.categoryId,
       filterType: filterType.value,
@@ -45,9 +42,13 @@ class CategoryClipController extends _$CategoryClipController {
       readCount: null,
     );
 
-    _next = response?.page?.next;
-
-    return _filterBlockedNaverClips(response?.data);
+    return result.when(
+      success: (response) {
+        _next = response?.page?.next;
+        return _filterBlockedNaverClips(response?.data);
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -58,7 +59,7 @@ class CategoryClipController extends _$CategoryClipController {
 
     state = await AsyncValue.guard(
       () async {
-        final response = await _repository.getCategoryClipResponse(
+        final result = await _repository.getCategoryClips(
           categoryType: category.categoryType,
           categoryId: category.categoryId,
           filterType: filterType.value,
@@ -68,13 +69,20 @@ class CategoryClipController extends _$CategoryClipController {
           readCount: _next!.readCount,
         );
 
-        _next = response?.page?.next;
-
-        if (response?.data == null) return [...prev!];
-        final filteredNewClips = _filterBlockedNaverClips(response?.data) ?? [];
-
-        ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
-        return [...prev!, ...filteredNewClips];
+        return result.when(
+          success: (response) {
+            _next = response?.page?.next;
+            ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
+            if (response?.data == null) return [...prev!];
+            final filteredNewClips =
+                _filterBlockedNaverClips(response?.data) ?? [];
+            return [...prev!, ...filteredNewClips];
+          },
+          failure: (_) {
+            ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
+            return [...prev!];
+          },
+        );
       },
     );
   }

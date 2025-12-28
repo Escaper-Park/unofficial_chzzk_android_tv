@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'dpad_widgets.dart' show DpadKeyNodeMap, DpadFocusScopeNavigator;
+import '../error/async_value_error_widget.dart';
 import '../ui/ui_widgets.dart' show CenteredText, FocusedOutlinedButton;
 import '../../../utils/hooks/custom_hooks.dart';
 import '../../constants/dimensions.dart';
@@ -277,8 +278,14 @@ class DpadListViewWithAsyncValue<T> extends HookWidget {
             itemBuilder: itemBuilder,
           );
         },
-        // error: (e, s) => _defaultFallback(errorText),
-        error: (_, __) => _defaultFallback(errorText),
+        error: (error, stackTrace) => useExceptionFallbackWidget
+            ? _defaultFallback(errorText)
+            : AsyncValueErrorWidget(
+                error: error,
+                stackTrace: stackTrace,
+                fallbackMessage: errorText,
+                onRetry: fallbackAction,
+              ),
         loading: () => const SizedBox.shrink(),
       ),
     );

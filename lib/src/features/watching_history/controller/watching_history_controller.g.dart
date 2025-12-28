@@ -7,7 +7,7 @@ part of 'watching_history_controller.dart';
 // **************************************************************************
 
 String _$watchingHistoryControllerHash() =>
-    r'c3cf68006271264c07f3680140f92117e7c11650';
+    r'51c536aff8bef3acb79fad31c4c3a810924f8d35';
 
 /// See also [WatchingHistoryController].
 @ProviderFor(WatchingHistoryController)

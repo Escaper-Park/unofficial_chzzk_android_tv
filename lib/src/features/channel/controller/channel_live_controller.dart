@@ -1,28 +1,41 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
 import '../../live/model/live_detail.dart';
-import '../../live/repository/live_repository.dart';
+import '../../live/repository/live_repository_wrapper.dart';
 
 part 'channel_live_controller.g.dart';
 
 @riverpod
 
-/// Get current selected channel's live if the streamer is broadcast.
+/// Get current selected channel's live if the streamer is broadcasting.
+///
+/// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
 class ChannelLiveController extends _$ChannelLiveController {
-  late LiveRepository _repository;
-
   @override
   FutureOr<LiveDetail?> build({required String channelId}) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = LiveRepository(dio);
-
     return await _fetch();
   }
 
   Future<LiveDetail?> _fetch() async {
-    final liveDetail = await _repository.getLiveDetail(channelId: channelId);
+    final wrapper = ref.read(liveRepositoryWrapperProvider);
+    final result = await wrapper.getLiveDetail(channelId: channelId);
 
-    return liveDetail;
+    return result.when(
+      success: (liveDetail) => liveDetail,
+      failure: (exception) {
+        // Log errors for debugging
+        assert(() {
+          // ignore: avoid_print
+          print(
+            'ChannelLiveController._fetch error: ${exception.message}',
+          );
+          return true;
+        }());
+
+        // Return null to indicate no live stream
+        // (could be offline, error, or restricted)
+        return null;
+      },
+    );
   }
 }

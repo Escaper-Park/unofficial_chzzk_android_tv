@@ -1,37 +1,42 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
 import '../model/category.dart';
 import '../model/category_response.dart';
-import '../repository/category_repository.dart';
+import '../repository/category_repository_wrapper.dart';
 
 part 'category_controller.g.dart';
 
 @riverpod
 class CategoryController extends _$CategoryController {
-  late CategoryRepository _repository;
+  late CategoryRepositoryWrapper _repository;
 
   CategoryNext? _next;
 
   @override
   FutureOr<List<Category>?> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = CategoryRepository(dio);
+    _repository = ref.watch(categoryRepositoryWrapperProvider);
 
     return await _fetch();
   }
 
   Future<List<Category>?> _fetch() async {
-    final categoryResponse = await _repository.getCategories(
+    final result = await _repository.getCategories(
       categoryId: null,
       concurrentUserCount: null,
       openLiveCount: null,
       size: 20,
     );
 
-    _next = categoryResponse?.page?.next;
-
-    return categoryResponse?.data;
+    return result.when(
+      success: (categoryResponse) {
+        _next = categoryResponse?.page?.next;
+        return categoryResponse?.data;
+      },
+      failure: (exception) {
+        // Log error or handle appropriately
+        return null;
+      },
+    );
   }
 
   Future<void> fetchMore() async {
@@ -41,18 +46,26 @@ class CategoryController extends _$CategoryController {
 
     state = await AsyncValue.guard(
       () async {
-        final categoryResponse = await _repository.getCategories(
+        final result = await _repository.getCategories(
           categoryId: _next!.categoryId,
           concurrentUserCount: _next!.concurrentUserCount,
           openLiveCount: _next!.openLiveCount,
           size: 20,
         );
 
-        _next = categoryResponse?.page?.next;
+        return result.when(
+          success: (categoryResponse) {
+            _next = categoryResponse?.page?.next;
 
-        if (categoryResponse?.data == null) return [...prev!];
+            if (categoryResponse?.data == null) return [...prev!];
 
-        return [...prev!, ...categoryResponse!.data];
+            return [...prev!, ...categoryResponse!.data];
+          },
+          failure: (exception) {
+            // On failure, return previous state without modification
+            return [...prev!];
+          },
+        );
       },
     );
   }

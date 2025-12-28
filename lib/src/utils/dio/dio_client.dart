@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'error_handling_interceptor.dart';
 import 'user_agent.dart';
 
 export 'package:dio/dio.dart';
@@ -13,21 +14,15 @@ class DioClient extends _$DioClient {
 
   /// A common response in CHZZK is like {code: 200, message: null, content: Map}
   /// and only needs `content` so it uses the interceptor to filter out the unnecessary data.
+  ///
+  /// Note: Error handling is now delegated to [ErrorHandlingInterceptor] which
+  /// converts DioExceptions to typed AppExceptions for proper error propagation.
   final InterceptorsWrapper _contentInterceptor = InterceptorsWrapper(
     onResponse: (response, handler) {
       response.data = response.data['content'];
       handler.next(response);
     },
-    onError: (error, handler) {
-      // return null on error situation.
-      handler.resolve(
-        Response(
-          requestOptions: error.requestOptions,
-          statusCode: error.response?.statusCode ?? 500,
-          data: null,
-        ),
-      );
-    },
+    // Error handling is now done by ErrorHandlingInterceptor - no more swallowing errors
   );
 
   @override
@@ -49,7 +44,14 @@ class DioClient extends _$DioClient {
 
   Dio _init(Set? cookies) {
     final Dio dio = getBaseDio(cookies);
-    dio.interceptors.add(_contentInterceptor);
+
+    // Add interceptors in order:
+    // 1. ErrorHandlingInterceptor - converts DioExceptions to typed AppExceptions
+    // 2. ContentInterceptor - extracts 'content' field from CHZZK API responses
+    dio.interceptors.addAll([
+      ErrorHandlingInterceptor(),
+      _contentInterceptor,
+    ]);
 
     return dio;
   }

@@ -7,7 +7,7 @@ part of 'following_vod_controller.dart';
 // **************************************************************************
 
 String _$followingVodControllerHash() =>
-    r'6d1ecc915437e905c3cd8bf8e469c16c30640664';
+    r'4b836e10d072a6e403332a5286e912f878f0792c';
 
 /// See also [FollowingVodController].
 @ProviderFor(FollowingVodController)

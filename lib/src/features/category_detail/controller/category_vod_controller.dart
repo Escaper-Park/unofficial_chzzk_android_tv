@@ -2,9 +2,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../common/constants/enums.dart' show AppRoute;
 import '../../../utils/extensions/custom_extensions.dart';
-import '../../../utils/dio/dio_client.dart';
 import '../../category/model/category.dart';
-import '../../category/repository/category_repository.dart';
+import '../../category/repository/category_repository_wrapper.dart';
 import '../../user/controller/private_user_blocks_controller.dart';
 import '../../vod/model/vod.dart';
 import '../../vod/model/vod_response.dart';
@@ -13,15 +12,14 @@ part 'category_vod_controller.g.dart';
 
 @riverpod
 class CategoryVodController extends _$CategoryVodController {
-  late CategoryRepository _repository;
+  late CategoryRepositoryWrapper _repository;
   late List<String> _privateUserBlocks;
 
   CategoryVodNext? _next;
 
   @override
   FutureOr<List<Vod>?> build({required Category category}) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = CategoryRepository(dio);
+    _repository = ref.watch(categoryRepositoryWrapperProvider);
     _privateUserBlocks =
         await ref.watch(privateUserBlocksControllerProvider.future);
 
@@ -29,7 +27,7 @@ class CategoryVodController extends _$CategoryVodController {
   }
 
   Future<List<Vod>?> _fetch() async {
-    final response = await _repository.getCategoryVods(
+    final result = await _repository.getCategoryVods(
       categoryType: category.categoryType,
       categoryId: category.categoryId,
       publishDateAt: null,
@@ -37,9 +35,13 @@ class CategoryVodController extends _$CategoryVodController {
       size: 18,
     );
 
-    _next = response?.page?.next;
-
-    return _filterBlockedVods(response?.data);
+    return result.when(
+      success: (response) {
+        _next = response?.page?.next;
+        return _filterBlockedVods(response?.data);
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -50,7 +52,7 @@ class CategoryVodController extends _$CategoryVodController {
 
     state = await AsyncValue.guard(
       () async {
-        final response = await _repository.getCategoryVods(
+        final result = await _repository.getCategoryVods(
           categoryType: category.categoryType,
           categoryId: category.categoryId,
           publishDateAt: _next!.publishDateAt,
@@ -58,13 +60,21 @@ class CategoryVodController extends _$CategoryVodController {
           size: 18,
         );
 
-        _next = response?.page?.next;
+        return result.when(
+          success: (response) {
+            _next = response?.page?.next;
 
-        if (response?.data == null) return [...prev!];
-        final filteredNewVods = _filterBlockedVods(response?.data) ?? [];
+            if (response?.data == null) return [...prev!];
+            final filteredNewVods = _filterBlockedVods(response?.data) ?? [];
 
-        ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
-        return [...prev!, ...filteredNewVods];
+            ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
+            return [...prev!, ...filteredNewVods];
+          },
+          failure: (_) {
+            ref.setFetchMoreLoading(AppRoute.categoryDetail.routeName, false);
+            return [...prev!];
+          },
+        );
       },
     );
   }

@@ -7,7 +7,7 @@ part of 'channel_live_controller.dart';
 // **************************************************************************
 
 String _$channelLiveControllerHash() =>
-    r'6d5c3e467464a950d5305962b62cd8cc2a190272';
+    r'5537d5101c104efb1a7a822d130af24efd04c632';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,22 +39,30 @@ abstract class _$ChannelLiveController
   });
 }
 
-/// Get current selected channel's live if the streamer is broadcast.
+/// Get current selected channel's live if the streamer is broadcasting.
+///
+/// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
 ///
 /// Copied from [ChannelLiveController].
 @ProviderFor(ChannelLiveController)
 const channelLiveControllerProvider = ChannelLiveControllerFamily();
 
-/// Get current selected channel's live if the streamer is broadcast.
+/// Get current selected channel's live if the streamer is broadcasting.
+///
+/// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
 ///
 /// Copied from [ChannelLiveController].
 class ChannelLiveControllerFamily extends Family<AsyncValue<LiveDetail?>> {
-  /// Get current selected channel's live if the streamer is broadcast.
+  /// Get current selected channel's live if the streamer is broadcasting.
+  ///
+  /// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
   ///
   /// Copied from [ChannelLiveController].
   const ChannelLiveControllerFamily();
 
-  /// Get current selected channel's live if the streamer is broadcast.
+  /// Get current selected channel's live if the streamer is broadcasting.
+  ///
+  /// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
   ///
   /// Copied from [ChannelLiveController].
   ChannelLiveControllerProvider call({
@@ -89,13 +97,17 @@ class ChannelLiveControllerFamily extends Family<AsyncValue<LiveDetail?>> {
   String? get name => r'channelLiveControllerProvider';
 }
 
-/// Get current selected channel's live if the streamer is broadcast.
+/// Get current selected channel's live if the streamer is broadcasting.
+///
+/// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
 ///
 /// Copied from [ChannelLiveController].
 class ChannelLiveControllerProvider
     extends AutoDisposeAsyncNotifierProviderImpl<ChannelLiveController,
         LiveDetail?> {
-  /// Get current selected channel's live if the streamer is broadcast.
+  /// Get current selected channel's live if the streamer is broadcasting.
+  ///
+  /// Uses Result pattern via [LiveRepositoryWrapper] for proper error handling.
   ///
   /// Copied from [ChannelLiveController].
   ChannelLiveControllerProvider({

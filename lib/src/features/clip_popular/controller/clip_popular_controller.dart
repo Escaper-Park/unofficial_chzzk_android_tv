@@ -1,18 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/extensions/custom_extensions.dart';
 import '../../../common/constants/enums.dart'
     show AppRoute, FilterType, ClipOrderType;
-import '../../../utils/dio/dio_client.dart';
+import '../../../utils/extensions/custom_extensions.dart';
 import '../../clip/model/clip.dart';
 import '../../clip/model/clip_response.dart';
-import '../../clip/repository/clip_repository.dart';
+import '../../clip/repository/clip_repository_wrapper.dart';
 
 part 'clip_popular_controller.g.dart';
 
 @riverpod
 class ClipPopularController extends _$ClipPopularController {
-  late ClipRepository _repository;
+  late ClipRepositoryWrapper _repository;
 
   PopularClipNext? _next;
 
@@ -21,22 +20,25 @@ class ClipPopularController extends _$ClipPopularController {
     required FilterType filterType,
     required ClipOrderType orderType,
   }) async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _repository = ClipRepository(dio);
+    _repository = ref.watch(clipRepositoryWrapperProvider);
 
     return await _fetch();
   }
 
   Future<List<NaverClip>?> _fetch() async {
-    final response = await _repository.getPopularClipResponse(
+    final result = await _repository.getPopularClips(
       filterType: filterType.value,
       orderType: orderType.value,
       next: null,
     );
 
-    _next = response?.page?.next;
-
-    return response?.data;
+    return result.when(
+      success: (response) {
+        _next = response?.page?.next;
+        return response?.data;
+      },
+      failure: (_) => null,
+    );
   }
 
   Future<void> fetchMore() async {
@@ -47,18 +49,24 @@ class ClipPopularController extends _$ClipPopularController {
 
     state = await AsyncValue.guard(
       () async {
-        final response = await _repository.getPopularClipResponse(
+        final result = await _repository.getPopularClips(
           filterType: filterType.value,
           orderType: orderType.value,
           next: _next!.next,
         );
 
-        _next = response?.page?.next;
-
-        if (response?.data == null) return [...prev!];
-
-        ref.setFetchMoreLoading(AppRoute.popularClips.routeName, false);
-        return [...prev!, ...response!.data];
+        return result.when(
+          success: (response) {
+            _next = response?.page?.next;
+            ref.setFetchMoreLoading(AppRoute.popularClips.routeName, false);
+            if (response?.data == null) return [...prev!];
+            return [...prev!, ...response!.data];
+          },
+          failure: (_) {
+            ref.setFetchMoreLoading(AppRoute.popularClips.routeName, false);
+            return [...prev!];
+          },
+        );
       },
     );
   }

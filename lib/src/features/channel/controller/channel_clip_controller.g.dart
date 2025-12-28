@@ -7,7 +7,7 @@ part of 'channel_clip_controller.dart';
 // **************************************************************************
 
 String _$channelClipControllerHash() =>
-    r'01fe362b74328fb47d7f99c415879ca69cf01509';
+    r'7ab06caf78f487fdc4ae35adc6ce3e8612a66ab6';
 
 /// Copied from Dart SDK
 class _SystemHash {

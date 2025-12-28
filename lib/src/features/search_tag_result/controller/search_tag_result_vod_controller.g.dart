@@ -7,7 +7,7 @@ part of 'search_tag_result_vod_controller.dart';
 // **************************************************************************
 
 String _$searchTagResultVodControllerHash() =>
-    r'f33fa2e5d9d3d91cc89a586db2938f436a105968';
+    r'fe457e8e97d9f0b092c48783635fddcc2a323526';
 
 /// Copied from Dart SDK
 class _SystemHash {

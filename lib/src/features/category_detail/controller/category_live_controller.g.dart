@@ -7,7 +7,7 @@ part of 'category_live_controller.dart';
 // **************************************************************************
 
 String _$categoryLiveControllerHash() =>
-    r'be4b8cbf57b0084589ea7b149a0148203dc53d52';
+    r'3f9d1ba897b2af0f238febedf3de90f406f89281';
 
 /// Copied from Dart SDK
 class _SystemHash {

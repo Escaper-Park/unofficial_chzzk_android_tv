@@ -7,7 +7,7 @@ part of 'auto_complete_tag_controller.dart';
 // **************************************************************************
 
 String _$autoCompleteTagControllerHash() =>
-    r'e4fe470d0f9d16fb6e384fe5ec5b0fbdf7d9867d';
+    r'814a4a159c0fb03da5315144abce61c1487027a0';
 
 /// See also [AutoCompleteTagController].
 @ProviderFor(AutoCompleteTagController)

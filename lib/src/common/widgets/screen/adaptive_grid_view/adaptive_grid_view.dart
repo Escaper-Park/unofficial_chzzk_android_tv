@@ -8,6 +8,7 @@ import '../../../constants/dimensions.dart' show Dimensions;
 import '../../../constants/enums.dart' show DpadAction;
 import '../../dpad/dpad_widgets.dart'
     show DpadCallbackShortcuts, ShortcutsBindings;
+import '../../error/async_value_error_widget.dart';
 import '../../ui/ui_widgets.dart' show CenteredText;
 
 class AdaptiveGridViewWithAsyncValue<T> extends HookWidget {
@@ -98,7 +99,11 @@ class AdaptiveGridViewWithAsyncValue<T> extends HookWidget {
           },
         );
       },
-      error: (_, __) => CenteredText(text: errorText),
+      error: (error, stackTrace) => AsyncValueErrorWidget(
+        error: error,
+        stackTrace: stackTrace,
+        fallbackMessage: errorText,
+      ),
       loading: () => const SizedBox.shrink(),
     );
   }

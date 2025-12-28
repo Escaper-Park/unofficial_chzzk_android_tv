@@ -1,22 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/dio/dio_client.dart';
-import '../repository/search_repository.dart';
+import '../repository/search_repository_wrapper.dart';
 
 part 'auto_complete_controller.g.dart';
 
 @riverpod
 class AutoCompleteController extends _$AutoCompleteController {
-  late SearchRepository _searchRepository;
-  late CategorySearchRepository _categorySearchRepository;
+  late SearchRepositoryWrapper _repository;
 
   /// return auto-completed channel and category keywords.
   @override
   FutureOr<List<String>> build() async {
-    final Dio dio = ref.watch(dioClientProvider);
-    _searchRepository = SearchRepository(dio);
-    _categorySearchRepository = CategorySearchRepository(dio);
-
+    _repository = ref.watch(searchRepositoryWrapperProvider);
     return [];
   }
 
@@ -36,26 +31,30 @@ class AutoCompleteController extends _$AutoCompleteController {
   }
 
   Future<List<String>> _getAutoCompleteChannelResponse(String keyword) async {
-    final response =
-        await _searchRepository.getAutoCompleteSearchChannelResponse(
+    final result = await _repository.getAutoCompleteChannels(
       keyword: keyword,
       offset: 0,
       size: 18,
     );
 
-    return response?.data ?? [];
+    return result.when(
+      success: (response) => response?.data ?? [],
+      failure: (_) => [],
+    );
   }
 
   Future<List<String>> _getAutoCompleteCategoryResponse(
     String keyword,
   ) async {
-    final response =
-        await _categorySearchRepository.getAutoCompleteSearchCategoryResponse(
+    final result = await _repository.getAutoCompleteCategories(
       keyword: keyword,
       offset: 0,
       limit: 10,
     );
 
-    return response?.data ?? [];
+    return result.when(
+      success: (response) => response?.data ?? [],
+      failure: (_) => [],
+    );
   }
 }
