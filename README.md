@@ -34,8 +34,9 @@
 - [기타 안내 사항](#기타-안내-사항)
 
 # 사용 방법
-## 다운로드
-APK 파일 [다운로드] (v0.3.4+1)
+## APK 파일 다운로드
+- [v0.4.0-pre](v0.4.0-pre)
+- [v0.3.4+1](v0.3.4+1) 
 
 위 링크에서 APK 파일을 다운로드하여 TV로 옮겨 설치합니다. 대부분의 TV에서 **v7a** 버전으로 사용 가능합니다.
 
@@ -87,6 +88,6 @@ APK 파일 [다운로드] (v0.3.4+1)
 
 > [!CAUTION]
 > 보안을 위해 네이버 로그인 2단계 인증을 사용해주세요.
-
-[다운로드]: https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.4+1
+[v0.4.0-pre]: https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.4.0-pre
+[v0.3.4+1]: https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.4+1
 [치지직]: https://chzzk.naver.com/
