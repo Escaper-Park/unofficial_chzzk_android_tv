@@ -1,0 +1,4 @@
+enum VodSort {
+  popular,
+  latest,
+}

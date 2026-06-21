@@ -1,0 +1,86 @@
+include: 
+  - package:bloc_lint/recommended.yaml
+  - package:flutter_lints/flutter.yaml
+
+plugins:
+
+analyzer:
+  exclude:
+    - .fvm/**
+    - android/.gradle/**
+    - build/**
+    - .dart_tool/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - old/**
+
+  errors:
+    invalid_annotation_target: ignore
+    avoid_catches_without_on_clauses: ignore
+
+linter:
+  rules:
+    - always_declare_return_types
+    - always_put_control_body_on_new_line
+    - avoid_catches_without_on_clauses
+    - avoid_equals_and_hash_code_on_mutable_classes
+    - avoid_final_parameters
+    - avoid_positional_boolean_parameters
+    - avoid_private_typedef_functions
+    - avoid_returning_this
+    - avoid_setters_without_getters
+    - avoid_slow_async_io
+    - avoid_type_to_string
+    - avoid_types_on_closure_parameters
+    - avoid_void_async
+    - cascade_invocations
+    - cast_nullable_to_non_nullable
+    - combinators_ordering
+    - comment_references
+    - directives_ordering
+    - discarded_futures
+    - do_not_use_environment
+    - flutter_style_todos
+    - leading_newlines_in_multiline_strings
+    - library_names
+    - matching_super_parameters
+    - no_literal_bool_comparisons
+    - no_runtimeType_toString
+    - omit_local_variable_types
+    - omit_obvious_local_variable_types
+    - one_member_abstracts
+    - only_throw_errors
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_foreach
+    - prefer_function_declarations_over_variables
+    - prefer_mixin
+    - prefer_null_aware_method_calls
+    - prefer_relative_imports
+    - prefer_single_quotes
+    - prefer_void_to_null
+    - require_trailing_commas
+    - sized_box_shrink_expand
+    - sort_child_properties_last
+    - throw_in_finally
+    - type_annotate_public_apis
+    - unawaited_futures
+    - unnecessary_await_in_return
+    - unnecessary_breaks
+    - unnecessary_lambdas
+    - unnecessary_raw_strings
+    - unreachable_from_main
+    - use_colored_box
+    - use_decorated_box
+    - use_enums
+    - use_is_even_rather_than_modulo
+    - use_named_constants
+    - use_null_aware_elements
+    - use_string_buffers
+    - use_to_and_as_if_applicable
+    - use_truncating_division
+
+formatter:
+  trailing_commas: preserve

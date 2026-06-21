@@ -1,0 +1,4 @@
+enum TvTabVariant {
+  primary,
+  secondary,
+}

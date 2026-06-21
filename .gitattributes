@@ -1,0 +1,8 @@
+/.gitattributes text eol=lf
+/build.yaml text eol=lf
+/pubspec.lock text eol=lf
+/pubspec.yaml text eol=lf
+*.dart text eol=lf
+
+*.freezed.dart linguist-generated=true -diff
+*.g.dart linguist-generated=true -diff

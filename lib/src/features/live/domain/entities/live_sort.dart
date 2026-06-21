@@ -1,0 +1,4 @@
+enum LiveSort {
+  popular,
+  latest,
+}

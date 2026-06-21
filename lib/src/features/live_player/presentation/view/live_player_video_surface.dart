@@ -1,0 +1,262 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:video_player/video_player.dart';
+
+import '../../../../core/utils/utils.dart';
+import '../../../settings/domain/entities/settings_preferences.dart';
+import '../live_player_screen_design.dart';
+import 'live_player_playback_session_controller.dart';
+import 'live_player_status_surface.dart';
+import 'live_player_watch_event_reporter.dart';
+
+part 'live_player_video_controller_factory.dart';
+part 'live_player_video_content.dart';
+part 'live_player_video_lifecycle.dart';
+part 'live_player_video_watch_reporter.dart';
+
+class LivePlayerVideoSurface extends HookWidget {
+  const LivePlayerVideoSurface({
+    super.key,
+    required this.playbackUri,
+    required this.playbackHttpHeaders,
+    required this.videoViewType,
+    required this.mixWithOthers,
+    required this.playbackPaused,
+    required this.muted,
+    required this.watchEventEnabled,
+    required this.playbackSessionController,
+    required this.channelId,
+    required this.liveId,
+    required this.liveOpenDate,
+    required this.liveTokens,
+    required this.postWatchEvent,
+    required this.onReady,
+    required this.onEnded,
+    required this.onFailure,
+  });
+
+  final Uri playbackUri;
+  final Map<String, String> playbackHttpHeaders;
+  final PlayerVideoViewType videoViewType;
+  final bool mixWithOthers;
+  final bool playbackPaused;
+  final bool muted;
+  final bool watchEventEnabled;
+  final LivePlayerPlaybackSessionController playbackSessionController;
+  final String? channelId;
+  final int? liveId;
+  final String? liveOpenDate;
+  final List<String> liveTokens;
+  final PostLivePlayerWatchEvent postWatchEvent;
+  final VoidCallback onReady;
+  final VoidCallback onEnded;
+  final VoidCallback onFailure;
+
+  @override
+  Widget build(BuildContext context) {
+    final playbackHttpHeadersKey = _playbackHttpHeadersKey(
+      playbackHttpHeaders,
+    );
+    final controller = useMemoized(
+      () => _liveVideoControllerFor(
+        playbackUri: playbackUri,
+        playbackHttpHeaders: playbackHttpHeaders,
+        videoViewType: videoViewType,
+        mixWithOthers: mixWithOthers,
+      ),
+      [playbackUri, playbackHttpHeadersKey, videoViewType, mixWithOthers],
+    );
+    final playbackSessionHandle = useMemoized(
+      () => _LivePlayerVideoSessionHandle(controller),
+      [controller],
+    );
+    final parsedLiveOpenDate = useMemoized(
+      () => _parseLiveOpenDate(liveOpenDate),
+      [liveOpenDate],
+    );
+    final postWatchEventRef = useRef(postWatchEvent)..value = postWatchEvent;
+    final reporter = useMemoized(
+      () => _livePlayerWatchEventReporterFor(
+        enabled: watchEventEnabled,
+        channelId: channelId,
+        liveId: liveId,
+        liveOpenDate: parsedLiveOpenDate,
+        liveTokens: liveTokens,
+        postWatchEvent:
+            ({
+              required channelId,
+              required liveId,
+              required watchEventType,
+              required sessionId,
+              required eventDurationSeconds,
+              required positionSeconds,
+              required awtSeconds,
+              required liveTokens,
+              required autoPlay,
+              required radioMode,
+              required allowStaleSlotTarget,
+            }) {
+              return postWatchEventRef.value(
+                channelId: channelId,
+                liveId: liveId,
+                watchEventType: watchEventType,
+                sessionId: sessionId,
+                eventDurationSeconds: eventDurationSeconds,
+                positionSeconds: positionSeconds,
+                awtSeconds: awtSeconds,
+                liveTokens: liveTokens,
+                autoPlay: autoPlay,
+                radioMode: radioMode,
+                allowStaleSlotTarget: allowStaleSlotTarget,
+              );
+            },
+      ),
+      [channelId, liveId, parsedLiveOpenDate, watchEventEnabled],
+    );
+    final playbackValue = useListenable(controller).value;
+    final initialized = useState(false);
+    final failed = useState(false);
+    final ended = useState(false);
+    final syncTimer = useMemoized(PeriodicCallbackTimer.new, const []);
+    final playbackPausedRef = useRef(playbackPaused);
+    final reporterRef = useRef<LivePlayerWatchEventReporter?>(reporter);
+    final previousReporterRef = useRef<LivePlayerWatchEventReporter?>(
+      reporter,
+    );
+
+    bool playbackSuspended() {
+      return playbackSessionHandle.suspended ||
+          playbackPausedRef.value ||
+          ended.value;
+    }
+
+    void reportPlaybackFailure() {
+      if (failed.value) {
+        return;
+      }
+
+      failed.value = true;
+      reporterRef.value?.pause();
+      onFailure();
+    }
+
+    void syncWatchEvent() {
+      if (!controller.value.isInitialized || failed.value) {
+        return;
+      }
+
+      final value = controller.value;
+      if (value.hasError) {
+        reportPlaybackFailure();
+        return;
+      }
+
+      final reporter = reporterRef.value;
+      if (value.isCompleted) {
+        if (!ended.value) {
+          ended.value = true;
+          reporter?.end();
+          onEnded();
+        }
+        return;
+      }
+
+      if (!value.isPlaying || playbackSuspended()) {
+        reporter?.pause();
+        return;
+      }
+
+      reporter?.start();
+      reporter?.tick();
+    }
+
+    _useLivePlayerControllerLifecycle(
+      controller: controller,
+      initialized: initialized,
+      failed: failed,
+      ended: ended,
+      syncTimer: syncTimer,
+      reporterRef: reporterRef,
+      playbackSessionController: playbackSessionController,
+      playbackSessionHandle: playbackSessionHandle,
+      muted: muted,
+      playbackSuspended: playbackSuspended,
+      onReady: onReady,
+      reportPlaybackFailure: reportPlaybackFailure,
+      syncWatchEvent: syncWatchEvent,
+    );
+
+    useEffect(() {
+      return syncTimer.dispose;
+    }, [syncTimer]);
+
+    useEffect(() {
+      unawaited(controller.setVolume(muted ? 0 : 1));
+      return null;
+    }, [controller, muted]);
+
+    reporter?.updateLiveTokens(liveTokens);
+    playbackPausedRef.value = playbackPaused;
+    reporterRef.value = reporter;
+
+    useEffect(() {
+      final previousReporter = previousReporterRef.value;
+      if (previousReporter != null && previousReporter != reporter) {
+        previousReporter.end();
+        unawaited(previousReporter.flush());
+      }
+
+      previousReporterRef.value = reporter;
+      reporterRef.value = reporter;
+      return null;
+    }, [reporter]);
+
+    useEffect(() {
+      return () {
+        reporter?.end();
+        unawaited(reporter?.flush());
+      };
+    }, [reporter]);
+
+    useEffect(
+      () {
+        if (!initialized.value || failed.value) {
+          return null;
+        }
+
+        final playback = playbackSuspended()
+            ? controller.pause()
+            : controller.play();
+        unawaited(playback.then((_) => syncWatchEvent()));
+        return null;
+      },
+      [
+        controller,
+        initialized.value,
+        failed.value,
+        ended.value,
+        playbackPaused,
+      ],
+    );
+
+    if (!initialized.value || failed.value) {
+      return const ColoredBox(
+        color: LivePlayerScreenDesign.backgroundColor,
+      );
+    }
+
+    return _LivePlayerVideoContent(
+      controller: controller,
+      playbackValue: playbackValue,
+    );
+  }
+}
+
+String _playbackHttpHeadersKey(Map<String, String> headers) {
+  final entries = headers.entries.toList()
+    ..sort((a, b) => a.key.compareTo(b.key));
+
+  return entries.map((entry) => '${entry.key}:${entry.value}').join('\n');
+}
