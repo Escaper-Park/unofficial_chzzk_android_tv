@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unofficial_chzzk_android_tv/src/core/ui/ui.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/entities/chat.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_layer_body.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_layer_geometry.dart';
@@ -139,6 +140,67 @@ void main() {
       tester.getRect(find.byType(ListView)),
       const Rect.fromLTWH(12, 7, 96, 46),
     );
+  });
+
+  testWidgets('badge collector always shows nickname', (tester) async {
+    _setViewport(tester);
+
+    await tester.pumpWidget(
+      const _Harness(
+        chatSettings: ChatSettings(
+          useBadgeCollector: 1,
+          badgeCollectorPanelHeight: 50,
+          showNickname: 0,
+        ),
+      ),
+    );
+
+    expect(find.text('viewer'), findsNothing);
+    expect(find.text('manager'), findsOneWidget);
+  });
+
+  testWidgets('badge collector always shows badges and verified marks', (
+    tester,
+  ) async {
+    _setViewport(tester);
+
+    await tester.pumpWidget(
+      const _Harness(
+        chatSettings: ChatSettings(
+          useBadgeCollector: 2,
+          overlayChatPanelWidth: 100,
+          badgeCollectorPanelHeight: 50,
+          showNickname: 0,
+          showUserBadges: 0,
+        ),
+        messages: [
+          PlayerChatMessage(
+            source: PlayerChatMessageSource.live,
+            id: 'normal-message',
+            messageTime: 1,
+            messageTypeCode: 1,
+            content: 'normal',
+            nickname: 'viewer',
+            nicknameBadgeImageUrl: 'https://example.com/viewer-badge.png',
+          ),
+          PlayerChatMessage(
+            source: PlayerChatMessageSource.live,
+            id: 'collector-message',
+            messageTime: 2,
+            messageTypeCode: 1,
+            content: 'collector',
+            nickname: 'manager',
+            userRoleCode: 'manager',
+            verifiedMark: true,
+            nicknameBadgeImageUrl: 'https://example.com/manager-badge.png',
+            userBadgeImageUrls: ['https://example.com/user-badge.png'],
+          ),
+        ],
+      ),
+    );
+
+    expect(find.text('manager'), findsOneWidget);
+    expect(find.byType(OptimizedImage), findsNWidgets(3));
   });
 
   testWidgets('side chat with badge collector shows divider between panels', (

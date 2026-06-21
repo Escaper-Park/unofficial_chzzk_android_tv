@@ -89,7 +89,10 @@ Widget _badgeCollectorPanel({
   return PlayerChatPanel(
     showTitle: false,
     messages: playerChatBadgeCollectorMessages(messages),
-    style: style,
+    style: style.copyWith(
+      showNickname: true,
+      showUserBadges: true,
+    ),
     filterDonations: false,
   );
 }

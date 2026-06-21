@@ -87,6 +87,76 @@ void main() {
 
     _expectChatImageSlots(tester);
   });
+
+  testWidgets('user badges setting hides viewer badges only', (tester) async {
+    await tester.pumpWidget(
+      const _ChatHarness(
+        child: SizedBox(
+          width: 320,
+          height: 120,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: PlayerChatPanelStyle(
+              showPanelContainer: false,
+              showUserBadges: false,
+            ),
+            messages: [
+              PlayerChatMessage(
+                source: PlayerChatMessageSource.live,
+                id: 'message-1',
+                messageTime: 1,
+                messageTypeCode: 1,
+                nickname: 'tester',
+                content: 'hello {:smile:}',
+                verifiedMark: true,
+                nicknameBadgeImageUrl: 'https://example.com/nickname.png',
+                userBadgeImageUrls: ['https://example.com/viewer.png'],
+                emojis: {'smile': 'https://example.com/smile.png'},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(OptimizedImage), findsNWidgets(3));
+  });
+
+  testWidgets('nickname setting hides nickname marks', (tester) async {
+    await tester.pumpWidget(
+      const _ChatHarness(
+        child: SizedBox(
+          width: 320,
+          height: 120,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: PlayerChatPanelStyle(
+              showPanelContainer: false,
+              showNickname: false,
+              showUserBadges: true,
+            ),
+            messages: [
+              PlayerChatMessage(
+                source: PlayerChatMessageSource.live,
+                id: 'message-1',
+                messageTime: 1,
+                messageTypeCode: 1,
+                nickname: 'tester',
+                content: 'hello {:smile:}',
+                verifiedMark: true,
+                nicknameBadgeImageUrl: 'https://example.com/nickname.png',
+                userBadgeImageUrls: ['https://example.com/viewer.png'],
+                emojis: {'smile': 'https://example.com/smile.png'},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('tester'), findsNothing);
+    expect(find.byType(OptimizedImage), findsNWidgets(2));
+  });
 }
 
 void _expectChatImageSlots(WidgetTester tester) {

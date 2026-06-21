@@ -72,6 +72,7 @@ class PlayerChatMessageBubble extends StatelessWidget {
               metaStyle: metaStyle,
               nicknameStyle: nicknameStyle,
               showUserBadges: style.showUserBadges,
+              showNicknameMarks: style.showNickname,
             ),
             const SizedBox(height: PlayerChatPanelDesign.metaContentGap),
           ],
@@ -111,8 +112,8 @@ class PlayerChatMessageBubble extends StatelessWidget {
   bool get _hasVisibleMeta {
     return _visibleNickname != null ||
         (style.showUserBadges && message.userBadgeImageUrls.isNotEmpty) ||
-        message.nicknameBadgeImageUrl != null ||
-        message.verifiedMark;
+        (style.showNickname && message.nicknameBadgeImageUrl != null) ||
+        (style.showNickname && message.verifiedMark);
   }
 
   String? get _visibleNickname {

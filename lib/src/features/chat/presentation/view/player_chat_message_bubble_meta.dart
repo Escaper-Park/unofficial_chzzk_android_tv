@@ -7,6 +7,7 @@ class _PlayerChatMetaRow extends StatelessWidget {
     required this.metaStyle,
     required this.nicknameStyle,
     required this.showUserBadges,
+    required this.showNicknameMarks,
   });
 
   final PlayerChatMessage message;
@@ -14,6 +15,7 @@ class _PlayerChatMetaRow extends StatelessWidget {
   final TextStyle metaStyle;
   final TextStyle nicknameStyle;
   final bool showUserBadges;
+  final bool showNicknameMarks;
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +38,18 @@ class _PlayerChatMetaRow extends StatelessWidget {
             ),
             const SizedBox(width: PlayerChatPanelDesign.metaItemGap),
           ],
-        if (message.nicknameBadgeImageUrl case final imageUrl?) ...[
-          OptimizedImage.network(
-            imageUrl,
-            width: iconSize,
-            height: iconSize,
-            fit: BoxFit.contain,
-            errorFallback: const SizedBox.shrink(),
-            placeholder: const SizedBox.shrink(),
-          ),
-          const SizedBox(width: PlayerChatPanelDesign.metaItemGap),
-        ],
+        if (showNicknameMarks)
+          if (message.nicknameBadgeImageUrl case final imageUrl?) ...[
+            OptimizedImage.network(
+              imageUrl,
+              width: iconSize,
+              height: iconSize,
+              fit: BoxFit.contain,
+              errorFallback: const SizedBox.shrink(),
+              placeholder: const SizedBox.shrink(),
+            ),
+            const SizedBox(width: PlayerChatPanelDesign.metaItemGap),
+          ],
         if (nickname case final value?)
           Flexible(
             child: Text(
@@ -56,7 +59,7 @@ class _PlayerChatMetaRow extends StatelessWidget {
               style: nicknameStyle,
             ),
           ),
-        if (message.verifiedMark) ...[
+        if (showNicknameMarks && message.verifiedMark) ...[
           const SizedBox(width: PlayerChatPanelDesign.metaItemGap),
           OptimizedImage.asset(
             PlayerChatPanelDesign.verifiedMarkAsset,
