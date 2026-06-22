@@ -99,6 +99,86 @@ void main() {
     );
   });
 
+  test(
+    'jump to realtime reloads active live with fresh playback source',
+    () async {
+      final detailsByChannelId = <String, LiveDetail>{
+        'channel-a': _liveDetail(
+          liveId: 1,
+          title: 'Initial live',
+          playbackUri: 'https://example.com/initial.m3u8',
+        ),
+      };
+      final repository = _FakeLiveRepository(
+        detailsByChannelId: detailsByChannelId,
+        status: const LiveStatus(
+          title: 'Initial live',
+          status: 'OPEN',
+          concurrentUserCount: 123,
+          adult: false,
+          tags: ['initial-tag'],
+        ),
+      );
+      final bloc = _livePlayerBloc(liveRepository: repository);
+      addTearDown(bloc.close);
+
+      bloc.add(
+        const LivePlayerEvent.started(
+          initialTarget: LivePlayerInitialTarget(
+            channelId: 'channel-a',
+            liveId: 1,
+            title: 'Initial title',
+          ),
+        ),
+      );
+
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlot.status == LivePlayerSlotStatus.ready &&
+            state.activeSlot.playbackUri ==
+                Uri.parse('https://example.com/initial.m3u8'),
+      );
+
+      detailsByChannelId['channel-a'] = _liveDetail(
+        liveId: 2,
+        title: 'Fresh live',
+        playbackUri: 'https://example.com/fresh.m3u8',
+      );
+      repository.status = const LiveStatus(
+        title: 'Fresh live',
+        status: 'OPEN',
+        concurrentUserCount: 456,
+        adult: false,
+        tags: ['fresh-tag'],
+      );
+      bloc.add(const LivePlayerEvent.jumpToRealtimeRequested());
+
+      final loading = await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlot.status == LivePlayerSlotStatus.loadingSource &&
+            state.activeSlot.channelId == 'channel-a',
+      );
+      expect(loading.activeSlot.playbackUri, isNull);
+      expect(loading.activeSlot.channelName, 'Channel A');
+      expect(loading.activeSlot.title, 'Initial live');
+      expect(loading.activeSlot.concurrentUserCount, 123);
+      expect(loading.activeSlot.tags, ['initial-tag']);
+
+      final refreshed = await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlot.status == LivePlayerSlotStatus.ready &&
+            state.activeSlot.playbackUri ==
+                Uri.parse('https://example.com/fresh.m3u8'),
+      );
+
+      expect(refreshed.activeSlot.liveId, 2);
+      expect(refreshed.activeSlot.title, 'Fresh live');
+      expect(refreshed.activeSlot.concurrentUserCount, 456);
+      expect(refreshed.activeSlot.tags, ['fresh-tag']);
+      expect(repository.getLiveDetailCalls, ['channel-a', 'channel-a']);
+    },
+  );
+
   test('started applies live settings to initial playback source', () async {
     final repository = _FakeLiveRepository(
       detail: _liveDetail(
@@ -2857,6 +2937,7 @@ class _FakeLiveRepository implements LiveRepository {
   LiveStatus? status;
   Completer<LiveStatus>? pendingStatus;
   final LivePage livePage;
+  final getLiveDetailCalls = <String>[];
   final getLiveStatusCalls =
       <({String channelId, bool? includePlayerRecommendContent})>[];
   final watchEventCalls =
@@ -2877,6 +2958,7 @@ class _FakeLiveRepository implements LiveRepository {
 
   @override
   Future<LiveDetail> getLiveDetail({required String channelId}) async {
+    getLiveDetailCalls.add(channelId);
     final detail = detailsByChannelId[channelId] ?? this.detail;
     if (detail == null) {
       throw StateError('missing detail');

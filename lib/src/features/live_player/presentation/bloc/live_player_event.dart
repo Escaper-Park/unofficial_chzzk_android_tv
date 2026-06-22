@@ -8,6 +8,9 @@ sealed class LivePlayerEvent with _$LivePlayerEvent {
 
   const factory LivePlayerEvent.retryRequested() = _RetryRequested;
 
+  const factory LivePlayerEvent.jumpToRealtimeRequested() =
+      _JumpToRealtimeRequested;
+
   const factory LivePlayerEvent.controlsRequested() = _ControlsRequested;
 
   const factory LivePlayerEvent.controlsClosed() = _ControlsClosed;

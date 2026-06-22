@@ -16,6 +16,7 @@ Widget? _activeMenuPanel({
   required bool playbackPaused,
   required bool muted,
   required ValueChanged<bool> onPlaybackPausedChanged,
+  required VoidCallback onRealtimePressed,
   required ValueChanged<bool> onMutedChanged,
   required VoidCallback onInteraction,
   required VoidCallback onCloseMenu,
@@ -42,6 +43,7 @@ Widget? _activeMenuPanel({
       anchorLink: primaryLinks.play,
       playbackPaused: playbackPaused,
       onPlaybackPausedChanged: onPlaybackPausedChanged,
+      onRealtimePressed: onRealtimePressed,
       onDismiss: onCloseMenu,
     ),
     _LiveOverlayMenu.chatMode => LiveOverlayChatModeMenu(

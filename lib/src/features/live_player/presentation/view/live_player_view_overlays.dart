@@ -21,6 +21,11 @@ Widget? _livePlayerOverlayFor({
       playbackPaused: playbackPaused,
       muted: muted,
       onPlaybackPausedChanged: onPlaybackPausedChanged,
+      onRealtimePressed: () {
+        context.read<LivePlayerBloc>().add(
+          const LivePlayerEvent.jumpToRealtimeRequested(),
+        );
+      },
       onMutedChanged: onMutedChanged,
       onInteraction: onControlsInteraction,
       modalDismissSerial: modalDismissSerial,

@@ -213,6 +213,58 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
+  testWidgets('realtime menu resumes playback and requests reload', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(960, 540);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controlsNode = FocusScopeNode();
+    addTearDown(controlsNode.dispose);
+    final pausedValues = <bool>[];
+    var realtimePressCount = 0;
+    var modalOpen = false;
+
+    await tester.pumpWidget(
+      _OverlayHarness(
+        child: SizedBox(
+          width: 960,
+          height: 540,
+          child: LivePlayerControlsOverlay(
+            state: _playingState(),
+            controlsNode: controlsNode,
+            playbackPaused: true,
+            muted: false,
+            onPlaybackPausedChanged: pausedValues.add,
+            onRealtimePressed: () => realtimePressCount += 1,
+            onMutedChanged: (_) {},
+            onInteraction: () {},
+            modalDismissSerial: 0,
+            onModalVisibilityChanged: (visible) => modalOpen = visible,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.byIcon(Icons.play_arrow));
+    await tester.pump();
+    expect(find.text(LivePlayerScreenString.overlayRealtime), findsOneWidget);
+    expect(modalOpen, isTrue);
+
+    await tester.tap(find.text(LivePlayerScreenString.overlayRealtime));
+    await tester.pump();
+
+    expect(pausedValues, [false]);
+    expect(realtimePressCount, 1);
+    expect(find.text(LivePlayerScreenString.overlayRealtime), findsNothing);
+    expect(modalOpen, isFalse);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   testWidgets('live elapsed info ticks from a localized timer', (
     tester,
   ) async {
