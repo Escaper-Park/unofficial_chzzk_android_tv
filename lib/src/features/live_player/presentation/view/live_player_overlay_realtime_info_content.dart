@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/ui/components/primitives/primitives.dart';
 import '../../../../core/ui/composites/media_cards/media_cards.dart';
 import '../../../player_shared/presentation/overlay_controls/tv_player_overlay_controls_design.dart';
 
@@ -12,7 +11,7 @@ class LiveOverlayRealtimeInfoContent extends StatelessWidget {
     this.viewerCountText,
   });
 
-  final List<String> tags;
+  final List<Widget> tags;
   final String? elapsedText;
   final String? viewerCountText;
 
@@ -39,21 +38,16 @@ class LiveOverlayRealtimeInfoContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (tags.isNotEmpty)
-            Flexible(
+            Expanded(
               child: TvMediaTagStrip(
-                tags: [
-                  for (final tag in tags)
-                    TvTag(
-                      text: tag,
-                      size: TvTagSize.small,
-                    ),
-                ],
+                tags: tags,
               ),
             ),
           if (metrics.isNotEmpty) ...[
             if (tags.isNotEmpty)
-              const SizedBox(width: TvPlayerOverlayControlsDesign.liveInfoGap),
-            const Spacer(),
+              const SizedBox(width: TvPlayerOverlayControlsDesign.liveInfoGap)
+            else
+              const Spacer(),
             _LiveOverlayMetricRow(metrics: metrics),
           ],
         ],

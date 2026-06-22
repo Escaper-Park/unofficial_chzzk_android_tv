@@ -72,6 +72,14 @@ abstract class LivePlayerSlotState with _$LivePlayerSlotState {
     return liveStatus?.categoryValue ?? detail?.categoryValue;
   }
 
+  String? get watchPartyTag {
+    return liveStatus?.watchPartyTag ?? detail?.watchPartyTag;
+  }
+
+  String? get watchPartyType {
+    return liveStatus?.watchPartyType ?? detail?.watchPartyType;
+  }
+
   List<String> get liveTokens {
     return liveStatus?.liveTokens ?? const <String>[];
   }

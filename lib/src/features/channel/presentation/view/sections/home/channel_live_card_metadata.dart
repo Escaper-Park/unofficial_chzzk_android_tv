@@ -6,10 +6,10 @@ import '../../../../../live/domain/entities/live_feed.dart';
 import '../../../../../live/presentation/live_card_string.dart';
 import '../../../../../live/presentation/view/shared/live_card_elapsed_ticker.dart';
 import '../../../../../live/presentation/view/shared/live_card_formatters.dart';
+import '../../../../../live/presentation/view/shared/live_tag_badges.dart';
 import '../../../channel_screen_design.dart';
 
 part 'channel_live_card_stats.dart';
-part 'channel_live_card_tags.dart';
 
 class ChannelLiveMetadata extends StatelessWidget {
   const ChannelLiveMetadata({
@@ -50,39 +50,11 @@ class ChannelLiveMetadata extends StatelessWidget {
   }
 
   List<Widget> _buildTags() {
-    final watchPartyLabel = _watchPartyLabelFor(item.watchPartyType);
-    final watchPartyTag = watchPartyLabel == null
-        ? null
-        : trimmedLiveCardTextOrNull(item.watchPartyTag);
-
-    return [
-      if (hasLiveCardText(item.categoryValue))
-        TvMediaBadge(
-          text: item.categoryValue!.trim(),
-          backgroundColor: TvMediaCardDesign.tagBackgroundColor,
-        ),
-      if (watchPartyLabel != null) ...[
-        TvMediaBadge(
-          text: watchPartyLabel,
-          outlined: true,
-          borderColor: AppColorTokens.brandColor,
-          textColor: AppColorTokens.brandColor,
-        ),
-        if (watchPartyTag != null)
-          TvMediaBadge(
-            text: watchPartyTag,
-            outlined: true,
-            borderColor: AppColorTokens.brandColor,
-            textColor: AppColorTokens.brandColor,
-          ),
-      ],
-      for (final tag in _regularTagTexts(item.tags, watchPartyTag))
-        TvMediaBadge(
-          text: tag,
-          outlined: true,
-          borderColor: TvMediaCardDesign.tagOutlineColor,
-          textColor: AppColorTokens.neutral100,
-        ),
-    ];
+    return buildLiveTagBadges(
+      categoryValue: item.categoryValue,
+      watchPartyTag: item.watchPartyTag,
+      watchPartyType: item.watchPartyType,
+      tags: item.tags,
+    );
   }
 }

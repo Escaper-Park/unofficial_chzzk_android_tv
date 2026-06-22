@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../../live/presentation/view/shared/live_tag_badges.dart';
 import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_ui_mapper.dart';
 import 'live_overlay_now_ticker.dart';
@@ -19,7 +20,12 @@ class LiveOverlayRealtimeInfo extends HookWidget {
     final now = useLiveOverlayNowTicker();
 
     return LiveOverlayRealtimeInfoContent(
-      tags: slot.tags,
+      tags: buildLiveTagBadges(
+        categoryValue: slot.categoryValue,
+        watchPartyTag: slot.watchPartyTag,
+        watchPartyType: slot.watchPartyType,
+        tags: slot.tags,
+      ),
       viewerCountText: LivePlayerScreenUiMapper.viewerCountText(
         slot.concurrentUserCount,
       ),
