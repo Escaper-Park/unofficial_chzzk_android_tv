@@ -7,8 +7,6 @@ final class TvRailDesign {
   static const leadingInset = 58.0;
   static const trailingInset = 58.0;
   static const scrollOffsetTolerance = 0.5;
-  static const scrollDuration = Duration(milliseconds: 150);
-  static const scrollCurve = Curves.easeOut;
   static const padding = EdgeInsets.symmetric(horizontal: leadingInset);
 
   static double targetOffsetForIndex({

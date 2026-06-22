@@ -1312,10 +1312,10 @@ void main() {
 
 double _labelOpacity(WidgetTester tester, String label) {
   return tester
-      .widget<AnimatedOpacity>(
+      .widget<Opacity>(
         find.ancestor(
           of: find.text(label),
-          matching: find.byType(AnimatedOpacity),
+          matching: find.byType(Opacity),
         ),
       )
       .opacity;
@@ -1400,7 +1400,7 @@ double _actionLabelTop(WidgetTester tester, String label) {
         find.ancestor(
           of: find.ancestor(
             of: find.text(label).first,
-            matching: find.byType(AnimatedOpacity),
+            matching: find.byType(Opacity),
           ),
           matching: find.byWidgetPredicate(
             (widget) =>

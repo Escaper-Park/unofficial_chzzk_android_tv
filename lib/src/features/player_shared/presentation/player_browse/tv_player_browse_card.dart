@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../../core/design/design.dart';
 import '../../../../core/tv/input/input.dart';
 import '../../../../core/ui/components/cards/cards.dart';
-import '../../../../core/ui/components/primitives/primitives.dart';
 import '../../../../core/ui/composites/media_cards/media_cards.dart';
 import 'tv_player_browse_card_info.dart';
 import 'tv_player_browse_overlay_design.dart';
@@ -31,7 +30,6 @@ class TvPlayerBrowseCard extends HookWidget {
     this.liveBadgeLabel,
     this.vodPublishDateLabel,
     this.vodDurationLabel,
-    this.progress,
     this.restrictionAssetPath,
     this.showAgeRestrictionOverlay = false,
     this.autofocus = false,
@@ -50,7 +48,6 @@ class TvPlayerBrowseCard extends HookWidget {
   final String? liveBadgeLabel;
   final String? vodPublishDateLabel;
   final String? vodDurationLabel;
-  final double? progress;
   final String? restrictionAssetPath;
   final bool showAgeRestrictionOverlay;
   final bool autofocus;
@@ -81,7 +78,7 @@ class TvPlayerBrowseCard extends HookWidget {
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         shape: shape,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.hardEdge,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -104,7 +101,6 @@ class TvPlayerBrowseCard extends HookWidget {
                 liveBadgeLabel: liveBadgeLabel,
                 vodPublishDateLabel: vodPublishDateLabel,
                 vodDurationLabel: vodDurationLabel,
-                progress: progress,
                 restrictionAssetPath: restrictionAssetPath,
                 showAgeRestrictionOverlay: showAgeRestrictionOverlay,
               ),

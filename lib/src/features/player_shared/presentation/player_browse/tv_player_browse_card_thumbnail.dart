@@ -12,7 +12,6 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
     required this.liveBadgeLabel,
     required this.vodPublishDateLabel,
     required this.vodDurationLabel,
-    required this.progress,
     required this.restrictionAssetPath,
     required this.showAgeRestrictionOverlay,
   });
@@ -27,7 +26,6 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
   final String? liveBadgeLabel;
   final String? vodPublishDateLabel;
   final String? vodDurationLabel;
-  final double? progress;
   final String? restrictionAssetPath;
   final bool showAgeRestrictionOverlay;
 
@@ -87,17 +85,6 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
             ),
           },
         ),
-        if (progress case final value?)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: TvProgressBar(
-              value: value.clamp(0, 1).toDouble(),
-              trackColor: TvPlayerBrowseOverlayDesign.progressTrackColor,
-              progressColor: TvPlayerBrowseOverlayDesign.progressValueColor,
-            ),
-          ),
       ],
     );
   }

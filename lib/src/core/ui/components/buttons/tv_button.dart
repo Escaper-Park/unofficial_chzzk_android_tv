@@ -28,6 +28,7 @@ class TvButton extends HookWidget {
     this.selected = false,
     this.enabled = true,
     this.guardActivations = true,
+    this.animateFocus = true,
   }) : iconButtonSize = null;
 
   const TvButton.icon({
@@ -42,6 +43,7 @@ class TvButton extends HookWidget {
     this.selected = false,
     this.enabled = true,
     this.guardActivations = true,
+    this.animateFocus = true,
   }) : text = null;
 
   final String? text;
@@ -55,6 +57,7 @@ class TvButton extends HookWidget {
   final bool selected;
   final bool enabled;
   final bool guardActivations;
+  final bool animateFocus;
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +84,28 @@ class TvButton extends HookWidget {
       focused: focused,
     );
 
+    final button = text == null
+        ? _buildIconButton(
+            focusNode: focusNode,
+            design: design,
+            style: style,
+            onPressed: onPressed,
+          )
+        : _buildLabelButton(
+            focusNode: focusNode,
+            design: design,
+            style: style,
+            onPressed: onPressed,
+          );
+
+    if (!animateFocus) {
+      return button;
+    }
+
     return AnimatedScale(
       scale: focused && enabled ? design.focusedScale : 1,
       duration: TvButtonDesign.focusScaleDuration,
-      child: text == null
-          ? _buildIconButton(
-              focusNode: focusNode,
-              design: design,
-              style: style,
-              onPressed: onPressed,
-            )
-          : _buildLabelButton(
-              focusNode: focusNode,
-              design: design,
-              style: style,
-              onPressed: onPressed,
-            ),
+      child: button,
     );
   }
 

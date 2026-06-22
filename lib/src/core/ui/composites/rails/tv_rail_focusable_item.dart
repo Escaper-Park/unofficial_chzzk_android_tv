@@ -68,12 +68,6 @@ class _TvRailFocusableItem extends StatelessWidget {
       return;
     }
 
-    unawaited(
-      controller.animateTo(
-        targetOffset,
-        duration: TvRailDesign.scrollDuration,
-        curve: TvRailDesign.scrollCurve,
-      ),
-    );
+    controller.jumpTo(targetOffset);
   }
 }

@@ -89,7 +89,6 @@ class _VodPlayerBrowseCard extends StatelessWidget {
       vodDurationLabel: formatVodCardElapsed(
         Duration(seconds: vod.duration),
       ),
-      progress: _watchProgress(vod),
       restrictionAssetPath: _restrictionAssetPath(vod, thumbnailUrl),
       showAgeRestrictionOverlay: vod.adult,
       autofocus: autofocus,
@@ -144,19 +143,6 @@ class _VodPlayerBrowsePlaceholder extends StatelessWidget {
       ),
     );
   }
-}
-
-double? _watchProgress(Vod vod) {
-  final timeline = vod.watchTimeline;
-  if (timeline == null) {
-    return null;
-  }
-
-  if (vod.duration <= 0) {
-    return 0;
-  }
-
-  return (timeline / vod.duration).clamp(0, 1).toDouble();
 }
 
 String? _restrictionAssetPath(Vod vod, String? thumbnailUrl) {
