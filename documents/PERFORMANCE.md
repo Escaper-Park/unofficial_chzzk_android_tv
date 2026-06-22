@@ -26,4 +26,11 @@
     <img src="../images/performance/performance_004.png" width="800" >
 </p>
 
-`설정-채팅`에서 사용자 배지 기능을 꺼서 기기에 부담을 줄여주세요.
+`설정-채팅`에서 `사용자 배지` 기능을 꺼서 기기에 부담을 줄여주세요.
+
+## 기타
+<p align="left">
+    <img src="../images/performance/performance_005.png" width="800" >
+</p>
+
+`설정-일반`에서 `몰입형 추천`을 꺼주세요.
