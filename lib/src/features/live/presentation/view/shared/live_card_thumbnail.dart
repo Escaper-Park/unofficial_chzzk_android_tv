@@ -26,6 +26,7 @@ class LiveCardThumbnail extends StatelessWidget {
     final thumbnailUrl = liveCardThumbnailUrl(
       thumbnailImageUrl: item.thumbnailImageUrl,
       defaultThumbnailImageUrl: item.defaultThumbnailImageUrl,
+      now: now,
     );
 
     return Stack(
