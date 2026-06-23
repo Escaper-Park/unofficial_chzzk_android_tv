@@ -189,7 +189,6 @@ void main() {
               imageUrl: null,
               vodPublishDateLabel: '2026.06.17',
               vodDurationLabel: '12:34',
-              progress: 0.5,
               onPressed: () {},
             ),
           ],
@@ -206,7 +205,7 @@ void main() {
     expect(find.text('12:34'), findsOneWidget);
     expect(find.byIcon(Icons.calendar_month_rounded), findsOneWidget);
     expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
-    expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsNothing);
   });
 }
 

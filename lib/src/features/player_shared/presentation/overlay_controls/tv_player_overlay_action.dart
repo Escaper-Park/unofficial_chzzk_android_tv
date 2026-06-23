@@ -42,9 +42,8 @@ class TvPlayerOverlayAction extends HookWidget {
       width: width,
       height: TvPlayerOverlayControlsDesign.actionLabelHeight,
       child: Center(
-        child: AnimatedOpacity(
+        child: Opacity(
           opacity: focusNode.hasFocus ? 1 : 0,
-          duration: TvPlayerOverlayControlsDesign.labelFadeDuration,
           child: OverflowBox(
             minWidth: 0,
             maxWidth: double.infinity,
@@ -84,6 +83,7 @@ class TvPlayerOverlayAction extends HookWidget {
             autofocus: autofocus,
             selected: selected,
             enabled: enabled,
+            animateFocus: false,
             onPressed: onPressed,
           ),
         ],

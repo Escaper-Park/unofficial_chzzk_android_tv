@@ -14,12 +14,14 @@ class LiveOverlayPlaybackMenu extends StatelessWidget {
     required this.anchorLink,
     required this.playbackPaused,
     required this.onPlaybackPausedChanged,
+    required this.onRealtimePressed,
     required this.onDismiss,
   });
 
   final LayerLink anchorLink;
   final bool playbackPaused;
   final ValueChanged<bool> onPlaybackPausedChanged;
+  final VoidCallback onRealtimePressed;
   final VoidCallback onDismiss;
 
   @override
@@ -56,6 +58,7 @@ class LiveOverlayPlaybackMenu extends StatelessWidget {
             showRadio: false,
             onPressed: () {
               onPlaybackPausedChanged(false);
+              onRealtimePressed();
               onDismiss();
             },
           ),

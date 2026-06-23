@@ -10,7 +10,6 @@ void main() {
     expect(TvRailDesign.leadingInset, 58);
     expect(TvRailDesign.trailingInset, 58);
     expect(TvRailDesign.scrollOffsetTolerance, 0.5);
-    expect(TvRailDesign.scrollDuration, const Duration(milliseconds: 150));
     expect(TvRailDesign.padding, const EdgeInsets.symmetric(horizontal: 58));
     expect(
       TvRailDesign.targetOffsetForIndex(
@@ -144,71 +143,69 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.pump(TvRailDesign.scrollDuration);
 
     expect(controller.offset, greaterThan(0));
   });
 
-  testWidgets('rail traversal focus does not apply default ensureVisible', (
-    tester,
-  ) async {
-    final node = FocusScopeNode();
-    final controller = ScrollController();
-    final itemNodes = List.generate(
-      8,
-      (index) => FocusNode(debugLabel: 'item $index'),
-    );
-    addTearDown(node.dispose);
-    addTearDown(controller.dispose);
-    addTearDown(() {
-      for (final itemNode in itemNodes) {
-        itemNode.dispose();
-      }
-    });
+  testWidgets(
+    'rail traversal focus scrolls immediately without ensureVisible',
+    (
+      tester,
+    ) async {
+      final node = FocusScopeNode();
+      final controller = ScrollController();
+      final itemNodes = List.generate(
+        8,
+        (index) => FocusNode(debugLabel: 'item $index'),
+      );
+      addTearDown(node.dispose);
+      addTearDown(controller.dispose);
+      addTearDown(() {
+        for (final itemNode in itemNodes) {
+          itemNode.dispose();
+        }
+      });
 
-    await tester.pumpWidget(
-      _RailHarness(
-        child: TvRail(
-          node: node,
-          controller: controller,
-          itemCount: itemNodes.length,
-          itemExtent: 124,
-          itemBuilder: (context, index) {
-            return Focus(
-              focusNode: itemNodes[index],
-              child: Text('Item $index'),
-            );
-          },
+      await tester.pumpWidget(
+        _RailHarness(
+          child: TvRail(
+            node: node,
+            controller: controller,
+            itemCount: itemNodes.length,
+            itemExtent: 124,
+            itemBuilder: (context, index) {
+              return Focus(
+                focusNode: itemNodes[index],
+                child: Text('Item $index'),
+              );
+            },
+          ),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    final traversalGroup = tester.widget<FocusTraversalGroup>(
-      find.descendant(
-        of: find.byType(TvRail),
-        matching: find.byType(FocusTraversalGroup),
-      ),
-    );
+      final traversalGroup = tester.widget<FocusTraversalGroup>(
+        find.descendant(
+          of: find.byType(TvRail),
+          matching: find.byType(FocusTraversalGroup),
+        ),
+      );
 
-    traversalGroup.policy.requestFocusCallback(
-      itemNodes[3],
-      alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
-    );
+      traversalGroup.policy.requestFocusCallback(
+        itemNodes[3],
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
 
-    expect(controller.offset, 0);
+      expect(controller.offset, 0);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(itemNodes[3].hasFocus, isTrue);
-    expect(controller.offset, 0);
+      expect(itemNodes[3].hasFocus, isTrue);
+      expect(controller.offset, greaterThan(0));
+    },
+  );
 
-    await tester.pump(TvRailDesign.scrollDuration);
-
-    expect(controller.offset, 0);
-  });
-
-  testWidgets('rail keeps offset when focused tail cannot scroll further', (
+  testWidgets('rail clamps focused tail scroll to max extent', (
     tester,
   ) async {
     final node = FocusScopeNode();
@@ -234,14 +231,14 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.pump(TvRailDesign.scrollDuration);
-
-    final tailOffset = controller.offset;
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-    await tester.pump(TvRailDesign.scrollDuration);
+    await tester.pump();
 
-    expect(controller.offset, tailOffset);
+    expect(
+      controller.offset,
+      moreOrLessEquals(controller.position.maxScrollExtent),
+    );
   });
 
   testWidgets('rail left traversal keeps focus on actionable child', (
@@ -270,12 +267,12 @@ void main() {
     await tester.pump();
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-    await tester.pump(TvRailDesign.scrollDuration);
+    await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pump();
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-    await tester.pump(TvRailDesign.scrollDuration);
+    await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pump();
 

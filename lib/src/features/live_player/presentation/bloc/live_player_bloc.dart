@@ -89,6 +89,7 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
 
     on<_Started>(_onStarted);
     on<_RetryRequested>(_onRetryRequested);
+    on<_JumpToRealtimeRequested>(_onJumpToRealtimeRequested);
     on<_ControlsRequested>(_onControlsRequested);
     on<_ControlsClosed>(_onControlsClosed);
     on<_BrowseRequested>(_onBrowseRequested);

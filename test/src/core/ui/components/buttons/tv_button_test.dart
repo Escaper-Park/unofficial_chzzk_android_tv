@@ -226,6 +226,21 @@ void main() {
     expect(tester.getSize(find.byType(IconButton)), const Size(40, 40));
   });
 
+  testWidgets('button can skip focus scale animation', (tester) async {
+    await tester.pumpWidget(
+      _ButtonHarness(
+        child: TvButton.icon(
+          icon: Icons.search,
+          onPressed: () {},
+          animateFocus: false,
+        ),
+      ),
+    );
+
+    expect(find.byType(IconButton), findsOneWidget);
+    expect(find.byType(AnimatedScale), findsNothing);
+  });
+
   testWidgets('disabled button does not call action', (tester) async {
     var pressed = 0;
 

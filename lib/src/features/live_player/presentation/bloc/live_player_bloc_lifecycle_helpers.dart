@@ -24,6 +24,20 @@ extension _LivePlayerBlocLifecycleHelpers on LivePlayerBloc {
     _RetryRequested event,
     Emitter<LivePlayerState> emit,
   ) async {
+    await _reloadActiveTarget(emit, preserveMetadataWhileLoading: false);
+  }
+
+  Future<void> _onJumpToRealtimeRequested(
+    _JumpToRealtimeRequested event,
+    Emitter<LivePlayerState> emit,
+  ) async {
+    await _reloadActiveTarget(emit, preserveMetadataWhileLoading: true);
+  }
+
+  Future<void> _reloadActiveTarget(
+    Emitter<LivePlayerState> emit, {
+    required bool preserveMetadataWhileLoading,
+  }) async {
     final slot = state.activeSlot;
     final channelId = slot.channelId;
     if (channelId == null) {
@@ -45,6 +59,7 @@ extension _LivePlayerBlocLifecycleHelpers on LivePlayerBloc {
         title: slot.fallbackTitle,
         thumbnailImageUrl: slot.fallbackThumbnailImageUrl,
       ),
+      preserveMetadataWhileLoading: preserveMetadataWhileLoading,
     );
   }
 }

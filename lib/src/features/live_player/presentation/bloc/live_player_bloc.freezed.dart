@@ -54,6 +54,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
     TResult Function(_RetryRequested value)? retryRequested,
+    TResult Function(_JumpToRealtimeRequested value)? jumpToRealtimeRequested,
     TResult Function(_ControlsRequested value)? controlsRequested,
     TResult Function(_ControlsClosed value)? controlsClosed,
     TResult Function(_BrowseRequested value)? browseRequested,
@@ -94,6 +95,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that);
       case _RetryRequested() when retryRequested != null:
         return retryRequested(_that);
+      case _JumpToRealtimeRequested() when jumpToRealtimeRequested != null:
+        return jumpToRealtimeRequested(_that);
       case _ControlsRequested() when controlsRequested != null:
         return controlsRequested(_that);
       case _ControlsClosed() when controlsClosed != null:
@@ -175,6 +178,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
     required TResult Function(_RetryRequested value) retryRequested,
+    required TResult Function(_JumpToRealtimeRequested value)
+    jumpToRealtimeRequested,
     required TResult Function(_ControlsRequested value) controlsRequested,
     required TResult Function(_ControlsClosed value) controlsClosed,
     required TResult Function(_BrowseRequested value) browseRequested,
@@ -219,6 +224,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that);
       case _RetryRequested():
         return retryRequested(_that);
+      case _JumpToRealtimeRequested():
+        return jumpToRealtimeRequested(_that);
       case _ControlsRequested():
         return controlsRequested(_that);
       case _ControlsClosed():
@@ -292,6 +299,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Started value)? started,
     TResult? Function(_RetryRequested value)? retryRequested,
+    TResult? Function(_JumpToRealtimeRequested value)? jumpToRealtimeRequested,
     TResult? Function(_ControlsRequested value)? controlsRequested,
     TResult? Function(_ControlsClosed value)? controlsClosed,
     TResult? Function(_BrowseRequested value)? browseRequested,
@@ -332,6 +340,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that);
       case _RetryRequested() when retryRequested != null:
         return retryRequested(_that);
+      case _JumpToRealtimeRequested() when jumpToRealtimeRequested != null:
+        return jumpToRealtimeRequested(_that);
       case _ControlsRequested() when controlsRequested != null:
         return controlsRequested(_that);
       case _ControlsClosed() when controlsClosed != null:
@@ -412,6 +422,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(LivePlayerInitialTarget? initialTarget)? started,
     TResult Function()? retryRequested,
+    TResult Function()? jumpToRealtimeRequested,
     TResult Function()? controlsRequested,
     TResult Function()? controlsClosed,
     TResult Function(bool isSignedIn)? browseRequested,
@@ -450,6 +461,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that.initialTarget);
       case _RetryRequested() when retryRequested != null:
         return retryRequested();
+      case _JumpToRealtimeRequested() when jumpToRealtimeRequested != null:
+        return jumpToRealtimeRequested();
       case _ControlsRequested() when controlsRequested != null:
         return controlsRequested();
       case _ControlsClosed() when controlsClosed != null:
@@ -531,6 +544,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(LivePlayerInitialTarget? initialTarget) started,
     required TResult Function() retryRequested,
+    required TResult Function() jumpToRealtimeRequested,
     required TResult Function() controlsRequested,
     required TResult Function() controlsClosed,
     required TResult Function(bool isSignedIn) browseRequested,
@@ -569,6 +583,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that.initialTarget);
       case _RetryRequested():
         return retryRequested();
+      case _JumpToRealtimeRequested():
+        return jumpToRealtimeRequested();
       case _ControlsRequested():
         return controlsRequested();
       case _ControlsClosed():
@@ -642,6 +658,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(LivePlayerInitialTarget? initialTarget)? started,
     TResult? Function()? retryRequested,
+    TResult? Function()? jumpToRealtimeRequested,
     TResult? Function()? controlsRequested,
     TResult? Function()? controlsClosed,
     TResult? Function(bool isSignedIn)? browseRequested,
@@ -679,6 +696,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return started(_that.initialTarget);
       case _RetryRequested() when retryRequested != null:
         return retryRequested();
+      case _JumpToRealtimeRequested() when jumpToRealtimeRequested != null:
+        return jumpToRealtimeRequested();
       case _ControlsRequested() when controlsRequested != null:
         return controlsRequested();
       case _ControlsClosed() when controlsClosed != null:
@@ -824,6 +843,26 @@ class _RetryRequested implements LivePlayerEvent {
   @override
   String toString() {
     return 'LivePlayerEvent.retryRequested()';
+  }
+}
+
+/// @nodoc
+
+class _JumpToRealtimeRequested implements LivePlayerEvent {
+  const _JumpToRealtimeRequested();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _JumpToRealtimeRequested);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'LivePlayerEvent.jumpToRealtimeRequested()';
   }
 }
 

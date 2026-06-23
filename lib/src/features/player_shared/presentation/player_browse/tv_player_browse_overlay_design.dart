@@ -40,8 +40,6 @@ abstract final class TvPlayerBrowseOverlayDesign {
   static const liveBadgeBackgroundColor = Color.fromRGBO(46, 48, 51, 0.68);
   static const badgeBorderColor = Color.fromRGBO(255, 255, 255, 0.12);
   static const badgeForegroundColor = Color(0xFFE6E6E6);
-  static const progressTrackColor = Color.fromRGBO(255, 255, 255, 0.20);
-  static const progressValueColor = AppColorTokens.neutral100;
 
   static double bandHeight(TvCardWidth width) {
     return containerHeight(width) + verticalPadding * 2;

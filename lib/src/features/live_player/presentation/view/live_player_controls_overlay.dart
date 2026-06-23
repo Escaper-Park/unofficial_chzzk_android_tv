@@ -35,6 +35,7 @@ class LivePlayerControlsOverlay extends HookWidget {
     required this.playbackPaused,
     required this.muted,
     required this.onPlaybackPausedChanged,
+    this.onRealtimePressed,
     required this.onMutedChanged,
     required this.onInteraction,
     required this.modalDismissSerial,
@@ -46,6 +47,7 @@ class LivePlayerControlsOverlay extends HookWidget {
   final bool playbackPaused;
   final bool muted;
   final ValueChanged<bool> onPlaybackPausedChanged;
+  final VoidCallback? onRealtimePressed;
   final ValueChanged<bool> onMutedChanged;
   final VoidCallback onInteraction;
   final int modalDismissSerial;
@@ -165,6 +167,7 @@ class LivePlayerControlsOverlay extends HookWidget {
               onInteraction();
               onPlaybackPausedChanged(value);
             },
+            onRealtimePressed: onRealtimePressed ?? () {},
             onMutedChanged: (value) {
               onInteraction();
               onMutedChanged(value);

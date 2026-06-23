@@ -5,6 +5,7 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
     Emitter<LivePlayerState> emit,
     LivePlayerInitialTarget target, {
     String? slotId,
+    bool preserveMetadataWhileLoading = false,
   }) async {
     final targetSlotId = slotId ?? state.activeSlotId;
     final targetSlot = state.slotById(targetSlotId);
@@ -30,8 +31,8 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
       liveId: target.liveId,
       fallbackTitle: target.title,
       fallbackThumbnailImageUrl: target.thumbnailImageUrl,
-      detail: null,
-      liveStatus: null,
+      detail: preserveMetadataWhileLoading ? targetSlot.detail : null,
+      liveStatus: preserveMetadataWhileLoading ? targetSlot.liveStatus : null,
       playbackUri: null,
       availableResolutionIndexes: LivePlaybackResolutionOptions.allIndexes,
       playbackLatencyIndex: null,
@@ -45,7 +46,9 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
           entrySettings.liveSettings.multiviewScreenModeIndex,
         ),
         channelMyInfo: targetSlotId == state.activeSlotId
-            ? null
+            ? preserveMetadataWhileLoading
+                  ? state.channelMyInfo
+                  : null
             : state.channelMyInfo,
         slots: [
           for (final current in state.slots)
