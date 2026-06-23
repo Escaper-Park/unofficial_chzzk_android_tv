@@ -159,7 +159,15 @@ void main() {
       final thumbnail = tester.widget<TvMediaThumbnail>(
         find.byType(TvMediaThumbnail),
       );
-      expect(thumbnail.imageUrl, 'https://example.com/live.png');
+      final thumbnailUrl = Uri.parse(thumbnail.imageUrl!);
+      expect(
+        '${thumbnailUrl.origin}${thumbnailUrl.path}',
+        'https://example.com/live.png',
+      );
+      expect(
+        int.parse(thumbnailUrl.queryParameters['date']!) % 30000,
+        0,
+      );
       expect(thumbnail.restrictionAssetPath, isNull);
       expect(thumbnail.showAgeRestrictionOverlay, isTrue);
     },
