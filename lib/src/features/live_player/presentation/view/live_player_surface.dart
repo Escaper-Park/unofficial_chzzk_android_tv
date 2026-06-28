@@ -109,6 +109,15 @@ class LivePlayerSurface extends StatelessWidget {
               playbackUri: playbackUri,
             ),
           );
+          final channelId = slot.channelId;
+          if (channelId != null) {
+            bloc.add(
+              LivePlayerEvent.liveStatusRefreshRequested(
+                slotId: slot.slotId,
+                channelId: channelId,
+              ),
+            );
+          }
         },
         onFailure: () {
           bloc.add(

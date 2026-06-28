@@ -31,8 +31,9 @@ final class LivePlayerEndedStatusCheckTracker {
   void start({
     required String slotId,
     required Uri playbackUri,
+    int initialAttempts = 0,
   }) {
-    _checks[slotId] = (playbackUri: playbackUri, attempts: 0);
+    _checks[slotId] = (playbackUri: playbackUri, attempts: initialAttempts);
   }
 
   void clear(String slotId) {

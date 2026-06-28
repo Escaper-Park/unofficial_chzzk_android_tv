@@ -32,6 +32,7 @@ extension _LivePlayerBlocPlaybackEventHelpers on LivePlayerBloc {
     _endedStatusChecks.start(
       slotId: event.slotId,
       playbackUri: event.playbackUri,
+      initialAttempts: 1,
     );
   }
 

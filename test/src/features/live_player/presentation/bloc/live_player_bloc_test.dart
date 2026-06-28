@@ -1238,7 +1238,7 @@ void main() {
   );
 
   test(
-    'playback ended restarts after two non-closed status refreshes',
+    'playback ended restarts after first non-closed status refresh',
     () async {
       final playbackUri = Uri.parse('https://example.com/live.m3u8');
       final repository = _FakeLiveRepository(
@@ -1267,26 +1267,7 @@ void main() {
       await pumpEventQueue();
 
       repository.status = const LiveStatus(
-        title: 'Still open first',
-        status: 'OPEN',
-        concurrentUserCount: 10,
-        adult: false,
-      );
-      bloc.add(
-        const LivePlayerEvent.liveStatusRefreshRequested(
-          slotId: 'primary',
-          channelId: 'channel-a',
-        ),
-      );
-      final firstCheck = await bloc.stream.firstWhere(
-        (state) => state.activeSlot.title == 'Still open first',
-      );
-
-      expect(firstCheck.activeSlot.status, LivePlayerSlotStatus.playing);
-      expect(firstCheck.activeSlot.playbackUri, playbackUri);
-
-      repository.status = const LiveStatus(
-        title: 'Still open second',
+        title: 'Still open',
         status: 'OPEN',
         concurrentUserCount: 10,
         adult: false,
