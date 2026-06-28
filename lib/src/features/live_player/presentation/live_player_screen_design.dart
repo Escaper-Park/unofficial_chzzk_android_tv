@@ -15,9 +15,6 @@ abstract final class LivePlayerScreenDesign {
   static const multiviewActiveOutlineWidth = 3.0;
   static const multiviewPipScreenPadding = 24.0;
   static const multiviewPipGap = 12.0;
-  static const multiviewPipRadiusRatio = 0.06;
-  static const multiviewPipMinRadius = 6.0;
-  static const multiviewPipMaxRadius = 12.0;
   static const multiviewPipSingleMaxSizePercent = 50;
   static const multiviewPipMultiMaxSizePercent = 33;
 

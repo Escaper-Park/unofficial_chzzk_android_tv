@@ -70,7 +70,9 @@ void main() {
     expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
   });
 
-  testWidgets('updates elapsed stat locally each second', (tester) async {
+  testWidgets('keeps initial elapsed stat while card remains mounted', (
+    tester,
+  ) async {
     _setWideViewport(tester);
     final openedAt = DateTime.utc(2026, 1, 1, 0, 0);
     var now = openedAt.add(const Duration(minutes: 5));
@@ -90,7 +92,8 @@ void main() {
     now = now.add(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('00:05:01'), findsOneWidget);
+    expect(find.text('00:05:00'), findsOneWidget);
+    expect(find.text('00:05:01'), findsNothing);
   });
 
   testWidgets('focused channel live card shows preview outline progress', (

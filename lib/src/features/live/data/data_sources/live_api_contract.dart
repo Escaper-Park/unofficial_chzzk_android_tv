@@ -27,7 +27,9 @@ abstract final class LiveApiDefaults {
   static const sortTypeLatest = 'LATEST';
   static const includePlayerRecommendContent = false;
   static const liveDetailCu = false;
-  static const liveDetailTm = true;
+  // Native playback cannot satisfy CHZZK's SMP segment auth used by
+  // time-machine live streams, so request the plain live stream by default.
+  static const liveDetailTm = false;
   static const liveDetailDtBase = 100000;
   static const liveDetailDtRange = 100000;
 }

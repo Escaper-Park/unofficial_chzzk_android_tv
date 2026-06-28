@@ -25,6 +25,15 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
     }
 
     _persistedSettingsPreferences = entrySettings.preferences;
+    final targetChangesLive =
+        targetSlot.channelId != target.channelId ||
+        targetSlot.liveId != target.liveId;
+    final slotVolumeById = targetChangesLive
+        ? {
+            for (final entry in state.slotVolumeById.entries)
+              if (entry.key != targetSlotId) entry.key: entry.value,
+          }
+        : state.slotVolumeById;
     final loadingSlot = targetSlot.copyWith(
       status: LivePlayerSlotStatus.loadingSource,
       channelId: target.channelId,
@@ -50,6 +59,7 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
                   ? state.channelMyInfo
                   : null
             : state.channelMyInfo,
+        slotVolumeById: slotVolumeById,
         slots: [
           for (final current in state.slots)
             current.slotId == targetSlotId ? loadingSlot : current,

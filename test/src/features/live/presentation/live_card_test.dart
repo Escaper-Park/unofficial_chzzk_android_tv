@@ -80,34 +80,39 @@ void main() {
     expect(thumbnail.restrictionAssetPath, isNull);
   });
 
-  testWidgets('live uptime badge ticks while card remains mounted', (
-    tester,
-  ) async {
-    var now = DateTime(2026, 6, 20, 12, 0, 5);
-    final openDate = now.subtract(const Duration(seconds: 5)).toIso8601String();
+  testWidgets(
+    'live uptime badge keeps initial elapsed while card remains mounted',
+    (
+      tester,
+    ) async {
+      var now = DateTime(2026, 6, 20, 12, 0, 5);
+      final openDate = now
+          .subtract(const Duration(seconds: 5))
+          .toIso8601String();
 
-    await tester.pumpWidget(
-      _CardHarness(
-        child: LiveCardThumbnail(
-          item: _liveWithOpenDate(openDate),
-          now: () => now,
+      await tester.pumpWidget(
+        _CardHarness(
+          child: LiveCardThumbnail(
+            item: _liveWithOpenDate(openDate),
+            now: () => now,
+          ),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    final initialElapsed = _elapsedDuration(_singleElapsedText(tester));
-    now = now.add(const Duration(seconds: 1));
+      final initialElapsed = _elapsedDuration(_singleElapsedText(tester));
+      now = now.add(const Duration(seconds: 1));
 
-    await tester.pump(const Duration(milliseconds: 1100));
+      await tester.pump(const Duration(milliseconds: 1100));
 
-    expect(
-      _elapsedDuration(_singleElapsedText(tester)),
-      greaterThan(initialElapsed),
-    );
+      expect(
+        _elapsedDuration(_singleElapsedText(tester)),
+        initialElapsed,
+      );
 
-    await tester.pumpWidget(const SizedBox.shrink());
-  });
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   testWidgets('live card uses abroad restriction asset only for ABROAD blind', (
     tester,

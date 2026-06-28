@@ -12,6 +12,7 @@ import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import 'live_player_multiview_chat_policy.dart';
 import 'live_player_playback_session_controller.dart';
+import 'live_player_status_surface.dart';
 import 'live_player_surface.dart';
 
 part 'live_player_multiview_focus_layout.dart';
@@ -117,19 +118,19 @@ class LivePlayerPlaybackLayout extends HookWidget {
                           slot.slotId == state.activeSlotId &&
                           activeOutlineController.isShowing,
                       playbackPaused: playbackPaused,
-                      muted: state.isMultiview
-                          ? !state.isSlotAudible(slot.slotId)
-                          : singleMuted,
+                      volume: state.isMultiview
+                          ? state.slotPlaybackVolume(slot.slotId)
+                          : singleMuted
+                          ? 0
+                          : 1,
                       mixWithOthers: true,
                       watchEventEnabled:
                           !state.isMultiview &&
                           state.watchEventReportingEnabled,
+                      statusPollingEnabled:
+                          !state.isMultiview ||
+                          slot.slotId == state.activeSlotId,
                       playbackSessionController: playbackSessionController,
-                      borderRadius: _livePlayerSlotBorderRadius(
-                        state: state,
-                        slotId: slot.slotId,
-                        rect: slotRects[slot.slotId]!,
-                      ),
                       statusSurfaceFor: statusSurfaceFor,
                     ),
                   ),
@@ -229,26 +230,45 @@ List<LivePlayerSlotState> _livePlayerPaintOrder(LivePlayerState state) {
   ];
 }
 
-Set<String> _playbackEnabledSlotIds(LivePlayerState state) {
+bool _playbackEnabledForSlotId(
+  LivePlayerState state,
+  String slotId,
+) {
   if (!state.isMultiview) {
-    return {state.activeSlotId};
+    return state.activeSlotId == slotId;
   }
 
-  final enabledSlotIds = <String>{};
   var canStartNextPendingSlot = true;
   for (final slot in state.slots) {
-    if (slot.status == LivePlayerSlotStatus.playing &&
-        slot.playbackUri != null) {
-      enabledSlotIds.add(slot.slotId);
-    } else if (canStartNextPendingSlot) {
-      enabledSlotIds.add(slot.slotId);
+    final enabled =
+        (slot.status == LivePlayerSlotStatus.playing &&
+            slot.playbackUri != null) ||
+        canStartNextPendingSlot;
+    if (slot.slotId == slotId) {
+      return enabled;
     }
 
     canStartNextPendingSlot =
         canStartNextPendingSlot && _slotStartupFinished(slot);
   }
 
-  return enabledSlotIds;
+  return false;
+}
+
+PlayerVideoViewType _effectiveVideoViewTypeForSlot(
+  LivePlayerState state,
+  LivePlayerSlotState slot,
+) {
+  if (!state.isMultiview ||
+      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip) {
+    return slot.videoViewType;
+  }
+
+  if (slot.slotId == state.activeSlotId) {
+    return PlayerVideoViewType.platformView;
+  }
+
+  return PlayerVideoViewType.textureView;
 }
 
 bool _slotStartupFinished(LivePlayerSlotState slot) {
@@ -259,20 +279,6 @@ bool _slotStartupFinished(LivePlayerSlotState slot) {
     LivePlayerSlotStatus.playing => slot.playbackUri != null,
     LivePlayerSlotStatus.loadingSource || LivePlayerSlotStatus.ready => false,
   };
-}
-
-double _livePlayerSlotBorderRadius({
-  required LivePlayerState state,
-  required String slotId,
-  required Rect rect,
-}) {
-  if (!state.isMultiview ||
-      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip ||
-      slotId == state.activeSlotId) {
-    return 0;
-  }
-
-  return _pipRadiusForRect(rect);
 }
 
 Rect _singlePlaybackRect(

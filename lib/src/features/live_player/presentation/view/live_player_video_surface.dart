@@ -24,7 +24,7 @@ class LivePlayerVideoSurface extends HookWidget {
     required this.videoViewType,
     required this.mixWithOthers,
     required this.playbackPaused,
-    required this.muted,
+    required this.volume,
     required this.watchEventEnabled,
     required this.playbackSessionController,
     required this.channelId,
@@ -42,7 +42,7 @@ class LivePlayerVideoSurface extends HookWidget {
   final PlayerVideoViewType videoViewType;
   final bool mixWithOthers;
   final bool playbackPaused;
-  final bool muted;
+  final double volume;
   final bool watchEventEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
   final String? channelId;
@@ -125,6 +125,7 @@ class LivePlayerVideoSurface extends HookWidget {
     final previousReporterRef = useRef<LivePlayerWatchEventReporter?>(
       reporter,
     );
+    final normalizedVolume = _normalizedPlayerVolume(volume);
 
     bool playbackSuspended() {
       return playbackSessionHandle.suspended ||
@@ -177,15 +178,37 @@ class LivePlayerVideoSurface extends HookWidget {
       initialized: initialized,
       failed: failed,
       ended: ended,
-      syncTimer: syncTimer,
       reporterRef: reporterRef,
       playbackSessionController: playbackSessionController,
       playbackSessionHandle: playbackSessionHandle,
-      muted: muted,
+      volume: normalizedVolume,
       playbackSuspended: playbackSuspended,
       onReady: onReady,
       reportPlaybackFailure: reportPlaybackFailure,
       syncWatchEvent: syncWatchEvent,
+    );
+
+    useEffect(
+      () {
+        if (!initialized.value || failed.value || reporter == null) {
+          syncTimer.stop();
+          return null;
+        }
+
+        syncTimer.start(
+          interval: const Duration(seconds: 1),
+          onTick: syncWatchEvent,
+        );
+        syncWatchEvent();
+        return syncTimer.stop;
+      },
+      [
+        controller,
+        syncTimer,
+        initialized.value,
+        failed.value,
+        reporter,
+      ],
     );
 
     useEffect(() {
@@ -193,9 +216,9 @@ class LivePlayerVideoSurface extends HookWidget {
     }, [syncTimer]);
 
     useEffect(() {
-      unawaited(controller.setVolume(muted ? 0 : 1));
+      unawaited(controller.setVolume(normalizedVolume));
       return null;
-    }, [controller, muted]);
+    }, [controller, normalizedVolume]);
 
     reporter?.updateLiveTokens(liveTokens);
     playbackPausedRef.value = playbackPaused;
@@ -250,8 +273,17 @@ class LivePlayerVideoSurface extends HookWidget {
     return _LivePlayerVideoContent(
       controller: controller,
       playbackValue: playbackValue,
+      videoViewType: videoViewType,
     );
   }
+}
+
+double _normalizedPlayerVolume(double volume) {
+  if (!volume.isFinite) {
+    return 0;
+  }
+
+  return volume.clamp(0, 1).toDouble();
 }
 
 String _playbackHttpHeadersKey(Map<String, String> headers) {

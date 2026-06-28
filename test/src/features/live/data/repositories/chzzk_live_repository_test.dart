@@ -17,7 +17,7 @@ void main() {
     expect(api.liveListSortType, LiveApiDefaults.sortTypeLatest);
   });
 
-  test('requests live detail with web query defaults', () async {
+  test('requests live detail with playable live query defaults', () async {
     final api = _FakeLiveApi();
     final repository = ChzzkLiveRepository(
       api: api,
@@ -31,6 +31,7 @@ void main() {
     expect(api.liveDetailDt, '1b6d9');
     expect(api.liveDetailCu, LiveApiDefaults.liveDetailCu);
     expect(api.liveDetailTm, LiveApiDefaults.liveDetailTm);
+    expect(api.liveDetailTm, false);
   });
 
   test('posts live watch event with web request body', () async {

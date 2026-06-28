@@ -5,11 +5,10 @@ void _useLivePlayerControllerLifecycle({
   required ValueNotifier<bool> initialized,
   required ValueNotifier<bool> failed,
   required ValueNotifier<bool> ended,
-  required PeriodicCallbackTimer syncTimer,
   required ObjectRef<LivePlayerWatchEventReporter?> reporterRef,
   required LivePlayerPlaybackSessionController playbackSessionController,
   required _LivePlayerVideoSessionHandle playbackSessionHandle,
-  required bool muted,
+  required double volume,
   required bool Function() playbackSuspended,
   required VoidCallback onReady,
   required VoidCallback reportPlaybackFailure,
@@ -46,7 +45,7 @@ void _useLivePlayerControllerLifecycle({
               }
 
               initialized.value = true;
-              await controller.setVolume(muted ? 0 : 1);
+              await controller.setVolume(volume);
               if (disposed) {
                 return;
               }
@@ -61,10 +60,6 @@ void _useLivePlayerControllerLifecycle({
                 }
               }
 
-              syncTimer.start(
-                interval: const Duration(seconds: 1),
-                onTick: syncWatchEvent,
-              );
               syncWatchEvent();
             })
             .catchError((Object _) {
@@ -78,7 +73,6 @@ void _useLivePlayerControllerLifecycle({
 
       return () {
         disposed = true;
-        syncTimer.stop();
         reporter?.suspend();
         controller.removeListener(handleControllerChange);
         playbackSessionController.unregister(
@@ -89,7 +83,6 @@ void _useLivePlayerControllerLifecycle({
     },
     [
       controller,
-      syncTimer,
       playbackSessionController,
       playbackSessionHandle,
     ],

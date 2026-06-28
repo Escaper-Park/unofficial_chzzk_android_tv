@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/network.dart';
 import '../../../auth/presentation/bloc/auth_session_bloc.dart';
+import '../../../settings/domain/entities/settings_preferences.dart';
 import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import 'live_player_live_status_poller.dart';
@@ -14,17 +15,21 @@ class LivePlayerSurface extends StatelessWidget {
     super.key,
     required this.slot,
     required this.playbackPaused,
-    required this.muted,
+    required this.volume,
     required this.mixWithOthers,
+    required this.videoViewType,
     required this.watchEventEnabled,
+    required this.statusPollingEnabled,
     required this.playbackSessionController,
   });
 
   final LivePlayerSlotState slot;
   final bool playbackPaused;
-  final bool muted;
+  final double volume;
   final bool mixWithOthers;
+  final PlayerVideoViewType videoViewType;
   final bool watchEventEnabled;
+  final bool statusPollingEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
 
   @override
@@ -43,7 +48,7 @@ class LivePlayerSurface extends StatelessWidget {
     return LivePlayerLiveStatusPoller(
       slotId: slot.slotId,
       channelId: slot.channelId,
-      pollingPaused: playbackPaused,
+      pollingPaused: playbackPaused || !statusPollingEnabled,
       onRefreshRequested: ({required slotId, required channelId}) {
         bloc.add(
           LivePlayerEvent.liveStatusRefreshRequested(
@@ -55,9 +60,9 @@ class LivePlayerSurface extends StatelessWidget {
       child: LivePlayerVideoSurface(
         playbackUri: playbackUri,
         playbackHttpHeaders: playbackHttpHeaders,
-        videoViewType: slot.videoViewType,
+        videoViewType: videoViewType,
         playbackPaused: playbackPaused,
-        muted: muted,
+        volume: volume,
         mixWithOthers: mixWithOthers,
         watchEventEnabled: watchEventEnabled,
         playbackSessionController: playbackSessionController,
@@ -109,6 +114,15 @@ class LivePlayerSurface extends StatelessWidget {
               playbackUri: playbackUri,
             ),
           );
+          final channelId = slot.channelId;
+          if (channelId != null) {
+            bloc.add(
+              LivePlayerEvent.liveStatusRefreshRequested(
+                slotId: slot.slotId,
+                channelId: channelId,
+              ),
+            );
+          }
         },
         onFailure: () {
           bloc.add(

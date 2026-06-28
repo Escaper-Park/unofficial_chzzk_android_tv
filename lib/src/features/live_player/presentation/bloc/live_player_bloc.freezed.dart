@@ -1,4 +1,4 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+﻿// GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
@@ -76,6 +76,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     TResult Function(_ActiveSlotShiftRequested value)? activeSlotShiftRequested,
     TResult Function(_ActiveSlotSelected value)? activeSlotSelected,
     TResult Function(_SlotAudioToggled value)? slotAudioToggled,
+    TResult Function(_SlotVolumeChanged value)? slotVolumeChanged,
     TResult Function(_SlotResolutionSelected value)? slotResolutionSelected,
     TResult Function(_SlotCloseConfirmed value)? slotCloseConfirmed,
     TResult Function(_LiveStatusRefreshRequested value)?
@@ -135,6 +136,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that);
       case _SlotAudioToggled() when slotAudioToggled != null:
         return slotAudioToggled(_that);
+      case _SlotVolumeChanged() when slotVolumeChanged != null:
+        return slotVolumeChanged(_that);
       case _SlotResolutionSelected() when slotResolutionSelected != null:
         return slotResolutionSelected(_that);
       case _SlotCloseConfirmed() when slotCloseConfirmed != null:
@@ -205,6 +208,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     activeSlotShiftRequested,
     required TResult Function(_ActiveSlotSelected value) activeSlotSelected,
     required TResult Function(_SlotAudioToggled value) slotAudioToggled,
+    required TResult Function(_SlotVolumeChanged value) slotVolumeChanged,
     required TResult Function(_SlotResolutionSelected value)
     slotResolutionSelected,
     required TResult Function(_SlotCloseConfirmed value) slotCloseConfirmed,
@@ -260,6 +264,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that);
       case _SlotAudioToggled():
         return slotAudioToggled(_that);
+      case _SlotVolumeChanged():
+        return slotVolumeChanged(_that);
       case _SlotResolutionSelected():
         return slotResolutionSelected(_that);
       case _SlotCloseConfirmed():
@@ -322,6 +328,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     activeSlotShiftRequested,
     TResult? Function(_ActiveSlotSelected value)? activeSlotSelected,
     TResult? Function(_SlotAudioToggled value)? slotAudioToggled,
+    TResult? Function(_SlotVolumeChanged value)? slotVolumeChanged,
     TResult? Function(_SlotResolutionSelected value)? slotResolutionSelected,
     TResult? Function(_SlotCloseConfirmed value)? slotCloseConfirmed,
     TResult? Function(_LiveStatusRefreshRequested value)?
@@ -380,6 +387,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that);
       case _SlotAudioToggled() when slotAudioToggled != null:
         return slotAudioToggled(_that);
+      case _SlotVolumeChanged() when slotVolumeChanged != null:
+        return slotVolumeChanged(_that);
       case _SlotResolutionSelected() when slotResolutionSelected != null:
         return slotResolutionSelected(_that);
       case _SlotCloseConfirmed() when slotCloseConfirmed != null:
@@ -441,6 +450,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     TResult Function(int delta)? activeSlotShiftRequested,
     TResult Function(String slotId)? activeSlotSelected,
     TResult Function(String slotId)? slotAudioToggled,
+    TResult Function(String slotId, double volume)? slotVolumeChanged,
     TResult Function(String slotId, int resolutionIndex)?
     slotResolutionSelected,
     TResult Function(String slotId)? slotCloseConfirmed,
@@ -501,6 +511,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that.slotId);
       case _SlotAudioToggled() when slotAudioToggled != null:
         return slotAudioToggled(_that.slotId);
+      case _SlotVolumeChanged() when slotVolumeChanged != null:
+        return slotVolumeChanged(_that.slotId, _that.volume);
       case _SlotResolutionSelected() when slotResolutionSelected != null:
         return slotResolutionSelected(_that.slotId, _that.resolutionIndex);
       case _SlotCloseConfirmed() when slotCloseConfirmed != null:
@@ -564,6 +576,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     required TResult Function(int delta) activeSlotShiftRequested,
     required TResult Function(String slotId) activeSlotSelected,
     required TResult Function(String slotId) slotAudioToggled,
+    required TResult Function(String slotId, double volume) slotVolumeChanged,
     required TResult Function(String slotId, int resolutionIndex)
     slotResolutionSelected,
     required TResult Function(String slotId) slotCloseConfirmed,
@@ -619,6 +632,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that.slotId);
       case _SlotAudioToggled():
         return slotAudioToggled(_that.slotId);
+      case _SlotVolumeChanged():
+        return slotVolumeChanged(_that.slotId, _that.volume);
       case _SlotResolutionSelected():
         return slotResolutionSelected(_that.slotId, _that.resolutionIndex);
       case _SlotCloseConfirmed():
@@ -677,6 +692,7 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
     TResult? Function(int delta)? activeSlotShiftRequested,
     TResult? Function(String slotId)? activeSlotSelected,
     TResult? Function(String slotId)? slotAudioToggled,
+    TResult? Function(String slotId, double volume)? slotVolumeChanged,
     TResult? Function(String slotId, int resolutionIndex)?
     slotResolutionSelected,
     TResult? Function(String slotId)? slotCloseConfirmed,
@@ -736,6 +752,8 @@ extension LivePlayerEventPatterns on LivePlayerEvent {
         return activeSlotSelected(_that.slotId);
       case _SlotAudioToggled() when slotAudioToggled != null:
         return slotAudioToggled(_that.slotId);
+      case _SlotVolumeChanged() when slotVolumeChanged != null:
+        return slotVolumeChanged(_that.slotId, _that.volume);
       case _SlotResolutionSelected() when slotResolutionSelected != null:
         return slotResolutionSelected(_that.slotId, _that.resolutionIndex);
       case _SlotCloseConfirmed() when slotCloseConfirmed != null:
@@ -1646,6 +1664,77 @@ class __$SlotAudioToggledCopyWithImpl<$Res>
             ? _self.slotId
             : slotId // ignore: cast_nullable_to_non_nullable
                   as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _SlotVolumeChanged implements LivePlayerEvent {
+  const _SlotVolumeChanged({required this.slotId, required this.volume});
+
+  final String slotId;
+  final double volume;
+
+  /// Create a copy of LivePlayerEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SlotVolumeChangedCopyWith<_SlotVolumeChanged> get copyWith =>
+      __$SlotVolumeChangedCopyWithImpl<_SlotVolumeChanged>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _SlotVolumeChanged &&
+            (identical(other.slotId, slotId) || other.slotId == slotId) &&
+            (identical(other.volume, volume) || other.volume == volume));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, slotId, volume);
+
+  @override
+  String toString() {
+    return 'LivePlayerEvent.slotVolumeChanged(slotId: $slotId, volume: $volume)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$SlotVolumeChangedCopyWith<$Res>
+    implements $LivePlayerEventCopyWith<$Res> {
+  factory _$SlotVolumeChangedCopyWith(
+    _SlotVolumeChanged value,
+    $Res Function(_SlotVolumeChanged) _then,
+  ) = __$SlotVolumeChangedCopyWithImpl;
+  @useResult
+  $Res call({String slotId, double volume});
+}
+
+/// @nodoc
+class __$SlotVolumeChangedCopyWithImpl<$Res>
+    implements _$SlotVolumeChangedCopyWith<$Res> {
+  __$SlotVolumeChangedCopyWithImpl(this._self, this._then);
+
+  final _SlotVolumeChanged _self;
+  final $Res Function(_SlotVolumeChanged) _then;
+
+  /// Create a copy of LivePlayerEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({Object? slotId = null, Object? volume = null}) {
+    return _then(
+      _SlotVolumeChanged(
+        slotId: null == slotId
+            ? _self.slotId
+            : slotId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        volume: null == volume
+            ? _self.volume
+            : volume // ignore: cast_nullable_to_non_nullable
+                  as double,
       ),
     );
   }
@@ -3088,6 +3177,7 @@ mixin _$LivePlayerState {
   String get primarySlotId;
   List<LivePlayerSlotState> get slots;
   Set<String> get audibleSlotIds;
+  Map<String, double> get slotVolumeById;
   int get activeSlotHighlightSerial;
   SettingsPreferences get settingsPreferences;
   GroupCollection get groupCollection;
@@ -3134,6 +3224,10 @@ mixin _$LivePlayerState {
             const DeepCollectionEquality().equals(
               other.audibleSlotIds,
               audibleSlotIds,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other.slotVolumeById,
+              slotVolumeById,
             ) &&
             (identical(
                   other.activeSlotHighlightSerial,
@@ -3184,6 +3278,7 @@ mixin _$LivePlayerState {
     primarySlotId,
     const DeepCollectionEquality().hash(slots),
     const DeepCollectionEquality().hash(audibleSlotIds),
+    const DeepCollectionEquality().hash(slotVolumeById),
     activeSlotHighlightSerial,
     settingsPreferences,
     groupCollection,
@@ -3204,7 +3299,7 @@ mixin _$LivePlayerState {
 
   @override
   String toString() {
-    return 'LivePlayerState(viewMode: $viewMode, multiviewLayoutMode: $multiviewLayoutMode, overlayMode: $overlayMode, activeSlotId: $activeSlotId, primarySlotId: $primarySlotId, slots: $slots, audibleSlotIds: $audibleSlotIds, activeSlotHighlightSerial: $activeSlotHighlightSerial, settingsPreferences: $settingsPreferences, groupCollection: $groupCollection, channelMyInfo: $channelMyInfo, isSignedIn: $isSignedIn, browseSection: $browseSection, browseStatus: $browseStatus, browseItems: $browseItems, browseLiveCursor: $browseLiveCursor, browseCategoryCursor: $browseCategoryCursor, browseHasMore: $browseHasMore, browseLoadingMore: $browseLoadingMore, browseFallbackAction: $browseFallbackAction, pendingReplacementLive: $pendingReplacementLive, feedbackType: $feedbackType, feedbackSerial: $feedbackSerial)';
+    return 'LivePlayerState(viewMode: $viewMode, multiviewLayoutMode: $multiviewLayoutMode, overlayMode: $overlayMode, activeSlotId: $activeSlotId, primarySlotId: $primarySlotId, slots: $slots, audibleSlotIds: $audibleSlotIds, slotVolumeById: $slotVolumeById, activeSlotHighlightSerial: $activeSlotHighlightSerial, settingsPreferences: $settingsPreferences, groupCollection: $groupCollection, channelMyInfo: $channelMyInfo, isSignedIn: $isSignedIn, browseSection: $browseSection, browseStatus: $browseStatus, browseItems: $browseItems, browseLiveCursor: $browseLiveCursor, browseCategoryCursor: $browseCategoryCursor, browseHasMore: $browseHasMore, browseLoadingMore: $browseLoadingMore, browseFallbackAction: $browseFallbackAction, pendingReplacementLive: $pendingReplacementLive, feedbackType: $feedbackType, feedbackSerial: $feedbackSerial)';
   }
 }
 
@@ -3223,6 +3318,7 @@ abstract mixin class $LivePlayerStateCopyWith<$Res> {
     String primarySlotId,
     List<LivePlayerSlotState> slots,
     Set<String> audibleSlotIds,
+    Map<String, double> slotVolumeById,
     int activeSlotHighlightSerial,
     SettingsPreferences settingsPreferences,
     GroupCollection groupCollection,
@@ -3269,6 +3365,7 @@ class _$LivePlayerStateCopyWithImpl<$Res>
     Object? primarySlotId = null,
     Object? slots = null,
     Object? audibleSlotIds = null,
+    Object? slotVolumeById = null,
     Object? activeSlotHighlightSerial = null,
     Object? settingsPreferences = null,
     Object? groupCollection = null,
@@ -3316,6 +3413,10 @@ class _$LivePlayerStateCopyWithImpl<$Res>
             ? _self.audibleSlotIds
             : audibleSlotIds // ignore: cast_nullable_to_non_nullable
                   as Set<String>,
+        slotVolumeById: null == slotVolumeById
+            ? _self.slotVolumeById
+            : slotVolumeById // ignore: cast_nullable_to_non_nullable
+                  as Map<String, double>,
         activeSlotHighlightSerial: null == activeSlotHighlightSerial
             ? _self.activeSlotHighlightSerial
             : activeSlotHighlightSerial // ignore: cast_nullable_to_non_nullable
@@ -3566,6 +3667,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
       String primarySlotId,
       List<LivePlayerSlotState> slots,
       Set<String> audibleSlotIds,
+      Map<String, double> slotVolumeById,
       int activeSlotHighlightSerial,
       SettingsPreferences settingsPreferences,
       GroupCollection groupCollection,
@@ -3597,6 +3699,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
           _that.primarySlotId,
           _that.slots,
           _that.audibleSlotIds,
+          _that.slotVolumeById,
           _that.activeSlotHighlightSerial,
           _that.settingsPreferences,
           _that.groupCollection,
@@ -3642,6 +3745,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
       String primarySlotId,
       List<LivePlayerSlotState> slots,
       Set<String> audibleSlotIds,
+      Map<String, double> slotVolumeById,
       int activeSlotHighlightSerial,
       SettingsPreferences settingsPreferences,
       GroupCollection groupCollection,
@@ -3672,6 +3776,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
           _that.primarySlotId,
           _that.slots,
           _that.audibleSlotIds,
+          _that.slotVolumeById,
           _that.activeSlotHighlightSerial,
           _that.settingsPreferences,
           _that.groupCollection,
@@ -3716,6 +3821,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
       String primarySlotId,
       List<LivePlayerSlotState> slots,
       Set<String> audibleSlotIds,
+      Map<String, double> slotVolumeById,
       int activeSlotHighlightSerial,
       SettingsPreferences settingsPreferences,
       GroupCollection groupCollection,
@@ -3746,6 +3852,7 @@ extension LivePlayerStatePatterns on LivePlayerState {
           _that.primarySlotId,
           _that.slots,
           _that.audibleSlotIds,
+          _that.slotVolumeById,
           _that.activeSlotHighlightSerial,
           _that.settingsPreferences,
           _that.groupCollection,
@@ -3780,6 +3887,7 @@ class _LivePlayerState extends LivePlayerState {
     required this.primarySlotId,
     required final List<LivePlayerSlotState> slots,
     final Set<String> audibleSlotIds = const <String>{},
+    final Map<String, double> slotVolumeById = const <String, double>{},
     this.activeSlotHighlightSerial = 0,
     this.settingsPreferences = defaultSettingsPreferences,
     this.groupCollection = defaultGroupCollection,
@@ -3798,6 +3906,7 @@ class _LivePlayerState extends LivePlayerState {
     this.feedbackSerial = 0,
   }) : _slots = slots,
        _audibleSlotIds = audibleSlotIds,
+       _slotVolumeById = slotVolumeById,
        _browseItems = browseItems,
        super._();
 
@@ -3828,6 +3937,15 @@ class _LivePlayerState extends LivePlayerState {
     if (_audibleSlotIds is EqualUnmodifiableSetView) return _audibleSlotIds;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_audibleSlotIds);
+  }
+
+  final Map<String, double> _slotVolumeById;
+  @override
+  @JsonKey()
+  Map<String, double> get slotVolumeById {
+    if (_slotVolumeById is EqualUnmodifiableMapView) return _slotVolumeById;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_slotVolumeById);
   }
 
   @override
@@ -3908,6 +4026,10 @@ class _LivePlayerState extends LivePlayerState {
               other._audibleSlotIds,
               _audibleSlotIds,
             ) &&
+            const DeepCollectionEquality().equals(
+              other._slotVolumeById,
+              _slotVolumeById,
+            ) &&
             (identical(
                   other.activeSlotHighlightSerial,
                   activeSlotHighlightSerial,
@@ -3957,6 +4079,7 @@ class _LivePlayerState extends LivePlayerState {
     primarySlotId,
     const DeepCollectionEquality().hash(_slots),
     const DeepCollectionEquality().hash(_audibleSlotIds),
+    const DeepCollectionEquality().hash(_slotVolumeById),
     activeSlotHighlightSerial,
     settingsPreferences,
     groupCollection,
@@ -3977,7 +4100,7 @@ class _LivePlayerState extends LivePlayerState {
 
   @override
   String toString() {
-    return 'LivePlayerState(viewMode: $viewMode, multiviewLayoutMode: $multiviewLayoutMode, overlayMode: $overlayMode, activeSlotId: $activeSlotId, primarySlotId: $primarySlotId, slots: $slots, audibleSlotIds: $audibleSlotIds, activeSlotHighlightSerial: $activeSlotHighlightSerial, settingsPreferences: $settingsPreferences, groupCollection: $groupCollection, channelMyInfo: $channelMyInfo, isSignedIn: $isSignedIn, browseSection: $browseSection, browseStatus: $browseStatus, browseItems: $browseItems, browseLiveCursor: $browseLiveCursor, browseCategoryCursor: $browseCategoryCursor, browseHasMore: $browseHasMore, browseLoadingMore: $browseLoadingMore, browseFallbackAction: $browseFallbackAction, pendingReplacementLive: $pendingReplacementLive, feedbackType: $feedbackType, feedbackSerial: $feedbackSerial)';
+    return 'LivePlayerState(viewMode: $viewMode, multiviewLayoutMode: $multiviewLayoutMode, overlayMode: $overlayMode, activeSlotId: $activeSlotId, primarySlotId: $primarySlotId, slots: $slots, audibleSlotIds: $audibleSlotIds, slotVolumeById: $slotVolumeById, activeSlotHighlightSerial: $activeSlotHighlightSerial, settingsPreferences: $settingsPreferences, groupCollection: $groupCollection, channelMyInfo: $channelMyInfo, isSignedIn: $isSignedIn, browseSection: $browseSection, browseStatus: $browseStatus, browseItems: $browseItems, browseLiveCursor: $browseLiveCursor, browseCategoryCursor: $browseCategoryCursor, browseHasMore: $browseHasMore, browseLoadingMore: $browseLoadingMore, browseFallbackAction: $browseFallbackAction, pendingReplacementLive: $pendingReplacementLive, feedbackType: $feedbackType, feedbackSerial: $feedbackSerial)';
   }
 }
 
@@ -3998,6 +4121,7 @@ abstract mixin class _$LivePlayerStateCopyWith<$Res>
     String primarySlotId,
     List<LivePlayerSlotState> slots,
     Set<String> audibleSlotIds,
+    Map<String, double> slotVolumeById,
     int activeSlotHighlightSerial,
     SettingsPreferences settingsPreferences,
     GroupCollection groupCollection,
@@ -4050,6 +4174,7 @@ class __$LivePlayerStateCopyWithImpl<$Res>
     Object? primarySlotId = null,
     Object? slots = null,
     Object? audibleSlotIds = null,
+    Object? slotVolumeById = null,
     Object? activeSlotHighlightSerial = null,
     Object? settingsPreferences = null,
     Object? groupCollection = null,
@@ -4097,6 +4222,10 @@ class __$LivePlayerStateCopyWithImpl<$Res>
             ? _self._audibleSlotIds
             : audibleSlotIds // ignore: cast_nullable_to_non_nullable
                   as Set<String>,
+        slotVolumeById: null == slotVolumeById
+            ? _self._slotVolumeById
+            : slotVolumeById // ignore: cast_nullable_to_non_nullable
+                  as Map<String, double>,
         activeSlotHighlightSerial: null == activeSlotHighlightSerial
             ? _self.activeSlotHighlightSerial
             : activeSlotHighlightSerial // ignore: cast_nullable_to_non_nullable

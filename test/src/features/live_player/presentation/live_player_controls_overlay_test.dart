@@ -619,7 +619,7 @@ void main() {
     );
     expect(
       find.descendant(of: modalPanel, matching: find.text('Channel B')),
-      findsOneWidget,
+      findsWidgets,
     );
     expect(
       find.descendant(of: modalPanel, matching: find.text('720p')),
@@ -671,6 +671,112 @@ void main() {
       0,
     );
     expect(preferencesRepository.saved, isNull);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('multiview sound menu opens channel volume sliders', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(960, 540);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controlsNode = FocusScopeNode();
+    addTearDown(controlsNode.dispose);
+    final bloc = _overlayBloc();
+    addTearDown(bloc.close);
+    final state = _playingState().copyWith(
+      viewMode: LivePlayerViewMode.multiview,
+      slots: [
+        LivePlayerSlotState(
+          slotId: 'primary',
+          status: LivePlayerSlotStatus.playing,
+          channelId: 'channel-a',
+          detail: _liveDetail(channelName: 'Channel A'),
+        ),
+        LivePlayerSlotState(
+          slotId: 'slot-1',
+          status: LivePlayerSlotStatus.playing,
+          channelId: 'channel-b',
+          detail: _liveDetail(
+            liveId: 2,
+            channelId: 'channel-b',
+            channelName: 'Channel B',
+          ),
+        ),
+      ],
+      audibleSlotIds: {'primary'},
+      slotVolumeById: {'slot-1': 0.7},
+    );
+
+    await tester.pumpWidget(
+      _OverlayHarness(
+        child: BlocProvider<LivePlayerBloc>.value(
+          value: bloc,
+          child: SizedBox(
+            width: 960,
+            height: 540,
+            child: LivePlayerControlsOverlay(
+              state: state,
+              controlsNode: controlsNode,
+              playbackPaused: false,
+              muted: false,
+              onPlaybackPausedChanged: (_) {},
+              onMutedChanged: (_) {},
+              onInteraction: () {},
+              modalDismissSerial: 0,
+              onModalVisibilityChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.byIcon(Icons.dashboard_customize_outlined));
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.volume_up_outlined).first);
+    await tester.pump();
+
+    final modalPanel = find.byType(TvModalPanel);
+    expect(
+      find.descendant(of: modalPanel, matching: find.text('Channel A')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.text('Channel B')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.byType(TvSwitch)),
+      findsNothing,
+    );
+
+    await tester.tap(find.widgetWithText(TvListItem, 'Channel B'));
+    await tester.pump();
+
+    expect(
+      find.descendant(of: modalPanel, matching: find.text('Channel A')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.text('Channel B')),
+      findsWidgets,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.text('70%')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.byType(Slider)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: modalPanel, matching: find.byType(TvSwitch)),
+      findsNothing,
+    );
 
     await tester.pumpWidget(const SizedBox.shrink());
   });

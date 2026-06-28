@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 
 import '../app.dart';
 import '../di/app_dependencies.dart';
+import 'app_image_cache_policy.dart';
 
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+  configureAppImageCache();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,

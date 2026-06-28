@@ -50,6 +50,8 @@ bool _shouldRefreshMultiviewPlaybackSources(
   SettingsPreferences next,
 ) {
   return previous.liveSettings.latencyIndex != next.liveSettings.latencyIndex ||
+      previous.liveSettings.resolutionIndex !=
+          next.liveSettings.resolutionIndex ||
       previous.liveSettings.multiviewResolutionIndex !=
           next.liveSettings.multiviewResolutionIndex ||
       previous.generalSetting.videoViewTypeIndex !=

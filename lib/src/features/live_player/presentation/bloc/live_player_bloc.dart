@@ -107,6 +107,7 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
     on<_ActiveSlotShiftRequested>(_onActiveSlotShiftRequested);
     on<_ActiveSlotSelected>(_onActiveSlotSelected);
     on<_SlotAudioToggled>(_onSlotAudioToggled);
+    on<_SlotVolumeChanged>(_onSlotVolumeChanged);
     on<_SlotResolutionSelected>(_onSlotResolutionSelected);
     on<_SlotCloseConfirmed>(_onSlotCloseConfirmed);
     on<_LiveStatusRefreshRequested>(_onLiveStatusRefreshRequested);
@@ -135,6 +136,8 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
 
   SettingsPreferences _persistedSettingsPreferences =
       defaultSettingsPreferences;
+  int? _pipMainResolutionIndex;
+  int? _pipOverlayResolutionIndex;
   int _statusRefreshSerial = 0;
   int _browseRequestSerial = 0;
   int _generatedSlotSerial = 1;

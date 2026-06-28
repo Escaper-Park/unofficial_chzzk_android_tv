@@ -67,8 +67,8 @@ final _koreanShiftLayout = [
     _character('|'),
   ]),
   _row([
-    _character('ㅁ'),
-    _character('ㄴ'),
+    _character('`'),
+    _character('~'),
     _character('ㅇ'),
     _character('ㄹ'),
     _character('ㅎ'),

@@ -22,6 +22,7 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
           audibleSlotIds: {
             enteringMultiview ? _primarySlotId : state.activeSlotId,
           },
+          slotVolumeById: const <String, double>{},
           pendingReplacementLive: null,
         ),
       );
@@ -41,6 +42,7 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
         primarySlotId: _primarySlotId,
         slots: [primarySlot],
         audibleSlotIds: const <String>{},
+        slotVolumeById: const <String, double>{},
         pendingReplacementLive: null,
       ),
     );
@@ -65,6 +67,9 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
         settingsPreferences: preferences,
       ),
     );
+    if (event.layoutMode == LivePlayerMultiviewLayoutMode.pip) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
     await _savePersistentPreferences(preferences);
   }
 
@@ -80,10 +85,13 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
       state.activeSlotIndex + event.delta,
       state.slots.length,
     );
-    _emitActiveSlotSelection(
+    final changed = _emitActiveSlotSelection(
       emit,
       state.slots[nextIndex].slotId,
     );
+    if (changed) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 
   Future<void> _onActiveSlotSelected(
@@ -94,7 +102,10 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
       return;
     }
 
-    _emitActiveSlotSelection(emit, event.slotId);
+    final changed = _emitActiveSlotSelection(emit, event.slotId);
+    if (changed) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 
   void _onSlotAudioToggled(
@@ -111,6 +122,27 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
     }
 
     emit(state.copyWith(audibleSlotIds: audibleSlotIds));
+  }
+
+  void _onSlotVolumeChanged(
+    _SlotVolumeChanged event,
+    Emitter<LivePlayerState> emit,
+  ) {
+    if (!state.isMultiview || state.slotById(event.slotId) == null) {
+      return;
+    }
+
+    final volume = event.volume.isFinite
+        ? event.volume.clamp(0, 1).toDouble()
+        : 1.0;
+    emit(
+      state.copyWith(
+        slotVolumeById: {
+          ...state.slotVolumeById,
+          event.slotId: volume,
+        },
+      ),
+    );
   }
 
   Future<void> _onSlotCloseConfirmed(
@@ -149,6 +181,16 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
     final nextActiveSlot = remainingSlots.firstWhere(
       (slot) => slot.slotId == nextActiveSlotId,
     );
+    final remainingSlotIds = {
+      for (final slot in remainingSlots) slot.slotId,
+    };
+    final remainingAudibleSlotIds = state.audibleSlotIds
+        .where(remainingSlotIds.contains)
+        .toSet();
+    final remainingVolumes = {
+      for (final entry in state.slotVolumeById.entries)
+        if (remainingSlotIds.contains(entry.key)) entry.key: entry.value,
+    };
 
     emit(
       state.copyWith(
@@ -156,10 +198,15 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
         primarySlotId: nextPrimarySlotId,
         slots: remainingSlots,
         audibleSlotIds: state.isMultiview
-            ? {nextActiveSlotId}
+            ? remainingAudibleSlotIds.length >= 2
+                  ? remainingAudibleSlotIds
+                  : state.audibleSlotIds.isEmpty
+                  ? const <String>{}
+                  : {nextActiveSlotId}
             : state.audibleSlotIds
                   .where((slotId) => slotId != event.slotId)
                   .toSet(),
+        slotVolumeById: remainingVolumes,
         activeSlotHighlightSerial: activeSlotRemoved && state.isMultiview
             ? state.activeSlotHighlightSerial + 1
             : state.activeSlotHighlightSerial,
@@ -169,6 +216,9 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
             : null,
       ),
     );
+    if (activeSlotRemoved) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 }
 
