@@ -76,7 +76,7 @@ class _LivePlayerSlotCell extends HookWidget {
             surfaceSlot != null &&
             surfaceSlot.playbackUri != slot.playbackUri;
         final statusSurface = retainedPlaybackVisible
-            ? const Center(child: LivePlayerLoadingIndicator())
+            ? const _RetainedPlaybackLoadingIndicator()
             : statusSurfaceFor(
                 slot,
                 active: slotSnapshot.active,
@@ -121,6 +121,34 @@ class _LivePlayerSlotCell extends HookWidget {
 
         return content;
       },
+    );
+  }
+}
+
+class _RetainedPlaybackLoadingIndicator extends StatelessWidget {
+  const _RetainedPlaybackLoadingIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final shortestSide = math.min(
+            constraints.maxWidth,
+            constraints.maxHeight,
+          );
+          final iconSize =
+              (shortestSide *
+                      LivePlayerScreenDesign.inactiveStatusIconSizeRatio)
+                  .clamp(
+                    LivePlayerScreenDesign.inactiveStatusIconMinSize,
+                    LivePlayerScreenDesign.inactiveStatusIconMaxSize,
+                  )
+                  .toDouble();
+
+          return LivePlayerLoadingIndicator(size: iconSize);
+        },
+      ),
     );
   }
 }

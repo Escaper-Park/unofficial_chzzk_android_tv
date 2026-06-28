@@ -112,10 +112,15 @@ class _LivePlayerInactiveFailureSurface extends StatelessWidget {
 }
 
 class LivePlayerLoadingIndicator extends StatelessWidget {
-  const LivePlayerLoadingIndicator({super.key});
+  const LivePlayerLoadingIndicator({
+    super.key,
+    this.size = TvPlayerLoadingIndicatorDesign.size,
+  });
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return const TvPlayerLoadingIndicator();
+    return TvPlayerLoadingIndicator(size: size);
   }
 }

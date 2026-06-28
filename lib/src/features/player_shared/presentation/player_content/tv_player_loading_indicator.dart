@@ -8,14 +8,19 @@ abstract final class TvPlayerLoadingIndicatorDesign {
 }
 
 class TvPlayerLoadingIndicator extends StatelessWidget {
-  const TvPlayerLoadingIndicator({super.key});
+  const TvPlayerLoadingIndicator({
+    super.key,
+    this.size = TvPlayerLoadingIndicatorDesign.size,
+  });
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return const OptimizedImage.asset(
+    return OptimizedImage.asset(
       AppAssetPaths.iconChzzkDark,
-      width: TvPlayerLoadingIndicatorDesign.size,
-      height: TvPlayerLoadingIndicatorDesign.size,
+      width: size,
+      height: size,
       fit: BoxFit.contain,
     );
   }
