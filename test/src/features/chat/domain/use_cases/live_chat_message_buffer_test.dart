@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/entities/chat.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/use_cases/live_chat_message_buffer.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/use_cases/live_chat_service.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/use_cases/player_chat_message_append_policy.dart';
 
 void main() {
   test('replaces recent messages and appends realtime messages', () async {
@@ -50,13 +51,67 @@ void main() {
       ['one', 'two'],
     );
   });
+
+  test('emoji registry attaches only emojis used by each message', () {
+    final registry = PlayerChatEmojiRegistry();
+
+    final seeded = registry.resolveMessages([
+      _message(
+        '{:one:}',
+        time: 1,
+        emojis: const {
+          'one': 'https://example.com/one.png',
+          'two': 'https://example.com/two.png',
+        },
+      ),
+    ]);
+    final resolved = registry.resolveMessages([
+      _message('{:one:} {:missing:}', time: 2),
+    ]);
+
+    expect(seeded.single.emojis, {
+      'one': 'https://example.com/one.png',
+    });
+    expect(resolved.single.emojis, {
+      'one': 'https://example.com/one.png',
+    });
+  });
+
+  test('emoji registry evicts older entries beyond its limit', () {
+    final registry = PlayerChatEmojiRegistry();
+    const newestIndex = PlayerChatEmojiRegistry.maxRegistrySize + 1;
+
+    registry.resolveMessages([
+      for (var index = 0; index <= newestIndex; index += 1)
+        _message(
+          'seed-$index',
+          time: index + 1,
+          emojis: {
+            'emoji-$index': 'https://example.com/$index.png',
+          },
+        ),
+    ]);
+
+    final resolved = registry.resolveMessages([
+      _message('{:emoji-0:} {:emoji-$newestIndex:}', time: newestIndex + 2),
+    ]);
+
+    expect(resolved.single.emojis, {
+      'emoji-$newestIndex': 'https://example.com/$newestIndex.png',
+    });
+  });
 }
 
-PlayerChatMessage _message(String content, {required int time}) {
+PlayerChatMessage _message(
+  String content, {
+  required int time,
+  Map<String, String> emojis = const <String, String>{},
+}) {
   return PlayerChatMessage.fromLivePayload(
     messageTime: time,
     messageTypeCode: 1,
     content: content,
     userIdHash: 'user-$content',
+    emojis: emojis,
   );
 }

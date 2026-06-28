@@ -1,6 +1,8 @@
 import '../entities/chat.dart';
 
 final class PlayerChatEmojiRegistry {
+  static const maxRegistrySize = 1024;
+
   final _emojis = <String, String>{};
 
   void clear() {
@@ -11,9 +13,7 @@ final class PlayerChatEmojiRegistry {
     final resolved = <PlayerChatMessage>[];
     for (final message in messages) {
       if (message.emojis.isNotEmpty) {
-        _emojis.addAll(message.emojis);
-        resolved.add(message);
-        continue;
+        _rememberEmojis(message.emojis);
       }
 
       if (!_containsEmojiToken(message.content)) {
@@ -21,7 +21,13 @@ final class PlayerChatEmojiRegistry {
         continue;
       }
 
-      resolved.add(message.withEmojis(_emojis));
+      final emojis = _emojisForContent(message.content);
+      if (emojis.isEmpty) {
+        resolved.add(message);
+        continue;
+      }
+
+      resolved.add(message.withEmojis(emojis));
     }
 
     return resolved;
@@ -30,7 +36,41 @@ final class PlayerChatEmojiRegistry {
   bool _containsEmojiToken(String content) {
     return content.contains('{:') && content.contains(':}');
   }
+
+  void _rememberEmojis(Map<String, String> emojis) {
+    _emojis.addAll(emojis);
+    final overflow = _emojis.length - maxRegistrySize;
+    if (overflow <= 0) {
+      return;
+    }
+
+    _emojis.keys
+        .take(overflow)
+        .toList(growable: false)
+        .forEach(
+          _emojis.remove,
+        );
+  }
+
+  Map<String, String> _emojisForContent(String content) {
+    final emojis = <String, String>{};
+    for (final match in _emojiTokenPattern.allMatches(content)) {
+      final key = match.group(1);
+      if (key == null || emojis.containsKey(key)) {
+        continue;
+      }
+
+      final imageUrl = _emojis[key];
+      if (imageUrl != null && imageUrl.isNotEmpty) {
+        emojis[key] = imageUrl;
+      }
+    }
+
+    return emojis;
+  }
 }
+
+final _emojiTokenPattern = RegExp(r'\{:([^}]+):\}');
 
 const playerChatMessageBufferSize = 160;
 const playerChatBadgeCollectorBufferSize = 80;
