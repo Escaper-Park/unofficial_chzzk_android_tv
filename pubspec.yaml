@@ -1,7 +1,7 @@
 name: unofficial_chzzk_android_tv
 description: "UnOfficial Chzzk for Android TV"
 publish_to: "none"
-version: 0.4.1+2
+version: 0.4.2+1
 
 environment:
   sdk: ^3.12.2
@@ -60,4 +60,3 @@ flutter:
       fonts:
         - asset: assets/fonts/KCC-Hanbit.otf
           weight: 400
-
