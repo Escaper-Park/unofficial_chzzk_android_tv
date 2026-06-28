@@ -1873,21 +1873,28 @@ void main() {
             state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
       );
       bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
-      await bloc.stream.firstWhere((state) => state.activeSlotId == 'slot-1');
+      final shifted = await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlotId == 'slot-1' &&
+            state.slotById('primary')?.playbackUri ==
+                _resolutionUri('channel-a', '480p') &&
+            state.slotById('slot-1')?.playbackUri ==
+                _resolutionUri('channel-b', '1080p'),
+      );
 
       expect(
-        bloc.state.slotById('primary')?.playbackUri,
-        _resolutionUri('channel-a', '1080p'),
+        shifted.slotById('primary')?.playbackUri,
+        _resolutionUri('channel-a', '480p'),
       );
       expect(
-        bloc.state.slotById('slot-1')?.playbackUri,
-        _resolutionUri('channel-b', '480p'),
+        shifted.slotById('slot-1')?.playbackUri,
+        _resolutionUri('channel-b', '1080p'),
       );
     },
   );
 
   test(
-    'PIP active slot change keeps configured multiview resolution',
+    'PIP active slot change applies main and overlay resolutions',
     () async {
       final bloc = _livePlayerBloc(
         liveRepository: _FakeLiveRepository(
@@ -1933,14 +1940,243 @@ void main() {
         (state) =>
             state.activeSlotId == 'slot-1' &&
             state.slotById('primary')?.playbackUri ==
-                _resolutionUri('channel-a', '1080p') &&
+                _resolutionUri('channel-a', '360p') &&
             state.slotById('slot-1')?.playbackUri ==
-                _resolutionUri('channel-b', '360p'),
+                _resolutionUri('channel-b', '1080p'),
       );
 
       expect(shifted.audibleSlotIds, {'slot-1'});
     },
   );
+
+  test('PIP layout preference change applies role resolutions', () async {
+    final bloc = _livePlayerBloc(
+      liveRepository: _FakeLiveRepository(
+        detail: _liveDetail(
+          livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+        ),
+        detailsByChannelId: {
+          'channel-b': _liveDetail(
+            channelId: 'channel-b',
+            liveId: 2,
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+          ),
+        },
+      ),
+      loadLivePlaybackPlaylistText: _fakeLivePlaybackPlaylistTextLoader(
+        playlistTextByUri: _playlistTextByChannelIds([
+          'channel-a',
+          'channel-b',
+        ]),
+      ),
+    );
+    addTearDown(bloc.close);
+
+    await _startReadyLive(bloc);
+    await _enterMultiviewAndAddLive(bloc, channelId: 'channel-b', liveId: 2);
+    bloc.add(
+      const LivePlayerEvent.slotResolutionSelected(
+        slotId: 'slot-1',
+        resolutionIndex: 2,
+      ),
+    );
+    await bloc.stream.firstWhere(
+      (state) =>
+          state.slotById('slot-1')?.playbackUri ==
+          _resolutionUri('channel-b', '720p'),
+    );
+
+    bloc.add(
+      LivePlayerEvent.preferencesChanged(
+        preferences: bloc.state.settingsPreferences.copyWith(
+          liveSettings: bloc.state.settingsPreferences.liveSettings.copyWith(
+            multiviewScreenModeIndex: 1,
+          ),
+        ),
+      ),
+    );
+
+    await bloc.stream.firstWhere(
+      (state) =>
+          state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip &&
+          state.slotById('primary')?.playbackUri ==
+              _resolutionUri('channel-a', '1080p') &&
+          state.slotById('slot-1')?.playbackUri ==
+              _resolutionUri('channel-b', '360p'),
+    );
+  });
+
+  test(
+    'PIP role resolution changes survive active slot switches for the session',
+    () async {
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+          detailsByChannelId: {
+            'channel-b': _liveDetail(
+              channelId: 'channel-b',
+              liveId: 2,
+              livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+            ),
+          },
+        ),
+        loadLivePlaybackPlaylistText: _fakeLivePlaybackPlaylistTextLoader(
+          playlistTextByUri: _playlistTextByChannelIds([
+            'channel-a',
+            'channel-b',
+          ]),
+        ),
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      await _enterMultiviewAndAddLive(bloc, channelId: 'channel-b', liveId: 2);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip &&
+            state.slotById('primary')?.playbackUri ==
+                _resolutionUri('channel-a', '1080p') &&
+            state.slotById('slot-1')?.playbackUri ==
+                _resolutionUri('channel-b', '360p'),
+      );
+
+      bloc.add(
+        const LivePlayerEvent.slotResolutionSelected(
+          slotId: 'primary',
+          resolutionIndex: 2,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('primary')?.playbackUri ==
+            _resolutionUri('channel-a', '720p'),
+      );
+
+      bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlotId == 'slot-1' &&
+            state.slotById('primary')?.playbackUri ==
+                _resolutionUri('channel-a', '360p') &&
+            state.slotById('slot-1')?.playbackUri ==
+                _resolutionUri('channel-b', '720p'),
+      );
+
+      bloc.add(
+        const LivePlayerEvent.slotResolutionSelected(
+          slotId: 'primary',
+          resolutionIndex: 1,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('primary')?.playbackUri ==
+            _resolutionUri('channel-a', '480p'),
+      );
+
+      bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.activeSlotId == 'primary' &&
+            state.slotById('primary')?.playbackUri ==
+                _resolutionUri('channel-a', '720p') &&
+            state.slotById('slot-1')?.playbackUri ==
+                _resolutionUri('channel-b', '480p'),
+      );
+    },
+  );
+
+  test('PIP role resolution memory resets with a new player session', () async {
+    final liveRepository = _FakeLiveRepository(
+      detail: _liveDetail(
+        livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+      ),
+      detailsByChannelId: {
+        'channel-b': _liveDetail(
+          channelId: 'channel-b',
+          liveId: 2,
+          livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+        ),
+      },
+    );
+    final loadLivePlaybackPlaylistText = _fakeLivePlaybackPlaylistTextLoader(
+      playlistTextByUri: _playlistTextByChannelIds([
+        'channel-a',
+        'channel-b',
+      ]),
+    );
+    final firstBloc = _livePlayerBloc(
+      liveRepository: liveRepository,
+      loadLivePlaybackPlaylistText: loadLivePlaybackPlaylistText,
+    );
+    var firstBlocClosed = false;
+    addTearDown(() async {
+      if (!firstBlocClosed) {
+        await firstBloc.close();
+      }
+    });
+
+    await _startReadyLive(firstBloc);
+    await _enterMultiviewAndAddLive(
+      firstBloc,
+      channelId: 'channel-b',
+      liveId: 2,
+    );
+    firstBloc.add(
+      const LivePlayerEvent.multiviewLayoutModeSelected(
+        layoutMode: LivePlayerMultiviewLayoutMode.pip,
+      ),
+    );
+    await firstBloc.stream.firstWhere(
+      (state) => state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+    );
+    firstBloc.add(
+      const LivePlayerEvent.slotResolutionSelected(
+        slotId: 'primary',
+        resolutionIndex: 2,
+      ),
+    );
+    await firstBloc.stream.firstWhere(
+      (state) =>
+          state.slotById('primary')?.playbackUri ==
+          _resolutionUri('channel-a', '720p'),
+    );
+    await firstBloc.close();
+    firstBlocClosed = true;
+
+    final secondBloc = _livePlayerBloc(
+      liveRepository: liveRepository,
+      loadLivePlaybackPlaylistText: loadLivePlaybackPlaylistText,
+    );
+    addTearDown(secondBloc.close);
+    await _startReadyLive(secondBloc);
+    await _enterMultiviewAndAddLive(
+      secondBloc,
+      channelId: 'channel-b',
+      liveId: 2,
+    );
+    secondBloc.add(
+      const LivePlayerEvent.multiviewLayoutModeSelected(
+        layoutMode: LivePlayerMultiviewLayoutMode.pip,
+      ),
+    );
+
+    await secondBloc.stream.firstWhere(
+      (state) =>
+          state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip &&
+          state.slotById('primary')?.playbackUri ==
+              _resolutionUri('channel-a', '1080p') &&
+          state.slotById('slot-1')?.playbackUri ==
+              _resolutionUri('channel-b', '360p'),
+    );
+  });
 
   test(
     'multiview layout change skips reload when slot resolution is unchanged',

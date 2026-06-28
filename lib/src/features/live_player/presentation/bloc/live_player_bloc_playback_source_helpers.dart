@@ -14,6 +14,15 @@ extension _LivePlayerBlocPlaybackSourceHelpers on LivePlayerBloc {
       return;
     }
 
+    _rememberPipRoleResolutionForSlot(
+      slotId: event.slotId,
+      resolutionIndex: event.resolutionIndex,
+    );
+    if (_usesPipRoleResolution) {
+      await _refreshMultiviewPlaybackSources(emit, state.settingsPreferences);
+      return;
+    }
+
     await _refreshSlotPlaybackSource(
       emit,
       slot: slot,
@@ -51,6 +60,16 @@ extension _LivePlayerBlocPlaybackSourceHelpers on LivePlayerBloc {
         ),
       );
     }
+  }
+
+  Future<void> _refreshPipRolePlaybackSources(
+    Emitter<LivePlayerState> emit,
+  ) async {
+    if (!_usesPipRoleResolution) {
+      return;
+    }
+
+    await _refreshMultiviewPlaybackSources(emit, state.settingsPreferences);
   }
 
   Future<void> _refreshSlotPlaybackSource(

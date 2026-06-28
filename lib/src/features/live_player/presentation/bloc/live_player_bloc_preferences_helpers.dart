@@ -11,6 +11,10 @@ extension _LivePlayerBlocPreferencesHelpers on LivePlayerBloc {
     final multiviewLayoutMode = _multiviewLayoutModeForIndex(
       preferences.liveSettings.multiviewScreenModeIndex,
     );
+    final enteringPipLayout =
+        wasMultiview &&
+        state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip &&
+        multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip;
     final shouldRefreshPlaybackSource = wasMultiview
         ? _shouldRefreshMultiviewPlaybackSources(
             previousPreferences,
@@ -25,7 +29,7 @@ extension _LivePlayerBlocPreferencesHelpers on LivePlayerBloc {
       ),
     );
 
-    if (shouldRefreshPlaybackSource) {
+    if (shouldRefreshPlaybackSource || enteringPipLayout) {
       if (wasMultiview) {
         await _refreshMultiviewPlaybackSources(emit, preferences);
       } else {

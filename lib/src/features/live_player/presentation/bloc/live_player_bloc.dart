@@ -136,6 +136,8 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
 
   SettingsPreferences _persistedSettingsPreferences =
       defaultSettingsPreferences;
+  int? _pipMainResolutionIndex;
+  int? _pipOverlayResolutionIndex;
   int _statusRefreshSerial = 0;
   int _browseRequestSerial = 0;
   int _generatedSlotSerial = 1;

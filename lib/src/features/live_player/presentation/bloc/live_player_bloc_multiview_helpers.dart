@@ -67,6 +67,9 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
         settingsPreferences: preferences,
       ),
     );
+    if (event.layoutMode == LivePlayerMultiviewLayoutMode.pip) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
     await _savePersistentPreferences(preferences);
   }
 
@@ -82,10 +85,13 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
       state.activeSlotIndex + event.delta,
       state.slots.length,
     );
-    _emitActiveSlotSelection(
+    final changed = _emitActiveSlotSelection(
       emit,
       state.slots[nextIndex].slotId,
     );
+    if (changed) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 
   Future<void> _onActiveSlotSelected(
@@ -96,7 +102,10 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
       return;
     }
 
-    _emitActiveSlotSelection(emit, event.slotId);
+    final changed = _emitActiveSlotSelection(emit, event.slotId);
+    if (changed) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 
   void _onSlotAudioToggled(
@@ -207,6 +216,9 @@ extension _LivePlayerBlocMultiviewHelpers on LivePlayerBloc {
             : null,
       ),
     );
+    if (activeSlotRemoved) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
   }
 }
 

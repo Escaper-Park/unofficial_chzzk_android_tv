@@ -70,11 +70,14 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
       return true;
     }
 
-    _emitActiveSlotSelection(
+    final changed = _emitActiveSlotSelection(
       emit,
       slot.slotId,
       clearPendingReplacement: clearPendingReplacement,
     );
+    if (changed) {
+      await _refreshPipRolePlaybackSources(emit);
+    }
     return true;
   }
 
