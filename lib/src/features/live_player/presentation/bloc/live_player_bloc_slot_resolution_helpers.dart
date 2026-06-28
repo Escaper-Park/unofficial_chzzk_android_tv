@@ -9,6 +9,11 @@ extension _LivePlayerBlocSlotResolutionHelpers on LivePlayerBloc {
       return preferences.liveSettings.resolutionIndex;
     }
 
+    final slotResolutionIndex = state.slotById(slotId)?.playbackResolutionIndex;
+    if (slotResolutionIndex != null) {
+      return slotResolutionIndex;
+    }
+
     return preferences.liveSettings.multiviewResolutionIndex;
   }
 }

@@ -1638,7 +1638,7 @@ void main() {
     expect(reported.pendingReplacementLive, isNull);
   });
 
-  test('multiview default resolution initializes every slot', () async {
+  test('multiview default resolution initializes added slots only', () async {
     final bloc = _livePlayerBloc(
       liveRepository: _FakeLiveRepository(
         detail: _liveDetail(
@@ -1682,7 +1682,7 @@ void main() {
       (state) =>
           state.isMultiview &&
           state.slotById('primary')?.playbackUri ==
-              _resolutionUri('channel-a', '360p'),
+              _resolutionUri('channel-a', '1080p'),
     );
     expect(oneSlot.multiviewLayoutMode, LivePlayerMultiviewLayoutMode.pbp);
 
@@ -1693,7 +1693,7 @@ void main() {
     );
     expect(
       bloc.state.slotById('primary')?.playbackUri,
-      _resolutionUri('channel-a', '360p'),
+      _resolutionUri('channel-a', '1080p'),
     );
     expect(
       bloc.state.slotById('slot-1')?.playbackUri,
@@ -1709,7 +1709,7 @@ void main() {
 
     expect(
       threeSlots.slotById('primary')?.playbackUri,
-      _resolutionUri('channel-a', '360p'),
+      _resolutionUri('channel-a', '1080p'),
     );
     expect(
       threeSlots.slotById('slot-1')?.playbackUri,
@@ -1788,7 +1788,7 @@ void main() {
 
     expect(
       changed.slotById('primary')?.playbackUri,
-      _resolutionUri('channel-a', '360p'),
+      _resolutionUri('channel-a', '1080p'),
     );
     expect(
       changed.slotById('slot-1')?.playbackUri,
@@ -1807,7 +1807,7 @@ void main() {
   });
 
   test(
-    'configured multiview resolution survives layout and focus changes',
+    'configured multiview resolution applies to added slots only',
     () async {
       final bloc = _livePlayerBloc(
         liveRepository: _FakeLiveRepository(
@@ -1846,7 +1846,7 @@ void main() {
         (state) =>
             state.isMultiview &&
             state.slotById('primary')?.playbackUri ==
-                _resolutionUri('channel-a', '480p'),
+                _resolutionUri('channel-a', '1080p'),
       );
 
       await _enterMultiviewAndAddLive(
@@ -1856,7 +1856,7 @@ void main() {
       );
       expect(
         bloc.state.slotById('primary')?.playbackUri,
-        _resolutionUri('channel-a', '480p'),
+        _resolutionUri('channel-a', '1080p'),
       );
       expect(
         bloc.state.slotById('slot-1')?.playbackUri,
@@ -1877,7 +1877,7 @@ void main() {
 
       expect(
         bloc.state.slotById('primary')?.playbackUri,
-        _resolutionUri('channel-a', '480p'),
+        _resolutionUri('channel-a', '1080p'),
       );
       expect(
         bloc.state.slotById('slot-1')?.playbackUri,
@@ -1923,7 +1923,7 @@ void main() {
         (state) =>
             state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip &&
             state.slotById('primary')?.playbackUri ==
-                _resolutionUri('channel-a', '360p') &&
+                _resolutionUri('channel-a', '1080p') &&
             state.slotById('slot-1')?.playbackUri ==
                 _resolutionUri('channel-b', '360p'),
       );
@@ -1933,7 +1933,7 @@ void main() {
         (state) =>
             state.activeSlotId == 'slot-1' &&
             state.slotById('primary')?.playbackUri ==
-                _resolutionUri('channel-a', '360p') &&
+                _resolutionUri('channel-a', '1080p') &&
             state.slotById('slot-1')?.playbackUri ==
                 _resolutionUri('channel-b', '360p'),
       );
@@ -1980,7 +1980,7 @@ void main() {
       await bloc.stream.firstWhere(
         (state) =>
             state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip &&
-            state.slotById('primary')?.playbackResolutionIndex == 0 &&
+            state.slotById('primary')?.playbackResolutionIndex == 3 &&
             state.slotById('slot-1')?.playbackResolutionIndex == 0,
       );
 
@@ -2027,7 +2027,7 @@ void main() {
         (state) =>
             state.isMultiview &&
             state.activeSlot.videoViewType == PlayerVideoViewType.textureView &&
-            state.activeSlot.playbackResolutionIndex == 0,
+            state.activeSlot.playbackResolutionIndex == 3,
       );
 
       playlistLoads.clear();
@@ -2047,7 +2047,7 @@ void main() {
 
       expect(
         changed.activeSlot.playbackUri,
-        _resolutionUri('channel-a', '360p'),
+        _resolutionUri('channel-a', '1080p'),
       );
       expect(playlistLoads, isEmpty);
     },
