@@ -11,7 +11,6 @@ class _LivePlayerSlotCell extends StatelessWidget {
     required this.mixWithOthers,
     required this.watchEventEnabled,
     required this.playbackSessionController,
-    required this.borderRadius,
     required this.statusSurfaceFor,
   });
 
@@ -24,7 +23,6 @@ class _LivePlayerSlotCell extends StatelessWidget {
   final bool mixWithOthers;
   final bool watchEventEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
-  final double borderRadius;
   final LivePlayerStatusSurfaceBuilder statusSurfaceFor;
 
   @override
@@ -96,11 +94,7 @@ class _LivePlayerSlotCell extends StatelessWidget {
           ],
         );
 
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
-          clipBehavior: borderRadius <= 0 ? Clip.none : Clip.antiAlias,
-          child: content,
-        );
+        return content;
       },
     );
   }

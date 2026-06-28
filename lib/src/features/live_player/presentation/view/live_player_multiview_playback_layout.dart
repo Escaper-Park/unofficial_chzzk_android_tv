@@ -125,10 +125,9 @@ class LivePlayerPlaybackLayout extends HookWidget {
                           !state.isMultiview &&
                           state.watchEventReportingEnabled,
                       playbackSessionController: playbackSessionController,
-                      borderRadius: _livePlayerSlotBorderRadius(
+                      videoViewType: _effectiveSlotVideoViewType(
                         state: state,
-                        slotId: slot.slotId,
-                        rect: slotRects[slot.slotId]!,
+                        slot: slot,
                       ),
                       statusSurfaceFor: statusSurfaceFor,
                     ),
@@ -251,6 +250,21 @@ Set<String> _playbackEnabledSlotIds(LivePlayerState state) {
   return enabledSlotIds;
 }
 
+PlayerVideoViewType _effectiveSlotVideoViewType({
+  required LivePlayerState state,
+  required LivePlayerSlotState slot,
+}) {
+  final videoViewType = slot.videoViewType;
+  if (videoViewType != PlayerVideoViewType.platformView ||
+      !state.isMultiview ||
+      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip ||
+      slot.slotId == state.activeSlotId) {
+    return videoViewType;
+  }
+
+  return PlayerVideoViewType.textureView;
+}
+
 bool _slotStartupFinished(LivePlayerSlotState slot) {
   return switch (slot.status) {
     LivePlayerSlotStatus.empty ||
@@ -259,20 +273,6 @@ bool _slotStartupFinished(LivePlayerSlotState slot) {
     LivePlayerSlotStatus.playing => slot.playbackUri != null,
     LivePlayerSlotStatus.loadingSource || LivePlayerSlotStatus.ready => false,
   };
-}
-
-double _livePlayerSlotBorderRadius({
-  required LivePlayerState state,
-  required String slotId,
-  required Rect rect,
-}) {
-  if (!state.isMultiview ||
-      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip ||
-      slotId == state.activeSlotId) {
-    return 0;
-  }
-
-  return _pipRadiusForRect(rect);
 }
 
 Rect _singlePlaybackRect(

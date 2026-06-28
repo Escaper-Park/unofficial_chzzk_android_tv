@@ -80,23 +80,6 @@ Size _pipSize({
   return Size(availableWidth, availableWidth * 9 / 16);
 }
 
-double _pipRadiusForRect(Rect rect) {
-  final shortestSide = math.min(rect.width, rect.height);
-  if (shortestSide <= 0) {
-    return 0;
-  }
-
-  final scaledRadius =
-      shortestSide * LivePlayerScreenDesign.multiviewPipRadiusRatio;
-  final radius = scaledRadius
-      .clamp(
-        LivePlayerScreenDesign.multiviewPipMinRadius,
-        LivePlayerScreenDesign.multiviewPipMaxRadius,
-      )
-      .toDouble();
-  return math.min(shortestSide / 2, radius);
-}
-
 double _pipAxisOrigin({
   required int positionPercent,
   required double available,

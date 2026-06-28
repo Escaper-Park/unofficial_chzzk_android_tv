@@ -1101,6 +1101,116 @@ void main() {
     );
   });
 
+  testWidgets('multiview PIP keeps platform views stable without clips', (
+    tester,
+  ) async {
+    final bloc = await _pumpLivePlayer(
+      tester,
+      preferences: const SettingsPreferences(
+        generalSetting: GeneralSetting(
+          videoViewTypeIndex: playerVideoViewTypeIndexMax,
+        ),
+      ),
+      liveRepository: const _FakeLiveRepository(
+        detailsByChannelId: {
+          'channel-b': LiveDetail(
+            liveId: 2,
+            title: 'Channel B live',
+            status: 'OPEN',
+            concurrentUserCount: 20,
+            adult: false,
+            chatChannelId: 'chat-b',
+            livePlaybackJson:
+                '{"media":[{"mediaId":"HLS","path":"https://example.com/channel-b.m3u8"}]}',
+            channel: LiveChannel(
+              channelId: 'channel-b',
+              channelName: 'Channel B',
+              verifiedMark: false,
+            ),
+          ),
+        },
+      ),
+    );
+    final videoPlatform =
+        VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+          bloc.state.activeSlot.playbackUri != null,
+    );
+
+    final primaryUri = bloc.state.activeSlot.playbackUri!.toString();
+    final primaryPlayerId = videoPlatform.latestPlayerIdForUri(primaryUri);
+    expect(primaryPlayerId, isNotNull);
+    expect(
+      videoPlatform.viewTypeForPlayer(primaryPlayerId!),
+      VideoViewType.platformView,
+    );
+
+    bloc.add(
+      const LivePlayerEvent.viewModeSelected(
+        viewMode: LivePlayerViewMode.multiview,
+      ),
+    );
+    await _pumpUntil(tester, until: () => bloc.state.isMultiview);
+    bloc.add(
+      const LivePlayerEvent.browseLiveSelected(
+        live: Live(
+          liveId: 2,
+          title: 'Channel B',
+          concurrentUserCount: 20,
+          adult: false,
+          channel: LiveChannel(
+            channelId: 'channel-b',
+            channelName: 'Channel B',
+            verifiedMark: false,
+          ),
+        ),
+      ),
+    );
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.slotById('slot-1')?.status == LivePlayerSlotStatus.playing,
+    );
+
+    final pipUri = bloc.state.slotById('slot-1')!.playbackUri!.toString();
+    final pbpPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
+    expect(pbpPlayerId, isNotNull);
+    expect(
+      videoPlatform.viewTypeForPlayer(pbpPlayerId!),
+      VideoViewType.platformView,
+    );
+
+    bloc.add(
+      const LivePlayerEvent.multiviewLayoutModeSelected(
+        layoutMode: LivePlayerMultiviewLayoutMode.pip,
+      ),
+    );
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+    );
+
+    final pipPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
+    expect(pipPlayerId, pbpPlayerId);
+    expect(
+      videoPlatform.viewTypeForPlayer(pipPlayerId!),
+      VideoViewType.platformView,
+    );
+    expect(
+      find.ancestor(
+        of: find.byKey(ValueKey('fake-video-view-$pipPlayerId')),
+        matching: find.byType(ClipRRect),
+      ),
+      findsNothing,
+    );
+    expect(videoPlatform.latestPlayerIdForUri(primaryUri), primaryPlayerId);
+  });
+
   testWidgets('multiview PIP stack fits inside the screen with reduced gaps', (
     tester,
   ) async {
@@ -1220,19 +1330,16 @@ void main() {
       ),
     );
 
-    final firstPipSlot = bloc.state.slotById('slot-1')!;
     final firstPipPlayerId = videoPlatform.latestPlayerIdForUri(
-      firstPipSlot.playbackUri!.toString(),
+      bloc.state.slotById('slot-1')!.playbackUri!.toString(),
     );
-    final firstPipClip = tester.widget<ClipRRect>(
+    expect(
       find.ancestor(
         of: find.byKey(ValueKey('fake-video-view-$firstPipPlayerId')),
         matching: find.byType(ClipRRect),
       ),
+      findsNothing,
     );
-    final firstPipRadius =
-        (firstPipClip.borderRadius as BorderRadius).topLeft.x;
-    expect(firstPipRadius, moreOrLessEquals(9.2664, epsilon: 0.01));
   });
 }
 
@@ -1853,6 +1960,7 @@ Never _unsupportedFakeOperation(String operation) {
 final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   final _streams = <int, StreamController<VideoEvent>>{};
   final _playerUriById = <int, String?>{};
+  final _viewTypeByPlayerId = <int, VideoViewType?>{};
   final _pendingInitializationByUri = <String, Completer<void>>{};
   final mixWithOthersValues = <bool>[];
   final buildViewPlayerIds = <int>[];
@@ -1861,18 +1969,19 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
 
   @override
   Future<int?> create(DataSource dataSource) async {
-    return _createPlayer(dataSource.uri);
+    return _createPlayer(dataSource.uri, null);
   }
 
   @override
   Future<int?> createWithOptions(VideoCreationOptions options) async {
-    return _createPlayer(options.dataSource.uri);
+    return _createPlayer(options.dataSource.uri, options.viewType);
   }
 
   @override
   Future<void> dispose(int playerId) async {
     playerCalls.add((playerId: playerId, method: 'dispose', volume: null));
     _playerUriById.remove(playerId);
+    _viewTypeByPlayerId.remove(playerId);
     await _streams.remove(playerId)?.close();
   }
 
@@ -1940,6 +2049,10 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
     return null;
   }
 
+  VideoViewType? viewTypeForPlayer(int playerId) {
+    return _viewTypeByPlayerId[playerId];
+  }
+
   void delayInitializationForUri(String uri) {
     _pendingInitializationByUri[uri] = Completer<void>();
   }
@@ -1969,13 +2082,15 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
     }
     _streams.clear();
     _playerUriById.clear();
+    _viewTypeByPlayerId.clear();
   }
 
-  int _createPlayer(String? uri) {
+  int _createPlayer(String? uri, VideoViewType? viewType) {
     final playerId = _nextPlayerId++;
     final stream = StreamController<VideoEvent>();
     _streams[playerId] = stream;
     _playerUriById[playerId] = uri;
+    _viewTypeByPlayerId[playerId] = viewType;
     final pendingInitialization = uri == null
         ? null
         : _pendingInitializationByUri[uri];
