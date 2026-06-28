@@ -13,9 +13,17 @@ class _ChannelLiveStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final startedAt = parseLiveCardOpenDate(item.openDate);
 
-    return LiveCardElapsedTicker(
-      enabled: startedAt != null,
+    if (startedAt == null) {
+      return _ChannelLiveStatsContent(
+        item: item,
+        startedAt: null,
+        currentTime: now(),
+      );
+    }
+
+    return LiveCardElapsedSnapshot(
       now: now,
+      snapshotKey: startedAt,
       builder: (context, currentTime) {
         return _ChannelLiveStatsContent(
           item: item,

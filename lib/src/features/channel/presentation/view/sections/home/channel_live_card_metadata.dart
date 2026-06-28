@@ -4,7 +4,7 @@ import '../../../../../../core/ui/composites/media_cards/tv_media_title.dart';
 import '../../../../../../core/ui/ui.dart';
 import '../../../../../live/domain/entities/live_feed.dart';
 import '../../../../../live/presentation/live_card_string.dart';
-import '../../../../../live/presentation/view/shared/live_card_elapsed_ticker.dart';
+import '../../../../../live/presentation/view/shared/live_card_elapsed_snapshot.dart';
 import '../../../../../live/presentation/view/shared/live_card_formatters.dart';
 import '../../../../../live/presentation/view/shared/live_tag_badges.dart';
 import '../../../channel_screen_design.dart';

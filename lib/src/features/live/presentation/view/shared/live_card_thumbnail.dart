@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/ui/ui.dart';
 import '../../../domain/entities/live_feed.dart';
 import '../../live_card_string.dart';
-import 'live_card_elapsed_ticker.dart';
+import 'live_card_elapsed_snapshot.dart';
 import 'live_card_formatters.dart';
 import 'live_card_thumbnail_url.dart';
 
@@ -93,8 +93,9 @@ class _LiveUptimeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LiveCardElapsedTicker(
+    return LiveCardElapsedSnapshot(
       now: now,
+      snapshotKey: startedAt,
       builder: (context, currentTime) {
         return TvMediaBadge(
           text: formatLiveCardElapsed(currentTime.difference(startedAt)),
