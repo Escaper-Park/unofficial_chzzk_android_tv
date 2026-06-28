@@ -88,6 +88,25 @@ void main() {
     expect(cubit.state.isShifted, isFalse);
   });
 
+  testWidgets('shows grave and tilde on shifted Korean layout', (tester) async {
+    final cubit = TvKeyboardCubit(
+      initialInputMode: TvKeyboardInputMode.korean,
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(_KeyboardHarness(cubit: cubit));
+    await tester.tap(find.byKey(const Key('tv-keyboard-key-shift')));
+    await tester.pump();
+
+    expect(find.text('`'), findsOneWidget);
+    expect(find.text('~'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('tv-keyboard-key-`')));
+    await tester.pump();
+
+    expect(cubit.state.value, '`');
+  });
+
   testWidgets('backspace removes the last input value', (tester) async {
     final cubit = TvKeyboardCubit(initialValue: 'ab');
     addTearDown(cubit.close);
