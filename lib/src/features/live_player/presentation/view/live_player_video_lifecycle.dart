@@ -5,7 +5,6 @@ void _useLivePlayerControllerLifecycle({
   required ValueNotifier<bool> initialized,
   required ValueNotifier<bool> failed,
   required ValueNotifier<bool> ended,
-  required PeriodicCallbackTimer syncTimer,
   required ObjectRef<LivePlayerWatchEventReporter?> reporterRef,
   required LivePlayerPlaybackSessionController playbackSessionController,
   required _LivePlayerVideoSessionHandle playbackSessionHandle,
@@ -61,10 +60,6 @@ void _useLivePlayerControllerLifecycle({
                 }
               }
 
-              syncTimer.start(
-                interval: const Duration(seconds: 1),
-                onTick: syncWatchEvent,
-              );
               syncWatchEvent();
             })
             .catchError((Object _) {
@@ -78,7 +73,6 @@ void _useLivePlayerControllerLifecycle({
 
       return () {
         disposed = true;
-        syncTimer.stop();
         reporter?.suspend();
         controller.removeListener(handleControllerChange);
         playbackSessionController.unregister(
@@ -89,7 +83,6 @@ void _useLivePlayerControllerLifecycle({
     },
     [
       controller,
-      syncTimer,
       playbackSessionController,
       playbackSessionHandle,
     ],

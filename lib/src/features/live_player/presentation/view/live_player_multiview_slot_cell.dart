@@ -10,6 +10,7 @@ class _LivePlayerSlotCell extends HookWidget {
     required this.volume,
     required this.mixWithOthers,
     required this.watchEventEnabled,
+    required this.statusPollingEnabled,
     required this.playbackSessionController,
     required this.statusSurfaceFor,
   });
@@ -22,6 +23,7 @@ class _LivePlayerSlotCell extends HookWidget {
   final double volume;
   final bool mixWithOthers;
   final bool watchEventEnabled;
+  final bool statusPollingEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
   final LivePlayerStatusSurfaceBuilder statusSurfaceFor;
 
@@ -46,11 +48,13 @@ class _LivePlayerSlotCell extends HookWidget {
           slot: slot,
           active: active,
           activeOutlineVisible: activeOutlineVisible,
-          playbackEnabled: _playbackEnabledSlotIds(state).contains(slotId),
+          playbackEnabled: _playbackEnabledForSlotId(state, slotId),
           playbackPaused: playbackPaused,
           volume: volume,
           mixWithOthers: mixWithOthers,
+          videoViewType: _effectiveVideoViewTypeForSlot(state, slot),
           watchEventEnabled: watchEventEnabled,
+          statusPollingEnabled: statusPollingEnabled,
         );
       },
       builder: (context, snapshot) {
@@ -85,13 +89,15 @@ class _LivePlayerSlotCell extends HookWidget {
             if (slotSnapshot.playbackEnabled && surfaceSlot != null)
               LivePlayerSurface(
                 key: ValueKey(
-                  'live-player-surface-${slot.slotId}-${surfaceRevision.value}',
+                  'live-player-surface-${slot.slotId}-${slotSnapshot.videoViewType.name}-${surfaceRevision.value}',
                 ),
                 slot: surfaceSlot,
                 playbackPaused: slotSnapshot.playbackPaused,
                 volume: slotSnapshot.volume,
                 mixWithOthers: slotSnapshot.mixWithOthers,
+                videoViewType: slotSnapshot.videoViewType,
                 watchEventEnabled: slotSnapshot.watchEventEnabled,
+                statusPollingEnabled: slotSnapshot.statusPollingEnabled,
                 playbackSessionController: playbackSessionController,
               )
             else
@@ -175,7 +181,9 @@ final class _LivePlayerSlotSnapshot {
     required this.playbackPaused,
     required this.volume,
     required this.mixWithOthers,
+    required this.videoViewType,
     required this.watchEventEnabled,
+    required this.statusPollingEnabled,
   });
 
   final LivePlayerSlotState slot;
@@ -185,7 +193,9 @@ final class _LivePlayerSlotSnapshot {
   final bool playbackPaused;
   final double volume;
   final bool mixWithOthers;
+  final PlayerVideoViewType videoViewType;
   final bool watchEventEnabled;
+  final bool statusPollingEnabled;
 
   @override
   bool operator ==(Object other) {
@@ -198,7 +208,9 @@ final class _LivePlayerSlotSnapshot {
             other.playbackPaused == playbackPaused &&
             other.volume == volume &&
             other.mixWithOthers == mixWithOthers &&
-            other.watchEventEnabled == watchEventEnabled;
+            other.videoViewType == videoViewType &&
+            other.watchEventEnabled == watchEventEnabled &&
+            other.statusPollingEnabled == statusPollingEnabled;
   }
 
   @override
@@ -210,6 +222,8 @@ final class _LivePlayerSlotSnapshot {
     playbackPaused,
     volume,
     mixWithOthers,
+    videoViewType,
     watchEventEnabled,
+    statusPollingEnabled,
   );
 }

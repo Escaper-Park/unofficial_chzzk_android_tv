@@ -178,7 +178,6 @@ class LivePlayerVideoSurface extends HookWidget {
       initialized: initialized,
       failed: failed,
       ended: ended,
-      syncTimer: syncTimer,
       reporterRef: reporterRef,
       playbackSessionController: playbackSessionController,
       playbackSessionHandle: playbackSessionHandle,
@@ -187,6 +186,29 @@ class LivePlayerVideoSurface extends HookWidget {
       onReady: onReady,
       reportPlaybackFailure: reportPlaybackFailure,
       syncWatchEvent: syncWatchEvent,
+    );
+
+    useEffect(
+      () {
+        if (!initialized.value || failed.value || reporter == null) {
+          syncTimer.stop();
+          return null;
+        }
+
+        syncTimer.start(
+          interval: const Duration(seconds: 1),
+          onTick: syncWatchEvent,
+        );
+        syncWatchEvent();
+        return syncTimer.stop;
+      },
+      [
+        controller,
+        syncTimer,
+        initialized.value,
+        failed.value,
+        reporter,
+      ],
     );
 
     useEffect(() {

@@ -127,6 +127,9 @@ class LivePlayerPlaybackLayout extends HookWidget {
                       watchEventEnabled:
                           !state.isMultiview &&
                           state.watchEventReportingEnabled,
+                      statusPollingEnabled:
+                          !state.isMultiview ||
+                          slot.slotId == state.activeSlotId,
                       playbackSessionController: playbackSessionController,
                       statusSurfaceFor: statusSurfaceFor,
                     ),
@@ -227,26 +230,45 @@ List<LivePlayerSlotState> _livePlayerPaintOrder(LivePlayerState state) {
   ];
 }
 
-Set<String> _playbackEnabledSlotIds(LivePlayerState state) {
+bool _playbackEnabledForSlotId(
+  LivePlayerState state,
+  String slotId,
+) {
   if (!state.isMultiview) {
-    return {state.activeSlotId};
+    return state.activeSlotId == slotId;
   }
 
-  final enabledSlotIds = <String>{};
   var canStartNextPendingSlot = true;
   for (final slot in state.slots) {
-    if (slot.status == LivePlayerSlotStatus.playing &&
-        slot.playbackUri != null) {
-      enabledSlotIds.add(slot.slotId);
-    } else if (canStartNextPendingSlot) {
-      enabledSlotIds.add(slot.slotId);
+    final enabled =
+        (slot.status == LivePlayerSlotStatus.playing &&
+            slot.playbackUri != null) ||
+        canStartNextPendingSlot;
+    if (slot.slotId == slotId) {
+      return enabled;
     }
 
     canStartNextPendingSlot =
         canStartNextPendingSlot && _slotStartupFinished(slot);
   }
 
-  return enabledSlotIds;
+  return false;
+}
+
+PlayerVideoViewType _effectiveVideoViewTypeForSlot(
+  LivePlayerState state,
+  LivePlayerSlotState slot,
+) {
+  if (!state.isMultiview ||
+      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip) {
+    return slot.videoViewType;
+  }
+
+  if (slot.slotId == state.activeSlotId) {
+    return PlayerVideoViewType.platformView;
+  }
+
+  return PlayerVideoViewType.textureView;
 }
 
 bool _slotStartupFinished(LivePlayerSlotState slot) {
