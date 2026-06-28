@@ -21,7 +21,7 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
     emit(
       state.copyWith(
         activeSlotId: slotId,
-        audibleSlotIds: state.isMultiview ? {slotId} : state.audibleSlotIds,
+        audibleSlotIds: _audibleSlotIdsForActiveSelection(slotId),
         activeSlotHighlightSerial: state.isMultiview
             ? state.activeSlotHighlightSerial + 1
             : state.activeSlotHighlightSerial,
@@ -34,6 +34,23 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
       ),
     );
     return true;
+  }
+
+  Set<String> _audibleSlotIdsForActiveSelection(String slotId) {
+    if (!state.isMultiview) {
+      return state.audibleSlotIds;
+    }
+
+    final audibleSlotIds = state.effectiveAudibleSlotIds;
+    if (audibleSlotIds.length >= 2) {
+      return audibleSlotIds;
+    }
+
+    if (audibleSlotIds.isEmpty) {
+      return const <String>{};
+    }
+
+    return {slotId};
   }
 
   Future<bool> _selectExistingLiveSlot(

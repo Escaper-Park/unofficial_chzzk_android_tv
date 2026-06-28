@@ -14,7 +14,7 @@ class LivePlayerSurface extends StatelessWidget {
     super.key,
     required this.slot,
     required this.playbackPaused,
-    required this.muted,
+    required this.volume,
     required this.mixWithOthers,
     required this.watchEventEnabled,
     required this.playbackSessionController,
@@ -22,7 +22,7 @@ class LivePlayerSurface extends StatelessWidget {
 
   final LivePlayerSlotState slot;
   final bool playbackPaused;
-  final bool muted;
+  final double volume;
   final bool mixWithOthers;
   final bool watchEventEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
@@ -57,7 +57,7 @@ class LivePlayerSurface extends StatelessWidget {
         playbackHttpHeaders: playbackHttpHeaders,
         videoViewType: slot.videoViewType,
         playbackPaused: playbackPaused,
-        muted: muted,
+        volume: volume,
         mixWithOthers: mixWithOthers,
         watchEventEnabled: watchEventEnabled,
         playbackSessionController: playbackSessionController,

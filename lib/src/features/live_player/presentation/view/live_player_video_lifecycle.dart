@@ -9,7 +9,7 @@ void _useLivePlayerControllerLifecycle({
   required ObjectRef<LivePlayerWatchEventReporter?> reporterRef,
   required LivePlayerPlaybackSessionController playbackSessionController,
   required _LivePlayerVideoSessionHandle playbackSessionHandle,
-  required bool muted,
+  required double volume,
   required bool Function() playbackSuspended,
   required VoidCallback onReady,
   required VoidCallback reportPlaybackFailure,
@@ -46,7 +46,7 @@ void _useLivePlayerControllerLifecycle({
               }
 
               initialized.value = true;
-              await controller.setVolume(muted ? 0 : 1);
+              await controller.setVolume(volume);
               if (disposed) {
                 return;
               }

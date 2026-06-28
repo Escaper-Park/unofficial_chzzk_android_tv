@@ -12,6 +12,7 @@ import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import 'live_player_multiview_chat_policy.dart';
 import 'live_player_playback_session_controller.dart';
+import 'live_player_status_surface.dart';
 import 'live_player_surface.dart';
 
 part 'live_player_multiview_focus_layout.dart';
@@ -117,18 +118,16 @@ class LivePlayerPlaybackLayout extends HookWidget {
                           slot.slotId == state.activeSlotId &&
                           activeOutlineController.isShowing,
                       playbackPaused: playbackPaused,
-                      muted: state.isMultiview
-                          ? !state.isSlotAudible(slot.slotId)
-                          : singleMuted,
+                      volume: state.isMultiview
+                          ? state.slotPlaybackVolume(slot.slotId)
+                          : singleMuted
+                          ? 0
+                          : 1,
                       mixWithOthers: true,
                       watchEventEnabled:
                           !state.isMultiview &&
                           state.watchEventReportingEnabled,
                       playbackSessionController: playbackSessionController,
-                      videoViewType: _effectiveSlotVideoViewType(
-                        state: state,
-                        slot: slot,
-                      ),
                       statusSurfaceFor: statusSurfaceFor,
                     ),
                   ),
@@ -248,21 +247,6 @@ Set<String> _playbackEnabledSlotIds(LivePlayerState state) {
   }
 
   return enabledSlotIds;
-}
-
-PlayerVideoViewType _effectiveSlotVideoViewType({
-  required LivePlayerState state,
-  required LivePlayerSlotState slot,
-}) {
-  final videoViewType = slot.videoViewType;
-  if (videoViewType != PlayerVideoViewType.platformView ||
-      !state.isMultiview ||
-      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip ||
-      slot.slotId == state.activeSlotId) {
-    return videoViewType;
-  }
-
-  return PlayerVideoViewType.textureView;
 }
 
 bool _slotStartupFinished(LivePlayerSlotState slot) {

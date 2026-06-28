@@ -1459,6 +1459,9 @@ void main() {
       );
       expect(multiview.audibleSlotIds, {'primary'});
       expect(multiview.effectiveAudibleSlotIds, {'primary'});
+      expect(multiview.slotVolumeById, isEmpty);
+      expect(multiview.slotStoredVolume('primary'), 1);
+      expect(multiview.slotPlaybackVolume('primary'), 1);
 
       bloc.add(
         const LivePlayerEvent.viewModeSelected(
@@ -1470,6 +1473,7 @@ void main() {
         (state) => state.viewMode == LivePlayerViewMode.single,
       );
       expect(single.audibleSlotIds, isEmpty);
+      expect(single.slotVolumeById, isEmpty);
       expect(single.effectiveAudibleSlotIds, {'primary'});
     },
   );
@@ -2101,7 +2105,7 @@ void main() {
   });
 
   test(
-    'multiview active slot changes reset audio to the active slot',
+    'multiview active slot changes preserve audio only when multiple slots are audible',
     () async {
       final bloc = _livePlayerBloc(
         liveRepository: _FakeLiveRepository(
@@ -2127,6 +2131,7 @@ void main() {
         (state) => state.audibleSlotIds.contains('slot-1'),
       );
       expect(multiAudio.audibleSlotIds, {'primary', 'slot-1'});
+      expect(multiAudio.effectiveAudibleSlotIds, {'primary', 'slot-1'});
 
       final previousHighlightSerial = multiAudio.activeSlotHighlightSerial;
       bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
@@ -2135,11 +2140,71 @@ void main() {
         (state) => state.activeSlotId == 'slot-1',
       );
 
-      expect(shifted.audibleSlotIds, {'slot-1'});
+      expect(shifted.audibleSlotIds, {'primary', 'slot-1'});
+      expect(shifted.effectiveAudibleSlotIds, {'primary', 'slot-1'});
       expect(
         shifted.activeSlotHighlightSerial,
         previousHighlightSerial + 1,
       );
+    },
+  );
+
+  test(
+    'multiview audio toggle restores the last slot volume in the session',
+    () async {
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            playbackUri: 'https://example.com/channel-a.m3u8',
+          ),
+        ),
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.multiview,
+        ),
+      );
+      await bloc.stream.firstWhere((state) => state.isMultiview);
+
+      bloc.add(
+        const LivePlayerEvent.slotVolumeChanged(
+          slotId: 'primary',
+          volume: 0.7,
+        ),
+      );
+      final adjusted = await bloc.stream.firstWhere(
+        (state) => state.slotStoredVolume('primary') == 0.7,
+      );
+      expect(adjusted.slotPlaybackVolume('primary'), 0.7);
+
+      bloc.add(const LivePlayerEvent.slotAudioToggled(slotId: 'primary'));
+      final muted = await bloc.stream.firstWhere(
+        (state) => !state.isSlotAudible('primary'),
+      );
+      expect(muted.audibleSlotIds, isEmpty);
+      expect(muted.slotStoredVolume('primary'), 0.7);
+      expect(muted.slotPlaybackVolume('primary'), 0);
+
+      bloc.add(const LivePlayerEvent.slotAudioToggled(slotId: 'primary'));
+      final restored = await bloc.stream.firstWhere(
+        (state) => state.isSlotAudible('primary'),
+      );
+      expect(restored.audibleSlotIds, {'primary'});
+      expect(restored.slotStoredVolume('primary'), 0.7);
+      expect(restored.slotPlaybackVolume('primary'), 0.7);
+
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.single,
+        ),
+      );
+      final single = await bloc.stream.firstWhere(
+        (state) => state.viewMode == LivePlayerViewMode.single,
+      );
+      expect(single.slotVolumeById, isEmpty);
     },
   );
 
@@ -2180,10 +2245,6 @@ void main() {
 
     bloc.add(const LivePlayerEvent.activeSlotSelected(slotId: 'slot-1'));
     await bloc.stream.firstWhere((state) => state.activeSlotId == 'slot-1');
-    bloc.add(const LivePlayerEvent.slotAudioToggled(slotId: 'primary'));
-    await bloc.stream.firstWhere(
-      (state) => state.audibleSlotIds.contains('primary'),
-    );
 
     bloc.add(const LivePlayerEvent.slotCloseConfirmed(slotId: 'slot-1'));
     final closed = await bloc.stream.firstWhere(

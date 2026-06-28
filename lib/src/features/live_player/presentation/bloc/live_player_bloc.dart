@@ -107,6 +107,7 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
     on<_ActiveSlotShiftRequested>(_onActiveSlotShiftRequested);
     on<_ActiveSlotSelected>(_onActiveSlotSelected);
     on<_SlotAudioToggled>(_onSlotAudioToggled);
+    on<_SlotVolumeChanged>(_onSlotVolumeChanged);
     on<_SlotResolutionSelected>(_onSlotResolutionSelected);
     on<_SlotCloseConfirmed>(_onSlotCloseConfirmed);
     on<_LiveStatusRefreshRequested>(_onLiveStatusRefreshRequested);

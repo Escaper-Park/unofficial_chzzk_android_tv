@@ -14,6 +14,7 @@ class TvSlider extends StatefulWidget {
     this.wraps = false,
     this.focusNode,
     this.autofocus = false,
+    this.onSubmitted,
   });
 
   final double value;
@@ -26,6 +27,7 @@ class TvSlider extends StatefulWidget {
   final bool wraps;
   final FocusNode? focusNode;
   final bool autofocus;
+  final VoidCallback? onSubmitted;
 
   @override
   State<TvSlider> createState() => _TvSliderState();
@@ -99,6 +101,18 @@ class _TvSliderState extends State<TvSlider> {
     final key = event.logicalKey;
     final isLeft = key == LogicalKeyboardKey.arrowLeft;
     final isRight = key == LogicalKeyboardKey.arrowRight;
+    final isSubmit =
+        key == LogicalKeyboardKey.select ||
+        key == LogicalKeyboardKey.enter ||
+        key == LogicalKeyboardKey.numpadEnter;
+    if (isSubmit && widget.onSubmitted != null) {
+      if (event is KeyDownEvent) {
+        widget.onSubmitted?.call();
+      }
+
+      return KeyEventResult.handled;
+    }
+
     if (!isLeft && !isRight) {
       return KeyEventResult.ignored;
     }

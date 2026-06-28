@@ -13,6 +13,7 @@ abstract class LivePlayerState with _$LivePlayerState {
     required String primarySlotId,
     required List<LivePlayerSlotState> slots,
     @Default(<String>{}) Set<String> audibleSlotIds,
+    @Default(<String, double>{}) Map<String, double> slotVolumeById,
     @Default(0) int activeSlotHighlightSerial,
     @Default(defaultSettingsPreferences)
     SettingsPreferences settingsPreferences,
@@ -89,12 +90,20 @@ abstract class LivePlayerState with _$LivePlayerState {
         audible.add(slotId);
       }
     }
-    return audible.isEmpty ? {activeSlotId} : audible;
+    if (audible.isNotEmpty || audibleSlotIds.isEmpty) {
+      return audible;
+    }
+
+    return {activeSlotId};
   }
 
   bool isSlotAudible(String slotId) {
     if (!isMultiview) {
       return slotId == activeSlotId;
+    }
+
+    if (audibleSlotIds.isEmpty) {
+      return false;
     }
 
     var hasKnownAudibleSlot = false;
@@ -110,6 +119,19 @@ abstract class LivePlayerState with _$LivePlayerState {
     }
 
     return !hasKnownAudibleSlot && slotId == activeSlotId;
+  }
+
+  double slotStoredVolume(String slotId) {
+    final volume = slotVolumeById[slotId] ?? 1;
+    if (!volume.isFinite) {
+      return 1;
+    }
+
+    return volume.clamp(0, 1).toDouble();
+  }
+
+  double slotPlaybackVolume(String slotId) {
+    return isSlotAudible(slotId) ? slotStoredVolume(slotId) : 0;
   }
 
   LivePlayerSlotState? slotById(String slotId) {

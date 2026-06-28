@@ -82,6 +82,45 @@ class LiveOverlayChannelSwitchItem extends HookWidget {
   }
 }
 
+class LiveOverlayChannelVolumeItem extends HookWidget {
+  const LiveOverlayChannelVolumeItem({
+    super.key,
+    required this.slot,
+    required this.selected,
+    required this.volumePercent,
+    required this.onPressed,
+    this.autofocus = false,
+  });
+
+  final LivePlayerSlotState slot;
+  final bool selected;
+  final int volumePercent;
+  final VoidCallback onPressed;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    final focusNode = useFocusNode();
+    final channelName = livePlayerSlotChannelName(slot);
+
+    return TvListItem(
+      title: channelName,
+      titleBuilder: (context, style) => TvMediaChannelName(
+        channelName: channelName,
+        verified: slot.channelVerified,
+        style: style,
+      ),
+      icon: selected ? Icons.volume_up_outlined : Icons.volume_off_outlined,
+      action: selected ? '$volumePercent%' : 'OFF',
+      selected: selected,
+      autofocus: autofocus,
+      focusNode: focusNode,
+      design: TvListItemDesign.dense(lineCount: 1),
+      onPressed: onPressed,
+    );
+  }
+}
+
 class LiveOverlayChannelInfoItem extends StatelessWidget {
   const LiveOverlayChannelInfoItem({
     super.key,

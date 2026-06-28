@@ -1,13 +1,13 @@
 part of 'live_player_multiview_playback_layout.dart';
 
-class _LivePlayerSlotCell extends StatelessWidget {
+class _LivePlayerSlotCell extends HookWidget {
   const _LivePlayerSlotCell({
     required this.slotId,
     required this.isMultiview,
     required this.active,
     required this.activeOutlineVisible,
     required this.playbackPaused,
-    required this.muted,
+    required this.volume,
     required this.mixWithOthers,
     required this.watchEventEnabled,
     required this.playbackSessionController,
@@ -19,7 +19,7 @@ class _LivePlayerSlotCell extends StatelessWidget {
   final bool active;
   final bool activeOutlineVisible;
   final bool playbackPaused;
-  final bool muted;
+  final double volume;
   final bool mixWithOthers;
   final bool watchEventEnabled;
   final LivePlayerPlaybackSessionController playbackSessionController;
@@ -27,6 +27,10 @@ class _LivePlayerSlotCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final retainedPlaybackSlot = useRef<LivePlayerSlotState?>(null);
+    final reloadPending = useRef(false);
+    final surfaceRevision = useRef(0);
+
     return BlocSelector<
       LivePlayerBloc,
       LivePlayerState,
@@ -44,7 +48,7 @@ class _LivePlayerSlotCell extends StatelessWidget {
           activeOutlineVisible: activeOutlineVisible,
           playbackEnabled: _playbackEnabledSlotIds(state).contains(slotId),
           playbackPaused: playbackPaused,
-          muted: muted,
+          volume: volume,
           mixWithOthers: mixWithOthers,
           watchEventEnabled: watchEventEnabled,
         );
@@ -57,16 +61,35 @@ class _LivePlayerSlotCell extends StatelessWidget {
           );
         }
         final slot = slotSnapshot.slot;
+        final surfaceSlot = _surfaceSlotFor(
+          slot: slot,
+          retainedPlaybackSlot: retainedPlaybackSlot,
+          reloadPending: reloadPending,
+          surfaceRevision: surfaceRevision,
+        );
+        final retainedPlaybackVisible =
+            slotSnapshot.playbackEnabled &&
+            surfaceSlot != null &&
+            surfaceSlot.playbackUri != slot.playbackUri;
+        final statusSurface = retainedPlaybackVisible
+            ? const Center(child: LivePlayerLoadingIndicator())
+            : statusSurfaceFor(
+                slot,
+                active: slotSnapshot.active,
+                isMultiview: isMultiview,
+              );
 
         final content = Stack(
           fit: StackFit.expand,
           children: [
-            if (slotSnapshot.playbackEnabled)
+            if (slotSnapshot.playbackEnabled && surfaceSlot != null)
               LivePlayerSurface(
-                key: ValueKey(slot.slotId),
-                slot: slot,
+                key: ValueKey(
+                  'live-player-surface-${slot.slotId}-${surfaceRevision.value}',
+                ),
+                slot: surfaceSlot,
                 playbackPaused: slotSnapshot.playbackPaused,
-                muted: slotSnapshot.muted,
+                volume: slotSnapshot.volume,
                 mixWithOthers: slotSnapshot.mixWithOthers,
                 watchEventEnabled: slotSnapshot.watchEventEnabled,
                 playbackSessionController: playbackSessionController,
@@ -75,11 +98,7 @@ class _LivePlayerSlotCell extends StatelessWidget {
               const ColoredBox(
                 color: LivePlayerScreenDesign.backgroundColor,
               ),
-            ?statusSurfaceFor(
-              slot,
-              active: slotSnapshot.active,
-              isMultiview: isMultiview,
-            ),
+            ?statusSurface,
             if (slotSnapshot.active && slotSnapshot.activeOutlineVisible)
               IgnorePointer(
                 child: DecoratedBox(
@@ -100,6 +119,52 @@ class _LivePlayerSlotCell extends StatelessWidget {
   }
 }
 
+LivePlayerSlotState? _surfaceSlotFor({
+  required LivePlayerSlotState slot,
+  required ObjectRef<LivePlayerSlotState?> retainedPlaybackSlot,
+  required ObjectRef<bool> reloadPending,
+  required ObjectRef<int> surfaceRevision,
+}) {
+  if (slot.playbackUri != null) {
+    if (reloadPending.value) {
+      surfaceRevision.value += 1;
+      reloadPending.value = false;
+    }
+    retainedPlaybackSlot.value = slot;
+    return slot;
+  }
+
+  final retained = retainedPlaybackSlot.value;
+  if (_canRetainPlaybackSurfaceForLoading(slot: slot, retained: retained)) {
+    reloadPending.value = true;
+    return retained;
+  }
+
+  retainedPlaybackSlot.value = null;
+  reloadPending.value = false;
+  return null;
+}
+
+bool _canRetainPlaybackSurfaceForLoading({
+  required LivePlayerSlotState slot,
+  required LivePlayerSlotState? retained,
+}) {
+  if (slot.status != LivePlayerSlotStatus.loadingSource ||
+      retained?.playbackUri == null) {
+    return false;
+  }
+
+  if (slot.channelId != retained!.channelId) {
+    return false;
+  }
+
+  final slotLiveId = slot.liveId;
+  final retainedLiveId = retained.liveId;
+  return slotLiveId == null ||
+      retainedLiveId == null ||
+      slotLiveId == retainedLiveId;
+}
+
 @immutable
 final class _LivePlayerSlotSnapshot {
   const _LivePlayerSlotSnapshot({
@@ -108,7 +173,7 @@ final class _LivePlayerSlotSnapshot {
     required this.activeOutlineVisible,
     required this.playbackEnabled,
     required this.playbackPaused,
-    required this.muted,
+    required this.volume,
     required this.mixWithOthers,
     required this.watchEventEnabled,
   });
@@ -118,7 +183,7 @@ final class _LivePlayerSlotSnapshot {
   final bool activeOutlineVisible;
   final bool playbackEnabled;
   final bool playbackPaused;
-  final bool muted;
+  final double volume;
   final bool mixWithOthers;
   final bool watchEventEnabled;
 
@@ -131,7 +196,7 @@ final class _LivePlayerSlotSnapshot {
             other.activeOutlineVisible == activeOutlineVisible &&
             other.playbackEnabled == playbackEnabled &&
             other.playbackPaused == playbackPaused &&
-            other.muted == muted &&
+            other.volume == volume &&
             other.mixWithOthers == mixWithOthers &&
             other.watchEventEnabled == watchEventEnabled;
   }
@@ -143,7 +208,7 @@ final class _LivePlayerSlotSnapshot {
     activeOutlineVisible,
     playbackEnabled,
     playbackPaused,
-    muted,
+    volume,
     mixWithOthers,
     watchEventEnabled,
   );

@@ -68,6 +68,11 @@ sealed class LivePlayerEvent with _$LivePlayerEvent {
     required String slotId,
   }) = _SlotAudioToggled;
 
+  const factory LivePlayerEvent.slotVolumeChanged({
+    required String slotId,
+    required double volume,
+  }) = _SlotVolumeChanged;
+
   const factory LivePlayerEvent.slotResolutionSelected({
     required String slotId,
     required int resolutionIndex,
