@@ -37,10 +37,18 @@ void _useVodPlayerViewControllerDisposal({
   required TvPlayerOverlayAutoHideController overlayAutoHideController,
   required TvSnackbarFeedbackController feedbackController,
   required VodPlayerSeekFeedbackController seekFeedbackController,
+  required ValueNotifier<bool> playbackPaused,
+  required ValueNotifier<bool> muted,
+  required ValueNotifier<int> seekSerial,
+  required ValueNotifier<VodPlayerSeekRequest?> seekRequest,
 }) {
   useEffect(() {
     return () {
       playbackSnapshot.dispose();
+      playbackPaused.dispose();
+      muted.dispose();
+      seekSerial.dispose();
+      seekRequest.dispose();
       doubleBackExitController.dispose();
       exitNoticeController.dispose();
       overlayAutoHideController.dispose();
