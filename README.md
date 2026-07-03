@@ -24,7 +24,7 @@
 ## 설치
 ### [APK 파일 다운로드](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases)
 
-[v0.4.2+1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.4.2%2B1) - 최신 버전
+[v0.4.2+2](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.4.2%2B2) - 최신 버전
 
 [v0.3.4+1](https://github.com/Escaper-Park/unofficial_chzzk_android_tv/releases/tag/v0.3.4%2B1) - 구 버전
 
