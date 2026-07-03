@@ -1,6 +1,6 @@
 part of 'live_player_video_surface.dart';
 
-class _LivePlayerVideoContent extends StatelessWidget {
+class _LivePlayerVideoContent extends HookWidget {
   const _LivePlayerVideoContent({
     required this.controller,
     required this.videoViewType,
@@ -13,15 +13,24 @@ class _LivePlayerVideoContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final frameValueListenable = useMemoized(
+      () => _LivePlayerVideoFrameValueListenable(controller),
+      [controller],
+    );
+
+    useEffect(() {
+      return frameValueListenable.dispose;
+    }, [frameValueListenable]);
+
     return ColoredBox(
       color: LivePlayerScreenDesign.backgroundColor,
       child: ClipRect(
-        child: ValueListenableBuilder<VideoPlayerValue>(
-          valueListenable: controller,
+        child: ValueListenableBuilder<_LivePlayerVideoFrameValue>(
+          valueListenable: frameValueListenable,
           child: VideoPlayer(controller),
-          builder: (context, playbackValue, child) {
+          builder: (context, frameValue, child) {
             return _LivePlayerVideoFrame(
-              playbackValue: playbackValue,
+              frameValue: frameValue,
               videoViewType: videoViewType,
               playbackSuspended: playbackSuspended,
               video: child!,
@@ -35,13 +44,13 @@ class _LivePlayerVideoContent extends StatelessWidget {
 
 class _LivePlayerVideoFrame extends HookWidget {
   const _LivePlayerVideoFrame({
-    required this.playbackValue,
+    required this.frameValue,
     required this.videoViewType,
     required this.playbackSuspended,
     required this.video,
   });
 
-  final VideoPlayerValue playbackValue;
+  final _LivePlayerVideoFrameValue frameValue;
   final PlayerVideoViewType videoViewType;
   final bool playbackSuspended;
   final Widget video;
@@ -53,8 +62,8 @@ class _LivePlayerVideoFrame extends HookWidget {
     useEffect(
       () {
         final shouldDelayBufferingIndicator =
-            !playbackValue.hasError &&
-            playbackValue.isBuffering &&
+            !frameValue.hasError &&
+            frameValue.isBuffering &&
             !playbackSuspended;
         if (!shouldDelayBufferingIndicator) {
           bufferingIndicatorVisible.value = false;
@@ -62,8 +71,8 @@ class _LivePlayerVideoFrame extends HookWidget {
         }
 
         final timer = Timer(_liveBufferingIndicatorDelay, () {
-          if (!playbackValue.hasError &&
-              playbackValue.isBuffering &&
+          if (!frameValue.hasError &&
+              frameValue.isBuffering &&
               !playbackSuspended) {
             bufferingIndicatorVisible.value = true;
           }
@@ -72,8 +81,8 @@ class _LivePlayerVideoFrame extends HookWidget {
         return timer.cancel;
       },
       [
-        playbackValue.hasError,
-        playbackValue.isBuffering,
+        frameValue.hasError,
+        frameValue.isBuffering,
         playbackSuspended,
       ],
     );
@@ -83,7 +92,7 @@ class _LivePlayerVideoFrame extends HookWidget {
       alignment: Alignment.center,
       children: [
         _videoWidget(),
-        if (bufferingIndicatorVisible.value && playbackValue.isBuffering)
+        if (bufferingIndicatorVisible.value && frameValue.isBuffering)
           const LivePlayerLoadingIndicator(),
       ],
     );
@@ -94,14 +103,14 @@ class _LivePlayerVideoFrame extends HookWidget {
       PlayerVideoViewType.textureView => FittedBox(
         fit: BoxFit.contain,
         child: SizedBox(
-          width: _videoWidth(playbackValue),
-          height: _videoHeight(playbackValue),
+          width: _videoWidth(frameValue),
+          height: _videoHeight(frameValue),
           child: video,
         ),
       ),
       PlayerVideoViewType.platformView => Center(
         child: AspectRatio(
-          aspectRatio: playbackValue.aspectRatio,
+          aspectRatio: frameValue.aspectRatio,
           child: video,
         ),
       ),
@@ -109,8 +118,84 @@ class _LivePlayerVideoFrame extends HookWidget {
   }
 }
 
-double _videoWidth(VideoPlayerValue value) {
-  final width = value.size.width;
+final class _LivePlayerVideoFrameValueListenable
+    extends ValueNotifier<_LivePlayerVideoFrameValue> {
+  _LivePlayerVideoFrameValueListenable(this._controller)
+    : super(_LivePlayerVideoFrameValue.from(_controller.value)) {
+    _controller.addListener(_sync);
+  }
+
+  final VideoPlayerController _controller;
+
+  void _sync() {
+    final next = _LivePlayerVideoFrameValue.from(_controller.value);
+    if (next == value) {
+      return;
+    }
+
+    value = next;
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_sync);
+    super.dispose();
+  }
+}
+
+@immutable
+final class _LivePlayerVideoFrameValue {
+  const _LivePlayerVideoFrameValue({
+    required this.hasError,
+    required this.isBuffering,
+    required this.width,
+    required this.height,
+    required this.aspectRatio,
+  });
+
+  factory _LivePlayerVideoFrameValue.from(VideoPlayerValue value) {
+    return _LivePlayerVideoFrameValue(
+      hasError: value.hasError,
+      isBuffering: value.isBuffering,
+      width: value.size.width,
+      height: value.size.height,
+      aspectRatio: value.aspectRatio,
+    );
+  }
+
+  final bool hasError;
+  final bool isBuffering;
+  final double width;
+  final double height;
+  final double aspectRatio;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerVideoFrameValue &&
+            other.hasError == hasError &&
+            other.isBuffering == isBuffering &&
+            _sameVideoDouble(other.width, width) &&
+            _sameVideoDouble(other.height, height) &&
+            _sameVideoDouble(other.aspectRatio, aspectRatio);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    hasError,
+    isBuffering,
+    width,
+    height,
+    aspectRatio,
+  );
+}
+
+bool _sameVideoDouble(double previous, double current) {
+  return previous == current || previous.isNaN && current.isNaN;
+}
+
+double _videoWidth(_LivePlayerVideoFrameValue value) {
+  final width = value.width;
   if (width.isFinite && width > 0) {
     return width;
   }
@@ -123,8 +208,8 @@ double _videoWidth(VideoPlayerValue value) {
   return _fallbackVideoWidth;
 }
 
-double _videoHeight(VideoPlayerValue value) {
-  final height = value.size.height;
+double _videoHeight(_LivePlayerVideoFrameValue value) {
+  final height = value.height;
   if (height.isFinite && height > 0) {
     return height;
   }

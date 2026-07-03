@@ -17,41 +17,31 @@ final class _LivePlayerPlaybackLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: playbackPaused,
-      builder: (context, playbackPaused, _) {
-        final effectivePlaybackPaused = playbackPaused || appPlaybackSuspended;
+    return BlocBuilder<LivePlayerBloc, LivePlayerState>(
+      buildWhen: _livePlayerPlaybackBuildWhen,
+      builder: (context, state) {
+        final slot = state.activeSlot;
+        final chatLayer = _livePlayerChatLayerFor(
+          state: state,
+          slot: slot,
+          playbackPaused: playbackPaused,
+          appPlaybackSuspended: appPlaybackSuspended,
+          connectLiveChat: connectLiveChat,
+        );
 
-        return ValueListenableBuilder<bool>(
-          valueListenable: muted,
-          builder: (context, muted, _) {
-            return BlocBuilder<LivePlayerBloc, LivePlayerState>(
-              buildWhen: _livePlayerPlaybackBuildWhen,
-              builder: (context, state) {
-                final slot = state.activeSlot;
-                final chatLayer = _livePlayerChatLayerFor(
-                  state: state,
-                  slot: slot,
-                  playbackPaused: effectivePlaybackPaused,
-                  appPlaybackSuspended: appPlaybackSuspended,
-                  connectLiveChat: connectLiveChat,
-                );
-
-                return _LivePlayerSessionLifecycle(
-                  state: state,
-                  playbackPaused: effectivePlaybackPaused,
-                  child: LivePlayerPlaybackLayout(
-                    state: state,
-                    playbackPaused: effectivePlaybackPaused,
-                    singleMuted: muted,
-                    chat: chatLayer,
-                    playbackSessionController: playbackSessionController,
-                    statusSurfaceFor: _livePlayerStatusSurfaceFor,
-                  ),
-                );
-              },
-            );
-          },
+        return _LivePlayerSessionLifecycle(
+          state: state,
+          playbackPaused: playbackPaused,
+          appPlaybackSuspended: appPlaybackSuspended,
+          child: LivePlayerPlaybackLayout(
+            state: state,
+            playbackPaused: playbackPaused,
+            singleMuted: muted,
+            appPlaybackSuspended: appPlaybackSuspended,
+            chat: chatLayer,
+            playbackSessionController: playbackSessionController,
+            statusSurfaceFor: _livePlayerStatusSurfaceFor,
+          ),
         );
       },
     );

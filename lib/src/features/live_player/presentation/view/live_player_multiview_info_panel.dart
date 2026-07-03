@@ -11,9 +11,11 @@ class LivePlayerMultiviewInfoPanel extends HookWidget {
   const LivePlayerMultiviewInfoPanel({
     super.key,
     required this.state,
+    this.selectSlotsFromBloc = false,
   });
 
   final LivePlayerState state;
+  final bool selectSlotsFromBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class LivePlayerMultiviewInfoPanel extends HookWidget {
                         child: LivePlayerMultiviewInfoCell(
                           slot: slots[0],
                           now: now,
+                          selectSlotFromBloc: selectSlotsFromBloc,
                         ),
                       ),
                       const SizedBox(
@@ -51,6 +54,7 @@ class LivePlayerMultiviewInfoPanel extends HookWidget {
                         child: LivePlayerMultiviewInfoCell(
                           slot: slots[1],
                           now: now,
+                          selectSlotFromBloc: selectSlotsFromBloc,
                         ),
                       ),
                     ],
@@ -66,6 +70,7 @@ class LivePlayerMultiviewInfoPanel extends HookWidget {
                         child: LivePlayerMultiviewInfoCell(
                           slot: slots[2],
                           now: now,
+                          selectSlotFromBloc: selectSlotsFromBloc,
                         ),
                       ),
                       const SizedBox(
@@ -75,6 +80,7 @@ class LivePlayerMultiviewInfoPanel extends HookWidget {
                         child: LivePlayerMultiviewInfoCell(
                           slot: slots[3],
                           now: now,
+                          selectSlotFromBloc: selectSlotsFromBloc,
                         ),
                       ),
                     ],

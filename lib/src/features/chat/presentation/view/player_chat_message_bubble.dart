@@ -15,7 +15,7 @@ part 'player_chat_message_bubble_content.dart';
 part 'player_chat_message_bubble_donation.dart';
 part 'player_chat_message_bubble_meta.dart';
 
-class PlayerChatMessageBubble extends StatelessWidget {
+class PlayerChatMessageBubble extends StatefulWidget {
   const PlayerChatMessageBubble({
     super.key,
     required this.message,
@@ -26,7 +26,25 @@ class PlayerChatMessageBubble extends StatelessWidget {
   final PlayerChatPanelStyle style;
 
   @override
+  State<PlayerChatMessageBubble> createState() =>
+      _PlayerChatMessageBubbleState();
+}
+
+class _PlayerChatMessageBubbleState extends State<PlayerChatMessageBubble> {
+  String? _contentMessageId;
+  String? _contentText;
+  bool? _contentBlind;
+  Map<String, String>? _contentEmojis;
+  double? _contentFontSize;
+  List<InlineSpan>? _contentSpans;
+  String? _timeMessageId;
+  bool? _timeVisible;
+  String? _timeLabel;
+
+  @override
   Widget build(BuildContext context) {
+    final message = widget.message;
+    final style = widget.style;
     final donationStyle = PlayerChatDonationStyle.forAmount(message.payAmount);
     final contentStyle = PlayerChatPanelDesign.messageTextStyle.copyWith(
       fontSize: math.max(1, style.messageFontSize),
@@ -49,9 +67,9 @@ class PlayerChatMessageBubble extends StatelessWidget {
             ),
     );
     final timeLabel = style.showTime && !message.isDonation
-        ? playerChatTimeLabel(message)
-        : null;
-    final contentSpans = _playerChatContentSpans(
+        ? _playerChatTimeLabelFor(message, visible: true)
+        : _playerChatTimeLabelFor(message, visible: false);
+    final contentSpans = _playerChatContentSpansFor(
       message: message,
       style: style,
       contentStyle: contentStyle,
@@ -65,10 +83,10 @@ class PlayerChatMessageBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_hasVisibleMeta) ...[
+          if (_hasVisibleMeta(message, style)) ...[
             _PlayerChatMetaRow(
               message: message,
-              nickname: _visibleNickname,
+              nickname: _visibleNickname(message, style),
               metaStyle: metaStyle,
               nicknameStyle: nicknameStyle,
               showUserBadges: style.showUserBadges,
@@ -109,14 +127,66 @@ class PlayerChatMessageBubble extends StatelessWidget {
     );
   }
 
-  bool get _hasVisibleMeta {
-    return _visibleNickname != null ||
+  List<InlineSpan> _playerChatContentSpansFor({
+    required PlayerChatMessage message,
+    required PlayerChatPanelStyle style,
+    required TextStyle contentStyle,
+  }) {
+    final text = message.isBlind
+        ? PlayerChatString.blindedMessage
+        : message.content;
+    final fontSize = contentStyle.fontSize ?? style.messageFontSize;
+    if (_contentMessageId == message.id &&
+        _contentText == text &&
+        _contentBlind == message.isBlind &&
+        identical(_contentEmojis, message.emojis) &&
+        _contentFontSize == fontSize) {
+      return _contentSpans ?? const <InlineSpan>[];
+    }
+
+    final spans = _playerChatContentSpans(
+      message: message,
+      style: style,
+      contentStyle: contentStyle,
+    );
+    _contentMessageId = message.id;
+    _contentText = text;
+    _contentBlind = message.isBlind;
+    _contentEmojis = message.emojis;
+    _contentFontSize = fontSize;
+    _contentSpans = spans;
+    return spans;
+  }
+
+  String? _playerChatTimeLabelFor(
+    PlayerChatMessage message, {
+    required bool visible,
+  }) {
+    if (_timeMessageId == message.id && _timeVisible == visible) {
+      return _timeLabel;
+    }
+
+    final label = visible ? playerChatTimeLabel(message) : null;
+    _timeMessageId = message.id;
+    _timeVisible = visible;
+    _timeLabel = label;
+    return label;
+  }
+
+  bool _hasVisibleMeta(
+    PlayerChatMessage message,
+    PlayerChatPanelStyle style,
+  ) {
+    return _visibleNickname(message, style) != null ||
         (style.showUserBadges && message.userBadgeImageUrls.isNotEmpty) ||
         (style.showNickname && message.nicknameBadgeImageUrl != null) ||
         (style.showNickname && message.verifiedMark);
   }
 
-  String? get _visibleNickname {
+  String? _visibleNickname(
+    PlayerChatMessage message,
+    PlayerChatPanelStyle style,
+  ) {
     final nickname = message.isDonation && message.isAnonymous
         ? PlayerChatString.anonymousDonation
         : message.nickname;

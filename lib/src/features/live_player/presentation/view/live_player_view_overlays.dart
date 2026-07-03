@@ -90,6 +90,7 @@ Widget? _livePlayerOverlayFor({
       onInteraction: onControlsInteraction,
       modalDismissSerial: modalDismissSerial,
       onModalVisibilityChanged: onModalVisibilityChanged,
+      selectSlotDetailsFromBloc: true,
     ),
     LivePlayerOverlayMode.browse => LivePlayerBrowseOverlay(
       state: state,

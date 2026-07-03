@@ -35,14 +35,16 @@ class LivePlayerPlaybackLayout extends HookWidget {
     required this.state,
     required this.playbackPaused,
     required this.singleMuted,
+    required this.appPlaybackSuspended,
     required this.chat,
     required this.playbackSessionController,
     required this.statusSurfaceFor,
   });
 
   final LivePlayerState state;
-  final bool playbackPaused;
-  final bool singleMuted;
+  final ValueListenable<bool> playbackPaused;
+  final ValueListenable<bool> singleMuted;
+  final bool appPlaybackSuspended;
   final Widget? chat;
   final LivePlayerPlaybackSessionController playbackSessionController;
   final LivePlayerStatusSurfaceBuilder statusSurfaceFor;
@@ -55,7 +57,6 @@ class LivePlayerPlaybackLayout extends HookWidget {
       ),
       const [],
     );
-    useListenable(activeOutlineController);
     final lastHighlightSerial = useRef(state.activeSlotHighlightSerial);
 
     useEffect(() {
@@ -114,15 +115,11 @@ class LivePlayerPlaybackLayout extends HookWidget {
                       active:
                           state.isMultiview &&
                           slot.slotId == state.activeSlotId,
-                      activeOutlineVisible:
-                          state.isMultiview &&
-                          slot.slotId == state.activeSlotId &&
-                          activeOutlineController.isShowing,
                       playbackPaused: playbackPaused,
+                      singleMuted: singleMuted,
+                      appPlaybackSuspended: appPlaybackSuspended,
                       volume: state.isMultiview
                           ? state.slotPlaybackVolume(slot.slotId)
-                          : singleMuted
-                          ? 0
                           : 1,
                       mixWithOthers: true,
                       watchEventEnabled:
@@ -131,6 +128,7 @@ class LivePlayerPlaybackLayout extends HookWidget {
                       statusPollingEnabled:
                           !state.isMultiview ||
                           slot.slotId == state.activeSlotId,
+                      activeOutlineController: activeOutlineController,
                       playbackSessionController: playbackSessionController,
                       statusSurfaceFor: statusSurfaceFor,
                     ),

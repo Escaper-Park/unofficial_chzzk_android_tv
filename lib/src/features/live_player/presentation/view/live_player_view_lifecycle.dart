@@ -77,16 +77,22 @@ class _LivePlayerSessionLifecycle extends HookWidget {
   const _LivePlayerSessionLifecycle({
     required this.state,
     required this.playbackPaused,
+    required this.appPlaybackSuspended,
     required this.child,
   });
 
   final LivePlayerState state;
-  final bool playbackPaused;
+  final ValueListenable<bool> playbackPaused;
+  final bool appPlaybackSuspended;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final keepAwake = !playbackPaused && _hasPlayableLiveSlot(state);
+    useListenable(playbackPaused);
+    final keepAwake =
+        !playbackPaused.value &&
+        !appPlaybackSuspended &&
+        _hasPlayableLiveSlot(state);
     final wakelockController = useMemoized(
       SerializedWakelockController.new,
       const [],
