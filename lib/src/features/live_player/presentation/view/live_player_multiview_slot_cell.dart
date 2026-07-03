@@ -229,7 +229,7 @@ final class _LivePlayerSlotSnapshot {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is _LivePlayerSlotSnapshot &&
-            other.slot == slot &&
+            _sameSlotPlaybackSurfaceInput(other.slot, slot) &&
             other.active == active &&
             other.activeOutlineVisible == activeOutlineVisible &&
             other.playbackEnabled == playbackEnabled &&
@@ -242,8 +242,15 @@ final class _LivePlayerSlotSnapshot {
   }
 
   @override
-  int get hashCode => Object.hash(
-    slot,
+  int get hashCode => Object.hashAll([
+    slot.slotId,
+    slot.status,
+    slot.channelId,
+    slot.liveId,
+    slot.playbackUri,
+    slot.openDate,
+    Object.hashAll(slot.liveTokens),
+    slot.failureReason,
     active,
     activeOutlineVisible,
     playbackEnabled,
@@ -253,5 +260,19 @@ final class _LivePlayerSlotSnapshot {
     videoViewType,
     watchEventEnabled,
     statusPollingEnabled,
-  );
+  ]);
+}
+
+bool _sameSlotPlaybackSurfaceInput(
+  LivePlayerSlotState previous,
+  LivePlayerSlotState current,
+) {
+  return previous.slotId == current.slotId &&
+      previous.status == current.status &&
+      previous.channelId == current.channelId &&
+      previous.liveId == current.liveId &&
+      previous.playbackUri == current.playbackUri &&
+      previous.openDate == current.openDate &&
+      listEquals(previous.liveTokens, current.liveTokens) &&
+      previous.failureReason == current.failureReason;
 }

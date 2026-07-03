@@ -1,5 +1,65 @@
 part of 'live_player_view.dart';
 
+final class _LivePlayerOverlayLayer extends StatelessWidget {
+  const _LivePlayerOverlayLayer({
+    required this.controlsNode,
+    required this.browseNode,
+    required this.playbackPaused,
+    required this.muted,
+    required this.overlayAutoHideController,
+    required this.exitNoticeController,
+    required this.onControlsInteraction,
+    required this.onControlsModalVisibilityChanged,
+  });
+
+  final FocusScopeNode controlsNode;
+  final FocusScopeNode browseNode;
+  final ValueNotifier<bool> playbackPaused;
+  final ValueNotifier<bool> muted;
+  final TvPlayerOverlayAutoHideController overlayAutoHideController;
+  final TvPlayerExitNoticeController exitNoticeController;
+  final VoidCallback onControlsInteraction;
+  final ValueChanged<bool> onControlsModalVisibilityChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: Listenable.merge([
+        playbackPaused,
+        muted,
+        overlayAutoHideController,
+      ]),
+      builder: (context, _) {
+        return BlocBuilder<LivePlayerBloc, LivePlayerState>(
+          buildWhen: _livePlayerOverlayBuildWhen,
+          builder: (context, state) {
+            return _livePlayerOverlayFor(
+                  context: context,
+                  state: state,
+                  controlsNode: controlsNode,
+                  browseNode: browseNode,
+                  playbackPaused: playbackPaused.value,
+                  muted: muted.value,
+                  onPlaybackPausedChanged: (value) {
+                    playbackPaused.value = value;
+                  },
+                  onMutedChanged: (value) {
+                    muted.value = value;
+                  },
+                  onControlsInteraction: onControlsInteraction,
+                  modalDismissSerial:
+                      overlayAutoHideController.modalDismissSerial,
+                  onModalVisibilityChanged: onControlsModalVisibilityChanged,
+                  onBrowseInteraction: exitNoticeController.hide,
+                ) ??
+                const SizedBox.shrink();
+          },
+        );
+      },
+    );
+  }
+}
+
 Widget? _livePlayerOverlayFor({
   required BuildContext context,
   required LivePlayerState state,

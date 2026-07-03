@@ -38,6 +38,7 @@ import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentatio
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/live_player_screen_string.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/view/live_player_multiview_chat_policy.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/view/live_player_playback_session_controller.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/view/live_player_status_surface.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/view/live_player_view.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/settings/domain/entities/settings_preferences.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/settings/domain/repositories/settings_preferences_repository.dart';
@@ -648,6 +649,45 @@ void main() {
     );
     await tester.pump();
     expect(videoPlatform.latestPlayerIdForUri(playbackUri), singlePlayerId);
+  });
+
+  testWidgets('live video buffering indicator ignores short buffering blips', (
+    tester,
+  ) async {
+    final bloc = await _pumpLivePlayer(tester);
+    final videoPlatform =
+        VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+          bloc.state.activeSlot.playbackUri != null,
+    );
+
+    final playbackUri = bloc.state.activeSlot.playbackUri!.toString();
+    final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+    expect(playerId, isNotNull);
+    expect(find.byType(LivePlayerLoadingIndicator), findsNothing);
+
+    videoPlatform.emitBufferingStart(playerId!);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1999));
+    expect(find.byType(LivePlayerLoadingIndicator), findsNothing);
+
+    videoPlatform.emitBufferingEnd(playerId);
+    await tester.pump();
+    expect(find.byType(LivePlayerLoadingIndicator), findsNothing);
+
+    videoPlatform.emitBufferingStart(playerId);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.byType(LivePlayerLoadingIndicator), findsOneWidget);
+
+    videoPlatform.emitBufferingEnd(playerId);
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(LivePlayerLoadingIndicator), findsNothing);
   });
 
   testWidgets('multiview starts additional video players one at a time', (
@@ -2200,6 +2240,20 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
     completer.complete();
   }
 
+  void emitBufferingStart(int playerId) {
+    _emit(
+      playerId,
+      VideoEvent(eventType: VideoEventType.bufferingStart),
+    );
+  }
+
+  void emitBufferingEnd(int playerId) {
+    _emit(
+      playerId,
+      VideoEvent(eventType: VideoEventType.bufferingEnd),
+    );
+  }
+
   List<String> callsForPlayer(int playerId) {
     return [
       for (final call in playerCalls)
@@ -2244,17 +2298,22 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   }
 
   void _emitInitialized(int playerId) {
-    final stream = _streams[playerId];
-    if (stream == null) {
-      return;
-    }
-
-    stream.add(
+    _emit(
+      playerId,
       VideoEvent(
         eventType: VideoEventType.initialized,
         size: const Size(16, 9),
         duration: const Duration(hours: 1),
       ),
     );
+  }
+
+  void _emit(int playerId, VideoEvent event) {
+    final stream = _streams[playerId];
+    if (stream == null) {
+      return;
+    }
+
+    stream.add(event);
   }
 }

@@ -57,6 +57,8 @@ void _useLivePlayerViewControllerDisposal({
   required TvPlayerOverlayAutoHideController overlayAutoHideController,
   required TvSnackbarFeedbackController feedbackController,
   required LivePlayerPlaybackSessionController playbackSessionController,
+  required ValueNotifier<bool> playbackPaused,
+  required ValueNotifier<bool> muted,
 }) {
   useEffect(() {
     return () {
@@ -65,6 +67,8 @@ void _useLivePlayerViewControllerDisposal({
       exitNoticeController.dispose();
       overlayAutoHideController.dispose();
       feedbackController.dispose();
+      playbackPaused.dispose();
+      muted.dispose();
     };
   }, const []);
 }

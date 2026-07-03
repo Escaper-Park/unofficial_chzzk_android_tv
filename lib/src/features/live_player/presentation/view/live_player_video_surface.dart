@@ -115,7 +115,6 @@ class LivePlayerVideoSurface extends HookWidget {
       ),
       [channelId, liveId, parsedLiveOpenDate, watchEventEnabled],
     );
-    final playbackValue = useListenable(controller).value;
     final initialized = useState(false);
     final failed = useState(false);
     final ended = useState(false);
@@ -272,11 +271,13 @@ class LivePlayerVideoSurface extends HookWidget {
 
     return _LivePlayerVideoContent(
       controller: controller,
-      playbackValue: playbackValue,
       videoViewType: videoViewType,
+      playbackSuspended: playbackSuspended(),
     );
   }
 }
+
+const _liveBufferingIndicatorDelay = Duration(seconds: 2);
 
 double _normalizedPlayerVolume(double volume) {
   if (!volume.isFinite) {
