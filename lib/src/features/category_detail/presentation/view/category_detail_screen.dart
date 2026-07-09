@@ -96,6 +96,7 @@ class _CategoryDetailScreenView extends HookWidget {
           return previous.feedbackSerial != current.feedbackSerial &&
               current.feedbackType != null;
         },
+        buildWhen: _shouldRebuildCategoryDetailScreen,
         listener: (context, state) {
           final feedbackType = state.feedbackType;
           if (feedbackType != null &&
@@ -185,4 +186,12 @@ Future<void> _handleFollowPressed({
   context.read<CategoryDetailBloc>().add(
     const CategoryDetailEvent.followToggled(),
   );
+}
+
+bool _shouldRebuildCategoryDetailScreen(
+  CategoryDetailState previous,
+  CategoryDetailState current,
+) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

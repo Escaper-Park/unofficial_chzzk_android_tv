@@ -24,6 +24,7 @@ class LivePlayerBrowseCard extends StatelessWidget {
     final thumbnailUrl = liveCardThumbnailUrl(
       thumbnailImageUrl: live.thumbnailImageUrl,
       defaultThumbnailImageUrl: live.defaultThumbnailImageUrl,
+      refreshInterval: _livePlayerBrowseThumbnailRefreshInterval,
     );
     final channel = live.channel;
 
@@ -66,3 +67,4 @@ String? _restrictionAssetPath(Live live, String? thumbnailUrl) {
 }
 
 const _blindTypeAbroad = 'ABROAD';
+const _livePlayerBrowseThumbnailRefreshInterval = Duration(minutes: 3);

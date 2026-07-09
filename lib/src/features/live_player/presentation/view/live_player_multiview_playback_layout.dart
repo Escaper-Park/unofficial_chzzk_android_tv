@@ -264,7 +264,7 @@ PlayerVideoViewType _effectiveVideoViewTypeForSlot(
   }
 
   if (slot.slotId == state.activeSlotId) {
-    return PlayerVideoViewType.platformView;
+    return slot.videoViewType;
   }
 
   return PlayerVideoViewType.textureView;

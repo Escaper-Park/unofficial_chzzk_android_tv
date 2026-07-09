@@ -109,6 +109,7 @@ class _BrowseScreenView extends HookWidget {
           return previous.feedbackSerial != current.feedbackSerial &&
               current.feedbackType != null;
         },
+        buildWhen: _shouldRebuildBrowseScreen,
         listener: (context, state) {
           final feedbackType = state.feedbackType;
           if (feedbackType != null &&
@@ -198,4 +199,9 @@ class _BrowseScreenView extends HookWidget {
 
     navigationNode?.requestFocus();
   }
+}
+
+bool _shouldRebuildBrowseScreen(BrowseState previous, BrowseState current) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

@@ -36,25 +36,23 @@ class _LivePlayerSlotCell extends HookWidget {
     final retainedPlaybackSlot = useRef<LivePlayerSlotState?>(null);
     final reloadPending = useRef(false);
     final surfaceRevision = useRef(0);
+    final mutedListenable = isMultiview
+        ? const AlwaysStoppedAnimation(false)
+        : singleMuted;
 
     return ValueListenableBuilder<bool>(
       valueListenable: playbackPaused,
       builder: (context, playbackPaused, child) {
+        final effectivePlaybackPaused = playbackPaused || appPlaybackSuspended;
         return ValueListenableBuilder<bool>(
-          valueListenable: singleMuted,
+          valueListenable: mutedListenable,
           builder: (context, muted, child) {
-            final effectivePlaybackPaused =
-                playbackPaused || appPlaybackSuspended;
             return _LivePlayerSlotCellContent(
               slotId: slotId,
               isMultiview: isMultiview,
               active: active,
               playbackPaused: effectivePlaybackPaused,
-              volume: isMultiview
-                  ? volume
-                  : muted
-                  ? 0
-                  : volume,
+              volume: muted ? 0 : volume,
               mixWithOthers: mixWithOthers,
               watchEventEnabled: watchEventEnabled,
               statusPollingEnabled: statusPollingEnabled,
@@ -341,8 +339,6 @@ final class _LivePlayerSlotSnapshot {
     slot.channelId,
     slot.liveId,
     slot.playbackUri,
-    slot.openDate,
-    Object.hashAll(slot.liveTokens),
     slot.failureReason,
     active,
     playbackEnabled,
@@ -364,7 +360,5 @@ bool _sameSlotPlaybackSurfaceInput(
       previous.channelId == current.channelId &&
       previous.liveId == current.liveId &&
       previous.playbackUri == current.playbackUri &&
-      previous.openDate == current.openDate &&
-      listEquals(previous.liveTokens, current.liveTokens) &&
       previous.failureReason == current.failureReason;
 }

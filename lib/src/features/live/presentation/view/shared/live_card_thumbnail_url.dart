@@ -4,6 +4,7 @@ String? liveCardThumbnailUrl({
   required String? thumbnailImageUrl,
   required String? defaultThumbnailImageUrl,
   DateTime Function()? now,
+  Duration refreshInterval = _liveThumbnailRefreshInterval,
 }) {
   final defaultThumbnailUrl = trimmedLiveCardTextOrNull(
     defaultThumbnailImageUrl,
@@ -22,23 +23,24 @@ String? liveCardThumbnailUrl({
   return _withLiveThumbnailDate(
     thumbnailUrl,
     now: now ?? DateTime.now,
+    refreshInterval: refreshInterval,
   );
 }
 
 String _withLiveThumbnailDate(
   String thumbnailUrl, {
   required DateTime Function() now,
+  required Duration refreshInterval,
 }) {
-  final date = _liveThumbnailDate(now()).toString();
+  final date = _liveThumbnailDate(now(), refreshInterval).toString();
   final separator = thumbnailUrl.contains('?') ? '&' : '?';
 
   return '$thumbnailUrl${separator}date=$date';
 }
 
-int _liveThumbnailDate(DateTime now) {
+int _liveThumbnailDate(DateTime now, Duration refreshInterval) {
   final milliseconds = now.millisecondsSinceEpoch;
-  return milliseconds -
-      milliseconds % _liveThumbnailRefreshInterval.inMilliseconds;
+  return milliseconds - milliseconds % refreshInterval.inMilliseconds;
 }
 
 const _liveThumbnailRefreshInterval = Duration(seconds: 30);

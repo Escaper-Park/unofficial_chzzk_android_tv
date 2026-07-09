@@ -1011,7 +1011,7 @@ void main() {
     );
   });
 
-  testWidgets('multiview PIP applies surface type by visual role', (
+  testWidgets('multiview PIP keeps active surface type from settings', (
     tester,
   ) async {
     final bloc = await _pumpLivePlayer(
@@ -1098,18 +1098,12 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
     );
-    await _pumpUntil(
-      tester,
-      until: () {
-        final playerId = videoPlatform.latestPlayerIdForUri(primaryUri);
-        return playerId != null &&
-            playerId != primaryPlayerId &&
-            videoPlatform.viewTypeForPlayer(playerId) ==
-                VideoViewType.platformView;
-      },
-    );
     final pipPrimaryPlayerId = videoPlatform.latestPlayerIdForUri(primaryUri);
     expect(pipPrimaryPlayerId, isNotNull);
+    expect(
+      videoPlatform.viewTypeForPlayer(pipPrimaryPlayerId!),
+      VideoViewType.textureView,
+    );
     expect(videoPlatform.latestPlayerIdForUri(secondaryUri), secondaryPlayerId);
     expect(
       videoPlatform.viewTypeForPlayer(secondaryPlayerId),
@@ -1118,21 +1112,6 @@ void main() {
 
     bloc.add(const LivePlayerEvent.activeSlotSelected(slotId: 'slot-1'));
     await _pumpUntil(tester, until: () => bloc.state.activeSlotId == 'slot-1');
-    await _pumpUntil(
-      tester,
-      until: () {
-        final primaryId = videoPlatform.latestPlayerIdForUri(primaryUri);
-        final secondaryId = videoPlatform.latestPlayerIdForUri(secondaryUri);
-        return primaryId != null &&
-            secondaryId != null &&
-            primaryId != pipPrimaryPlayerId &&
-            secondaryId != secondaryPlayerId &&
-            videoPlatform.viewTypeForPlayer(primaryId) ==
-                VideoViewType.textureView &&
-            videoPlatform.viewTypeForPlayer(secondaryId) ==
-                VideoViewType.platformView;
-      },
-    );
     final pipInactivePrimaryPlayerId = videoPlatform.latestPlayerIdForUri(
       primaryUri,
     );
@@ -1141,6 +1120,14 @@ void main() {
     );
     expect(pipInactivePrimaryPlayerId, isNotNull);
     expect(pipActiveSecondaryPlayerId, isNotNull);
+    expect(
+      videoPlatform.viewTypeForPlayer(pipInactivePrimaryPlayerId!),
+      VideoViewType.textureView,
+    );
+    expect(
+      videoPlatform.viewTypeForPlayer(pipActiveSecondaryPlayerId!),
+      VideoViewType.textureView,
+    );
 
     bloc.add(
       const LivePlayerEvent.multiviewLayoutModeSelected(
@@ -1152,24 +1139,22 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.focus,
     );
-    await _pumpUntil(
-      tester,
-      until: () {
-        final secondaryId = videoPlatform.latestPlayerIdForUri(secondaryUri);
-        return secondaryId != null &&
-            secondaryId != pipActiveSecondaryPlayerId &&
-            videoPlatform.viewTypeForPlayer(secondaryId) ==
-                VideoViewType.textureView;
-      },
-    );
     final focusPrimaryPlayerId = videoPlatform.latestPlayerIdForUri(
       primaryUri,
     );
     final focusSecondaryPlayerId = videoPlatform.latestPlayerIdForUri(
       secondaryUri,
     );
-    expect(focusPrimaryPlayerId, pipInactivePrimaryPlayerId);
+    expect(focusPrimaryPlayerId, isNotNull);
     expect(focusSecondaryPlayerId, isNotNull);
+    expect(
+      videoPlatform.viewTypeForPlayer(focusPrimaryPlayerId!),
+      VideoViewType.textureView,
+    );
+    expect(
+      videoPlatform.viewTypeForPlayer(focusSecondaryPlayerId!),
+      VideoViewType.textureView,
+    );
 
     bloc.add(const LivePlayerEvent.activeSlotSelected(slotId: 'primary'));
     await _pumpUntil(tester, until: () => bloc.state.activeSlotId == 'primary');

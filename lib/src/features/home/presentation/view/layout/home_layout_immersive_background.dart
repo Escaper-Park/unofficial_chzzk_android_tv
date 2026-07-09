@@ -3,13 +3,35 @@ part of 'home_layout.dart';
 Widget _buildHomeImmersiveBackground({
   required HomeState state,
   required int activeIndex,
-  required double scrollOffset,
+  required ScrollController scrollController,
   required LivePreviewStateListenable? previewState,
 }) {
   if (!state.visibleSections.contains(HomeSectionId.immersive)) {
     return const SizedBox.shrink();
   }
 
+  return AnimatedBuilder(
+    animation: scrollController,
+    builder: (context, _) {
+      final scrollOffset = scrollController.hasClients
+          ? scrollController.offset
+          : 0.0;
+      return _homeImmersiveBackgroundFor(
+        state: state,
+        activeIndex: activeIndex,
+        scrollOffset: scrollOffset,
+        previewState: previewState,
+      );
+    },
+  );
+}
+
+Widget _homeImmersiveBackgroundFor({
+  required HomeState state,
+  required int activeIndex,
+  required double scrollOffset,
+  required LivePreviewStateListenable? previewState,
+}) {
   final items = state.immersive.items;
   if (state.immersive.status != HomeSectionLoadStatus.ready || items.isEmpty) {
     return Positioned(

@@ -58,6 +58,7 @@ class LivePlayerSurface extends StatelessWidget {
         );
       },
       child: LivePlayerVideoSurface(
+        slotId: slot.slotId,
         playbackUri: playbackUri,
         playbackHttpHeaders: playbackHttpHeaders,
         videoViewType: videoViewType,

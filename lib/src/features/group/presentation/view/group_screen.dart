@@ -98,6 +98,7 @@ class _GroupScreenView extends HookWidget {
             previous.feedbackSerial != current.feedbackSerial ||
             previous.activeChannelModal != current.activeChannelModal;
       },
+      buildWhen: _shouldRebuildGroupScreen,
       listener: (context, state) {
         if (state.isKeyboardOpen) {
           keyboardBinding.sync(state);
@@ -174,4 +175,9 @@ class _GroupScreenView extends HookWidget {
       },
     );
   }
+}
+
+bool _shouldRebuildGroupScreen(GroupState previous, GroupState current) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

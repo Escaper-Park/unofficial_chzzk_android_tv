@@ -467,26 +467,29 @@ void main() {
     expect(source?.availableResolutionIndexes, [0, 2, 4]);
   });
 
-  test('status reader reads live status with player recommendations', () async {
-    final repository = _FakeLiveRepository(
-      status: const LiveStatus(
-        title: 'Live title',
-        status: 'OPEN',
-        concurrentUserCount: 10,
-        adult: false,
-      ),
-    );
-    final reader = LivePlayerStatusReader(
-      liveRepository: repository,
-      channelRepository: _FakeChannelRepository(),
-    );
+  test(
+    'status reader reads live status without player recommendations',
+    () async {
+      final repository = _FakeLiveRepository(
+        status: const LiveStatus(
+          title: 'Live title',
+          status: 'OPEN',
+          concurrentUserCount: 10,
+          adult: false,
+        ),
+      );
+      final reader = LivePlayerStatusReader(
+        liveRepository: repository,
+        channelRepository: _FakeChannelRepository(),
+      );
 
-    await reader.readStatus('channel-a');
+      await reader.readStatus('channel-a');
 
-    expect(repository.getLiveStatusCalls, [
-      (channelId: 'channel-a', includePlayerRecommendContent: true),
-    ]);
-  });
+      expect(repository.getLiveStatusCalls, [
+        (channelId: 'channel-a', includePlayerRecommendContent: false),
+      ]);
+    },
+  );
 
   test('status reader applies member-only viewer benefits', () async {
     final channelRepository = _FakeChannelRepository(
@@ -892,7 +895,7 @@ void main() {
     expect(repository.getLiveStatusCalls.last.channelId, 'channel-a');
     expect(
       repository.getLiveStatusCalls.last.includePlayerRecommendContent,
-      isTrue,
+      isFalse,
     );
   });
 

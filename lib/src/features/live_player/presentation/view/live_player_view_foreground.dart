@@ -9,21 +9,39 @@ final class _LivePlayerForegroundLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocSelector<
+      LivePlayerBloc,
+      LivePlayerState,
+      LivePlayerFeedbackType?
+    >(
+      selector: (state) => state.feedbackType,
+      builder: (context, feedbackType) {
+        return _LivePlayerForegroundControllerBoundary(
+          feedbackType: feedbackType,
+          exitNoticeController: exitNoticeController,
+        );
+      },
+    );
+  }
+}
+
+final class _LivePlayerForegroundControllerBoundary extends StatelessWidget {
+  const _LivePlayerForegroundControllerBoundary({
+    required this.feedbackType,
+    required this.exitNoticeController,
+  });
+
+  final LivePlayerFeedbackType? feedbackType;
+  final TvPlayerExitNoticeController exitNoticeController;
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: exitNoticeController,
       builder: (context, _) {
-        return BlocSelector<
-          LivePlayerBloc,
-          LivePlayerState,
-          LivePlayerFeedbackType?
-        >(
-          selector: (state) => state.feedbackType,
-          builder: (context, feedbackType) {
-            return _LivePlayerForeground(
-              feedbackType: feedbackType,
-              showExitNotice: exitNoticeController.isShowing,
-            );
-          },
+        return _LivePlayerForeground(
+          feedbackType: feedbackType,
+          showExitNotice: exitNoticeController.isShowing,
         );
       },
     );

@@ -72,6 +72,7 @@ class _SearchScreenView extends HookWidget {
             previous.query != current.query ||
             previous.navigationSerial != current.navigationSerial;
       },
+      buildWhen: _shouldRebuildSearchScreen,
       listener: (context, state) {
         if (state.isKeyboardOpen) {
           keyboardBinding.sync(state);
@@ -145,6 +146,11 @@ class _SearchScreenView extends HookWidget {
       ),
     );
   }
+}
+
+bool _shouldRebuildSearchScreen(SearchState previous, SearchState current) {
+  return previous.copyWith(navigationRequest: null, navigationSerial: 0) !=
+      current.copyWith(navigationRequest: null, navigationSerial: 0);
 }
 
 void _requestFirstFocusable(FocusScopeNode node) {

@@ -29,7 +29,10 @@ class LivePreviewPlayer extends HookWidget {
       ),
       [playbackUri, videoViewType],
     );
-    final playbackValue = useListenable(controller).value;
+    final frameValueListenable = useMemoized(
+      () => _LivePreviewVideoFrameValueListenable(controller),
+      [controller],
+    );
     final initialized = useState(false);
     final failed = useState(false);
 
@@ -80,9 +83,10 @@ class LivePreviewPlayer extends HookWidget {
       return () {
         disposed = true;
         controller.removeListener(handleControllerChange);
+        frameValueListenable.dispose();
         unawaited(controller.dispose());
       };
-    }, [controller]);
+    }, [controller, frameValueListenable]);
 
     useEffect(() {
       if (!initialized.value || failed.value) {
@@ -100,21 +104,85 @@ class LivePreviewPlayer extends HookWidget {
     return ColoredBox(
       color: Colors.black,
       child: ClipRect(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _videoWidth(playbackValue),
-            height: _videoHeight(playbackValue),
-            child: VideoPlayer(controller),
-          ),
+        child: ValueListenableBuilder<_LivePreviewVideoFrameValue>(
+          valueListenable: frameValueListenable,
+          child: VideoPlayer(controller),
+          builder: (context, frameValue, child) {
+            return FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: _videoWidth(frameValue),
+                height: _videoHeight(frameValue),
+                child: child,
+              ),
+            );
+          },
         ),
       ),
     );
   }
 }
 
-double _videoWidth(VideoPlayerValue value) {
-  final width = value.size.width;
+final class _LivePreviewVideoFrameValueListenable
+    extends ValueNotifier<_LivePreviewVideoFrameValue> {
+  _LivePreviewVideoFrameValueListenable(this._controller)
+    : super(_LivePreviewVideoFrameValue.from(_controller.value)) {
+    _controller.addListener(_sync);
+  }
+
+  final VideoPlayerController _controller;
+
+  void _sync() {
+    final next = _LivePreviewVideoFrameValue.from(_controller.value);
+    if (next == value) {
+      return;
+    }
+
+    value = next;
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_sync);
+    super.dispose();
+  }
+}
+
+@immutable
+final class _LivePreviewVideoFrameValue {
+  const _LivePreviewVideoFrameValue({
+    required this.width,
+    required this.height,
+    required this.aspectRatio,
+  });
+
+  factory _LivePreviewVideoFrameValue.from(VideoPlayerValue value) {
+    return _LivePreviewVideoFrameValue(
+      width: value.size.width,
+      height: value.size.height,
+      aspectRatio: value.aspectRatio,
+    );
+  }
+
+  final double width;
+  final double height;
+  final double aspectRatio;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePreviewVideoFrameValue &&
+            _sameVideoDouble(other.width, width) &&
+            _sameVideoDouble(other.height, height) &&
+            _sameVideoDouble(other.aspectRatio, aspectRatio);
+  }
+
+  @override
+  int get hashCode => Object.hash(width, height, aspectRatio);
+}
+
+double _videoWidth(_LivePreviewVideoFrameValue value) {
+  final width = value.width;
   if (width.isFinite && width > 0) {
     return width;
   }
@@ -127,13 +195,17 @@ double _videoWidth(VideoPlayerValue value) {
   return _fallbackVideoWidth;
 }
 
-double _videoHeight(VideoPlayerValue value) {
-  final height = value.size.height;
+double _videoHeight(_LivePreviewVideoFrameValue value) {
+  final height = value.height;
   if (height.isFinite && height > 0) {
     return height;
   }
 
   return _fallbackVideoHeight;
+}
+
+bool _sameVideoDouble(double previous, double current) {
+  return previous == current || previous.isNaN && current.isNaN;
 }
 
 VideoViewType _videoViewTypeFor(PlayerVideoViewType videoViewType) {

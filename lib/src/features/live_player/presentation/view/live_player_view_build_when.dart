@@ -8,8 +8,8 @@ bool _livePlayerPlaybackBuildWhen(
       previous.multiviewLayoutMode != current.multiviewLayoutMode ||
       previous.activeSlotId != current.activeSlotId ||
       previous.primarySlotId != current.primarySlotId ||
-      previous.audibleSlotIds != current.audibleSlotIds ||
-      previous.slotVolumeById != current.slotVolumeById ||
+      !setEquals(previous.audibleSlotIds, current.audibleSlotIds) ||
+      !mapEquals(previous.slotVolumeById, current.slotVolumeById) ||
       previous.activeSlotHighlightSerial != current.activeSlotHighlightSerial) {
     return true;
   }
@@ -18,6 +18,10 @@ bool _livePlayerPlaybackBuildWhen(
     previous.settingsPreferences,
     current.settingsPreferences,
   )) {
+    return true;
+  }
+
+  if (_livePlayerHasChatLayer(previous) != _livePlayerHasChatLayer(current)) {
     return true;
   }
 
@@ -61,7 +65,6 @@ bool _sameActiveSlotPlaybackInput(
   return previous.slotId == current.slotId &&
       previous.status == current.status &&
       previous.channelId == current.channelId &&
-      previous.chatChannelId == current.chatChannelId &&
       previous.playbackUri == current.playbackUri;
 }
 
@@ -99,8 +102,8 @@ bool _livePlayerControlsOverlayBuildWhen(
       previous.activeSlotId != current.activeSlotId ||
       previous.primarySlotId != current.primarySlotId ||
       !_sameControlsOverlaySlots(previous.slots, current.slots) ||
-      previous.audibleSlotIds != current.audibleSlotIds ||
-      previous.slotVolumeById != current.slotVolumeById ||
+      !setEquals(previous.audibleSlotIds, current.audibleSlotIds) ||
+      !mapEquals(previous.slotVolumeById, current.slotVolumeById) ||
       previous.settingsPreferences != current.settingsPreferences ||
       previous.groupCollection != current.groupCollection ||
       previous.channelMyInfo != current.channelMyInfo ||

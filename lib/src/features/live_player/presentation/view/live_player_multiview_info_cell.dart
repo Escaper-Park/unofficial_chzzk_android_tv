@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../../core/ui/ui.dart';
 import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_ui_mapper.dart';
+import 'live_overlay_now_ticker.dart';
 import 'live_player_controls_overlay_design.dart';
 import 'live_player_multiview_metric.dart';
 
@@ -11,12 +13,10 @@ class LivePlayerMultiviewInfoCell extends StatelessWidget {
   const LivePlayerMultiviewInfoCell({
     super.key,
     required this.slot,
-    required this.now,
     this.selectSlotFromBloc = false,
   });
 
   final LivePlayerSlotState? slot;
-  final DateTime now;
   final bool selectSlotFromBloc;
 
   @override
@@ -29,7 +29,6 @@ class LivePlayerMultiviewInfoCell extends StatelessWidget {
     if (!selectSlotFromBloc) {
       return _LivePlayerMultiviewInfoCellView(
         snapshot: _LivePlayerMultiviewInfoCellSnapshot.fromSlot(slot),
-        now: now,
       );
     }
 
@@ -46,7 +45,6 @@ class LivePlayerMultiviewInfoCell extends StatelessWidget {
       builder: (context, snapshot) {
         return _LivePlayerMultiviewInfoCellView(
           snapshot: snapshot,
-          now: now,
         );
       },
     );
@@ -56,11 +54,9 @@ class LivePlayerMultiviewInfoCell extends StatelessWidget {
 class _LivePlayerMultiviewInfoCellView extends StatelessWidget {
   const _LivePlayerMultiviewInfoCellView({
     required this.snapshot,
-    required this.now,
   });
 
   final _LivePlayerMultiviewInfoCellSnapshot snapshot;
-  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +66,8 @@ class _LivePlayerMultiviewInfoCellView extends StatelessWidget {
     final secondaryStyle = baseStyle?.copyWith(
       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.68),
     );
-    final elapsedText = LivePlayerScreenUiMapper.elapsedText(
-      openDate: snapshot.openDate,
-      now: now,
+    final startedAt = LivePlayerScreenUiMapper.parseOpenDate(
+      snapshot.openDate,
     );
     final viewerCountText = LivePlayerScreenUiMapper.viewerCountText(
       snapshot.concurrentUserCount,
@@ -125,15 +120,12 @@ class _LivePlayerMultiviewInfoCellView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              if (elapsedText != null)
-                LivePlayerMultiviewMetric(
-                  icon: Icons.schedule,
-                  text: elapsedText,
+              if (startedAt != null)
+                _LivePlayerMultiviewElapsedMetric(
+                  startedAt: startedAt,
                   style: baseStyle,
-                  fixedTextWidth: LivePlayerControlsOverlayDesign
-                      .multiviewInfoMetricTextWidth,
                 ),
-              if (elapsedText != null && viewerCountText != null)
+              if (startedAt != null && viewerCountText != null)
                 const SizedBox(
                   height:
                       LivePlayerControlsOverlayDesign.multiviewInfoMetricGap,
@@ -221,6 +213,29 @@ final class _LivePlayerMultiviewInfoCellSnapshot {
     openDate,
     concurrentUserCount,
   );
+}
+
+class _LivePlayerMultiviewElapsedMetric extends HookWidget {
+  const _LivePlayerMultiviewElapsedMetric({
+    required this.startedAt,
+    required this.style,
+  });
+
+  final DateTime startedAt;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final now = useLiveOverlayNowTicker();
+
+    return LivePlayerMultiviewMetric(
+      icon: Icons.schedule,
+      text: LivePlayerScreenUiMapper.formatElapsed(now.difference(startedAt)),
+      style: style,
+      fixedTextWidth:
+          LivePlayerControlsOverlayDesign.multiviewInfoMetricTextWidth,
+    );
+  }
 }
 
 String _slotChannelName(_LivePlayerMultiviewInfoCellSnapshot slot) {

@@ -125,6 +125,7 @@ class _FollowingScreenView extends HookWidget {
 
           return feedbackChanged || channelModalChanged;
         },
+        buildWhen: _shouldRebuildFollowingScreen,
         listener: (context, state) {
           final feedbackType = state.feedbackType;
           if (feedbackType != null &&
@@ -202,4 +203,12 @@ class _FollowingScreenView extends HookWidget {
       ),
     );
   }
+}
+
+bool _shouldRebuildFollowingScreen(
+  FollowingState previous,
+  FollowingState current,
+) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

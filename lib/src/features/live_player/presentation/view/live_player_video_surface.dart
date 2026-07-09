@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/utils/utils.dart';
 import '../../../settings/domain/entities/settings_preferences.dart';
+import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import 'live_player_playback_session_controller.dart';
 import 'live_player_status_surface.dart';
@@ -19,6 +22,7 @@ part 'live_player_video_watch_reporter.dart';
 class LivePlayerVideoSurface extends HookWidget {
   const LivePlayerVideoSurface({
     super.key,
+    required this.slotId,
     required this.playbackUri,
     required this.playbackHttpHeaders,
     required this.videoViewType,
@@ -37,6 +41,7 @@ class LivePlayerVideoSurface extends HookWidget {
     required this.onFailure,
   });
 
+  final String slotId;
   final Uri playbackUri;
   final Map<String, String> playbackHttpHeaders;
   final PlayerVideoViewType videoViewType;
@@ -56,6 +61,18 @@ class LivePlayerVideoSurface extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final watchSnapshot = context
+        .select<LivePlayerBloc, _LivePlayerVideoWatchSnapshot>((bloc) {
+          return _LivePlayerVideoWatchSnapshot.fromState(
+            bloc.state,
+            slotId: slotId,
+            channelId: channelId,
+            liveId: liveId,
+            playbackUri: playbackUri,
+            fallbackLiveOpenDate: liveOpenDate,
+            fallbackLiveTokens: liveTokens,
+          );
+        });
     final playbackHttpHeadersKey = _playbackHttpHeadersKey(
       playbackHttpHeaders,
     );
@@ -73,8 +90,8 @@ class LivePlayerVideoSurface extends HookWidget {
       [controller],
     );
     final parsedLiveOpenDate = useMemoized(
-      () => _parseLiveOpenDate(liveOpenDate),
-      [liveOpenDate],
+      () => _parseLiveOpenDate(watchSnapshot.liveOpenDate),
+      [watchSnapshot.liveOpenDate],
     );
     final postWatchEventRef = useRef(postWatchEvent)..value = postWatchEvent;
     final reporter = useMemoized(
@@ -83,7 +100,7 @@ class LivePlayerVideoSurface extends HookWidget {
         channelId: channelId,
         liveId: liveId,
         liveOpenDate: parsedLiveOpenDate,
-        liveTokens: liveTokens,
+        liveTokens: watchSnapshot.liveTokens,
         postWatchEvent:
             ({
               required channelId,
@@ -195,7 +212,7 @@ class LivePlayerVideoSurface extends HookWidget {
         }
 
         syncTimer.start(
-          interval: const Duration(seconds: 1),
+          interval: _liveWatchEventSyncInterval,
           onTick: syncWatchEvent,
         );
         syncWatchEvent();
@@ -219,7 +236,7 @@ class LivePlayerVideoSurface extends HookWidget {
       return null;
     }, [controller, normalizedVolume]);
 
-    reporter?.updateLiveTokens(liveTokens);
+    reporter?.updateLiveTokens(watchSnapshot.liveTokens);
     playbackPausedRef.value = playbackPaused;
     reporterRef.value = reporter;
 
@@ -271,13 +288,59 @@ class LivePlayerVideoSurface extends HookWidget {
 
     return _LivePlayerVideoContent(
       controller: controller,
-      videoViewType: videoViewType,
       playbackSuspended: playbackSuspended(),
     );
   }
 }
 
+@immutable
+final class _LivePlayerVideoWatchSnapshot {
+  const _LivePlayerVideoWatchSnapshot({
+    required this.liveOpenDate,
+    required this.liveTokens,
+  });
+
+  factory _LivePlayerVideoWatchSnapshot.fromState(
+    LivePlayerState state, {
+    required String slotId,
+    required String? channelId,
+    required int? liveId,
+    required Uri playbackUri,
+    required String? fallbackLiveOpenDate,
+    required List<String> fallbackLiveTokens,
+  }) {
+    final currentSlot = state.slotById(slotId);
+    final slot =
+        currentSlot != null &&
+            currentSlot.channelId == channelId &&
+            currentSlot.liveId == liveId &&
+            currentSlot.playbackUri == playbackUri
+        ? currentSlot
+        : null;
+
+    return _LivePlayerVideoWatchSnapshot(
+      liveOpenDate: slot?.openDate ?? fallbackLiveOpenDate,
+      liveTokens: slot?.liveTokens ?? fallbackLiveTokens,
+    );
+  }
+
+  final String? liveOpenDate;
+  final List<String> liveTokens;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerVideoWatchSnapshot &&
+            other.liveOpenDate == liveOpenDate &&
+            listEquals(other.liveTokens, liveTokens);
+  }
+
+  @override
+  int get hashCode => Object.hash(liveOpenDate, Object.hashAll(liveTokens));
+}
+
 const _liveBufferingIndicatorDelay = Duration(seconds: 2);
+const _liveWatchEventSyncInterval = Duration(seconds: 5);
 
 double _normalizedPlayerVolume(double volume) {
   if (!volume.isFinite) {

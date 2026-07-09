@@ -11,22 +11,47 @@ final class _VodPlayerForegroundLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocSelector<
+      VodPlayerBloc,
+      VodPlayerState,
+      _VodPlayerForegroundSnapshot
+    >(
+      selector: _VodPlayerForegroundSnapshot.new,
+      builder: (context, snapshot) {
+        return _VodPlayerForegroundControllerBoundary(
+          snapshot: snapshot,
+          seekFeedbackController: seekFeedbackController,
+          exitNoticeController: exitNoticeController,
+        );
+      },
+    );
+  }
+}
+
+final class _VodPlayerForegroundControllerBoundary extends StatelessWidget {
+  const _VodPlayerForegroundControllerBoundary({
+    required this.snapshot,
+    required this.seekFeedbackController,
+    required this.exitNoticeController,
+  });
+
+  final _VodPlayerForegroundSnapshot snapshot;
+  final VodPlayerSeekFeedbackController seekFeedbackController;
+  final TvPlayerExitNoticeController exitNoticeController;
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: Listenable.merge([
         seekFeedbackController,
         exitNoticeController,
       ]),
       builder: (context, _) {
-        return BlocBuilder<VodPlayerBloc, VodPlayerState>(
-          buildWhen: _vodPlayerForegroundBuildWhen,
-          builder: (context, state) {
-            return _VodPlayerForeground(
-              slot: state.activeSlot,
-              seekFeedback: seekFeedbackController.feedback,
-              feedbackType: state.feedbackType,
-              showExitNotice: exitNoticeController.isShowing,
-            );
-          },
+        return _VodPlayerForeground(
+          slot: snapshot.state.activeSlot,
+          seekFeedback: seekFeedbackController.feedback,
+          feedbackType: snapshot.state.feedbackType,
+          showExitNotice: exitNoticeController.isShowing,
         );
       },
     );
@@ -89,4 +114,33 @@ final class _VodPlayerForeground extends StatelessWidget {
       ],
     );
   }
+}
+
+@immutable
+final class _VodPlayerForegroundSnapshot {
+  const _VodPlayerForegroundSnapshot(this.state);
+
+  final VodPlayerState state;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _VodPlayerForegroundSnapshot &&
+            !_vodPlayerForegroundBuildWhen(other.state, state);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    state.feedbackType,
+    _vodForegroundSlotInputHash(state.activeSlot),
+  );
+}
+
+int _vodForegroundSlotInputHash(VodPlayerSlotState slot) {
+  return Object.hash(
+    slot.slotId,
+    slot.status,
+    slot.videoNo,
+    slot.failureReason,
+  );
 }

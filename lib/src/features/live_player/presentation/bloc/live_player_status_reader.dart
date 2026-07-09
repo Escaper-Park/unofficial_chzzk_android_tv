@@ -12,7 +12,7 @@ final class LivePlayerStatusReader {
   Future<LiveStatus> readStatus(String channelId) {
     return liveRepository.getLiveStatus(
       channelId: channelId,
-      includePlayerRecommendContent: true,
+      includePlayerRecommendContent: false,
     );
   }
 

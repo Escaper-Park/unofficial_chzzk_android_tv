@@ -3,12 +3,10 @@ part of 'live_player_video_surface.dart';
 class _LivePlayerVideoContent extends HookWidget {
   const _LivePlayerVideoContent({
     required this.controller,
-    required this.videoViewType,
     required this.playbackSuspended,
   });
 
   final VideoPlayerController controller;
-  final PlayerVideoViewType videoViewType;
   final bool playbackSuspended;
 
   @override
@@ -31,7 +29,6 @@ class _LivePlayerVideoContent extends HookWidget {
           builder: (context, frameValue, child) {
             return _LivePlayerVideoFrame(
               frameValue: frameValue,
-              videoViewType: videoViewType,
               playbackSuspended: playbackSuspended,
               video: child!,
             );
@@ -45,13 +42,11 @@ class _LivePlayerVideoContent extends HookWidget {
 class _LivePlayerVideoFrame extends HookWidget {
   const _LivePlayerVideoFrame({
     required this.frameValue,
-    required this.videoViewType,
     required this.playbackSuspended,
     required this.video,
   });
 
   final _LivePlayerVideoFrameValue frameValue;
-  final PlayerVideoViewType videoViewType;
   final bool playbackSuspended;
   final Widget video;
 
@@ -99,22 +94,22 @@ class _LivePlayerVideoFrame extends HookWidget {
   }
 
   Widget _videoWidget() {
-    return switch (videoViewType) {
-      PlayerVideoViewType.textureView => FittedBox(
-        fit: BoxFit.contain,
-        child: SizedBox(
-          width: _videoWidth(frameValue),
-          height: _videoHeight(frameValue),
-          child: video,
-        ),
-      ),
-      PlayerVideoViewType.platformView => Center(
-        child: AspectRatio(
-          aspectRatio: frameValue.aspectRatio,
-          child: video,
-        ),
-      ),
-    };
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final videoSize = _containedVideoSize(
+          constraints.biggest,
+          _videoAspectRatio(frameValue),
+        );
+
+        return Center(
+          child: SizedBox(
+            width: videoSize.width,
+            height: videoSize.height,
+            child: video,
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -148,8 +143,6 @@ final class _LivePlayerVideoFrameValue {
   const _LivePlayerVideoFrameValue({
     required this.hasError,
     required this.isBuffering,
-    required this.width,
-    required this.height,
     required this.aspectRatio,
   });
 
@@ -157,16 +150,12 @@ final class _LivePlayerVideoFrameValue {
     return _LivePlayerVideoFrameValue(
       hasError: value.hasError,
       isBuffering: value.isBuffering,
-      width: value.size.width,
-      height: value.size.height,
       aspectRatio: value.aspectRatio,
     );
   }
 
   final bool hasError;
   final bool isBuffering;
-  final double width;
-  final double height;
   final double aspectRatio;
 
   @override
@@ -175,47 +164,39 @@ final class _LivePlayerVideoFrameValue {
         other is _LivePlayerVideoFrameValue &&
             other.hasError == hasError &&
             other.isBuffering == isBuffering &&
-            _sameVideoDouble(other.width, width) &&
-            _sameVideoDouble(other.height, height) &&
             _sameVideoDouble(other.aspectRatio, aspectRatio);
   }
 
   @override
-  int get hashCode => Object.hash(
-    hasError,
-    isBuffering,
-    width,
-    height,
-    aspectRatio,
-  );
+  int get hashCode => Object.hash(hasError, isBuffering, aspectRatio);
 }
 
 bool _sameVideoDouble(double previous, double current) {
   return previous == current || previous.isNaN && current.isNaN;
 }
 
-double _videoWidth(_LivePlayerVideoFrameValue value) {
-  final width = value.width;
-  if (width.isFinite && width > 0) {
-    return width;
-  }
-
+double _videoAspectRatio(_LivePlayerVideoFrameValue value) {
   final aspectRatio = value.aspectRatio;
   if (aspectRatio.isFinite && aspectRatio > 0) {
-    return aspectRatio * _fallbackVideoHeight;
+    return aspectRatio;
   }
 
-  return _fallbackVideoWidth;
+  return _fallbackVideoAspectRatio;
 }
 
-double _videoHeight(_LivePlayerVideoFrameValue value) {
-  final height = value.height;
-  if (height.isFinite && height > 0) {
-    return height;
+Size _containedVideoSize(Size bounds, double aspectRatio) {
+  final width = bounds.width;
+  final height = bounds.height;
+  if (!width.isFinite || !height.isFinite || width <= 0 || height <= 0) {
+    return Size.zero;
   }
 
-  return _fallbackVideoHeight;
+  final boundsAspectRatio = width / height;
+  if (boundsAspectRatio > aspectRatio) {
+    return Size(height * aspectRatio, height);
+  }
+
+  return Size(width, width / aspectRatio);
 }
 
-const _fallbackVideoWidth = 160.0;
-const _fallbackVideoHeight = 90.0;
+const _fallbackVideoAspectRatio = 16 / 9;

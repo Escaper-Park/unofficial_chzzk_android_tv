@@ -1,12 +1,52 @@
 part of 'live_player_view.dart';
 
-Widget? _livePlayerChatLayerFor({
-  required LivePlayerState state,
-  required LivePlayerSlotState slot,
-  required ValueListenable<bool> playbackPaused,
-  required bool appPlaybackSuspended,
-  required ConnectLiveChat connectLiveChat,
-}) {
+bool _livePlayerHasChatLayer(LivePlayerState state) {
+  return _livePlayerChatLayerInputSnapshotFor(state) != null;
+}
+
+final class _LivePlayerChatLayerSelector extends StatelessWidget {
+  const _LivePlayerChatLayerSelector({
+    required this.playbackPaused,
+    required this.appPlaybackSuspended,
+    required this.connectLiveChat,
+  });
+
+  final ValueListenable<bool> playbackPaused;
+  final bool appPlaybackSuspended;
+  final ConnectLiveChat connectLiveChat;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<
+      LivePlayerBloc,
+      LivePlayerState,
+      _LivePlayerChatLayerInputSnapshot?
+    >(
+      selector: _livePlayerChatLayerInputSnapshotFor,
+      builder: (context, snapshot) {
+        if (snapshot == null) {
+          return const SizedBox.shrink();
+        }
+
+        return _LivePlayerChatLayerPlaybackBoundary(
+          channelId: snapshot.channelId,
+          chatChannelId: snapshot.chatChannelId,
+          presentationModeIndex: snapshot.presentationModeIndex,
+          chatSettings: snapshot.chatSettings,
+          slotPlaying: snapshot.slotPlaying,
+          playbackPaused: playbackPaused,
+          appPlaybackSuspended: appPlaybackSuspended,
+          connectLiveChat: connectLiveChat,
+        );
+      },
+    );
+  }
+}
+
+_LivePlayerChatLayerInputSnapshot? _livePlayerChatLayerInputSnapshotFor(
+  LivePlayerState state,
+) {
+  final slot = state.activeSlot;
   final liveChatRequest = LiveChatSessionRequest.tryCreate(
     channelId: slot.channelId,
     chatChannelId: slot.chatChannelId,
@@ -22,16 +62,50 @@ Widget? _livePlayerChatLayerFor({
     return null;
   }
 
-  return _LivePlayerChatLayerPlaybackBoundary(
+  return _LivePlayerChatLayerInputSnapshot(
     channelId: liveChatRequest.channelId,
     chatChannelId: liveChatRequest.chatChannelId,
     presentationModeIndex: presentationModeIndex,
     chatSettings: livePlayerEffectiveChatSettings(state),
     slotPlaying:
         slot.status == LivePlayerSlotStatus.playing && slot.playbackUri != null,
-    playbackPaused: playbackPaused,
-    appPlaybackSuspended: appPlaybackSuspended,
-    connectLiveChat: connectLiveChat,
+  );
+}
+
+@immutable
+final class _LivePlayerChatLayerInputSnapshot {
+  const _LivePlayerChatLayerInputSnapshot({
+    required this.channelId,
+    required this.chatChannelId,
+    required this.presentationModeIndex,
+    required this.chatSettings,
+    required this.slotPlaying,
+  });
+
+  final String channelId;
+  final String chatChannelId;
+  final int presentationModeIndex;
+  final ChatSettings chatSettings;
+  final bool slotPlaying;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerChatLayerInputSnapshot &&
+            other.channelId == channelId &&
+            other.chatChannelId == chatChannelId &&
+            other.presentationModeIndex == presentationModeIndex &&
+            other.chatSettings == chatSettings &&
+            other.slotPlaying == slotPlaying;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    channelId,
+    chatChannelId,
+    presentationModeIndex,
+    chatSettings,
+    slotPlaying,
   );
 }
 
