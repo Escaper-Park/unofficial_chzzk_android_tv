@@ -157,8 +157,6 @@ void _useVodPlayerSeekRequest({
   required ValueNotifier<bool> failed,
   required ValueNotifier<bool> ended,
   required VodPlayerSeekRequest? seekRequest,
-  required VodPlayerWatchEventReporter? reporter,
-  required VodPlayerChatReplayController? chatReplayController,
   required ObjectRef<int?> handledSeekSerial,
   required ObjectRef<int?> pendingWatchEventSeekPositionSeconds,
   required VodPlayerWatchEventSeekHold watchEventSeekHold,
@@ -177,28 +175,38 @@ void _useVodPlayerSeekRequest({
         return null;
       }
 
+      var cancelled = false;
       handledSeekSerial.value = request.serial;
       final previousPosition = controller.value.position;
       watchEventSeekHold.hold();
       unawaited(
-        controller.seekTo(request.position).then((_) {
-          watchEventSeekHold.hold();
-          pendingWatchEventSeekPositionSeconds.value =
-              request.position.inSeconds;
-          final chatController = chatReplayControllerRef.value;
-          if (chatController != null) {
-            unawaited(
-              chatController.seekCommitted(
-                request.position,
-                previousPosition: previousPosition,
-              ),
-            );
-          }
-          reportPosition();
-          syncChatReplay();
-        }),
+        controller
+            .seekTo(request.position)
+            .then((_) {
+              if (cancelled) {
+                return;
+              }
+
+              watchEventSeekHold.hold();
+              pendingWatchEventSeekPositionSeconds.value =
+                  request.position.inSeconds;
+              final chatController = chatReplayControllerRef.value;
+              if (chatController != null) {
+                unawaited(
+                  chatController.seekCommitted(
+                    request.position,
+                    previousPosition: previousPosition,
+                  ),
+                );
+              }
+              reportPosition();
+              syncChatReplay();
+            })
+            .catchError((Object _) {}),
       );
-      return null;
+      return () {
+        cancelled = true;
+      };
     },
     [
       controller,
@@ -206,8 +214,6 @@ void _useVodPlayerSeekRequest({
       failed.value,
       ended.value,
       seekRequest,
-      reporter,
-      chatReplayController,
     ],
   );
 }

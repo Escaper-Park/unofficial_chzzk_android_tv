@@ -8,10 +8,17 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
   List<PlayerChatMessage> _messages = const <PlayerChatMessage>[];
   Future<void> _connectionCleanup = Future<void>.value();
   _LivePlayerChatLayerStatus _status = _LivePlayerChatLayerStatus.loading;
+  final _chatSnapshot = ValueNotifier(
+    const _LivePlayerChatLayerSnapshot(
+      messages: <PlayerChatMessage>[],
+      status: _LivePlayerChatLayerStatus.loading,
+    ),
+  );
   var _connectSerial = 0;
   var _connectAttempt = 0;
   var _isConnecting = false;
   var _sessionActive = false;
+  Timer? _messageSnapshotTimer;
 
   void _syncSession({required bool notify}) {
     final mode = PlayerChatPresentationMode.fromLiveSettingsIndex(
@@ -92,9 +99,13 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
     _updateState(
       () {
         if (clearMessages) {
-          _messages = const <PlayerChatMessage>[];
+          _updateChatSnapshot(
+            messages: const <PlayerChatMessage>[],
+            status: _LivePlayerChatLayerStatus.loading,
+          );
+          return;
         }
-        _status = _LivePlayerChatLayerStatus.loading;
+        _updateChatSnapshot(status: _LivePlayerChatLayerStatus.loading);
       },
       notify: notify,
     );
@@ -127,9 +138,7 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
 
       _connection = connection;
       _isConnecting = false;
-      setState(() {
-        _status = _LivePlayerChatLayerStatus.data;
-      });
+      _updateChatSnapshot(status: _LivePlayerChatLayerStatus.data);
       _messageSubscription =
           liveChatMessageSnapshotsFromBatches(connection.batches).listen(
             (messages) {
@@ -137,10 +146,9 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
                 return;
               }
 
-              setState(() {
-                _messages = messages;
-                _status = _LivePlayerChatLayerStatus.data;
-              });
+              _updateChatSnapshot(
+                messages: messages,
+              );
             },
             onError: (Object _, StackTrace _) {
               if (!_isCurrentConnection(serial, request)) {
@@ -170,16 +178,14 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
     _isConnecting = false;
     unawaited(_disposeConnection(clearActiveRequest: false));
     if (_connectAttempt >= _maxLiveChatConnectAttempts) {
-      setState(() {
-        _messages = const <PlayerChatMessage>[];
-        _status = _LivePlayerChatLayerStatus.error;
-      });
+      _updateChatSnapshot(
+        messages: const <PlayerChatMessage>[],
+        status: _LivePlayerChatLayerStatus.error,
+      );
       return;
     }
 
-    setState(() {
-      _status = _LivePlayerChatLayerStatus.loading;
-    });
+    _updateChatSnapshot(status: _LivePlayerChatLayerStatus.loading);
     _chatLayerTimers.scheduleRetry(() {
       if (!_isCurrentSession(request)) {
         return;
@@ -191,6 +197,8 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
 
   void _disconnectNow({bool clearMessages = false}) {
     _chatLayerTimers.cancelAll();
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
     _connectSerial += 1;
     _connectAttempt = 0;
     _isConnecting = false;
@@ -210,8 +218,10 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
     setState(() {
       _sessionActive = false;
       if (clearMessages) {
-        _messages = const <PlayerChatMessage>[];
-        _status = _LivePlayerChatLayerStatus.loading;
+        _updateChatSnapshot(
+          messages: const <PlayerChatMessage>[],
+          status: _LivePlayerChatLayerStatus.loading,
+        );
       }
     });
   }
@@ -227,6 +237,95 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
 
     update();
   }
+
+  void _updateChatSnapshot({
+    List<PlayerChatMessage>? messages,
+    _LivePlayerChatLayerStatus? status,
+  }) {
+    final nextMessages = messages ?? _messages;
+    final nextStatus = status ?? _status;
+    _messages = nextMessages;
+    _status = nextStatus;
+
+    if (messages != null &&
+        status == null &&
+        widget.messageSnapshotInterval > Duration.zero) {
+      _scheduleMessageSnapshot();
+      return;
+    }
+
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
+    _publishChatSnapshot();
+  }
+
+  void _scheduleMessageSnapshot() {
+    if (_messageSnapshotTimer != null) {
+      return;
+    }
+
+    _messageSnapshotTimer = Timer(widget.messageSnapshotInterval, () {
+      _messageSnapshotTimer = null;
+      if (!mounted) {
+        return;
+      }
+
+      _publishChatSnapshot();
+    });
+  }
+
+  void _syncMessageSnapshotInterval() {
+    final hadPendingSnapshot = _messageSnapshotTimer != null;
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
+
+    if (widget.messageSnapshotInterval > Duration.zero) {
+      if (hadPendingSnapshot) {
+        _scheduleMessageSnapshot();
+        return;
+      }
+    }
+
+    _publishChatSnapshot();
+  }
+
+  void _publishChatSnapshot() {
+    if (!mounted) {
+      return;
+    }
+
+    final nextSnapshot = _LivePlayerChatLayerSnapshot(
+      messages: _messages,
+      status: _status,
+    );
+    if (_chatSnapshot.value == nextSnapshot) {
+      return;
+    }
+
+    _chatSnapshot.value = nextSnapshot;
+  }
 }
 
 const _maxLiveChatConnectAttempts = 3;
+
+@immutable
+final class _LivePlayerChatLayerSnapshot {
+  const _LivePlayerChatLayerSnapshot({
+    required this.messages,
+    required this.status,
+  });
+
+  final List<PlayerChatMessage> messages;
+  final _LivePlayerChatLayerStatus status;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerChatLayerSnapshot &&
+            identical(other.messages, messages) &&
+            other.status == status;
+  }
+
+  @override
+  int get hashCode => Object.hash(identityHashCode(messages), status);
+}

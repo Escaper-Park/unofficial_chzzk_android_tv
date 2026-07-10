@@ -21,8 +21,13 @@ extension _LivePlayerBlocBrowseLoadHelpers on LivePlayerBloc {
     required int requestSerial,
   }) async {
     try {
-      final result = await _fetchBrowseSection(section);
-      if (requestSerial != _browseRequestSerial ||
+      final result = await _fetchBrowseSection(
+        section,
+        requestSerial: requestSerial,
+      );
+      if (emit.isDone ||
+          isClosed ||
+          requestSerial != _browseRequestSerial ||
           state.overlayMode != LivePlayerOverlayMode.browse ||
           state.browseSection != section) {
         return;
@@ -71,7 +76,9 @@ extension _LivePlayerBlocBrowseLoadHelpers on LivePlayerBloc {
         ),
       );
     } on Object {
-      if (requestSerial != _browseRequestSerial ||
+      if (emit.isDone ||
+          isClosed ||
+          requestSerial != _browseRequestSerial ||
           state.overlayMode != LivePlayerOverlayMode.browse ||
           state.browseSection != section) {
         return;

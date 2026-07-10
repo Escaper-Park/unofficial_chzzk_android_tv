@@ -53,4 +53,18 @@ void main() {
     expect(tickCount, 0);
     expect(timer.isRunning, isFalse);
   });
+
+  test('cannot restart after disposal', () async {
+    final timer = PeriodicCallbackTimer()..dispose();
+    var tickCount = 0;
+
+    timer.start(
+      interval: const Duration(milliseconds: 5),
+      onTick: () => tickCount += 1,
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 16));
+
+    expect(tickCount, 0);
+    expect(timer.isRunning, isFalse);
+  });
 }

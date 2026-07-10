@@ -1,3 +1,5 @@
+import '../../../../core/utils/controller_disposal_barrier.dart';
+
 final class LivePlayerPlaybackSessionHandle {
   const LivePlayerPlaybackSessionHandle(this._suspend);
 
@@ -10,6 +12,8 @@ final class LivePlayerPlaybackSessionHandle {
 
 final class LivePlayerPlaybackSessionController {
   final Set<LivePlayerPlaybackSessionHandle> _handles = {};
+  final ControllerDisposalCoordinator _controllerDisposals =
+      mediaControllerDisposalCoordinator;
   var _suspended = false;
   var _disposed = false;
 
@@ -34,6 +38,16 @@ final class LivePlayerPlaybackSessionController {
     for (final handle in _handles.toList(growable: false)) {
       handle.suspend();
     }
+  }
+
+  Future<void> waitForControllerDisposals() {
+    return _controllerDisposals.waitForPending();
+  }
+
+  Future<void> scheduleControllerDisposal(
+    Future<void> Function() dispose,
+  ) {
+    return _controllerDisposals.schedule(dispose);
   }
 
   void dispose() {

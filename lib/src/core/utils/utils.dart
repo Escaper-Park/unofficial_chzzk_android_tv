@@ -1,3 +1,4 @@
+export 'controller_disposal_barrier.dart';
 export 'debounced_value_commit.dart';
 export 'formatters.dart';
 export 'periodic_callback_timer.dart';

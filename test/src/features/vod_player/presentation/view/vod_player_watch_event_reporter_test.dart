@@ -1,5 +1,7 @@
 // ignore_for_file: cascade_invocations
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/vod_player/presentation/view/vod_player_watch_event_reporter.dart';
@@ -267,6 +269,64 @@ void main() {
 
     expect(messages, ['Failed to post VOD watch event.']);
     expect(messages.join(), isNot(contains('secret-token')));
+  });
+
+  test('coalesces continued events while a previous post is pending', () async {
+    var now = DateTime(2026);
+    final firstPost = Completer<void>();
+    final calls = <_WatchEventCall>[];
+    final reporter = VodPlayerWatchEventReporter(
+      channelId: 'channel-a',
+      videoNo: 13704728,
+      durationSeconds: 60,
+      sessionId: 'session-a',
+      now: () => now,
+      postWatchEvent:
+          ({
+            required channelId,
+            required videoNo,
+            required watchEventType,
+            required awtSeconds,
+            required positionSeconds,
+            required sessionId,
+            required eventDurationSeconds,
+            required totalLengthSeconds,
+          }) {
+            calls.add(
+              _WatchEventCall(
+                channelId: channelId,
+                videoNo: videoNo,
+                watchEventType: watchEventType,
+                awtSeconds: awtSeconds,
+                positionSeconds: positionSeconds,
+                sessionId: sessionId,
+                eventDurationSeconds: eventDurationSeconds,
+                totalLengthSeconds: totalLengthSeconds,
+              ),
+            );
+            return calls.length == 1 ? firstPost.future : Future<void>.value();
+          },
+    );
+
+    reporter.start(positionSeconds: 0);
+    now = now.add(const Duration(seconds: 10));
+    reporter.tick(positionSeconds: 10);
+    now = now.add(const Duration(seconds: 10));
+    reporter.tick(positionSeconds: 20);
+
+    expect(calls, [_call(type: 'WATCH_STARTED', positionSeconds: 0)]);
+
+    firstPost.complete();
+    await reporter.flush();
+
+    expect(calls, [
+      _call(type: 'WATCH_STARTED', positionSeconds: 0),
+      _call(
+        type: 'WATCH_CONTINUED',
+        positionSeconds: 20,
+        awtSeconds: 20,
+      ),
+    ]);
   });
 }
 

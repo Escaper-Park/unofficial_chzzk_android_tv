@@ -5,12 +5,17 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     _BrowseRequested event,
     Emitter<LivePlayerState> emit,
   ) async {
+    if (state.overlayMode == LivePlayerOverlayMode.browse) {
+      return;
+    }
+
     final slot = state.activeSlot;
     if (slot.channelId == null) {
       return;
     }
 
     final requestSerial = ++_browseRequestSerial;
+    final browseSessionSerial = ++_browseSessionSerial;
     final openingState = state.copyWith(
       overlayMode: LivePlayerOverlayMode.browse,
       isSignedIn: event.isSignedIn,
@@ -18,45 +23,55 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     final openingSection = openingState.initialBrowseSection;
     emit(_browseLoadingState(openingState, openingSection));
 
-    var preferences = state.settingsPreferences;
-    try {
-      preferences = await settingsPreferencesRepository.read();
-      if (requestSerial != _browseRequestSerial) {
-        return;
-      }
-
-      _persistedSettingsPreferences = preferences;
-    } on Object {
-      // Keep the existing preferences if reading them fails.
-    }
-    if (requestSerial != _browseRequestSerial) {
-      return;
-    }
-
-    var groupCollection = state.groupCollection;
-    try {
-      groupCollection = await groupRepository.read();
-      if (requestSerial != _browseRequestSerial) {
-        return;
-      }
-    } on Object {
-      // Keep the existing group state if reading it fails.
-    }
-    if (requestSerial != _browseRequestSerial) {
-      return;
-    }
-
-    final refreshedState = state.copyWith(
-      settingsPreferences: preferences,
-      groupCollection: groupCollection,
+    final groupCollectionFuture = _readBrowseGroupCollection(
+      fallback: openingState.groupCollection,
     );
-    final section = refreshedState.effectiveBrowseSection(openingSection);
-    emit(_browseLoadingState(refreshedState, section));
-    await _loadBrowseSection(
+    final browseLoadFuture = _loadBrowseSection(
       emit,
-      section,
+      openingSection,
       requestSerial: requestSerial,
     );
+    final groupCollection = await groupCollectionFuture;
+    if (!emit.isDone &&
+        !isClosed &&
+        browseSessionSerial == _browseSessionSerial &&
+        state.overlayMode == LivePlayerOverlayMode.browse &&
+        state.groupCollection == openingState.groupCollection &&
+        groupCollection != state.groupCollection) {
+      emit(state.copyWith(groupCollection: groupCollection));
+    }
+    await browseLoadFuture;
+  }
+
+  Future<GroupCollection> _readBrowseGroupCollection({
+    required GroupCollection fallback,
+  }) async {
+    final existingRead = _browseGroupCollectionReadInFlight;
+    final read = existingRead ?? _startBrowseGroupCollectionRead();
+    try {
+      return await read.timeout(
+            _browseGroupCollectionReadTimeout,
+            onTimeout: () => fallback,
+          ) ??
+          fallback;
+    } on Object {
+      return fallback;
+    }
+  }
+
+  Future<GroupCollection?> _startBrowseGroupCollectionRead() {
+    final read = _readBrowseGroupCollectionOnce(groupRepository);
+    _browseGroupCollectionReadInFlight = read;
+    final owner = WeakReference(this);
+    unawaited(
+      read.whenComplete(() {
+        final bloc = owner.target;
+        if (identical(bloc?._browseGroupCollectionReadInFlight, read)) {
+          bloc?._browseGroupCollectionReadInFlight = null;
+        }
+      }),
+    );
+    return read;
   }
 
   void _onBrowseClosed(
@@ -64,6 +79,7 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     Emitter<LivePlayerState> emit,
   ) {
     ++_browseRequestSerial;
+    ++_browseSessionSerial;
     emit(
       state.copyWith(
         overlayMode: LivePlayerOverlayMode.none,
@@ -77,7 +93,8 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     _BrowseNextSectionRequested event,
     Emitter<LivePlayerState> emit,
   ) async {
-    if (state.overlayMode != LivePlayerOverlayMode.browse) {
+    if (state.overlayMode != LivePlayerOverlayMode.browse ||
+        state.browseStatus == LivePlayerBrowseLoadStatus.loading) {
       return;
     }
 
@@ -88,7 +105,8 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     _BrowsePreviousSectionRequested event,
     Emitter<LivePlayerState> emit,
   ) async {
-    if (state.overlayMode != LivePlayerOverlayMode.browse) {
+    if (state.overlayMode != LivePlayerOverlayMode.browse ||
+        state.browseStatus == LivePlayerBrowseLoadStatus.loading) {
       return;
     }
 
@@ -136,10 +154,13 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     try {
       final result = await _fetchBrowseSection(
         section,
+        requestSerial: requestSerial,
         liveCursor: state.browseLiveCursor,
         categoryCursor: state.browseCategoryCursor,
       );
-      if (requestSerial != _browseRequestSerial ||
+      if (emit.isDone ||
+          isClosed ||
+          requestSerial != _browseRequestSerial ||
           state.overlayMode != LivePlayerOverlayMode.browse ||
           state.browseSection != section) {
         return;
@@ -157,7 +178,9 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
         ),
       );
     } on Object {
-      if (requestSerial != _browseRequestSerial ||
+      if (emit.isDone ||
+          isClosed ||
+          requestSerial != _browseRequestSerial ||
           state.overlayMode != LivePlayerOverlayMode.browse ||
           state.browseSection != section) {
         return;
@@ -172,3 +195,15 @@ extension _LivePlayerBlocBrowseHelpers on LivePlayerBloc {
     }
   }
 }
+
+Future<GroupCollection?> _readBrowseGroupCollectionOnce(
+  GroupRepository repository,
+) async {
+  try {
+    return await repository.read();
+  } on Object {
+    return null;
+  }
+}
+
+const _browseGroupCollectionReadTimeout = Duration(seconds: 2);

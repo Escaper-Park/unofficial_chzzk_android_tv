@@ -11,7 +11,7 @@ extension _VodPlayerBlocEntryHelpers on VodPlayerBloc {
     } on Object {
       return const _VodPlayerEntrySettings(
         preferences: defaultSettingsPreferences,
-        videoViewType: PlayerVideoViewType.textureView,
+        videoViewType: PlayerVideoViewType.platformView,
       );
     }
   }

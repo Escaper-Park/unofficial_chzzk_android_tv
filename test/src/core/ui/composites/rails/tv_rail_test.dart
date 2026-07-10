@@ -12,6 +12,11 @@ void main() {
     expect(TvRailDesign.scrollOffsetTolerance, 0.5);
     expect(TvRailDesign.padding, const EdgeInsets.symmetric(horizontal: 58));
     expect(
+      TvRailDesign.fixedExtentPadding,
+      const EdgeInsets.only(left: 58, right: 38),
+    );
+    expect(TvRailDesign.scrollItemExtent(124), 144);
+    expect(
       TvRailDesign.targetOffsetForIndex(
         index: 2,
         itemExtent: 124,
@@ -85,6 +90,8 @@ void main() {
     final railList = tester.widget<ListView>(find.byType(ListView));
 
     expect(railList.clipBehavior, Clip.none);
+    expect(railList.itemExtent, 144);
+    expect(railList.padding, TvRailDesign.fixedExtentPadding);
     expect(find.text('Item 0'), findsOneWidget);
   });
 

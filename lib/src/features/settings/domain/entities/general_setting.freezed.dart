@@ -525,7 +525,7 @@ class _GeneralSetting extends GeneralSetting {
     this.streamingPreviewResolutionIndex = 2,
     this.liveCardPreviewResolutionIndex = 0,
     this.overlayControlsDisplayTime = 15,
-    this.videoViewTypeIndex = playerVideoViewTypeIndexMin,
+    this.videoViewTypeIndex = playerVideoViewTypeIndexMax,
   }) : super._();
   factory _GeneralSetting.fromJson(Map<String, dynamic> json) =>
       _$GeneralSettingFromJson(json);

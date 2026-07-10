@@ -11,6 +11,7 @@ import '../repositories/chat_repository.dart';
 import 'live_chat_message_parser.dart';
 
 part 'live_chat_socket_connection.dart';
+part 'live_chat_decode_worker.dart';
 part 'live_chat_socket_frames.dart';
 part 'live_chat_socket_helpers.dart';
 
@@ -40,12 +41,14 @@ final class LiveChatService {
     String Function()? idFactory,
     Duration? pingInterval,
     Duration? pongTimeout,
+    Duration? disposeStepTimeout,
   }) : _createWebSocketChannel =
            createWebSocketChannel ?? WebSocketChannel.connect,
        _random = random ?? Random(),
        _idFactory = idFactory ?? _createClientId,
        _pingInterval = pingInterval ?? _defaultPingInterval,
-       _pongTimeout = pongTimeout ?? _defaultPongTimeout;
+       _pongTimeout = pongTimeout ?? _defaultPongTimeout,
+       _disposeStepTimeout = disposeStepTimeout ?? _defaultDisposeStepTimeout;
 
   static const _websocketBaseHost = 'chat.naver.com';
   static const _chatServiceId = 'game';
@@ -61,7 +64,7 @@ final class LiveChatService {
   static const _serverCount = 5;
   static const _defaultPingInterval = Duration(milliseconds: 25000);
   static const _defaultPongTimeout = Duration(seconds: 10);
-  static const _frameDecodeIsolateThresholdBytes = 64 * 1024;
+  static const _defaultDisposeStepTimeout = Duration(seconds: 1);
 
   final ChatRepository chatRepository;
   final CreateLiveChatWebSocketChannel _createWebSocketChannel;
@@ -69,6 +72,7 @@ final class LiveChatService {
   final String Function() _idFactory;
   final Duration _pingInterval;
   final Duration _pongTimeout;
+  final Duration _disposeStepTimeout;
   final String _windowId = _createClientId();
 
   Future<LiveChatConnection> connect(LiveChatSessionRequest request) async {
@@ -95,6 +99,7 @@ final class LiveChatService {
       windowId: _windowId,
       pingInterval: _pingInterval,
       pongTimeout: _pongTimeout,
+      disposeStepTimeout: _disposeStepTimeout,
     )..start();
   }
 }

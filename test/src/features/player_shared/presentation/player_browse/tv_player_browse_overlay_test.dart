@@ -92,6 +92,19 @@ void main() {
 
     final rail = tester.widget<TvRail>(find.byType(TvRail));
     expect(rail.itemExtent, TvCardWidth.four.value);
+    expect(rail.clipBehavior, Clip.hardEdge);
+    expect(rail.cacheExtent, 0);
+    expect(rail.addAutomaticKeepAlives, isFalse);
+
+    final listView = tester.widget<ListView>(find.byType(ListView));
+    expect(
+      listView.itemExtent,
+      TvRailDesign.scrollItemExtent(TvCardWidth.four.value),
+    );
+    expect(listView.clipBehavior, Clip.hardEdge);
+    final delegate = listView.childrenDelegate as SliverChildBuilderDelegate;
+    expect(delegate.addAutomaticKeepAlives, isFalse);
+    expect(delegate.addRepaintBoundaries, isTrue);
 
     expect(
       find.byWidgetPredicate(
@@ -132,6 +145,35 @@ void main() {
     expect(find.byType(TvFocusSection), findsOneWidget);
   });
 
+  testWidgets('browse overlay lazily builds only the visible rail window', (
+    tester,
+  ) async {
+    final node = FocusScopeNode();
+    addTearDown(node.dispose);
+    var buildCount = 0;
+
+    await tester.pumpWidget(
+      _BrowseHarness(
+        child: TvPlayerBrowseOverlay(
+          node: node,
+          title: 'Popular lives',
+          itemCount: 200,
+          itemBuilder: (context, index) {
+            buildCount += 1;
+            return TvPlayerBrowseCard(
+              title: 'Live $index',
+              imageUrl: null,
+              onPressed: () {},
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(buildCount, lessThan(10));
+    expect(find.text('Live 199'), findsNothing);
+  });
+
   testWidgets('browse overlay handles up and down callbacks', (tester) async {
     final node = FocusScopeNode();
     addTearDown(node.dispose);
@@ -162,6 +204,8 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.sendKeyRepeatEvent(LogicalKeyboardKey.arrowUp);
+    await tester.sendKeyRepeatEvent(LogicalKeyboardKey.arrowDown);
 
     expect(upCount, 1);
     expect(downCount, 1);
@@ -206,6 +250,50 @@ void main() {
     expect(find.byIcon(Icons.calendar_month_rounded), findsOneWidget);
     expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
     expect(find.byType(LinearProgressIndicator), findsNothing);
+  });
+
+  testWidgets('browse card focus only rebuilds the outline layer', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+
+    await tester.pumpWidget(
+      _BrowseHarness(
+        child: TvPlayerBrowseCard(
+          title: 'Live title',
+          imageUrl: 'https://example.com/thumbnail.jpg',
+          channelName: 'Live channel',
+          focusNode: focusNode,
+          onPressed: () {},
+        ),
+      ),
+    );
+
+    final imageFinder = find.descendant(
+      of: find.byType(TvPlayerBrowseCard),
+      matching: find.byType(OptimizedImage),
+    );
+    final imageBeforeFocus = tester.widget<OptimizedImage>(imageFinder.first);
+
+    focusNode.requestFocus();
+    await tester.pump();
+
+    expect(focusNode.hasFocus, isTrue);
+    expect(
+      identical(
+        tester.widget<OptimizedImage>(imageFinder.first),
+        imageBeforeFocus,
+      ),
+      isTrue,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(TvPlayerBrowseCard),
+        matching: find.byType(RepaintBoundary),
+      ),
+      findsWidgets,
+    );
   });
 }
 

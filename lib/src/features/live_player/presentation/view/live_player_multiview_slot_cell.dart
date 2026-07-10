@@ -5,12 +5,14 @@ class _LivePlayerSlotCell extends HookWidget {
     required this.slotId,
     required this.isMultiview,
     required this.active,
-    required this.activeOutlineVisible,
     required this.playbackPaused,
+    required this.singleMuted,
+    required this.appPlaybackSuspended,
     required this.volume,
     required this.mixWithOthers,
     required this.watchEventEnabled,
     required this.statusPollingEnabled,
+    required this.activeOutlineController,
     required this.playbackSessionController,
     required this.statusSurfaceFor,
   });
@@ -18,12 +20,14 @@ class _LivePlayerSlotCell extends HookWidget {
   final String slotId;
   final bool isMultiview;
   final bool active;
-  final bool activeOutlineVisible;
-  final bool playbackPaused;
+  final ValueListenable<bool> playbackPaused;
+  final ValueListenable<bool> singleMuted;
+  final bool appPlaybackSuspended;
   final double volume;
   final bool mixWithOthers;
   final bool watchEventEnabled;
   final bool statusPollingEnabled;
+  final TvTimedVisibilityController activeOutlineController;
   final LivePlayerPlaybackSessionController playbackSessionController;
   final LivePlayerStatusSurfaceBuilder statusSurfaceFor;
 
@@ -32,7 +36,75 @@ class _LivePlayerSlotCell extends HookWidget {
     final retainedPlaybackSlot = useRef<LivePlayerSlotState?>(null);
     final reloadPending = useRef(false);
     final surfaceRevision = useRef(0);
+    final mutedListenable = isMultiview
+        ? const AlwaysStoppedAnimation(false)
+        : singleMuted;
 
+    return ValueListenableBuilder<bool>(
+      valueListenable: playbackPaused,
+      builder: (context, playbackPaused, child) {
+        final effectivePlaybackPaused = playbackPaused || appPlaybackSuspended;
+        return ValueListenableBuilder<bool>(
+          valueListenable: mutedListenable,
+          builder: (context, muted, child) {
+            return _LivePlayerSlotCellContent(
+              slotId: slotId,
+              isMultiview: isMultiview,
+              active: active,
+              playbackPaused: effectivePlaybackPaused,
+              volume: muted ? 0 : volume,
+              mixWithOthers: mixWithOthers,
+              watchEventEnabled: watchEventEnabled,
+              statusPollingEnabled: statusPollingEnabled,
+              activeOutlineController: activeOutlineController,
+              playbackSessionController: playbackSessionController,
+              statusSurfaceFor: statusSurfaceFor,
+              retainedPlaybackSlot: retainedPlaybackSlot,
+              reloadPending: reloadPending,
+              surfaceRevision: surfaceRevision,
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _LivePlayerSlotCellContent extends StatelessWidget {
+  const _LivePlayerSlotCellContent({
+    required this.slotId,
+    required this.isMultiview,
+    required this.active,
+    required this.playbackPaused,
+    required this.volume,
+    required this.mixWithOthers,
+    required this.watchEventEnabled,
+    required this.statusPollingEnabled,
+    required this.activeOutlineController,
+    required this.playbackSessionController,
+    required this.statusSurfaceFor,
+    required this.retainedPlaybackSlot,
+    required this.reloadPending,
+    required this.surfaceRevision,
+  });
+
+  final String slotId;
+  final bool isMultiview;
+  final bool active;
+  final bool playbackPaused;
+  final double volume;
+  final bool mixWithOthers;
+  final bool watchEventEnabled;
+  final bool statusPollingEnabled;
+  final TvTimedVisibilityController activeOutlineController;
+  final LivePlayerPlaybackSessionController playbackSessionController;
+  final LivePlayerStatusSurfaceBuilder statusSurfaceFor;
+  final ObjectRef<LivePlayerSlotState?> retainedPlaybackSlot;
+  final ObjectRef<bool> reloadPending;
+  final ObjectRef<int> surfaceRevision;
+
+  @override
+  Widget build(BuildContext context) {
     return BlocSelector<
       LivePlayerBloc,
       LivePlayerState,
@@ -47,7 +119,6 @@ class _LivePlayerSlotCell extends HookWidget {
         return _LivePlayerSlotSnapshot(
           slot: slot,
           active: active,
-          activeOutlineVisible: activeOutlineVisible,
           playbackEnabled: _playbackEnabledForSlotId(state, slotId),
           playbackPaused: playbackPaused,
           volume: volume,
@@ -83,7 +154,7 @@ class _LivePlayerSlotCell extends HookWidget {
                 isMultiview: isMultiview,
               );
 
-        final content = Stack(
+        return Stack(
           fit: StackFit.expand,
           children: [
             if (slotSnapshot.playbackEnabled && surfaceSlot != null)
@@ -105,22 +176,45 @@ class _LivePlayerSlotCell extends HookWidget {
                 color: LivePlayerScreenDesign.backgroundColor,
               ),
             ?statusSurface,
-            if (slotSnapshot.active && slotSnapshot.activeOutlineVisible)
-              IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColorTokens.brandColor,
-                      width: LivePlayerScreenDesign.multiviewActiveOutlineWidth,
-                    ),
-                  ),
-                ),
+            if (slotSnapshot.active)
+              _LivePlayerActiveSlotOutline(
+                controller: activeOutlineController,
               ),
           ],
         );
-
-        return content;
       },
+    );
+  }
+}
+
+class _LivePlayerActiveSlotOutline extends StatelessWidget {
+  const _LivePlayerActiveSlotOutline({
+    required this.controller,
+  });
+
+  final TvTimedVisibilityController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        if (!controller.isShowing) {
+          return const SizedBox.shrink();
+        }
+
+        return child!;
+      },
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColorTokens.brandColor,
+              width: LivePlayerScreenDesign.multiviewActiveOutlineWidth,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -204,7 +298,6 @@ final class _LivePlayerSlotSnapshot {
   const _LivePlayerSlotSnapshot({
     required this.slot,
     required this.active,
-    required this.activeOutlineVisible,
     required this.playbackEnabled,
     required this.playbackPaused,
     required this.volume,
@@ -216,7 +309,6 @@ final class _LivePlayerSlotSnapshot {
 
   final LivePlayerSlotState slot;
   final bool active;
-  final bool activeOutlineVisible;
   final bool playbackEnabled;
   final bool playbackPaused;
   final double volume;
@@ -229,9 +321,8 @@ final class _LivePlayerSlotSnapshot {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is _LivePlayerSlotSnapshot &&
-            other.slot == slot &&
+            _sameSlotPlaybackSurfaceInput(other.slot, slot) &&
             other.active == active &&
-            other.activeOutlineVisible == activeOutlineVisible &&
             other.playbackEnabled == playbackEnabled &&
             other.playbackPaused == playbackPaused &&
             other.volume == volume &&
@@ -242,10 +333,16 @@ final class _LivePlayerSlotSnapshot {
   }
 
   @override
-  int get hashCode => Object.hash(
-    slot,
+  int get hashCode => Object.hashAll([
+    slot.slotId,
+    slot.status,
+    slot.channelId,
+    slot.liveId,
+    slot.playbackUri,
+    slot.expectedVideoWidth,
+    slot.expectedVideoHeight,
+    slot.failureReason,
     active,
-    activeOutlineVisible,
     playbackEnabled,
     playbackPaused,
     volume,
@@ -253,5 +350,19 @@ final class _LivePlayerSlotSnapshot {
     videoViewType,
     watchEventEnabled,
     statusPollingEnabled,
-  );
+  ]);
+}
+
+bool _sameSlotPlaybackSurfaceInput(
+  LivePlayerSlotState previous,
+  LivePlayerSlotState current,
+) {
+  return previous.slotId == current.slotId &&
+      previous.status == current.status &&
+      previous.channelId == current.channelId &&
+      previous.liveId == current.liveId &&
+      previous.playbackUri == current.playbackUri &&
+      previous.expectedVideoWidth == current.expectedVideoWidth &&
+      previous.expectedVideoHeight == current.expectedVideoHeight &&
+      previous.failureReason == current.failureReason;
 }

@@ -37,6 +37,35 @@ class _VodPlayerControlsOverlayMenuHost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (activeMenu != _VodOverlayMenu.chapters) {
+      return _activeMenuPanel(
+            context: context,
+            state: state,
+            slot: slot,
+            currentPosition: Duration.zero,
+            activeMenu: activeMenu,
+            activeChatSettingIndex: activeChatSettingIndex,
+            primaryLinks: primaryLinks,
+            settingsLinks: settingsLinks,
+            chatSettingLinks: chatSettingLinks,
+            muted: muted,
+            onMutedChanged: (value) {
+              onInteraction();
+              onMutedChanged(value);
+            },
+            onSeek: (position) {
+              onInteraction();
+              onSeek(position);
+              onCloseMenu();
+            },
+            onInteraction: onInteraction,
+            onCloseMenu: onCloseMenu,
+            onOpenMenu: onOpenMenu,
+            onPreferencesChanged: onPreferencesChanged,
+          ) ??
+          const SizedBox.shrink();
+    }
+
     return ValueListenableBuilder<VodPlayerPlaybackSnapshot>(
       valueListenable: playbackSnapshot,
       builder: (context, snapshot, _) {

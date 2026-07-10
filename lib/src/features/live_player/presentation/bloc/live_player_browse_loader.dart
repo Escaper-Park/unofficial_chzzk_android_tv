@@ -25,9 +25,15 @@ final class LivePlayerBrowseLoader {
       case LivePlayerBrowseSection.category:
         return _loadCategory(request);
       case LivePlayerBrowseSection.recent:
-        return _loadRecent(request.recentLiveChannelIds);
+        return _loadRecent(
+          request.recentLiveChannelIds,
+          isCancelled: request.isCancelled,
+        );
       case LivePlayerBrowseSection.group:
-        return _loadGroup(request.groupMemberChannelIds);
+        return _loadGroup(
+          request.groupMemberChannelIds,
+          isCancelled: request.isCancelled,
+        );
     }
   }
 
@@ -78,32 +84,44 @@ final class LivePlayerBrowseLoader {
   }
 
   Future<LivePlayerBrowseLoadResult> _loadGroup(
-    List<String> memberChannelIds,
-  ) async {
+    List<String> memberChannelIds, {
+    bool Function()? isCancelled,
+  }) async {
     if (memberChannelIds.isEmpty) {
       return const LivePlayerBrowseLoadResult();
     }
 
-    return _loadDetails(memberChannelIds);
+    return _loadDetails(memberChannelIds, isCancelled: isCancelled);
   }
 
   Future<LivePlayerBrowseLoadResult> _loadRecent(
-    List<String> channelIds,
-  ) async {
+    List<String> channelIds, {
+    bool Function()? isCancelled,
+  }) async {
     if (channelIds.isEmpty) {
       return const LivePlayerBrowseLoadResult();
     }
 
-    return _loadDetails(channelIds.take(_recentBrowseLimit));
+    return _loadDetails(
+      channelIds.take(_recentBrowseLimit),
+      isCancelled: isCancelled,
+    );
   }
 
   Future<LivePlayerBrowseLoadResult> _loadDetails(
-    Iterable<String> channelIds,
-  ) async {
+    Iterable<String> channelIds, {
+    bool Function()? isCancelled,
+  }) async {
     final lives = <Live>[];
     for (final channelId in channelIds) {
+      if (isCancelled?.call() ?? false) {
+        break;
+      }
       try {
         final detail = await liveRepository.getLiveDetail(channelId: channelId);
+        if (isCancelled?.call() ?? false) {
+          break;
+        }
         final live = _liveFromDetail(detail, fallbackChannelId: channelId);
         if (live != null) {
           lives.add(live);
@@ -126,6 +144,7 @@ final class LivePlayerBrowseRequest {
     this.categoryId,
     this.recentLiveChannelIds = const <String>[],
     this.groupMemberChannelIds = const <String>[],
+    this.isCancelled,
   });
 
   final LivePlayerBrowseSection section;
@@ -135,6 +154,7 @@ final class LivePlayerBrowseRequest {
   final String? categoryId;
   final List<String> recentLiveChannelIds;
   final List<String> groupMemberChannelIds;
+  final bool Function()? isCancelled;
 }
 
 final class LivePlayerBrowseLoadResult {

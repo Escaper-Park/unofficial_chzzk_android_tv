@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../category/domain/entities/category_live.dart';
@@ -92,24 +95,45 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
     on<_JumpToRealtimeRequested>(_onJumpToRealtimeRequested);
     on<_ControlsRequested>(_onControlsRequested);
     on<_ControlsClosed>(_onControlsClosed);
-    on<_BrowseRequested>(_onBrowseRequested);
+    on<_BrowseRequested>(_onBrowseRequested, transformer: concurrent());
     on<_BrowseClosed>(_onBrowseClosed);
-    on<_BrowseNextSectionRequested>(_onBrowseNextSectionRequested);
-    on<_BrowsePreviousSectionRequested>(_onBrowsePreviousSectionRequested);
+    on<_BrowseNextSectionRequested>(
+      _onBrowseNextSectionRequested,
+      transformer: droppable(),
+    );
+    on<_BrowsePreviousSectionRequested>(
+      _onBrowsePreviousSectionRequested,
+      transformer: droppable(),
+    );
     on<_BrowseFallbackPressed>(_onBrowseFallbackPressed);
     on<_BrowseLoadMoreRequested>(_onBrowseLoadMoreRequested);
     on<_BrowseLiveSelected>(_onBrowseLiveSelected);
     on<_BrowseReplacementClosed>(_onBrowseReplacementClosed);
     on<_BrowseReplacementSlotSelected>(_onBrowseReplacementSlotSelected);
-    on<_PreferencesChanged>(_onPreferencesChanged);
-    on<_ViewModeSelected>(_onViewModeSelected);
-    on<_MultiviewLayoutModeSelected>(_onMultiviewLayoutModeSelected);
-    on<_ActiveSlotShiftRequested>(_onActiveSlotShiftRequested);
-    on<_ActiveSlotSelected>(_onActiveSlotSelected);
+    on<_PreferencesChanged>(_onPreferencesChanged, transformer: restartable());
+    on<_ViewModeSelected>(_onViewModeSelected, transformer: restartable());
+    on<_MultiviewLayoutModeSelected>(
+      _onMultiviewLayoutModeSelected,
+      transformer: restartable(),
+    );
+    on<_ActiveSlotShiftRequested>(
+      _onActiveSlotShiftRequested,
+      transformer: sequential(),
+    );
+    on<_ActiveSlotSelected>(
+      _onActiveSlotSelected,
+      transformer: restartable(),
+    );
     on<_SlotAudioToggled>(_onSlotAudioToggled);
     on<_SlotVolumeChanged>(_onSlotVolumeChanged);
-    on<_SlotResolutionSelected>(_onSlotResolutionSelected);
-    on<_SlotCloseConfirmed>(_onSlotCloseConfirmed);
+    on<_SlotResolutionSelected>(
+      _onSlotResolutionSelected,
+      transformer: restartable(),
+    );
+    on<_SlotCloseConfirmed>(
+      _onSlotCloseConfirmed,
+      transformer: sequential(),
+    );
     on<_LiveStatusRefreshRequested>(_onLiveStatusRefreshRequested);
     on<_FollowingToggled>(_onFollowingToggled);
     on<_GroupAddRequested>(_onGroupAddRequested);
@@ -140,6 +164,10 @@ final class LivePlayerBloc extends Bloc<LivePlayerEvent, LivePlayerState> {
   int? _pipOverlayResolutionIndex;
   int _statusRefreshSerial = 0;
   int _browseRequestSerial = 0;
+  int _browseSessionSerial = 0;
+  int _multiviewPlaybackTransitionSerial = 0;
+  Future<void> _preferencesSaveQueue = Future<void>.value();
+  Future<GroupCollection?>? _browseGroupCollectionReadInFlight;
   int _generatedSlotSerial = 1;
   final List<String> _recentLiveChannelIds = [];
   final Map<String, int> _slotTargetRequestSerials = {};

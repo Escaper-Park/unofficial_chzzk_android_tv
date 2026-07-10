@@ -51,10 +51,6 @@ class HomeLayout extends HookWidget {
   Widget build(BuildContext context) {
     final fallbackScrollController = useScrollController();
     final scrollController = this.scrollController ?? fallbackScrollController;
-    useListenable(scrollController);
-    final scrollOffset = scrollController.hasClients
-        ? scrollController.offset
-        : 0.0;
     final immersiveActiveIndex = useState(0);
     final immersiveActionNode = useFocusNode(
       debugLabel: 'home immersive action',
@@ -96,7 +92,7 @@ class HomeLayout extends HookWidget {
           _buildHomeImmersiveBackground(
             state: state,
             activeIndex: immersiveActiveIndex.value,
-            scrollOffset: scrollOffset,
+            scrollController: scrollController,
             previewState: previewState,
           ),
           SingleChildScrollView(

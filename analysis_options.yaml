@@ -10,6 +10,7 @@ analyzer:
     - android/.gradle/**
     - build/**
     - .dart_tool/**
+    - third_party/**
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - old/**

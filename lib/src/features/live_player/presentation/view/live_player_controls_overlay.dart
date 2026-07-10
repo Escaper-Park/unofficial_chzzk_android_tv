@@ -40,6 +40,7 @@ class LivePlayerControlsOverlay extends HookWidget {
     required this.onInteraction,
     required this.modalDismissSerial,
     required this.onModalVisibilityChanged,
+    this.selectSlotDetailsFromBloc = false,
   });
 
   final LivePlayerState state;
@@ -52,6 +53,7 @@ class LivePlayerControlsOverlay extends HookWidget {
   final VoidCallback onInteraction;
   final int modalDismissSerial;
   final ValueChanged<bool> onModalVisibilityChanged;
+  final bool selectSlotDetailsFromBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -199,6 +201,7 @@ class LivePlayerControlsOverlay extends HookWidget {
               slot: slot,
               actionMode: actionMode.value,
               showingMultiviewInfo: showingMultiviewInfo,
+              selectSlotDetailsFromBloc: selectSlotDetailsFromBloc,
               chatSettingLinks: chatSettingLinks,
               onOpenMenu: openMenu,
               onActionModeChanged: setActionMode,

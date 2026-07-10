@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -59,17 +60,28 @@ class VodPlayerView extends HookWidget {
       TvSnackbarFeedbackController.new,
       const [],
     );
-    final playbackPaused = useState(false);
-    final muted = useState(false);
-    final seekSerial = useState(0);
-    final seekRequest = useState<VodPlayerSeekRequest?>(null);
+    final playbackPaused = useMemoized(
+      () => ValueNotifier(false),
+      const [],
+    );
+    final muted = useMemoized(
+      () => ValueNotifier(false),
+      const [],
+    );
+    final seekSerial = useMemoized(
+      () => ValueNotifier(0),
+      const [],
+    );
+    final seekRequest = useMemoized(
+      () => ValueNotifier<VodPlayerSeekRequest?>(null),
+      const [],
+    );
     final seekFeedbackController = useMemoized(
       () => VodPlayerSeekFeedbackController(
         displayDuration: VodPlayerScreenDesign.seekFeedbackDuration,
       ),
       const [],
     );
-    useListenable(seekFeedbackController);
     final overlayAutoHideController = useMemoized(
       () => TvPlayerOverlayAutoHideController(
         displayDuration: Duration(
@@ -78,14 +90,12 @@ class VodPlayerView extends HookWidget {
       ),
       const [],
     );
-    useListenable(overlayAutoHideController);
     final exitNoticeController = useMemoized(
       () => TvPlayerExitNoticeController(
         displayDuration: VodPlayerScreenDesign.exitNoticeDuration,
       ),
       const [],
     );
-    useListenable(exitNoticeController);
     final lastVisibleChatWindowIndex = useRef(
       visibleVodChatWindowIndex(
         context
@@ -200,6 +210,10 @@ class VodPlayerView extends HookWidget {
       overlayAutoHideController: overlayAutoHideController,
       feedbackController: feedbackController,
       seekFeedbackController: seekFeedbackController,
+      playbackPaused: playbackPaused,
+      muted: muted,
+      seekSerial: seekSerial,
+      seekRequest: seekRequest,
     );
 
     return TvScaffold(
@@ -209,33 +223,99 @@ class VodPlayerView extends HookWidget {
         playbackSnapshot: playbackSnapshot,
         lastVisibleChatWindowIndex: lastVisibleChatWindowIndex,
         feedbackController: feedbackController,
-        child: BlocBuilder<VodPlayerBloc, VodPlayerState>(
-          buildWhen: (previous, current) {
-            return !isOnlyVodPlaybackPositionStateChange(previous, current);
+        child: PlayerContentLayout(
+          player: _VodPlayerPlaybackLayer(
+            playbackPaused: playbackPaused,
+            muted: muted,
+            seekRequest: seekRequest,
+            playbackSnapshot: playbackSnapshot,
+          ),
+          controllerNode: controllerNode,
+          controllerFocusNode: controllerFocusNode,
+          onSelect: () {
+            final state = context.read<VodPlayerBloc>().state;
+            _handleVodPlayerSelect(
+              context,
+              state.activeSlot,
+              onControlsOpened: restartControlsTimer,
+            );
           },
-          builder: (context, state) {
-            return _vodPlayerContentFor(
-              context: context,
-              state: state,
-              controllerNode: controllerNode,
-              controllerFocusNode: controllerFocusNode,
-              controlsNode: controlsNode,
-              browseNode: browseNode,
-              playbackPaused: playbackPaused,
-              muted: muted,
-              seekSerial: seekSerial,
-              seekRequest: seekRequest,
-              playbackSnapshot: playbackSnapshot,
-              lastVisibleChatWindowIndex: lastVisibleChatWindowIndex,
-              seekFeedbackController: seekFeedbackController,
-              overlayAutoHideController: overlayAutoHideController,
-              exitNoticeController: exitNoticeController,
-              onControlsInteraction: restartControlsTimer,
-              onControlsModalVisibilityChanged: (visible) {
-                updateControlsModalVisibility(visible: visible);
+          onUp: () {
+            final state = context.read<VodPlayerBloc>().state;
+            _handleVodPlayerUp(
+              context,
+              state.activeSlot,
+              onBrowseOpened: overlayAutoHideController.dismissModal,
+            );
+          },
+          onDown: () {
+            final state = context.read<VodPlayerBloc>().state;
+            _handleVodPlayerDown(
+              state,
+              lastVisibleChatWindowIndex,
+              onChatWindowIndexSelected: (value) {
+                if (value != vodChatWindowHiddenIndex) {
+                  lastVisibleChatWindowIndex.value = value;
+                }
+
+                _updateVodPlayerPreferences(
+                  context,
+                  state.settingsPreferences.copyWith(
+                    vodSettings: state.settingsPreferences.vodSettings.copyWith(
+                      chatWindowIndex: value,
+                    ),
+                  ),
+                );
               },
             );
           },
+          onLeft: () {
+            final state = context.read<VodPlayerBloc>().state;
+            _seekVodPlayerRelative(
+              context: context,
+              seekSerial: seekSerial,
+              seekRequest: seekRequest,
+              playbackSnapshot: playbackSnapshot,
+              seekFeedbackController: seekFeedbackController,
+              forward: false,
+              slot: state.activeSlot,
+              state: state,
+            );
+          },
+          onRight: () {
+            final state = context.read<VodPlayerBloc>().state;
+            _seekVodPlayerRelative(
+              context: context,
+              seekSerial: seekSerial,
+              seekRequest: seekRequest,
+              playbackSnapshot: playbackSnapshot,
+              seekFeedbackController: seekFeedbackController,
+              forward: true,
+              slot: state.activeSlot,
+              state: state,
+            );
+          },
+          controlsOverlay: _VodPlayerOverlayLayer(
+            controllerNode: controllerNode,
+            controlsNode: controlsNode,
+            browseNode: browseNode,
+            playbackPaused: playbackPaused,
+            muted: muted,
+            seekSerial: seekSerial,
+            seekRequest: seekRequest,
+            playbackSnapshot: playbackSnapshot,
+            overlayAutoHideController: overlayAutoHideController,
+            exitNoticeController: exitNoticeController,
+            onControlsInteraction: restartControlsTimer,
+            onControlsModalVisibilityChanged: (visible) {
+              updateControlsModalVisibility(visible: visible);
+            },
+            onSeekFeedback: seekFeedbackController.show,
+          ),
+          foreground: _VodPlayerForegroundLayer(
+            seekFeedbackController: seekFeedbackController,
+            exitNoticeController: exitNoticeController,
+          ),
         ),
       ),
     );

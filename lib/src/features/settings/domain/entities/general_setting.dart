@@ -30,7 +30,7 @@ abstract class GeneralSetting with _$GeneralSetting {
     @Default(2) int streamingPreviewResolutionIndex,
     @Default(0) int liveCardPreviewResolutionIndex,
     @Default(15) int overlayControlsDisplayTime,
-    @Default(playerVideoViewTypeIndexMin) int videoViewTypeIndex,
+    @Default(playerVideoViewTypeIndexMax) int videoViewTypeIndex,
   }) = _GeneralSetting;
 
   factory GeneralSetting.fromJson(Map<String, dynamic> json) =>
@@ -44,4 +44,6 @@ abstract class GeneralSetting with _$GeneralSetting {
   }
 }
 
-const defaultGeneralSetting = GeneralSetting();
+const defaultGeneralSetting = GeneralSetting(
+  videoViewTypeIndex: playerVideoViewTypeIndexMax,
+);

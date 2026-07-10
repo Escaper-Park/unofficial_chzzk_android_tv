@@ -8,40 +8,98 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
     _emitSlot(emit, slot.copyWith(slotId: state.activeSlotId));
   }
 
-  bool _emitActiveSlotSelection(
-    Emitter<LivePlayerState> emit,
+  LivePlayerState? _stateWithActiveSlotSelection(
+    LivePlayerState sourceState,
     String slotId, {
     bool clearPendingReplacement = false,
   }) {
-    final slot = state.slotById(slotId);
-    if (slot == null || state.activeSlotId == slotId) {
+    final slot = sourceState.slotById(slotId);
+    if (slot == null || sourceState.activeSlotId == slotId) {
+      return null;
+    }
+
+    return sourceState.copyWith(
+      activeSlotId: slotId,
+      audibleSlotIds: _audibleSlotIdsForActiveSelection(
+        sourceState,
+        slotId,
+      ),
+      activeSlotHighlightSerial: sourceState.isMultiview
+          ? sourceState.activeSlotHighlightSerial + 1
+          : sourceState.activeSlotHighlightSerial,
+      pendingReplacementLive: clearPendingReplacement
+          ? null
+          : sourceState.pendingReplacementLive,
+      channelMyInfo: sourceState.channelMyInfo?.channelId == slot.channelId
+          ? sourceState.channelMyInfo
+          : null,
+    );
+  }
+
+  Future<bool> _selectActiveSlotWithPlaybackTransition(
+    Emitter<LivePlayerState> emit,
+    String slotId, {
+    bool clearPendingReplacement = false,
+  }) async {
+    final before = state;
+    final transitionSerial = _beginMultiviewPlaybackTransition();
+    final projectedState = _stateWithActiveSlotSelection(
+      before,
+      slotId,
+      clearPendingReplacement: clearPendingReplacement,
+    );
+    if (projectedState == null) {
+      return false;
+    }
+
+    if (!before.isMultiview ||
+        before.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip) {
+      emit(projectedState);
+      return true;
+    }
+
+    final updates = await _resolveMultiviewPlaybackSourceBatch(
+      projectedState: projectedState,
+      preferences: before.settingsPreferences,
+    );
+    if (updates == null ||
+        emit.isDone ||
+        !_multiviewPlaybackTransitionStillCurrent(
+          before,
+          transitionSerial,
+        )) {
+      return false;
+    }
+
+    final latestProjectedState = _stateWithActiveSlotSelection(
+      state,
+      slotId,
+      clearPendingReplacement: clearPendingReplacement,
+    );
+    if (latestProjectedState == null) {
       return false;
     }
 
     emit(
-      state.copyWith(
-        activeSlotId: slotId,
-        audibleSlotIds: _audibleSlotIdsForActiveSelection(slotId),
-        activeSlotHighlightSerial: state.isMultiview
-            ? state.activeSlotHighlightSerial + 1
-            : state.activeSlotHighlightSerial,
-        pendingReplacementLive: clearPendingReplacement
-            ? null
-            : state.pendingReplacementLive,
-        channelMyInfo: state.channelMyInfo?.channelId == slot.channelId
-            ? state.channelMyInfo
-            : null,
+      latestProjectedState.copyWith(
+        slots: _applyPlaybackSourceBatch(
+          latestProjectedState.slots,
+          updates,
+        ),
       ),
     );
     return true;
   }
 
-  Set<String> _audibleSlotIdsForActiveSelection(String slotId) {
-    if (!state.isMultiview) {
-      return state.audibleSlotIds;
+  Set<String> _audibleSlotIdsForActiveSelection(
+    LivePlayerState sourceState,
+    String slotId,
+  ) {
+    if (!sourceState.isMultiview) {
+      return sourceState.audibleSlotIds;
     }
 
-    final audibleSlotIds = state.effectiveAudibleSlotIds;
+    final audibleSlotIds = sourceState.effectiveAudibleSlotIds;
     if (audibleSlotIds.length >= 2) {
       return audibleSlotIds;
     }
@@ -70,14 +128,11 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
       return true;
     }
 
-    final changed = _emitActiveSlotSelection(
+    await _selectActiveSlotWithPlaybackTransition(
       emit,
       slot.slotId,
       clearPendingReplacement: clearPendingReplacement,
     );
-    if (changed) {
-      await _refreshPipRolePlaybackSources(emit);
-    }
     return true;
   }
 
@@ -130,6 +185,9 @@ extension _LivePlayerBlocSlotHelpers on LivePlayerBloc {
         detail: detail ?? slot.detail,
         liveStatus: liveStatus ?? slot.liveStatus,
         playbackUri: null,
+        expectedVideoWidth: null,
+        expectedVideoHeight: null,
+        playbackMetadataResolutionAttempts: 0,
         failureReason: null,
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../../core/ui/ui.dart';
@@ -131,23 +132,38 @@ class LiveOverlayChannelInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final channelName = livePlayerSlotChannelName(slot);
+    return BlocSelector<
+      LivePlayerBloc,
+      LivePlayerState,
+      _LiveOverlayChannelInfoSnapshot
+    >(
+      selector: (state) {
+        return _LiveOverlayChannelInfoSnapshot.fromSlot(
+          state.slotById(slot.slotId) ?? slot,
+        );
+      },
+      builder: (context, snapshot) {
+        final channelName = snapshot.channelName;
 
-    return TvListItem(
-      title: channelName,
-      titleBuilder: (context, style) => TvMediaChannelName(
-        channelName: channelName,
-        verified: slot.channelVerified,
-        style: style,
-      ),
-      subtitle: slot.title,
-      icon: Icons.info_outline,
-      action: LivePlayerScreenUiMapper.viewerCountText(
-        slot.concurrentUserCount,
-      ),
-      enabled: false,
-      design: TvListItemDesign.dense(lineCount: slot.title == null ? 1 : 2),
-      onPressed: () {},
+        return TvListItem(
+          title: channelName,
+          titleBuilder: (context, style) => TvMediaChannelName(
+            channelName: channelName,
+            verified: snapshot.channelVerified,
+            style: style,
+          ),
+          subtitle: snapshot.title,
+          icon: Icons.info_outline,
+          action: LivePlayerScreenUiMapper.viewerCountText(
+            snapshot.concurrentUserCount,
+          ),
+          enabled: false,
+          design: TvListItemDesign.dense(
+            lineCount: snapshot.title == null ? 1 : 2,
+          ),
+          onPressed: () {},
+        );
+      },
     );
   }
 }
@@ -156,4 +172,53 @@ String livePlayerSlotChannelName(LivePlayerSlotState slot) {
   return slot.channelName ??
       slot.channelId ??
       LivePlayerScreenString.overlayBroadcastFallback;
+}
+
+@immutable
+final class _LiveOverlayChannelInfoSnapshot {
+  const _LiveOverlayChannelInfoSnapshot({
+    required this.slotId,
+    required this.channelName,
+    required this.channelVerified,
+    required this.title,
+    required this.concurrentUserCount,
+  });
+
+  factory _LiveOverlayChannelInfoSnapshot.fromSlot(
+    LivePlayerSlotState slot,
+  ) {
+    return _LiveOverlayChannelInfoSnapshot(
+      slotId: slot.slotId,
+      channelName: livePlayerSlotChannelName(slot),
+      channelVerified: slot.channelVerified,
+      title: slot.title,
+      concurrentUserCount: slot.concurrentUserCount,
+    );
+  }
+
+  final String slotId;
+  final String channelName;
+  final bool channelVerified;
+  final String? title;
+  final int? concurrentUserCount;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LiveOverlayChannelInfoSnapshot &&
+            other.slotId == slotId &&
+            other.channelName == channelName &&
+            other.channelVerified == channelVerified &&
+            other.title == title &&
+            other.concurrentUserCount == concurrentUserCount;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    slotId,
+    channelName,
+    channelVerified,
+    title,
+    concurrentUserCount,
+  );
 }

@@ -61,6 +61,7 @@ class _CategoryScreenView extends HookWidget {
         return previous.feedbackSerial != current.feedbackSerial &&
             current.feedbackType != null;
       },
+      buildWhen: _shouldRebuildCategoryScreen,
       listener: (context, state) {
         showSnackbar(CategoryScreenString.feedbackMessage(state.feedbackType!));
       },
@@ -86,4 +87,12 @@ class _CategoryScreenView extends HookWidget {
       },
     );
   }
+}
+
+bool _shouldRebuildCategoryScreen(
+  CategoryState previous,
+  CategoryState current,
+) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

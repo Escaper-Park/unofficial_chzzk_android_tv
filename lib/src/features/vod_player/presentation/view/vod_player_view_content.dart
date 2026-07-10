@@ -1,134 +1,184 @@
 part of 'vod_player_view.dart';
 
-Widget _vodPlayerContentFor({
-  required BuildContext context,
-  required VodPlayerState state,
-  required FocusScopeNode controllerNode,
-  required FocusNode controllerFocusNode,
-  required FocusScopeNode controlsNode,
-  required FocusScopeNode browseNode,
-  required ValueNotifier<bool> playbackPaused,
-  required ValueNotifier<bool> muted,
-  required ValueNotifier<int> seekSerial,
-  required ValueNotifier<VodPlayerSeekRequest?> seekRequest,
-  required ValueNotifier<VodPlayerPlaybackSnapshot> playbackSnapshot,
-  required ObjectRef<int> lastVisibleChatWindowIndex,
-  required VodPlayerSeekFeedbackController seekFeedbackController,
-  required TvPlayerOverlayAutoHideController overlayAutoHideController,
-  required TvPlayerExitNoticeController exitNoticeController,
-  required VoidCallback onControlsInteraction,
-  required ValueChanged<bool> onControlsModalVisibilityChanged,
-}) {
-  void updatePreferences(SettingsPreferences preferences) {
-    context.read<VodPlayerBloc>().add(
-      VodPlayerEvent.preferencesChanged(
-        preferences: preferences,
-      ),
-    );
-  }
+final class _VodPlayerPlaybackLayer extends StatelessWidget {
+  const _VodPlayerPlaybackLayer({
+    required this.playbackPaused,
+    required this.muted,
+    required this.seekRequest,
+    required this.playbackSnapshot,
+  });
 
-  void selectChatWindowIndex(int value) {
-    if (value != vodChatWindowHiddenIndex) {
-      lastVisibleChatWindowIndex.value = value;
-    }
+  final ValueListenable<bool> playbackPaused;
+  final ValueListenable<bool> muted;
+  final ValueListenable<VodPlayerSeekRequest?> seekRequest;
+  final ValueNotifier<VodPlayerPlaybackSnapshot> playbackSnapshot;
 
-    updatePreferences(
-      state.settingsPreferences.copyWith(
-        vodSettings: state.settingsPreferences.vodSettings.copyWith(
-          chatWindowIndex: value,
-        ),
-      ),
-    );
-  }
-
-  final slot = state.activeSlot;
-
-  return PlayerContentLayout(
-    player: VodPlayerSurface(
-      slot: slot,
-      playbackPaused: playbackPaused.value,
-      muted: muted.value,
-      playbackSpeed: state.playbackSpeed,
-      seekRequest: seekRequest.value,
-      playbackSnapshot: playbackSnapshot,
-      chatPresentationModeIndex:
-          state.settingsPreferences.vodSettings.chatWindowIndex,
-      chatSettings: state.settingsPreferences.chatSettings,
-    ),
-    controllerNode: controllerNode,
-    controllerFocusNode: controllerFocusNode,
-    onSelect: () => _handleVodPlayerSelect(
-      context,
-      slot,
-      onControlsOpened: onControlsInteraction,
-    ),
-    onUp: () => _handleVodPlayerUp(
-      context,
-      slot,
-      onBrowseOpened: overlayAutoHideController.dismissModal,
-    ),
-    onDown: () => _handleVodPlayerDown(
-      state,
-      lastVisibleChatWindowIndex,
-      onChatWindowIndexSelected: selectChatWindowIndex,
-    ),
-    onLeft: () => _seekVodPlayerRelative(
-      context: context,
-      seekSerial: seekSerial,
-      seekRequest: seekRequest,
-      playbackSnapshot: playbackSnapshot,
-      seekFeedbackController: seekFeedbackController,
-      forward: false,
-      slot: slot,
-      state: state,
-    ),
-    onRight: () => _seekVodPlayerRelative(
-      context: context,
-      seekSerial: seekSerial,
-      seekRequest: seekRequest,
-      playbackSnapshot: playbackSnapshot,
-      seekFeedbackController: seekFeedbackController,
-      forward: true,
-      slot: slot,
-      state: state,
-    ),
-    controlsOverlay: _vodPlayerOverlayFor(
-      context: context,
-      state: state,
-      slot: slot,
-      controllerNode: controllerNode,
-      controlsNode: controlsNode,
-      browseNode: browseNode,
-      playbackPaused: playbackPaused.value,
-      muted: muted.value,
-      onPlaybackPausedChanged: (value) {
-        playbackPaused.value = value;
-      },
-      onMutedChanged: (value) {
-        muted.value = value;
-      },
-      onSeek: (position) {
-        _seekVodPlayerTo(
-          context: context,
-          seekSerial: seekSerial,
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<
+      VodPlayerBloc,
+      VodPlayerState,
+      _VodPlayerPlaybackLayerSnapshot
+    >(
+      selector: _VodPlayerPlaybackLayerSnapshot.new,
+      builder: (context, snapshot) {
+        return _VodPlayerSurfaceValueBoundary(
+          snapshot: snapshot,
+          playbackPaused: playbackPaused,
+          muted: muted,
           seekRequest: seekRequest,
           playbackSnapshot: playbackSnapshot,
-          position: position,
-          slot: slot,
         );
       },
-      onSeekFeedback: seekFeedbackController.show,
-      playbackSnapshot: playbackSnapshot,
-      onControlsInteraction: onControlsInteraction,
-      modalDismissSerial: overlayAutoHideController.modalDismissSerial,
-      onModalVisibilityChanged: onControlsModalVisibilityChanged,
-      onBrowseInteraction: exitNoticeController.hide,
-    ),
-    foreground: _VodPlayerForeground(
-      slot: slot,
-      seekFeedback: seekFeedbackController.feedback,
-      feedbackType: state.feedbackType,
-      showExitNotice: exitNoticeController.isShowing,
+    );
+  }
+}
+
+final class _VodPlayerSurfaceValueBoundary extends StatelessWidget {
+  const _VodPlayerSurfaceValueBoundary({
+    required this.snapshot,
+    required this.playbackPaused,
+    required this.muted,
+    required this.seekRequest,
+    required this.playbackSnapshot,
+  });
+
+  final _VodPlayerPlaybackLayerSnapshot snapshot;
+  final ValueListenable<bool> playbackPaused;
+  final ValueListenable<bool> muted;
+  final ValueListenable<VodPlayerSeekRequest?> seekRequest;
+  final ValueNotifier<VodPlayerPlaybackSnapshot> playbackSnapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: playbackPaused,
+      builder: (context, playbackPaused, _) {
+        return ValueListenableBuilder<bool>(
+          valueListenable: muted,
+          builder: (context, muted, _) {
+            return ValueListenableBuilder<VodPlayerSeekRequest?>(
+              valueListenable: seekRequest,
+              builder: (context, seekRequest, _) {
+                final state = snapshot.state;
+                return VodPlayerSurface(
+                  slot: state.activeSlot,
+                  playbackPaused: playbackPaused,
+                  muted: muted,
+                  playbackSpeed: state.playbackSpeed,
+                  seekRequest: seekRequest,
+                  playbackSnapshot: playbackSnapshot,
+                  chatPresentationModeIndex:
+                      state.settingsPreferences.vodSettings.chatWindowIndex,
+                  chatSettings: state.settingsPreferences.chatSettings,
+                  chatSuspended:
+                      state.overlayMode == VodPlayerOverlayMode.browse,
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+bool _vodPlayerPlaybackBuildWhen(
+  VodPlayerState previous,
+  VodPlayerState current,
+) {
+  if (previous.activeSlotId != current.activeSlotId ||
+      previous.primarySlotId != current.primarySlotId ||
+      previous.playbackSpeed != current.playbackSpeed ||
+      (previous.overlayMode == VodPlayerOverlayMode.browse) !=
+          (current.overlayMode == VodPlayerOverlayMode.browse)) {
+    return true;
+  }
+
+  if (_vodPlayerPlaybackPreferencesChanged(
+    previous.settingsPreferences,
+    current.settingsPreferences,
+  )) {
+    return true;
+  }
+
+  return !_sameVodPlaybackSlotInput(previous.activeSlot, current.activeSlot);
+}
+
+bool _vodPlayerPlaybackPreferencesChanged(
+  SettingsPreferences previous,
+  SettingsPreferences current,
+) {
+  return previous.chatSettings != current.chatSettings ||
+      previous.vodSettings.chatWindowIndex !=
+          current.vodSettings.chatWindowIndex;
+}
+
+bool _sameVodPlaybackSlotInput(
+  VodPlayerSlotState previous,
+  VodPlayerSlotState current,
+) {
+  return previous.slotId == current.slotId &&
+      previous.status == current.status &&
+      previous.videoNo == current.videoNo &&
+      previous.videoId == current.videoId &&
+      previous.detail == current.detail &&
+      previous.playbackUri == current.playbackUri &&
+      previous.videoViewType == current.videoViewType &&
+      previous.startPosition == current.startPosition;
+}
+
+void _updateVodPlayerPreferences(
+  BuildContext context,
+  SettingsPreferences preferences,
+) {
+  context.read<VodPlayerBloc>().add(
+    VodPlayerEvent.preferencesChanged(
+      preferences: preferences,
     ),
   );
+}
+
+@immutable
+final class _VodPlayerPlaybackLayerSnapshot {
+  const _VodPlayerPlaybackLayerSnapshot(this.state);
+
+  final VodPlayerState state;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _VodPlayerPlaybackLayerSnapshot &&
+            !_vodPlayerPlaybackBuildWhen(other.state, state);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    state.activeSlotId,
+    state.primarySlotId,
+    state.playbackSpeed,
+    state.overlayMode == VodPlayerOverlayMode.browse,
+    _vodPlayerPlaybackPreferencesHash(state.settingsPreferences),
+    _vodPlaybackSlotInputHash(state.activeSlot),
+  ]);
+}
+
+int _vodPlayerPlaybackPreferencesHash(SettingsPreferences preferences) {
+  return Object.hash(
+    preferences.chatSettings,
+    preferences.vodSettings.chatWindowIndex,
+  );
+}
+
+int _vodPlaybackSlotInputHash(VodPlayerSlotState slot) {
+  return Object.hashAll([
+    slot.slotId,
+    slot.status,
+    slot.videoNo,
+    slot.videoId,
+    slot.detail,
+    slot.playbackUri,
+    slot.videoViewType,
+    slot.startPosition,
+  ]);
 }

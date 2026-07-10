@@ -18,9 +18,28 @@ abstract class LivePlayerSlotState with _$LivePlayerSlotState {
     List<int> availableResolutionIndexes,
     int? playbackLatencyIndex,
     int? playbackResolutionIndex,
+    int? expectedVideoWidth,
+    int? expectedVideoHeight,
+    @Default(0) int playbackMetadataResolutionAttempts,
     @Default(PlayerVideoViewType.textureView) PlayerVideoViewType videoViewType,
     LivePlayerFailureReason? failureReason,
   }) = _LivePlayerSlotState;
+
+  double? get expectedVideoAspectRatio {
+    final width = expectedVideoWidth;
+    final height = expectedVideoHeight;
+    if (width == null || height == null || width <= 0 || height <= 0) {
+      return null;
+    }
+
+    return width / height;
+  }
+
+  bool get shouldRetryPlaybackMetadata {
+    return expectedVideoAspectRatio == null &&
+        playbackMetadataResolutionAttempts <
+            _maximumPlaybackMetadataResolutionAttempts;
+  }
 
   String? get title {
     return liveStatus?.title ?? detail?.title ?? fallbackTitle;
@@ -84,3 +103,5 @@ abstract class LivePlayerSlotState with _$LivePlayerSlotState {
     return liveStatus?.liveTokens ?? const <String>[];
   }
 }
+
+const _maximumPlaybackMetadataResolutionAttempts = 2;

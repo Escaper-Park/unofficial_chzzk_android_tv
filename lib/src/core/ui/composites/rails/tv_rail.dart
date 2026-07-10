@@ -24,6 +24,9 @@ class TvRail extends HookWidget {
     this.upEnsureVisibleScope = true,
     this.downEnsureVisibleScope = true,
     this.controller,
+    this.clipBehavior = Clip.none,
+    this.cacheExtent,
+    this.addAutomaticKeepAlives = true,
     this.onFocusedTail,
     this.hasMore = true,
     this.isLoadingMore = false,
@@ -45,6 +48,9 @@ class TvRail extends HookWidget {
   final bool upEnsureVisibleScope;
   final bool downEnsureVisibleScope;
   final ScrollController? controller;
+  final Clip clipBehavior;
+  final double? cacheExtent;
+  final bool addAutomaticKeepAlives;
   final VoidCallback? onFocusedTail;
   final bool hasMore;
   final bool isLoadingMore;
@@ -72,8 +78,13 @@ class TvRail extends HookWidget {
         child: ListView.builder(
           controller: controller,
           scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.none,
-          padding: TvRailDesign.padding,
+          clipBehavior: clipBehavior,
+          padding: TvRailDesign.fixedExtentPadding,
+          itemExtent: TvRailDesign.scrollItemExtent(itemExtent),
+          // ignore: deprecated_member_use
+          cacheExtent: cacheExtent,
+          addAutomaticKeepAlives: addAutomaticKeepAlives,
+          addRepaintBoundaries: true,
           itemCount: itemCount,
           itemBuilder: (context, index) {
             return _TvRailFocusableItem(
@@ -86,9 +97,7 @@ class TvRail extends HookWidget {
               tailItemThreshold: tailItemThreshold,
               onFocusedTail: onFocusedTail,
               child: Padding(
-                padding: EdgeInsets.only(
-                  right: index == itemCount - 1 ? 0 : TvRailDesign.itemGap,
-                ),
+                padding: const EdgeInsets.only(right: TvRailDesign.itemGap),
                 child: SizedBox(
                   width: itemExtent,
                   child: itemBuilder(context, index),

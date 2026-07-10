@@ -5,6 +5,7 @@ Widget _livePlayerControlsMainSurface({
   required LivePlayerSlotState slot,
   required _LiveOverlayActionMode actionMode,
   required bool showingMultiviewInfo,
+  required bool selectSlotDetailsFromBloc,
   required List<LayerLink> chatSettingLinks,
   required void Function(
     _LiveOverlayMenu menu, {
@@ -23,7 +24,10 @@ Widget _livePlayerControlsMainSurface({
   required bool playbackPaused,
 }) {
   if (showingMultiviewInfo) {
-    return LivePlayerMultiviewInfoPanel(state: state);
+    return LivePlayerMultiviewInfoPanel(
+      state: state,
+      selectSlotsFromBloc: selectSlotDetailsFromBloc,
+    );
   }
 
   if (actionMode == _LiveOverlayActionMode.chatSettings) {
@@ -93,6 +97,8 @@ Widget _livePlayerControlsMainSurface({
         ),
       ),
     },
-    playbackInfo: LiveOverlayRealtimeInfo(slot: slot),
+    playbackInfo: selectSlotDetailsFromBloc
+        ? LiveOverlayRealtimeInfoForSlot(slotId: slot.slotId)
+        : LiveOverlayRealtimeInfo(slot: slot),
   );
 }

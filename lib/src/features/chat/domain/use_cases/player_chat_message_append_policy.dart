@@ -74,10 +74,11 @@ final _emojiTokenPattern = RegExp(r'\{:([^}]+):\}');
 
 const playerChatMessageBufferSize = 160;
 const playerChatBadgeCollectorBufferSize = 80;
-const playerChatAppendInterval = Duration(milliseconds: 200);
-const playerChatAppendMediumInterval = Duration(milliseconds: 80);
-const playerChatAppendFastInterval = Duration(milliseconds: 50);
-const playerChatAppendBurstInterval = Duration(milliseconds: 50);
+const playerChatPendingMessageBufferSize = playerChatMessageBufferSize * 4;
+const playerChatAppendInterval = Duration(milliseconds: 500);
+const playerChatAppendMediumInterval = playerChatAppendInterval;
+const playerChatAppendFastInterval = playerChatAppendInterval;
+const playerChatAppendBurstInterval = playerChatAppendInterval;
 
 Duration playerChatAppendIntervalForPendingCount(int pendingMessageCount) {
   if (pendingMessageCount >= 80) {
@@ -97,15 +98,19 @@ Duration playerChatAppendIntervalForPendingCount(int pendingMessageCount) {
 
 int playerChatAppendBatchSizeForPendingCount(int pendingMessageCount) {
   if (pendingMessageCount >= 80) {
-    return 12;
+    return 64;
   }
 
   if (pendingMessageCount >= 24) {
-    return 6;
+    return 48;
   }
 
   if (pendingMessageCount >= 8) {
-    return 2;
+    return 24;
+  }
+
+  if (pendingMessageCount >= 4) {
+    return 8;
   }
 
   return 1;

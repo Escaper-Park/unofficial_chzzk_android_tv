@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -22,6 +23,7 @@ import '../../../settings/domain/repositories/settings_preferences_repository.da
 import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import '../live_player_screen_string.dart';
+import 'live_player_browse_card.dart';
 import 'live_player_browse_overlay.dart';
 import 'live_player_chat_layer.dart';
 import 'live_player_chat_shortcuts.dart';
@@ -58,12 +60,28 @@ class LivePlayerView extends HookWidget {
     final browseNode = useFocusScopeNode(
       debugLabel: 'live player browse section',
     );
+    final browseThumbnailStreamRetainer = useMemoized(
+      () => BucketedImageStreamRetainer(
+        bucketDuration: livePlayerBrowseThumbnailRefreshInterval,
+      ),
+      const [],
+    );
+    useEffect(
+      () => browseThumbnailStreamRetainer.dispose,
+      [browseThumbnailStreamRetainer],
+    );
     final feedbackController = useMemoized(
       TvSnackbarFeedbackController.new,
       const [],
     );
-    final playbackPaused = useState(false);
-    final muted = useState(false);
+    final playbackPaused = useMemoized(
+      () => ValueNotifier(false),
+      const [],
+    );
+    final muted = useMemoized(
+      () => ValueNotifier(false),
+      const [],
+    );
     final appLifecycleState = _useLivePlayerAppLifecycleState();
     final overlayAutoHideController = useMemoized(
       () => TvPlayerOverlayAutoHideController(
@@ -73,14 +91,12 @@ class LivePlayerView extends HookWidget {
       ),
       const [],
     );
-    useListenable(overlayAutoHideController);
     final exitNoticeController = useMemoized(
       () => TvPlayerExitNoticeController(
         displayDuration: LivePlayerScreenDesign.exitNoticeDuration,
       ),
       const [],
     );
-    useListenable(exitNoticeController);
     final liveChatService = useMemoized(
       () => LiveChatService(
         chatRepository: context.read<ChatRepository>(),
@@ -102,8 +118,6 @@ class LivePlayerView extends HookWidget {
       ),
     );
     final appPlaybackSuspended = appLifecycleState != AppLifecycleState.resumed;
-    final effectivePlaybackPaused =
-        playbackPaused.value || appPlaybackSuspended;
 
     void exitPlayer() {
       playbackSessionController.suspendAll();
@@ -203,6 +217,8 @@ class LivePlayerView extends HookWidget {
       overlayAutoHideController: overlayAutoHideController,
       feedbackController: feedbackController,
       playbackSessionController: playbackSessionController,
+      playbackPaused: playbackPaused,
+      muted: muted,
     );
 
     return TvScaffold(
@@ -211,31 +227,92 @@ class LivePlayerView extends HookWidget {
       body: _LivePlayerViewListeners(
         lastVisibleChatWindowIndex: lastVisibleChatWindowIndex,
         feedbackController: feedbackController,
-        child: BlocBuilder<LivePlayerBloc, LivePlayerState>(
-          buildWhen: _livePlayerViewBuildWhen,
-          builder: (context, state) {
-            return _livePlayerContentFor(
-              context: context,
-              state: state,
-              controllerNode: controllerNode,
-              controllerFocusNode: controllerFocusNode,
-              controlsNode: controlsNode,
-              browseNode: browseNode,
-              playbackPaused: playbackPaused,
-              muted: muted,
-              appPlaybackSuspended: appPlaybackSuspended,
-              effectivePlaybackPaused: effectivePlaybackPaused,
-              connectLiveChat: liveChatService.connect,
-              lastVisibleChatWindowIndex: lastVisibleChatWindowIndex,
-              playbackSessionController: playbackSessionController,
-              overlayAutoHideController: overlayAutoHideController,
-              exitNoticeController: exitNoticeController,
-              onControlsInteraction: restartControlsTimer,
-              onControlsModalVisibilityChanged: (visible) {
-                updateControlsModalVisibility(visible: visible);
+        child: PlayerContentLayout(
+          player: _LivePlayerPlaybackLayer(
+            playbackPaused: playbackPaused,
+            muted: muted,
+            appPlaybackSuspended: appPlaybackSuspended,
+            connectLiveChat: liveChatService.connect,
+            playbackSessionController: playbackSessionController,
+          ),
+          controllerNode: controllerNode,
+          controllerFocusNode: controllerFocusNode,
+          onSelect: () {
+            final state = context.read<LivePlayerBloc>().state;
+            _handleLivePlayerSelect(
+              context,
+              state.activeSlot,
+              onControlsOpened: restartControlsTimer,
+            );
+          },
+          onUp: () {
+            final state = context.read<LivePlayerBloc>().state;
+            _handleLivePlayerUp(
+              context,
+              state.activeSlot,
+              isSignedIn: context.read<AuthSessionBloc>().hasRequiredCookies,
+              onBrowseOpened: overlayAutoHideController.dismissModal,
+            );
+          },
+          onDown: () {
+            final state = context.read<LivePlayerBloc>().state;
+            _handleLivePlayerDown(
+              context,
+              state,
+              lastVisibleChatWindowIndex,
+              onChatWindowIndexSelected: (value) {
+                if (value != liveChatWindowHiddenIndex) {
+                  lastVisibleChatWindowIndex.value = value;
+                }
+
+                _updateLivePlayerPreferences(
+                  context,
+                  state.settingsPreferences.copyWith(
+                    liveSettings: state.settingsPreferences.liveSettings
+                        .copyWith(chatWindowIndex: value),
+                  ),
+                );
               },
             );
           },
+          onLeft: () {
+            final state = context.read<LivePlayerBloc>().state;
+            _handleLivePlayerHorizontalChatShortcut(
+              context,
+              state,
+              forward: false,
+              onPreferencesChanged: (preferences) {
+                _updateLivePlayerPreferences(context, preferences);
+              },
+            );
+          },
+          onRight: () {
+            final state = context.read<LivePlayerBloc>().state;
+            _handleLivePlayerHorizontalChatShortcut(
+              context,
+              state,
+              forward: true,
+              onPreferencesChanged: (preferences) {
+                _updateLivePlayerPreferences(context, preferences);
+              },
+            );
+          },
+          controlsOverlay: _LivePlayerOverlayLayer(
+            controlsNode: controlsNode,
+            browseNode: browseNode,
+            browseThumbnailStreamRetainer: browseThumbnailStreamRetainer,
+            playbackPaused: playbackPaused,
+            muted: muted,
+            overlayAutoHideController: overlayAutoHideController,
+            exitNoticeController: exitNoticeController,
+            onControlsInteraction: restartControlsTimer,
+            onControlsModalVisibilityChanged: (visible) {
+              updateControlsModalVisibility(visible: visible);
+            },
+          ),
+          foreground: _LivePlayerForegroundLayer(
+            exitNoticeController: exitNoticeController,
+          ),
         ),
       ),
     );

@@ -8,11 +8,13 @@ class LiveOverlayRealtimeInfoContent extends StatelessWidget {
     super.key,
     this.tags = const [],
     this.elapsedText,
+    this.elapsed,
     this.viewerCountText,
   });
 
   final List<Widget> tags;
   final String? elapsedText;
+  final Widget? elapsed;
   final String? viewerCountText;
 
   @override
@@ -23,10 +25,11 @@ class LiveOverlayRealtimeInfoContent extends StatelessWidget {
           icon: Icons.person_outline,
           text: viewerCountText!,
         ),
-      if (_hasText(elapsedText))
+      if (_hasText(elapsedText) || elapsed != null)
         _LiveOverlayMetric(
           icon: Icons.schedule,
-          text: elapsedText!,
+          text: elapsedText,
+          child: elapsed,
           textWidth: TvPlayerOverlayControlsDesign.liveInfoElapsedTextWidth,
           textAlign: TextAlign.right,
         ),
@@ -122,22 +125,24 @@ class _LiveOverlayMetricText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Text(
-      metric.text,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: metric.textAlign,
-      style: style,
-    );
+    final child =
+        metric.child ??
+        Text(
+          metric.text!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: metric.textAlign,
+          style: style,
+        );
 
     final textWidth = metric.textWidth;
     if (textWidth == null) {
-      return text;
+      return child;
     }
 
     return SizedBox(
       width: textWidth,
-      child: text,
+      child: child,
     );
   }
 }
@@ -169,13 +174,15 @@ class _TvLiveOverlayMetricDivider extends StatelessWidget {
 final class _LiveOverlayMetric {
   const _LiveOverlayMetric({
     required this.icon,
-    required this.text,
+    this.text,
+    this.child,
     this.textWidth,
     this.textAlign = TextAlign.start,
-  });
+  }) : assert(text != null || child != null);
 
   final IconData icon;
-  final String text;
+  final String? text;
+  final Widget? child;
   final double? textWidth;
   final TextAlign textAlign;
 }

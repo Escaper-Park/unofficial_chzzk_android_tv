@@ -1,6 +1,15 @@
 part of 'vod_player_chat_replay_controller.dart';
 
 extension _VodPlayerChatReplayCacheHelpers on VodPlayerChatReplayController {
+  bool _isBeforeCachedCoverage(int positionMs) {
+    final loadedRangeStartMs = _loadedRangeStartMs;
+    if (loadedRangeStartMs == null) {
+      return false;
+    }
+
+    return positionMs < (_cacheCoverageStartMs ?? loadedRangeStartMs);
+  }
+
   bool _canReuseCache(int positionMs) {
     if (_cachedMessages.isEmpty) {
       if (_emptyCacheTerminal) {
@@ -168,21 +177,54 @@ extension _VodPlayerChatReplayCacheHelpers on VodPlayerChatReplayController {
       0,
       positionMs - VodPlayerChatReplayController._rawCachePastWindowMs,
     );
-    final removeCount = math.min(
+    var retainStart = math.min(
       lowerBoundVodChatReplayMessagesByPosition(
         _cachedMessages,
         earliestRetainedTimeMs,
       ),
       _cachedMessages.length - 1,
     );
-    if (removeCount <= 0) {
+    var retainEnd = _cachedMessages.length;
+    if (retainEnd - retainStart >
+        VodPlayerChatReplayController._rawCacheMessageLimit) {
+      final dueExclusive = upperBoundVodChatReplayMessagesByPosition(
+        _cachedMessages,
+        positionMs,
+      ).clamp(retainStart, retainEnd).toInt();
+      final latestStart =
+          retainEnd - VodPlayerChatReplayController._rawCacheMessageLimit;
+      retainStart = math.min(
+        math.max(
+          retainStart,
+          dueExclusive -
+              VodPlayerChatReplayController._rawCachePastMessageBudget,
+        ),
+        latestStart,
+      );
+      retainEnd =
+          retainStart + VodPlayerChatReplayController._rawCacheMessageLimit;
+    }
+
+    if (retainStart <= 0 && retainEnd >= _cachedMessages.length) {
       return;
     }
 
-    _cachedMessages.removeRange(0, removeCount);
+    if (retainEnd < _cachedMessages.length) {
+      final firstTrimmedFutureMs = vodChatReplayMessagePositionMs(
+        _cachedMessages[retainEnd],
+      );
+      final nextPlayerMessageTime = _nextPlayerMessageTime;
+      _nextPlayerMessageTime = nextPlayerMessageTime == null
+          ? firstTrimmedFutureMs
+          : math.min(nextPlayerMessageTime, firstTrimmedFutureMs);
+      _cachedMessages.removeRange(retainEnd, _cachedMessages.length);
+    }
+    if (retainStart > 0) {
+      _cachedMessages.removeRange(0, retainStart);
+    }
     _nextVisibleMessageIndex = math.max(
       0,
-      _nextVisibleMessageIndex - removeCount,
+      math.min(_nextVisibleMessageIndex, retainEnd) - retainStart,
     );
     final cacheCoverageStartMs = _cacheCoverageStartMs;
     if (cacheCoverageStartMs != null && _cachedMessages.isNotEmpty) {

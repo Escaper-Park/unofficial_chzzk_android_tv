@@ -11,6 +11,7 @@ VideoPlayerController _liveVideoControllerFor({
     formatHint: VideoFormat.hls,
     httpHeaders: playbackHttpHeaders,
     viewType: _videoViewTypeFor(videoViewType),
+    positionUpdateInterval: null,
     videoPlayerOptions: VideoPlayerOptions(
       mixWithOthers: mixWithOthers,
     ),

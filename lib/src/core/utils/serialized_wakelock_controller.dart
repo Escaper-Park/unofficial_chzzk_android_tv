@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 typedef WakelockSetter = Future<void> Function({required bool enabled});
@@ -9,8 +11,10 @@ final class SerializedWakelockController {
   }) : _setEnabled = setEnabled;
 
   final WakelockSetter _setEnabled;
-  Future<void> _tail = Future<void>.value();
+  Future<void> _workerDone = Future<void>.value();
   bool? _lastRequested;
+  bool? _lastProcessed;
+  var _workerRunning = false;
   var _disposed = false;
 
   void setEnabled({required bool enabled}) {
@@ -22,10 +26,7 @@ final class SerializedWakelockController {
     }
 
     _lastRequested = enabled;
-    _tail = _tail
-        .catchError((Object _) {})
-        .then((_) => _setEnabled(enabled: enabled))
-        .catchError((Object _) {});
+    _ensureWorker();
   }
 
   void dispose() {
@@ -33,8 +34,46 @@ final class SerializedWakelockController {
     setEnabled(enabled: false);
   }
 
-  Future<void> drain() {
-    return _tail.catchError((Object _) {});
+  Future<void> drain() async {
+    while (_workerRunning || _lastProcessed != _lastRequested) {
+      await _workerDone;
+    }
+  }
+
+  void _ensureWorker() {
+    if (_workerRunning || _lastProcessed == _lastRequested) {
+      return;
+    }
+
+    _workerRunning = true;
+    final done = Completer<void>();
+    _workerDone = done.future;
+    unawaited(
+      _runWorker().whenComplete(() {
+        _workerRunning = false;
+        done.complete();
+        _ensureWorker();
+      }),
+    );
+  }
+
+  Future<void> _runWorker() async {
+    while (true) {
+      final enabled = _lastRequested;
+      if (enabled == null) {
+        return;
+      }
+
+      try {
+        await _setEnabled(enabled: enabled);
+      } on Object {
+        // A platform failure must not prevent a later disable request.
+      }
+      _lastProcessed = enabled;
+      if (_lastRequested == enabled) {
+        return;
+      }
+    }
   }
 }
 

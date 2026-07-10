@@ -16,9 +16,19 @@ extension _LivePlayerBlocEntryHelpers on LivePlayerBloc {
       return const _LivePlayerEntrySettings(
         preferences: defaultSettingsPreferences,
         liveSettings: defaultLiveSettings,
-        videoViewType: PlayerVideoViewType.textureView,
+        videoViewType: PlayerVideoViewType.platformView,
       );
     }
+  }
+
+  _LivePlayerEntrySettings _entrySettingsForPreferences(
+    SettingsPreferences preferences,
+  ) {
+    return _LivePlayerEntrySettings(
+      preferences: preferences,
+      liveSettings: preferences.liveSettings,
+      videoViewType: preferences.generalSetting.videoViewType,
+    );
   }
 }
 

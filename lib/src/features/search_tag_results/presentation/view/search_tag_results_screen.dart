@@ -90,6 +90,7 @@ class _SearchTagResultsScreenView extends HookWidget {
         return previous.feedbackSerial != current.feedbackSerial &&
             current.feedbackType != null;
       },
+      buildWhen: _shouldRebuildSearchTagResultsScreen,
       listener: (context, state) {
         final feedbackType = state.feedbackType;
         if (feedbackType != null &&
@@ -183,4 +184,12 @@ class _SearchTagResultsScreenView extends HookWidget {
 
     context.go(AppRoute.search.path);
   }
+}
+
+bool _shouldRebuildSearchTagResultsScreen(
+  SearchTagResultsState previous,
+  SearchTagResultsState current,
+) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

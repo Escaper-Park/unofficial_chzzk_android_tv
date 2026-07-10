@@ -22,6 +22,13 @@ typedef PostLivePlayerWatchEvent =
       required bool allowStaleSlotTarget,
     });
 
+typedef _PendingLiveWatchEvent = ({
+  String watchEventType,
+  int positionSeconds,
+  int? awtSeconds,
+  List<String> liveTokens,
+});
+
 final class LivePlayerWatchEventReporter {
   LivePlayerWatchEventReporter({
     required String channelId,
@@ -66,7 +73,10 @@ final class LivePlayerWatchEventReporter {
   final Duration _continuedInterval;
   final Duration _continuedGuard;
 
-  Future<void> _pendingSend = Future<void>.value();
+  final List<_PendingLiveWatchEvent> _pendingEvents = [];
+  Future<void> _sendLoopDone = Future<void>.value();
+  int? _replaceableContinuedEventIndex;
+  var _sendLoopRunning = false;
   List<String> _liveTokens;
   bool _hasStarted = false;
   bool _isPlaybackActive = false;
@@ -179,8 +189,10 @@ final class LivePlayerWatchEventReporter {
     );
   }
 
-  Future<void> flush() {
-    return _pendingSend;
+  Future<void> flush() async {
+    while (_sendLoopRunning || _pendingEvents.isNotEmpty) {
+      await _sendLoopDone;
+    }
   }
 
   int? _awtSeconds() {
@@ -202,26 +214,68 @@ final class LivePlayerWatchEventReporter {
     required String watchEventType,
     int? awtSeconds,
   }) {
-    final positionSeconds = _positionSeconds();
-    final liveTokens = [..._liveTokens];
-    _pendingSend = _pendingSend.then((_) async {
+    final event = (
+      watchEventType: watchEventType,
+      positionSeconds: _positionSeconds(),
+      awtSeconds: awtSeconds,
+      liveTokens: [..._liveTokens],
+    );
+    final replaceableIndex = _replaceableContinuedEventIndex;
+    if (watchEventType == _watchContinued && replaceableIndex != null) {
+      _pendingEvents[replaceableIndex] = event;
+    } else {
+      _pendingEvents.add(event);
+      _replaceableContinuedEventIndex = watchEventType == _watchContinued
+          ? _pendingEvents.length - 1
+          : null;
+    }
+    _ensureSendLoop();
+  }
+
+  void _ensureSendLoop() {
+    if (_sendLoopRunning || _pendingEvents.isEmpty) {
+      return;
+    }
+
+    _sendLoopRunning = true;
+    final done = Completer<void>();
+    _sendLoopDone = done.future;
+    unawaited(
+      _drainSendQueue().whenComplete(() {
+        _sendLoopRunning = false;
+        done.complete();
+        _ensureSendLoop();
+      }),
+    );
+  }
+
+  Future<void> _drainSendQueue() async {
+    while (_pendingEvents.isNotEmpty) {
+      final event = _pendingEvents.removeAt(0);
+      final replaceableIndex = _replaceableContinuedEventIndex;
+      if (replaceableIndex != null) {
+        _replaceableContinuedEventIndex = replaceableIndex == 0
+            ? null
+            : replaceableIndex - 1;
+      }
+
       try {
         await _postWatchEvent(
           channelId: _channelId,
           liveId: _liveId,
-          watchEventType: watchEventType,
+          watchEventType: event.watchEventType,
           sessionId: _sessionId,
           eventDurationSeconds: _reportedDurationSeconds,
-          positionSeconds: positionSeconds,
-          awtSeconds: awtSeconds,
-          liveTokens: liveTokens,
+          positionSeconds: event.positionSeconds,
+          awtSeconds: event.awtSeconds,
+          liveTokens: event.liveTokens,
           autoPlay: _autoPlay,
           radioMode: _radioMode,
-          allowStaleSlotTarget: watchEventType == _watchEnded,
+          allowStaleSlotTarget: event.watchEventType == _watchEnded,
         );
       } on Object {
         debugPrint('Failed to post live watch event.');
       }
-    });
+    }
   }
 }

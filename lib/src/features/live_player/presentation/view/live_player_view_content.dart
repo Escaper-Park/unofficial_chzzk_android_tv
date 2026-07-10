@@ -1,120 +1,133 @@
 part of 'live_player_view.dart';
 
-Widget _livePlayerContentFor({
-  required BuildContext context,
-  required LivePlayerState state,
-  required FocusScopeNode controllerNode,
-  required FocusNode controllerFocusNode,
-  required FocusScopeNode controlsNode,
-  required FocusScopeNode browseNode,
-  required ValueNotifier<bool> playbackPaused,
-  required ValueNotifier<bool> muted,
-  required bool appPlaybackSuspended,
-  required bool effectivePlaybackPaused,
-  required ConnectLiveChat connectLiveChat,
-  required ObjectRef<int> lastVisibleChatWindowIndex,
-  required LivePlayerPlaybackSessionController playbackSessionController,
-  required TvPlayerOverlayAutoHideController overlayAutoHideController,
-  required TvPlayerExitNoticeController exitNoticeController,
-  required VoidCallback onControlsInteraction,
-  required ValueChanged<bool> onControlsModalVisibilityChanged,
-}) {
-  void updatePreferences(SettingsPreferences preferences) {
-    context.read<LivePlayerBloc>().add(
-      LivePlayerEvent.preferencesChanged(
-        preferences: preferences,
-      ),
+final class _LivePlayerPlaybackLayer extends StatelessWidget {
+  const _LivePlayerPlaybackLayer({
+    required this.playbackPaused,
+    required this.muted,
+    required this.appPlaybackSuspended,
+    required this.connectLiveChat,
+    required this.playbackSessionController,
+  });
+
+  final ValueListenable<bool> playbackPaused;
+  final ValueListenable<bool> muted;
+  final bool appPlaybackSuspended;
+  final ConnectLiveChat connectLiveChat;
+  final LivePlayerPlaybackSessionController playbackSessionController;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<
+      LivePlayerBloc,
+      LivePlayerState,
+      _LivePlayerPlaybackSnapshot
+    >(
+      selector: _LivePlayerPlaybackSnapshot.new,
+      builder: (context, snapshot) {
+        final state = snapshot.state;
+        final chatLayer = _livePlayerHasChatLayer(state)
+            ? _LivePlayerChatLayerSelector(
+                playbackPaused: playbackPaused,
+                appPlaybackSuspended: appPlaybackSuspended,
+                connectLiveChat: connectLiveChat,
+              )
+            : null;
+
+        return _LivePlayerSessionLifecycle(
+          state: state,
+          playbackPaused: playbackPaused,
+          appPlaybackSuspended: appPlaybackSuspended,
+          child: LivePlayerPlaybackLayout(
+            state: state,
+            playbackPaused: playbackPaused,
+            singleMuted: muted,
+            appPlaybackSuspended: appPlaybackSuspended,
+            chat: chatLayer,
+            playbackSessionController: playbackSessionController,
+            statusSurfaceFor: _livePlayerStatusSurfaceFor,
+          ),
+        );
+      },
     );
   }
+}
 
-  void selectChatWindowIndex(int value) {
-    if (value != liveChatWindowHiddenIndex) {
-      lastVisibleChatWindowIndex.value = value;
-    }
-
-    updatePreferences(
-      state.settingsPreferences.copyWith(
-        liveSettings: state.settingsPreferences.liveSettings.copyWith(
-          chatWindowIndex: value,
-        ),
-      ),
-    );
-  }
-
-  final slot = state.activeSlot;
-  final chatLayer = _livePlayerChatLayerFor(
-    state: state,
-    slot: slot,
-    playbackPaused: effectivePlaybackPaused,
-    appPlaybackSuspended: appPlaybackSuspended,
-    connectLiveChat: connectLiveChat,
-  );
-
-  return _LivePlayerSessionLifecycle(
-    state: state,
-    playbackPaused: effectivePlaybackPaused,
-    child: PlayerContentLayout(
-      player: LivePlayerPlaybackLayout(
-        state: state,
-        playbackPaused: effectivePlaybackPaused,
-        singleMuted: muted.value,
-        chat: chatLayer,
-        playbackSessionController: playbackSessionController,
-        statusSurfaceFor: _livePlayerStatusSurfaceFor,
-      ),
-      controllerNode: controllerNode,
-      controllerFocusNode: controllerFocusNode,
-      onSelect: () => _handleLivePlayerSelect(
-        context,
-        slot,
-        onControlsOpened: onControlsInteraction,
-      ),
-      onUp: () => _handleLivePlayerUp(
-        context,
-        slot,
-        isSignedIn: context.read<AuthSessionBloc>().hasRequiredCookies,
-        onBrowseOpened: overlayAutoHideController.dismissModal,
-      ),
-      onDown: () => _handleLivePlayerDown(
-        context,
-        state,
-        lastVisibleChatWindowIndex,
-        onChatWindowIndexSelected: selectChatWindowIndex,
-      ),
-      onLeft: () => _handleLivePlayerHorizontalChatShortcut(
-        context,
-        state,
-        forward: false,
-        onPreferencesChanged: updatePreferences,
-      ),
-      onRight: () => _handleLivePlayerHorizontalChatShortcut(
-        context,
-        state,
-        forward: true,
-        onPreferencesChanged: updatePreferences,
-      ),
-      controlsOverlay: _livePlayerOverlayFor(
-        context: context,
-        state: state,
-        controlsNode: controlsNode,
-        browseNode: browseNode,
-        playbackPaused: playbackPaused.value,
-        muted: muted.value,
-        onPlaybackPausedChanged: (value) {
-          playbackPaused.value = value;
-        },
-        onMutedChanged: (value) {
-          muted.value = value;
-        },
-        onControlsInteraction: onControlsInteraction,
-        modalDismissSerial: overlayAutoHideController.modalDismissSerial,
-        onModalVisibilityChanged: onControlsModalVisibilityChanged,
-        onBrowseInteraction: exitNoticeController.hide,
-      ),
-      foreground: _LivePlayerForeground(
-        feedbackType: state.feedbackType,
-        showExitNotice: exitNoticeController.isShowing,
-      ),
+void _updateLivePlayerPreferences(
+  BuildContext context,
+  SettingsPreferences preferences,
+) {
+  context.read<LivePlayerBloc>().add(
+    LivePlayerEvent.preferencesChanged(
+      preferences: preferences,
     ),
+  );
+}
+
+@immutable
+final class _LivePlayerPlaybackSnapshot {
+  const _LivePlayerPlaybackSnapshot(this.state);
+
+  final LivePlayerState state;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerPlaybackSnapshot &&
+            !_livePlayerPlaybackBuildWhen(other.state, state);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    state.viewMode,
+    state.multiviewLayoutMode,
+    state.activeSlotId,
+    state.primarySlotId,
+    _unorderedStringSetHash(state.audibleSlotIds),
+    _stringDoubleMapHash(state.slotVolumeById),
+    state.activeSlotHighlightSerial,
+    _livePlayerPlaybackPreferencesHash(state.settingsPreferences),
+    _livePlayerHasChatLayer(state),
+    _activeSlotPlaybackInputHash(state.activeSlot),
+    _hasPlayableLiveSlot(state),
+    Object.hashAll(state.slots.map((slot) => slot.slotId)),
+  ]);
+}
+
+int _livePlayerPlaybackPreferencesHash(SettingsPreferences preferences) {
+  final live = preferences.liveSettings;
+  return Object.hashAll([
+    preferences.chatSettings,
+    live.chatWindowIndex,
+    live.multiviewChatWindowIndex,
+    live.multiviewChatPositionX,
+    live.multiviewChatPositionY,
+    live.multiviewPipLayoutIndex,
+    live.multiviewPipPositionX,
+    live.multiviewPipPositionY,
+    live.multiviewPipSize,
+  ]);
+}
+
+int _activeSlotPlaybackInputHash(LivePlayerSlotState slot) {
+  return Object.hash(
+    slot.slotId,
+    slot.status,
+    slot.channelId,
+    slot.playbackUri,
+    slot.expectedVideoWidth,
+    slot.expectedVideoHeight,
+  );
+}
+
+int _unorderedStringSetHash(Set<String> values) {
+  final sortedValues = values.toList()..sort();
+  return Object.hashAll(sortedValues);
+}
+
+int _stringDoubleMapHash(Map<String, double> values) {
+  final entries = values.entries.toList()
+    ..sort((a, b) => a.key.compareTo(b.key));
+  return Object.hashAll(
+    entries.map((entry) => Object.hash(entry.key, entry.value)),
   );
 }

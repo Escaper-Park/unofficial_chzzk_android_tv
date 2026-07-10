@@ -5,18 +5,37 @@ extension _LivePlayerBlocSlotResolutionHelpers on LivePlayerBloc {
     required String slotId,
     required SettingsPreferences preferences,
   }) {
-    if (!state.isMultiview) {
+    return _resolutionIndexForSlotInState(
+      sourceState: state,
+      slotId: slotId,
+      preferences: preferences,
+    );
+  }
+
+  int _resolutionIndexForSlotInState({
+    required LivePlayerState sourceState,
+    required String slotId,
+    required SettingsPreferences preferences,
+    int? pipMainResolutionIndex,
+    int? pipOverlayResolutionIndex,
+  }) {
+    if (!sourceState.isMultiview) {
       return preferences.liveSettings.resolutionIndex;
     }
 
-    if (_usesPipRoleResolution) {
-      return slotId == state.activeSlotId
-          ? _pipMainResolutionIndex ?? preferences.liveSettings.resolutionIndex
-          : _pipOverlayResolutionIndex ??
+    if (_usesPipRoleResolutionInState(sourceState)) {
+      return slotId == sourceState.activeSlotId
+          ? pipMainResolutionIndex ??
+                _pipMainResolutionIndex ??
+                preferences.liveSettings.resolutionIndex
+          : pipOverlayResolutionIndex ??
+                _pipOverlayResolutionIndex ??
                 preferences.liveSettings.multiviewResolutionIndex;
     }
 
-    final slotResolutionIndex = state.slotById(slotId)?.playbackResolutionIndex;
+    final slotResolutionIndex = sourceState
+        .slotById(slotId)
+        ?.playbackResolutionIndex;
     if (slotResolutionIndex != null) {
       return slotResolutionIndex;
     }
@@ -25,23 +44,11 @@ extension _LivePlayerBlocSlotResolutionHelpers on LivePlayerBloc {
   }
 
   bool get _usesPipRoleResolution {
-    return state.isMultiview &&
-        state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip;
+    return _usesPipRoleResolutionInState(state);
   }
 
-  void _rememberPipRoleResolutionForSlot({
-    required String slotId,
-    required int resolutionIndex,
-  }) {
-    if (!_usesPipRoleResolution) {
-      return;
-    }
-
-    if (slotId == state.activeSlotId) {
-      _pipMainResolutionIndex = resolutionIndex;
-      return;
-    }
-
-    _pipOverlayResolutionIndex = resolutionIndex;
+  bool _usesPipRoleResolutionInState(LivePlayerState sourceState) {
+    return sourceState.isMultiview &&
+        sourceState.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip;
   }
 }

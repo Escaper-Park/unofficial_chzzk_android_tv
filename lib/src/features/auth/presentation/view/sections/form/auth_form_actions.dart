@@ -5,15 +5,18 @@ class _AuthActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthScreenBloc, AuthScreenState>(
-      buildWhen: (previous, current) {
-        return previous.isPasswordVisible != current.isPasswordVisible ||
-            previous.isSubmitting != current.isSubmitting ||
-            previous.isCapturingSession != current.isCapturingSession;
+    return BlocSelector<
+      AuthScreenBloc,
+      AuthScreenState,
+      ({bool enabled, bool isPasswordVisible})
+    >(
+      selector: (state) {
+        return (
+          enabled: !state.isSubmitting && !state.isCapturingSession,
+          isPasswordVisible: state.isPasswordVisible,
+        );
       },
-      builder: (context, state) {
-        final enabled = !state.isSubmitting && !state.isCapturingSession;
-
+      builder: (context, snapshot) {
         return SizedBox(
           width: double.infinity,
           child: Row(
@@ -21,11 +24,13 @@ class _AuthActionRow extends StatelessWidget {
             spacing: AuthScreenDesign.actionGap,
             children: [
               TvButton.label(
-                text: AuthScreenUiMapper.passwordActionLabel(state),
-                icon: state.isPasswordVisible
+                text: snapshot.isPasswordVisible
+                    ? AuthScreenString.hidePassword
+                    : AuthScreenString.showPassword,
+                icon: snapshot.isPasswordVisible
                     ? Icons.visibility_off_rounded
                     : Icons.visibility_rounded,
-                enabled: enabled,
+                enabled: snapshot.enabled,
                 onPressed: () {
                   context.read<AuthScreenBloc>().add(
                     const AuthScreenEvent.passwordVisibilityToggled(),
@@ -35,7 +40,7 @@ class _AuthActionRow extends StatelessWidget {
               TvButton.label(
                 text: AuthScreenString.reloadPage,
                 icon: Icons.refresh_rounded,
-                enabled: enabled,
+                enabled: snapshot.enabled,
                 onPressed: () {
                   context.read<AuthScreenBloc>().add(
                     const AuthScreenEvent.reloadRequested(),
@@ -45,7 +50,7 @@ class _AuthActionRow extends StatelessWidget {
               TvButton.label(
                 text: AuthScreenString.login,
                 icon: Icons.login_rounded,
-                enabled: enabled,
+                enabled: snapshot.enabled,
                 onPressed: () {
                   context.read<AuthScreenBloc>().add(
                     const AuthScreenEvent.loginRequested(),

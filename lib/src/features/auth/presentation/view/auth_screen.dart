@@ -100,6 +100,7 @@ class _AuthScreenContent extends HookWidget {
             previous.activeValue != current.activeValue ||
             previous.isLoginCompleted != current.isLoginCompleted;
       },
+      buildWhen: _shouldRebuildAuthScreen,
       listener: (context, state) {
         final didRequestReload =
             state.reloadRequestId != lastReloadRequestId.value;
@@ -160,4 +161,12 @@ class _AuthScreenContent extends HookWidget {
       },
     );
   }
+}
+
+bool _shouldRebuildAuthScreen(
+  AuthScreenState previous,
+  AuthScreenState current,
+) {
+  return previous.copyWith(reloadRequestId: 0, submitRequestId: 0) !=
+      current.copyWith(reloadRequestId: 0, submitRequestId: 0);
 }

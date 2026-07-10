@@ -81,6 +81,33 @@ void main() {
     expect(preferences.liveSettings, defaultLiveSettings);
   });
 
+  test(
+    'missing video view setting defaults single playback to PlatformView',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        SettingsPreferencesStorageKeys.preferences: jsonEncode({
+          'generalSetting': {
+            'showPopularVod': 1,
+          },
+        }),
+      });
+      final repository = SharedPreferencesSettingsRepository(
+        preferences: await SharedPreferences.getInstance(),
+      );
+
+      final preferences = await repository.read();
+
+      expect(
+        preferences.generalSetting.videoViewType,
+        PlayerVideoViewType.platformView,
+      );
+      expect(
+        const GeneralSetting().videoViewType,
+        PlayerVideoViewType.platformView,
+      );
+    },
+  );
+
   test('normalizes stored values outside known option ranges', () async {
     SharedPreferences.setMockInitialValues({
       SettingsPreferencesStorageKeys.preferences: jsonEncode({

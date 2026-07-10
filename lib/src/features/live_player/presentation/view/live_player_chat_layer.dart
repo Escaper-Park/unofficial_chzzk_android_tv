@@ -27,6 +27,7 @@ class LivePlayerChatLayer extends StatefulWidget {
     required this.chatSettings,
     required this.playbackActive,
     required this.connectLiveChat,
+    this.messageSnapshotInterval = Duration.zero,
     this.disconnectImmediatelyWhenInactive = false,
   });
 
@@ -36,6 +37,7 @@ class LivePlayerChatLayer extends StatefulWidget {
   final ChatSettings chatSettings;
   final bool playbackActive;
   final ConnectLiveChat connectLiveChat;
+  final Duration messageSnapshotInterval;
   final bool disconnectImmediatelyWhenInactive;
 
   @override
@@ -55,13 +57,18 @@ class _LivePlayerChatLayerState extends State<LivePlayerChatLayer>
     super.didUpdateWidget(oldWidget);
 
     _syncSession(notify: true);
+    if (oldWidget.messageSnapshotInterval != widget.messageSnapshotInterval) {
+      _syncMessageSnapshotInterval();
+    }
   }
 
   @override
   void dispose() {
     _chatLayerTimers.cancelAll();
+    _messageSnapshotTimer?.cancel();
     _connectSerial += 1;
     unawaited(_disposeConnection());
+    _chatSnapshot.dispose();
     super.dispose();
   }
 
@@ -74,14 +81,22 @@ class _LivePlayerChatLayerState extends State<LivePlayerChatLayer>
       return const SizedBox.shrink();
     }
 
-    return PlayerChatLayerBody(
-      key: ValueKey(
-        'live-chat-layer-${widget.channelId}-${widget.chatChannelId}',
-      ),
-      mode: mode,
-      chatSettings: widget.chatSettings,
-      messages: _messages,
-      statusText: _livePlayerChatLayerStatusText(_status, _messages),
+    return ValueListenableBuilder<_LivePlayerChatLayerSnapshot>(
+      valueListenable: _chatSnapshot,
+      builder: (context, snapshot, _) {
+        return PlayerChatLayerBody(
+          key: ValueKey(
+            'live-chat-layer-${widget.channelId}-${widget.chatChannelId}',
+          ),
+          mode: mode,
+          chatSettings: widget.chatSettings,
+          messages: snapshot.messages,
+          statusText: _livePlayerChatLayerStatusText(
+            snapshot.status,
+            snapshot.messages,
+          ),
+        );
+      },
     );
   }
 }

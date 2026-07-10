@@ -14,6 +14,7 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
     required this.vodDurationLabel,
     required this.restrictionAssetPath,
     required this.showAgeRestrictionOverlay,
+    required this.streamRetainer,
   });
 
   final TvPlayerBrowseCardVariant variant;
@@ -28,6 +29,7 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
   final String? vodDurationLabel;
   final String? restrictionAssetPath;
   final bool showAgeRestrictionOverlay;
+  final BucketedImageStreamRetainer? streamRetainer;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class _TvPlayerBrowseCardThumbnail extends StatelessWidget {
               : Icons.video_library_outlined,
           restrictionAssetPath: restrictionAssetPath,
           showAgeRestrictionOverlay: showAgeRestrictionOverlay,
+          streamRetainer: streamRetainer,
         ),
         const DecoratedBox(
           decoration: BoxDecoration(

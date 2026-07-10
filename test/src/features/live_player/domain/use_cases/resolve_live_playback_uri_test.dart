@@ -84,6 +84,8 @@ void main() {
       Uri.parse('https://example.com/720p/index.m3u8?token=signed'),
     );
     expect(source?.availableResolutionIndexes, [0, 2, 3, 4]);
+    expect(source?.expectedVideoWidth, 1280);
+    expect(source?.expectedVideoHeight, 720);
   });
 
   test('keeps master playlist URI when resolution is auto', () async {
@@ -110,6 +112,8 @@ void main() {
 
     expect(source?.playbackUri, Uri.parse('https://example.com/master.m3u8'));
     expect(source?.availableResolutionIndexes, [0, 2, 4]);
+    expect(source?.expectedVideoWidth, 1280);
+    expect(source?.expectedVideoHeight, 720);
   });
 
   test(

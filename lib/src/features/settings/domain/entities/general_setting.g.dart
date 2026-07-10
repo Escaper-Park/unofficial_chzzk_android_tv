@@ -31,7 +31,7 @@ _GeneralSetting _$GeneralSettingFromJson(
       (json['overlayControlsDisplayTime'] as num?)?.toInt() ?? 15,
   videoViewTypeIndex:
       (json['videoViewTypeIndex'] as num?)?.toInt() ??
-      playerVideoViewTypeIndexMin,
+      playerVideoViewTypeIndexMax,
 );
 
 Map<String, dynamic> _$GeneralSettingToJson(

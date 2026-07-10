@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/utils/utils.dart';
 import '../../../settings/domain/entities/settings_preferences.dart';
+import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import 'live_player_playback_session_controller.dart';
 import 'live_player_status_surface.dart';
@@ -19,7 +22,9 @@ part 'live_player_video_watch_reporter.dart';
 class LivePlayerVideoSurface extends HookWidget {
   const LivePlayerVideoSurface({
     super.key,
+    required this.slotId,
     required this.playbackUri,
+    this.expectedVideoAspectRatio,
     required this.playbackHttpHeaders,
     required this.videoViewType,
     required this.mixWithOthers,
@@ -37,7 +42,9 @@ class LivePlayerVideoSurface extends HookWidget {
     required this.onFailure,
   });
 
+  final String slotId;
   final Uri playbackUri;
+  final double? expectedVideoAspectRatio;
   final Map<String, String> playbackHttpHeaders;
   final PlayerVideoViewType videoViewType;
   final bool mixWithOthers;
@@ -56,6 +63,18 @@ class LivePlayerVideoSurface extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final watchSnapshot = context
+        .select<LivePlayerBloc, _LivePlayerVideoWatchSnapshot>((bloc) {
+          return _LivePlayerVideoWatchSnapshot.fromState(
+            bloc.state,
+            slotId: slotId,
+            channelId: channelId,
+            liveId: liveId,
+            playbackUri: playbackUri,
+            fallbackLiveOpenDate: liveOpenDate,
+            fallbackLiveTokens: liveTokens,
+          );
+        });
     final playbackHttpHeadersKey = _playbackHttpHeadersKey(
       playbackHttpHeaders,
     );
@@ -72,9 +91,21 @@ class LivePlayerVideoSurface extends HookWidget {
       () => _LivePlayerVideoSessionHandle(controller),
       [controller],
     );
+    final frameValueListenable = useMemoized(
+      () => _LivePlayerVideoFrameValueListenable(controller),
+      [controller],
+    );
+    final video = useMemoized<Widget>(
+      () => VideoPlayer(controller),
+      [controller],
+    );
+    useEffect(() {
+      return frameValueListenable.dispose;
+    }, [frameValueListenable]);
+
     final parsedLiveOpenDate = useMemoized(
-      () => _parseLiveOpenDate(liveOpenDate),
-      [liveOpenDate],
+      () => _parseLiveOpenDate(watchSnapshot.liveOpenDate),
+      [watchSnapshot.liveOpenDate],
     );
     final postWatchEventRef = useRef(postWatchEvent)..value = postWatchEvent;
     final reporter = useMemoized(
@@ -83,7 +114,7 @@ class LivePlayerVideoSurface extends HookWidget {
         channelId: channelId,
         liveId: liveId,
         liveOpenDate: parsedLiveOpenDate,
-        liveTokens: liveTokens,
+        liveTokens: watchSnapshot.liveTokens,
         postWatchEvent:
             ({
               required channelId,
@@ -115,17 +146,21 @@ class LivePlayerVideoSurface extends HookWidget {
       ),
       [channelId, liveId, parsedLiveOpenDate, watchEventEnabled],
     );
-    final playbackValue = useListenable(controller).value;
-    final initialized = useState(false);
-    final failed = useState(false);
-    final ended = useState(false);
+    final initialized = useValueNotifier(false, [controller]);
+    final failed = useValueNotifier(false, [controller]);
+    final ended = useValueNotifier(false, [controller]);
+    final isInitialized = useValueListenable(initialized);
+    final isFailed = useValueListenable(failed);
+    final isEnded = useValueListenable(ended);
     final syncTimer = useMemoized(PeriodicCallbackTimer.new, const []);
-    final playbackPausedRef = useRef(playbackPaused);
-    final reporterRef = useRef<LivePlayerWatchEventReporter?>(reporter);
+    final playbackPausedRef = useRef(playbackPaused)..value = playbackPaused;
+    final reporterRef = useRef<LivePlayerWatchEventReporter?>(reporter)
+      ..value = reporter;
     final previousReporterRef = useRef<LivePlayerWatchEventReporter?>(
       reporter,
     );
     final normalizedVolume = _normalizedPlayerVolume(volume);
+    final volumeRef = useRef(normalizedVolume)..value = normalizedVolume;
 
     bool playbackSuspended() {
       return playbackSessionHandle.suspended ||
@@ -175,13 +210,14 @@ class LivePlayerVideoSurface extends HookWidget {
 
     _useLivePlayerControllerLifecycle(
       controller: controller,
+      frameValueListenable: frameValueListenable,
       initialized: initialized,
       failed: failed,
       ended: ended,
       reporterRef: reporterRef,
       playbackSessionController: playbackSessionController,
       playbackSessionHandle: playbackSessionHandle,
-      volume: normalizedVolume,
+      volumeRef: volumeRef,
       playbackSuspended: playbackSuspended,
       onReady: onReady,
       reportPlaybackFailure: reportPlaybackFailure,
@@ -190,13 +226,13 @@ class LivePlayerVideoSurface extends HookWidget {
 
     useEffect(
       () {
-        if (!initialized.value || failed.value || reporter == null) {
+        if (!isInitialized || isFailed || reporter == null) {
           syncTimer.stop();
           return null;
         }
 
         syncTimer.start(
-          interval: const Duration(seconds: 1),
+          interval: _liveWatchEventSyncInterval,
           onTick: syncWatchEvent,
         );
         syncWatchEvent();
@@ -205,8 +241,8 @@ class LivePlayerVideoSurface extends HookWidget {
       [
         controller,
         syncTimer,
-        initialized.value,
-        failed.value,
+        isInitialized,
+        isFailed,
         reporter,
       ],
     );
@@ -216,13 +252,17 @@ class LivePlayerVideoSurface extends HookWidget {
     }, [syncTimer]);
 
     useEffect(() {
-      unawaited(controller.setVolume(normalizedVolume));
-      return null;
-    }, [controller, normalizedVolume]);
+      if (!isInitialized || controller.value.volume == normalizedVolume) {
+        return null;
+      }
 
-    reporter?.updateLiveTokens(liveTokens);
-    playbackPausedRef.value = playbackPaused;
-    reporterRef.value = reporter;
+      unawaited(
+        controller.setVolume(normalizedVolume).catchError((Object _) {}),
+      );
+      return null;
+    }, [controller, isInitialized, normalizedVolume]);
+
+    reporter?.updateLiveTokens(watchSnapshot.liveTokens);
 
     useEffect(() {
       final previousReporter = previousReporterRef.value;
@@ -245,38 +285,104 @@ class LivePlayerVideoSurface extends HookWidget {
 
     useEffect(
       () {
-        if (!initialized.value || failed.value) {
+        if (!isInitialized || isFailed) {
           return null;
         }
 
-        final playback = playbackSuspended()
-            ? controller.pause()
-            : controller.play();
-        unawaited(playback.then((_) => syncWatchEvent()));
-        return null;
+        var cancelled = false;
+        Future<void> syncPlayback() async {
+          try {
+            await _syncLivePlayerControllerPlayback(
+              controller: controller,
+              playbackSuspended: playbackSuspended(),
+            );
+            if (!cancelled) {
+              syncWatchEvent();
+            }
+          } on Object {
+            if (!cancelled) {
+              reportPlaybackFailure();
+            }
+          }
+        }
+
+        unawaited(syncPlayback());
+        return () {
+          cancelled = true;
+        };
       },
       [
         controller,
-        initialized.value,
-        failed.value,
-        ended.value,
+        isInitialized,
+        isFailed,
+        isEnded,
         playbackPaused,
       ],
     );
 
-    if (!initialized.value || failed.value) {
+    if (!isInitialized || isFailed) {
       return const ColoredBox(
         color: LivePlayerScreenDesign.backgroundColor,
       );
     }
 
     return _LivePlayerVideoContent(
-      controller: controller,
-      playbackValue: playbackValue,
-      videoViewType: videoViewType,
+      frameValueListenable: frameValueListenable,
+      playbackSuspended: playbackSuspended(),
+      expectedVideoAspectRatio: expectedVideoAspectRatio,
+      video: video,
     );
   }
 }
+
+@immutable
+final class _LivePlayerVideoWatchSnapshot {
+  const _LivePlayerVideoWatchSnapshot({
+    required this.liveOpenDate,
+    required this.liveTokens,
+  });
+
+  factory _LivePlayerVideoWatchSnapshot.fromState(
+    LivePlayerState state, {
+    required String slotId,
+    required String? channelId,
+    required int? liveId,
+    required Uri playbackUri,
+    required String? fallbackLiveOpenDate,
+    required List<String> fallbackLiveTokens,
+  }) {
+    final currentSlot = state.slotById(slotId);
+    final slot =
+        currentSlot != null &&
+            currentSlot.channelId == channelId &&
+            currentSlot.liveId == liveId &&
+            currentSlot.playbackUri == playbackUri
+        ? currentSlot
+        : null;
+
+    return _LivePlayerVideoWatchSnapshot(
+      liveOpenDate: slot?.openDate ?? fallbackLiveOpenDate,
+      liveTokens: slot?.liveTokens ?? fallbackLiveTokens,
+    );
+  }
+
+  final String? liveOpenDate;
+  final List<String> liveTokens;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is _LivePlayerVideoWatchSnapshot &&
+            other.liveOpenDate == liveOpenDate &&
+            listEquals(other.liveTokens, liveTokens);
+  }
+
+  @override
+  int get hashCode => Object.hash(liveOpenDate, Object.hashAll(liveTokens));
+}
+
+const _liveBufferingIndicatorDelay = Duration(seconds: 2);
+const _liveWatchEventSyncInterval = Duration(seconds: 5);
 
 double _normalizedPlayerVolume(double volume) {
   if (!volume.isFinite) {

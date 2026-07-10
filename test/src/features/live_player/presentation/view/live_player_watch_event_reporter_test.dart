@@ -1,5 +1,7 @@
 // ignore_for_file: cascade_invocations
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/view/live_player_watch_event_reporter.dart';
@@ -226,6 +228,73 @@ void main() {
 
     expect(messages, ['Failed to post live watch event.']);
     expect(messages.join(), isNot(contains('secret-token')));
+  });
+
+  test('coalesces continued events while a previous post is pending', () async {
+    var now = DateTime(2026);
+    final firstPost = Completer<void>();
+    final calls = <_WatchEventCall>[];
+    final reporter = LivePlayerWatchEventReporter(
+      channelId: 'channel-a',
+      liveId: 19505830,
+      liveOpenDate: DateTime(2026),
+      liveTokens: const ['token-a'],
+      sessionId: 'session-a',
+      now: () => now,
+      continuedInterval: const Duration(seconds: 1),
+      continuedGuard: Duration.zero,
+      postWatchEvent:
+          ({
+            required channelId,
+            required liveId,
+            required watchEventType,
+            required sessionId,
+            required eventDurationSeconds,
+            required positionSeconds,
+            required awtSeconds,
+            required liveTokens,
+            required autoPlay,
+            required radioMode,
+            required allowStaleSlotTarget,
+          }) {
+            calls.add(
+              _WatchEventCall(
+                channelId: channelId,
+                liveId: liveId,
+                watchEventType: watchEventType,
+                sessionId: sessionId,
+                eventDurationSeconds: eventDurationSeconds,
+                positionSeconds: positionSeconds,
+                awtSeconds: awtSeconds,
+                liveTokens: liveTokens,
+                autoPlay: autoPlay,
+                radioMode: radioMode,
+                allowStaleSlotTarget: allowStaleSlotTarget,
+              ),
+            );
+            return calls.length == 1 ? firstPost.future : Future<void>.value();
+          },
+    );
+
+    reporter.start();
+    now = now.add(const Duration(seconds: 1));
+    reporter.tick();
+    now = now.add(const Duration(seconds: 1));
+    reporter.tick();
+
+    expect(calls, [_call(type: 'WATCH_STARTED', positionSeconds: 0)]);
+
+    firstPost.complete();
+    await reporter.flush();
+
+    expect(calls, [
+      _call(type: 'WATCH_STARTED', positionSeconds: 0),
+      _call(
+        type: 'WATCH_CONTINUED',
+        positionSeconds: 2,
+        awtSeconds: 2,
+      ),
+    ]);
   });
 }
 

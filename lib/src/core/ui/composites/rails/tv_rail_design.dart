@@ -8,6 +8,14 @@ final class TvRailDesign {
   static const trailingInset = 58.0;
   static const scrollOffsetTolerance = 0.5;
   static const padding = EdgeInsets.symmetric(horizontal: leadingInset);
+  static const fixedExtentPadding = EdgeInsets.only(
+    left: leadingInset,
+    right: trailingInset - itemGap,
+  );
+
+  static double scrollItemExtent(double itemExtent) {
+    return itemExtent + itemGap;
+  }
 
   static double targetOffsetForIndex({
     required int index,

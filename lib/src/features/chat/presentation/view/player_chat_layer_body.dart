@@ -74,11 +74,13 @@ Widget _chatPanel({
   required String? statusText,
   required PlayerChatPanelStyle style,
 }) {
-  return PlayerChatPanel(
-    showTitle: false,
-    messages: messages,
-    statusText: statusText,
-    style: style,
+  return RepaintBoundary(
+    child: PlayerChatPanel(
+      showTitle: false,
+      messages: messages,
+      statusText: statusText,
+      style: style,
+    ),
   );
 }
 
@@ -86,13 +88,59 @@ Widget _badgeCollectorPanel({
   required List<PlayerChatMessage> messages,
   required PlayerChatPanelStyle style,
 }) {
-  return PlayerChatPanel(
-    showTitle: false,
-    messages: playerChatBadgeCollectorMessages(messages),
-    style: style.copyWith(
-      showNickname: true,
-      showUserBadges: true,
+  return RepaintBoundary(
+    child: _PlayerChatBadgeCollectorPanel(
+      messages: messages,
+      style: style,
     ),
-    filterDonations: false,
   );
+}
+
+class _PlayerChatBadgeCollectorPanel extends StatefulWidget {
+  const _PlayerChatBadgeCollectorPanel({
+    required this.messages,
+    required this.style,
+  });
+
+  final List<PlayerChatMessage> messages;
+  final PlayerChatPanelStyle style;
+
+  @override
+  State<_PlayerChatBadgeCollectorPanel> createState() {
+    return _PlayerChatBadgeCollectorPanelState();
+  }
+}
+
+class _PlayerChatBadgeCollectorPanelState
+    extends State<_PlayerChatBadgeCollectorPanel> {
+  List<PlayerChatMessage>? _sourceMessages;
+  List<PlayerChatMessage>? _collectorMessages;
+
+  @override
+  Widget build(BuildContext context) {
+    final messages = _collectorMessagesFor(widget.messages);
+
+    return PlayerChatPanel(
+      showTitle: false,
+      messages: messages,
+      style: widget.style.copyWith(
+        showNickname: true,
+        showUserBadges: true,
+      ),
+      filterDonations: false,
+    );
+  }
+
+  List<PlayerChatMessage> _collectorMessagesFor(
+    List<PlayerChatMessage> messages,
+  ) {
+    if (identical(_sourceMessages, messages)) {
+      return _collectorMessages ?? const <PlayerChatMessage>[];
+    }
+
+    final collectorMessages = playerChatBadgeCollectorMessages(messages);
+    _sourceMessages = messages;
+    _collectorMessages = collectorMessages;
+    return collectorMessages;
+  }
 }

@@ -154,6 +154,7 @@ class _ChannelScreenView extends HookWidget {
 
           return feedbackChanged || groupPanelChanged;
         },
+        buildWhen: _shouldRebuildChannelScreen,
         listener: (context, state) {
           final feedbackType = state.feedbackType;
           if (feedbackType != null &&
@@ -234,4 +235,12 @@ class _ChannelScreenView extends HookWidget {
       ),
     );
   }
+}
+
+bool _shouldRebuildChannelScreen(
+  ChannelState previous,
+  ChannelState current,
+) {
+  return previous.copyWith(feedbackType: null, feedbackSerial: 0) !=
+      current.copyWith(feedbackType: null, feedbackSerial: 0);
 }

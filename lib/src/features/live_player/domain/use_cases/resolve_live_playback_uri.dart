@@ -13,10 +13,14 @@ final class LiveResolvedPlaybackSource {
   const LiveResolvedPlaybackSource({
     required this.playbackUri,
     required this.availableResolutionIndexes,
+    this.expectedVideoWidth,
+    this.expectedVideoHeight,
   });
 
   final Uri playbackUri;
   final List<int> availableResolutionIndexes;
+  final int? expectedVideoWidth;
+  final int? expectedVideoHeight;
 }
 
 abstract final class LivePlaybackResolutionOptions {
@@ -142,9 +146,14 @@ Future<LiveResolvedPlaybackSource?> resolveLivePlaybackSource({
         );
 
     if (autoRequested) {
+      final highestVariant = HlsMasterPlaylistParser.selectHighestVariant(
+        variants,
+      );
       return LiveResolvedPlaybackSource(
         playbackUri: masterUri,
         availableResolutionIndexes: availableIndexes,
+        expectedVideoWidth: highestVariant?.width,
+        expectedVideoHeight: highestVariant?.height,
       );
     }
 
@@ -162,6 +171,8 @@ Future<LiveResolvedPlaybackSource?> resolveLivePlaybackSource({
       return LiveResolvedPlaybackSource(
         playbackUri: masterUri,
         availableResolutionIndexes: availableIndexes,
+        expectedVideoWidth: selectedVariant?.width,
+        expectedVideoHeight: selectedVariant?.height,
       );
     }
 
@@ -171,6 +182,8 @@ Future<LiveResolvedPlaybackSource?> resolveLivePlaybackSource({
         masterUri.queryParametersAll,
       ),
       availableResolutionIndexes: availableIndexes,
+      expectedVideoWidth: selectedVariant?.width,
+      expectedVideoHeight: selectedVariant?.height,
     );
   } on Object {
     return LiveResolvedPlaybackSource(
