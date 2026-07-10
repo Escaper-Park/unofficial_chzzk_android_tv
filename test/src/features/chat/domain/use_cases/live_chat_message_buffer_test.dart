@@ -40,7 +40,7 @@ void main() {
         replaceExisting: false,
       ),
     );
-    await Future<void>.delayed(const Duration(milliseconds: 520));
+    await Future<void>.delayed(const Duration(milliseconds: 220));
 
     expect(
       snapshots.last.map((message) => message.content),
@@ -128,20 +128,30 @@ void main() {
     expect(snapshot.first.content, 'message-1');
   });
 
-  test('keeps burst rendering cadence bounded while draining in batches', () {
+  test('uses small batches with a faster burst cadence', () {
     expect(
       playerChatAppendIntervalForPendingCount(1000),
-      playerChatAppendInterval,
+      playerChatAppendBurstInterval,
     );
-    expect(playerChatAppendBatchSizeForPendingCount(1000), 64);
+    expect(playerChatAppendBatchSizeForPendingCount(1000), 12);
+    expect(playerChatAppendBatchSizeForPendingCount(30), 6);
+    expect(playerChatAppendBatchSizeForPendingCount(10), 2);
+    expect(playerChatAppendBatchSizeForPendingCount(4), 1);
   });
 
-  test('emits burst snapshots no faster than twice per second', () async {
+  test('drains burst snapshots in small frequent steps', () async {
     final source = StreamController<LiveChatMessageBatch>();
     final snapshots = <List<PlayerChatMessage>>[];
-    final subscription = liveChatMessageSnapshotsFromBatches(
-      source.stream,
-    ).listen(snapshots.add);
+    final completeSnapshot = Completer<List<PlayerChatMessage>>();
+    final subscription =
+        liveChatMessageSnapshotsFromBatches(
+          source.stream,
+        ).listen((messages) {
+          snapshots.add(messages);
+          if (messages.length == 100 && !completeSnapshot.isCompleted) {
+            completeSnapshot.complete(messages);
+          }
+        });
     addTearDown(() async {
       await subscription.cancel();
       await source.close();
@@ -156,23 +166,30 @@ void main() {
         replaceExisting: false,
       ),
     );
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await Future<void>.delayed(const Duration(milliseconds: 40));
     expect(snapshots, isEmpty);
 
-    await Future<void>.delayed(const Duration(milliseconds: 150));
-    expect(snapshots, hasLength(1));
-    expect(snapshots.single, hasLength(64));
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+    expect(snapshots, isNotEmpty);
+    expect(snapshots.first, hasLength(12));
 
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    expect(snapshots.last, hasLength(100));
-    expect(snapshots.last.last.content, 'burst-99');
+    final finalSnapshot = await completeSnapshot.future.timeout(
+      const Duration(seconds: 3),
+    );
+    expect(finalSnapshot.last.content, 'burst-99');
+    for (var index = 1; index < snapshots.length; index += 1) {
+      expect(
+        snapshots[index].length - snapshots[index - 1].length,
+        inInclusiveRange(1, 12),
+      );
+    }
   });
 
   test('preserves burst order while removing duplicate messages', () async {
     final source = StreamController<LiveChatMessageBatch>();
-    final firstSnapshot = liveChatMessageSnapshotsFromBatches(
+    final completeSnapshot = liveChatMessageSnapshotsFromBatches(
       source.stream,
-    ).first;
+    ).firstWhere((messages) => messages.length == 30);
     addTearDown(source.close);
     final messages = [
       for (var index = 0; index < 30; index += 1)
@@ -190,7 +207,7 @@ void main() {
       ),
     );
 
-    final snapshot = await firstSnapshot.timeout(const Duration(seconds: 1));
+    final snapshot = await completeSnapshot.timeout(const Duration(seconds: 2));
 
     expect(
       snapshot.map((message) => message.content),
