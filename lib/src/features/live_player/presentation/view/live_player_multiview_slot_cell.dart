@@ -339,6 +339,8 @@ final class _LivePlayerSlotSnapshot {
     slot.channelId,
     slot.liveId,
     slot.playbackUri,
+    slot.expectedVideoWidth,
+    slot.expectedVideoHeight,
     slot.failureReason,
     active,
     playbackEnabled,
@@ -360,5 +362,7 @@ bool _sameSlotPlaybackSurfaceInput(
       previous.channelId == current.channelId &&
       previous.liveId == current.liveId &&
       previous.playbackUri == current.playbackUri &&
+      previous.expectedVideoWidth == current.expectedVideoWidth &&
+      previous.expectedVideoHeight == current.expectedVideoHeight &&
       previous.failureReason == current.failureReason;
 }

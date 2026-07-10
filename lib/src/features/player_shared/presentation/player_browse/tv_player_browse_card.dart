@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../../../core/design/design.dart';
 import '../../../../core/tv/input/input.dart';
 import '../../../../core/ui/components/cards/cards.dart';
+import '../../../../core/ui/components/primitives/primitives.dart';
 import '../../../../core/ui/composites/media_cards/media_cards.dart';
 import 'tv_player_browse_card_info.dart';
 import 'tv_player_browse_overlay_design.dart';
@@ -35,6 +36,7 @@ class TvPlayerBrowseCard extends HookWidget {
     this.autofocus = false,
     this.focusNode,
     this.onFocusChanged,
+    this.thumbnailStreamRetainer,
   });
 
   final String title;
@@ -53,15 +55,14 @@ class TvPlayerBrowseCard extends HookWidget {
   final bool autofocus;
   final FocusNode? focusNode;
   final ValueChanged<bool>? onFocusChanged;
+  final BucketedImageStreamRetainer? thumbnailStreamRetainer;
 
   @override
   Widget build(BuildContext context) {
     final ownedFocusNode = useFocusNode();
     final focusNode = this.focusNode ?? ownedFocusNode;
     final activationGuard = useMemoized(TvActivationGuard.new);
-    useListenable(focusNode);
 
-    final focused = focusNode.hasFocus;
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(
         TvPlayerBrowseOverlayDesign.cardRadius,
@@ -90,40 +91,59 @@ class TvPlayerBrowseCard extends HookWidget {
               customBorder: shape,
               overlayColor: const WidgetStatePropertyAll(Colors.transparent),
               splashFactory: NoSplash.splashFactory,
-              child: _TvPlayerBrowseCardThumbnail(
-                variant: variant,
-                width: width,
-                title: title,
-                imageUrl: imageUrl,
-                channelName: channelName,
-                channelImageUrl: channelImageUrl,
-                channelVerified: channelVerified,
-                liveBadgeLabel: liveBadgeLabel,
-                vodPublishDateLabel: vodPublishDateLabel,
-                vodDurationLabel: vodDurationLabel,
-                restrictionAssetPath: restrictionAssetPath,
-                showAgeRestrictionOverlay: showAgeRestrictionOverlay,
-              ),
-            ),
-            if (focused)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        TvPlayerBrowseOverlayDesign.cardRadius,
-                      ),
-                      border: Border.all(
-                        color: AppColorTokens.brandColor,
-                        width: TvPlayerBrowseOverlayDesign.cardOutlineWidth,
-                      ),
-                    ),
-                  ),
+              child: RepaintBoundary(
+                child: _TvPlayerBrowseCardThumbnail(
+                  variant: variant,
+                  width: width,
+                  title: title,
+                  imageUrl: imageUrl,
+                  channelName: channelName,
+                  channelImageUrl: channelImageUrl,
+                  channelVerified: channelVerified,
+                  liveBadgeLabel: liveBadgeLabel,
+                  vodPublishDateLabel: vodPublishDateLabel,
+                  vodDurationLabel: vodDurationLabel,
+                  restrictionAssetPath: restrictionAssetPath,
+                  showAgeRestrictionOverlay: showAgeRestrictionOverlay,
+                  streamRetainer: thumbnailStreamRetainer,
                 ),
               ),
+            ),
+            Positioned.fill(
+              child: _TvPlayerBrowseCardFocusOutline(focusNode: focusNode),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TvPlayerBrowseCardFocusOutline extends StatelessWidget {
+  const _TvPlayerBrowseCardFocusOutline({required this.focusNode});
+
+  final FocusNode focusNode;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: focusNode,
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              TvPlayerBrowseOverlayDesign.cardRadius,
+            ),
+            border: Border.all(
+              color: AppColorTokens.brandColor,
+              width: TvPlayerBrowseOverlayDesign.cardOutlineWidth,
+            ),
+          ),
+        ),
+      ),
+      builder: (context, child) {
+        return focusNode.hasFocus ? child! : const SizedBox.expand();
+      },
     );
   }
 }

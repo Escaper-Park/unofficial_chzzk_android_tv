@@ -71,6 +71,8 @@ final class _VodPlayerSurfaceValueBoundary extends StatelessWidget {
                   chatPresentationModeIndex:
                       state.settingsPreferences.vodSettings.chatWindowIndex,
                   chatSettings: state.settingsPreferences.chatSettings,
+                  chatSuspended:
+                      state.overlayMode == VodPlayerOverlayMode.browse,
                 );
               },
             );
@@ -87,7 +89,9 @@ bool _vodPlayerPlaybackBuildWhen(
 ) {
   if (previous.activeSlotId != current.activeSlotId ||
       previous.primarySlotId != current.primarySlotId ||
-      previous.playbackSpeed != current.playbackSpeed) {
+      previous.playbackSpeed != current.playbackSpeed ||
+      (previous.overlayMode == VodPlayerOverlayMode.browse) !=
+          (current.overlayMode == VodPlayerOverlayMode.browse)) {
     return true;
   }
 
@@ -153,6 +157,7 @@ final class _VodPlayerPlaybackLayerSnapshot {
     state.activeSlotId,
     state.primarySlotId,
     state.playbackSpeed,
+    state.overlayMode == VodPlayerOverlayMode.browse,
     _vodPlayerPlaybackPreferencesHash(state.settingsPreferences),
     _vodPlaybackSlotInputHash(state.activeSlot),
   ]);

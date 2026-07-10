@@ -46,6 +46,8 @@ final class VodPlayerChatReplayController extends ChangeNotifier {
   static const syncTickInterval = Duration(milliseconds: 200);
 
   static const _rawCachePastWindowMs = 5 * 60 * 1000;
+  static const _rawCacheMessageLimit = playerChatMessageBufferSize * 8;
+  static const _rawCachePastMessageBudget = _rawCacheMessageLimit * 3 ~/ 4;
   static const _tailPrefetchLeadTimeMs = 10000;
   static const _positionJumpRepositionThresholdMs = 2000;
   static const _previousVideoChatSize = 50;
@@ -73,6 +75,7 @@ final class VodPlayerChatReplayController extends ChangeNotifier {
   Duration? _visibleMessageAppendTimerInterval;
   bool _isFetching = false;
   bool _isDisposed = false;
+  bool _isSuspended = false;
   bool _isTailPrefetchInFlight = false;
   int _fetchRevision = 0;
 
@@ -91,7 +94,7 @@ final class VodPlayerChatReplayController extends ChangeNotifier {
     final effectiveForceReposition = forceReposition || jumpedPosition;
     _currentPlayerPositionMs = positionMs;
 
-    if (_isDisposed || !state.isVisible) {
+    if (_isDisposed || _isSuspended || !state.isVisible) {
       return;
     }
 
@@ -116,12 +119,12 @@ final class VodPlayerChatReplayController extends ChangeNotifier {
 
       await _fetchChunkAround(
         positionMs,
-        replaceCachedMessages: force,
+        replaceCachedMessages: force || _isBeforeCachedCoverage(positionMs),
         preferNextCursor: preferNextCursor,
       );
     }
 
-    if (_isDisposed || !state.isVisible) {
+    if (_isDisposed || _isSuspended || !state.isVisible) {
       return;
     }
 
@@ -156,6 +159,32 @@ final class VodPlayerChatReplayController extends ChangeNotifier {
 
   void pauseReplayClock() {
     _rollbackPendingVisibleMessages();
+  }
+
+  void setSuspended({required bool suspended}) {
+    if (_isDisposed || _isSuspended == suspended) {
+      return;
+    }
+
+    _isSuspended = suspended;
+    if (suspended) {
+      _fetchRevision += 1;
+      _isFetching = false;
+      _isTailPrefetchInFlight = false;
+      _pendingSync.clear();
+      _rollbackPendingVisibleMessages();
+      return;
+    }
+
+    final positionMs = _currentPlayerPositionMs;
+    if (positionMs != null && state.isVisible) {
+      unawaited(
+        syncToPosition(
+          Duration(milliseconds: positionMs),
+          forceReposition: true,
+        ),
+      );
+    }
   }
 
   void setPresentationMode(PlayerChatPresentationMode mode) {

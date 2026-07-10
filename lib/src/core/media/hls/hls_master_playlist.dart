@@ -6,12 +6,14 @@ final class HlsVariantStream {
     required this.uri,
     this.bandwidth,
     this.averageBandwidth,
+    this.width,
     this.height,
   });
 
   final Uri uri;
   final int? bandwidth;
   final int? averageBandwidth;
+  final int? width;
   final int? height;
 
   int? get preferredBandwidth => averageBandwidth ?? bandwidth;
@@ -46,6 +48,7 @@ abstract final class HlsMasterPlaylistParser {
           uri: masterUri.resolve(variantUri),
           bandwidth: _parseInt(attributes['BANDWIDTH']),
           averageBandwidth: _parseInt(attributes['AVERAGE-BANDWIDTH']),
+          width: resolution.$1,
           height: resolution.$2,
         ),
       );

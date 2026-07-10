@@ -37,6 +37,30 @@ void main() {
     expect(resolverWasCancelled, isTrue);
     expect(controller.value.isPlaying, isFalse);
   });
+
+  test('does not start new asynchronous work after disposal', () async {
+    final controller = LivePreviewController()..dispose();
+    var settingsReadCount = 0;
+    var resolveCount = 0;
+
+    await controller.start(
+      hasFocus: true,
+      item: _previewableLive,
+      settings: null,
+      readSettings: () async {
+        settingsReadCount += 1;
+        return _immediatePreviewSettings;
+      },
+      resolvePlaybackUri:
+          ({required item, required settings, required isCancelled}) async {
+            resolveCount += 1;
+            return Uri.parse('https://example.com/live.m3u8');
+          },
+    );
+
+    expect(settingsReadCount, 0);
+    expect(resolveCount, 0);
+  });
 }
 
 const _previewableLive = Live(

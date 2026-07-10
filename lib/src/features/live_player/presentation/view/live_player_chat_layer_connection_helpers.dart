@@ -27,11 +27,39 @@ extension _LivePlayerChatLayerConnectionHelpers
       return _connectionCleanup;
     }
 
-    final nextCleanup = connection.dispose().catchError((_) {});
-    _connectionCleanup = _connectionCleanup.then<void>(
-      (_) => nextCleanup,
-      onError: (_) => nextCleanup,
+    final nextCleanup = _disposeLiveChatConnectionAfter(
+      _connectionCleanup,
+      connection,
     );
+    _connectionCleanup = nextCleanup;
     return _connectionCleanup;
   }
 }
+
+Future<void> _disposeLiveChatConnectionAfter(
+  Future<void> previous,
+  LiveChatConnection connection,
+) async {
+  await _waitForLiveChatConnectionCleanup(previous);
+
+  Future<void> current;
+  try {
+    current = connection.dispose();
+  } on Object {
+    return;
+  }
+  await _waitForLiveChatConnectionCleanup(current);
+}
+
+Future<void> _waitForLiveChatConnectionCleanup(Future<void> cleanup) async {
+  try {
+    await cleanup.timeout(
+      _liveChatConnectionCleanupTimeout,
+      onTimeout: () {},
+    );
+  } on Object {
+    // A stuck connection must not block browse exit or a later reconnect.
+  }
+}
+
+const _liveChatConnectionCleanupTimeout = Duration(seconds: 3);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/utils/controller_disposal_barrier.dart';
 import '../../../../core/utils/periodic_callback_timer.dart';
 import '../../../../core/utils/serialized_wakelock_controller.dart';
 import '../../../settings/domain/entities/settings_preferences.dart';
@@ -85,6 +86,10 @@ class VodPlayerVideoSurface extends HookWidget {
     final initialized = useState(false);
     final failed = useState(false);
     final ended = useState(false);
+    final controllerDisposalCoordinator = useMemoized(
+      () => mediaControllerDisposalCoordinator,
+      const [],
+    );
     final appLifecycleState = _useVodPlayerAppLifecycleState();
     final watchEventSyncTimer = useMemoized(
       PeriodicCallbackTimer.new,
@@ -127,6 +132,7 @@ class VodPlayerVideoSurface extends HookWidget {
       initialized: initialized,
       failed: failed,
       ended: ended,
+      controllerDisposalCoordinator: controllerDisposalCoordinator,
       handledSeekSerial: handledSeekSerial,
       pendingWatchEventSeekPositionSeconds:
           pendingWatchEventSeekPositionSeconds,

@@ -74,11 +74,13 @@ Widget _chatPanel({
   required String? statusText,
   required PlayerChatPanelStyle style,
 }) {
-  return PlayerChatPanel(
-    showTitle: false,
-    messages: messages,
-    statusText: statusText,
-    style: style,
+  return RepaintBoundary(
+    child: PlayerChatPanel(
+      showTitle: false,
+      messages: messages,
+      statusText: statusText,
+      style: style,
+    ),
   );
 }
 
@@ -86,9 +88,11 @@ Widget _badgeCollectorPanel({
   required List<PlayerChatMessage> messages,
   required PlayerChatPanelStyle style,
 }) {
-  return _PlayerChatBadgeCollectorPanel(
-    messages: messages,
-    style: style,
+  return RepaintBoundary(
+    child: _PlayerChatBadgeCollectorPanel(
+      messages: messages,
+      style: style,
+    ),
   );
 }
 

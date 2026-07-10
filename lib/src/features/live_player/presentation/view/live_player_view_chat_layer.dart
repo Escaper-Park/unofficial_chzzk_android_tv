@@ -34,6 +34,7 @@ final class _LivePlayerChatLayerSelector extends StatelessWidget {
           presentationModeIndex: snapshot.presentationModeIndex,
           chatSettings: snapshot.chatSettings,
           slotPlaying: snapshot.slotPlaying,
+          messageSnapshotInterval: snapshot.messageSnapshotInterval,
           playbackPaused: playbackPaused,
           appPlaybackSuspended: appPlaybackSuspended,
           connectLiveChat: connectLiveChat,
@@ -69,6 +70,7 @@ _LivePlayerChatLayerInputSnapshot? _livePlayerChatLayerInputSnapshotFor(
     chatSettings: livePlayerEffectiveChatSettings(state),
     slotPlaying:
         slot.status == LivePlayerSlotStatus.playing && slot.playbackUri != null,
+    messageSnapshotInterval: _liveChatMessageSnapshotInterval,
   );
 }
 
@@ -80,6 +82,7 @@ final class _LivePlayerChatLayerInputSnapshot {
     required this.presentationModeIndex,
     required this.chatSettings,
     required this.slotPlaying,
+    required this.messageSnapshotInterval,
   });
 
   final String channelId;
@@ -87,6 +90,7 @@ final class _LivePlayerChatLayerInputSnapshot {
   final int presentationModeIndex;
   final ChatSettings chatSettings;
   final bool slotPlaying;
+  final Duration messageSnapshotInterval;
 
   @override
   bool operator ==(Object other) {
@@ -96,7 +100,8 @@ final class _LivePlayerChatLayerInputSnapshot {
             other.chatChannelId == chatChannelId &&
             other.presentationModeIndex == presentationModeIndex &&
             other.chatSettings == chatSettings &&
-            other.slotPlaying == slotPlaying;
+            other.slotPlaying == slotPlaying &&
+            other.messageSnapshotInterval == messageSnapshotInterval;
   }
 
   @override
@@ -106,6 +111,7 @@ final class _LivePlayerChatLayerInputSnapshot {
     presentationModeIndex,
     chatSettings,
     slotPlaying,
+    messageSnapshotInterval,
   );
 }
 
@@ -116,6 +122,7 @@ final class _LivePlayerChatLayerPlaybackBoundary extends StatelessWidget {
     required this.presentationModeIndex,
     required this.chatSettings,
     required this.slotPlaying,
+    required this.messageSnapshotInterval,
     required this.playbackPaused,
     required this.appPlaybackSuspended,
     required this.connectLiveChat,
@@ -126,6 +133,7 @@ final class _LivePlayerChatLayerPlaybackBoundary extends StatelessWidget {
   final int presentationModeIndex;
   final ChatSettings chatSettings;
   final bool slotPlaying;
+  final Duration messageSnapshotInterval;
   final ValueListenable<bool> playbackPaused;
   final bool appPlaybackSuspended;
   final ConnectLiveChat connectLiveChat;
@@ -143,9 +151,14 @@ final class _LivePlayerChatLayerPlaybackBoundary extends StatelessWidget {
           playbackActive:
               slotPlaying && !playbackPaused && !appPlaybackSuspended,
           connectLiveChat: connectLiveChat,
+          messageSnapshotInterval: messageSnapshotInterval,
           disconnectImmediatelyWhenInactive: appPlaybackSuspended,
         );
       },
     );
   }
 }
+
+// liveChatMessageSnapshotsFromBatches already publishes at a bounded 500 ms
+// cadence. A second timer here only adds latency and allocation churn.
+const _liveChatMessageSnapshotInterval = Duration.zero;

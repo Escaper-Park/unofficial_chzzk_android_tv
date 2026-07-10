@@ -17,6 +17,7 @@ class TvMediaThumbnail extends StatelessWidget {
     this.bottomStartBadge,
     this.bottomEndBadge,
     this.progress,
+    this.streamRetainer,
   });
 
   final String? imageUrl;
@@ -28,6 +29,7 @@ class TvMediaThumbnail extends StatelessWidget {
   final Widget? bottomStartBadge;
   final Widget? bottomEndBadge;
   final double? progress;
+  final BucketedImageStreamRetainer? streamRetainer;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class TvMediaThumbnail extends StatelessWidget {
                 height: size.height,
                 placeholder: placeholder,
                 errorFallback: fallback,
+                streamRetainer: streamRetainer,
               ),
             if (restrictionAssetPath == null &&
                 thumbnailUrl != null &&

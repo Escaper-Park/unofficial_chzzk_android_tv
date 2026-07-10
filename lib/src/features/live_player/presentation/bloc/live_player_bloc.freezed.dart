@@ -1,4 +1,4 @@
-﻿// GENERATED CODE - DO NOT MODIFY BY HAND
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
@@ -2407,6 +2407,9 @@ mixin _$LivePlayerSlotState {
   List<int> get availableResolutionIndexes;
   int? get playbackLatencyIndex;
   int? get playbackResolutionIndex;
+  int? get expectedVideoWidth;
+  int? get expectedVideoHeight;
+  int get playbackMetadataResolutionAttempts;
   PlayerVideoViewType get videoViewType;
   LivePlayerFailureReason? get failureReason;
 
@@ -2453,6 +2456,16 @@ mixin _$LivePlayerSlotState {
                   playbackResolutionIndex,
                 ) ||
                 other.playbackResolutionIndex == playbackResolutionIndex) &&
+            (identical(other.expectedVideoWidth, expectedVideoWidth) ||
+                other.expectedVideoWidth == expectedVideoWidth) &&
+            (identical(other.expectedVideoHeight, expectedVideoHeight) ||
+                other.expectedVideoHeight == expectedVideoHeight) &&
+            (identical(
+                  other.playbackMetadataResolutionAttempts,
+                  playbackMetadataResolutionAttempts,
+                ) ||
+                other.playbackMetadataResolutionAttempts ==
+                    playbackMetadataResolutionAttempts) &&
             (identical(other.videoViewType, videoViewType) ||
                 other.videoViewType == videoViewType) &&
             (identical(other.failureReason, failureReason) ||
@@ -2474,13 +2487,16 @@ mixin _$LivePlayerSlotState {
     const DeepCollectionEquality().hash(availableResolutionIndexes),
     playbackLatencyIndex,
     playbackResolutionIndex,
+    expectedVideoWidth,
+    expectedVideoHeight,
+    playbackMetadataResolutionAttempts,
     videoViewType,
     failureReason,
   );
 
   @override
   String toString() {
-    return 'LivePlayerSlotState(slotId: $slotId, status: $status, channelId: $channelId, liveId: $liveId, fallbackTitle: $fallbackTitle, fallbackThumbnailImageUrl: $fallbackThumbnailImageUrl, detail: $detail, liveStatus: $liveStatus, playbackUri: $playbackUri, availableResolutionIndexes: $availableResolutionIndexes, playbackLatencyIndex: $playbackLatencyIndex, playbackResolutionIndex: $playbackResolutionIndex, videoViewType: $videoViewType, failureReason: $failureReason)';
+    return 'LivePlayerSlotState(slotId: $slotId, status: $status, channelId: $channelId, liveId: $liveId, fallbackTitle: $fallbackTitle, fallbackThumbnailImageUrl: $fallbackThumbnailImageUrl, detail: $detail, liveStatus: $liveStatus, playbackUri: $playbackUri, availableResolutionIndexes: $availableResolutionIndexes, playbackLatencyIndex: $playbackLatencyIndex, playbackResolutionIndex: $playbackResolutionIndex, expectedVideoWidth: $expectedVideoWidth, expectedVideoHeight: $expectedVideoHeight, playbackMetadataResolutionAttempts: $playbackMetadataResolutionAttempts, videoViewType: $videoViewType, failureReason: $failureReason)';
   }
 }
 
@@ -2504,6 +2520,9 @@ abstract mixin class $LivePlayerSlotStateCopyWith<$Res> {
     List<int> availableResolutionIndexes,
     int? playbackLatencyIndex,
     int? playbackResolutionIndex,
+    int? expectedVideoWidth,
+    int? expectedVideoHeight,
+    int playbackMetadataResolutionAttempts,
     PlayerVideoViewType videoViewType,
     LivePlayerFailureReason? failureReason,
   });
@@ -2537,6 +2556,9 @@ class _$LivePlayerSlotStateCopyWithImpl<$Res>
     Object? availableResolutionIndexes = null,
     Object? playbackLatencyIndex = freezed,
     Object? playbackResolutionIndex = freezed,
+    Object? expectedVideoWidth = freezed,
+    Object? expectedVideoHeight = freezed,
+    Object? playbackMetadataResolutionAttempts = null,
     Object? videoViewType = null,
     Object? failureReason = freezed,
   }) {
@@ -2590,6 +2612,19 @@ class _$LivePlayerSlotStateCopyWithImpl<$Res>
             ? _self.playbackResolutionIndex
             : playbackResolutionIndex // ignore: cast_nullable_to_non_nullable
                   as int?,
+        expectedVideoWidth: freezed == expectedVideoWidth
+            ? _self.expectedVideoWidth
+            : expectedVideoWidth // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        expectedVideoHeight: freezed == expectedVideoHeight
+            ? _self.expectedVideoHeight
+            : expectedVideoHeight // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        playbackMetadataResolutionAttempts:
+            null == playbackMetadataResolutionAttempts
+            ? _self.playbackMetadataResolutionAttempts
+            : playbackMetadataResolutionAttempts // ignore: cast_nullable_to_non_nullable
+                  as int,
         videoViewType: null == videoViewType
             ? _self.videoViewType
             : videoViewType // ignore: cast_nullable_to_non_nullable
@@ -2737,6 +2772,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
       List<int> availableResolutionIndexes,
       int? playbackLatencyIndex,
       int? playbackResolutionIndex,
+      int? expectedVideoWidth,
+      int? expectedVideoHeight,
+      int playbackMetadataResolutionAttempts,
       PlayerVideoViewType videoViewType,
       LivePlayerFailureReason? failureReason,
     )?
@@ -2759,6 +2797,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
           _that.availableResolutionIndexes,
           _that.playbackLatencyIndex,
           _that.playbackResolutionIndex,
+          _that.expectedVideoWidth,
+          _that.expectedVideoHeight,
+          _that.playbackMetadataResolutionAttempts,
           _that.videoViewType,
           _that.failureReason,
         );
@@ -2795,6 +2836,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
       List<int> availableResolutionIndexes,
       int? playbackLatencyIndex,
       int? playbackResolutionIndex,
+      int? expectedVideoWidth,
+      int? expectedVideoHeight,
+      int playbackMetadataResolutionAttempts,
       PlayerVideoViewType videoViewType,
       LivePlayerFailureReason? failureReason,
     )
@@ -2816,6 +2860,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
           _that.availableResolutionIndexes,
           _that.playbackLatencyIndex,
           _that.playbackResolutionIndex,
+          _that.expectedVideoWidth,
+          _that.expectedVideoHeight,
+          _that.playbackMetadataResolutionAttempts,
           _that.videoViewType,
           _that.failureReason,
         );
@@ -2851,6 +2898,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
       List<int> availableResolutionIndexes,
       int? playbackLatencyIndex,
       int? playbackResolutionIndex,
+      int? expectedVideoWidth,
+      int? expectedVideoHeight,
+      int playbackMetadataResolutionAttempts,
       PlayerVideoViewType videoViewType,
       LivePlayerFailureReason? failureReason,
     )?
@@ -2872,6 +2922,9 @@ extension LivePlayerSlotStatePatterns on LivePlayerSlotState {
           _that.availableResolutionIndexes,
           _that.playbackLatencyIndex,
           _that.playbackResolutionIndex,
+          _that.expectedVideoWidth,
+          _that.expectedVideoHeight,
+          _that.playbackMetadataResolutionAttempts,
           _that.videoViewType,
           _that.failureReason,
         );
@@ -2898,6 +2951,9 @@ class _LivePlayerSlotState extends LivePlayerSlotState {
         LivePlaybackResolutionOptions.allIndexes,
     this.playbackLatencyIndex,
     this.playbackResolutionIndex,
+    this.expectedVideoWidth,
+    this.expectedVideoHeight,
+    this.playbackMetadataResolutionAttempts = 0,
     this.videoViewType = PlayerVideoViewType.textureView,
     this.failureReason,
   }) : _availableResolutionIndexes = availableResolutionIndexes,
@@ -2936,6 +2992,13 @@ class _LivePlayerSlotState extends LivePlayerSlotState {
   final int? playbackLatencyIndex;
   @override
   final int? playbackResolutionIndex;
+  @override
+  final int? expectedVideoWidth;
+  @override
+  final int? expectedVideoHeight;
+  @override
+  @JsonKey()
+  final int playbackMetadataResolutionAttempts;
   @override
   @JsonKey()
   final PlayerVideoViewType videoViewType;
@@ -2986,6 +3049,16 @@ class _LivePlayerSlotState extends LivePlayerSlotState {
                   playbackResolutionIndex,
                 ) ||
                 other.playbackResolutionIndex == playbackResolutionIndex) &&
+            (identical(other.expectedVideoWidth, expectedVideoWidth) ||
+                other.expectedVideoWidth == expectedVideoWidth) &&
+            (identical(other.expectedVideoHeight, expectedVideoHeight) ||
+                other.expectedVideoHeight == expectedVideoHeight) &&
+            (identical(
+                  other.playbackMetadataResolutionAttempts,
+                  playbackMetadataResolutionAttempts,
+                ) ||
+                other.playbackMetadataResolutionAttempts ==
+                    playbackMetadataResolutionAttempts) &&
             (identical(other.videoViewType, videoViewType) ||
                 other.videoViewType == videoViewType) &&
             (identical(other.failureReason, failureReason) ||
@@ -3007,13 +3080,16 @@ class _LivePlayerSlotState extends LivePlayerSlotState {
     const DeepCollectionEquality().hash(_availableResolutionIndexes),
     playbackLatencyIndex,
     playbackResolutionIndex,
+    expectedVideoWidth,
+    expectedVideoHeight,
+    playbackMetadataResolutionAttempts,
     videoViewType,
     failureReason,
   );
 
   @override
   String toString() {
-    return 'LivePlayerSlotState(slotId: $slotId, status: $status, channelId: $channelId, liveId: $liveId, fallbackTitle: $fallbackTitle, fallbackThumbnailImageUrl: $fallbackThumbnailImageUrl, detail: $detail, liveStatus: $liveStatus, playbackUri: $playbackUri, availableResolutionIndexes: $availableResolutionIndexes, playbackLatencyIndex: $playbackLatencyIndex, playbackResolutionIndex: $playbackResolutionIndex, videoViewType: $videoViewType, failureReason: $failureReason)';
+    return 'LivePlayerSlotState(slotId: $slotId, status: $status, channelId: $channelId, liveId: $liveId, fallbackTitle: $fallbackTitle, fallbackThumbnailImageUrl: $fallbackThumbnailImageUrl, detail: $detail, liveStatus: $liveStatus, playbackUri: $playbackUri, availableResolutionIndexes: $availableResolutionIndexes, playbackLatencyIndex: $playbackLatencyIndex, playbackResolutionIndex: $playbackResolutionIndex, expectedVideoWidth: $expectedVideoWidth, expectedVideoHeight: $expectedVideoHeight, playbackMetadataResolutionAttempts: $playbackMetadataResolutionAttempts, videoViewType: $videoViewType, failureReason: $failureReason)';
   }
 }
 
@@ -3039,6 +3115,9 @@ abstract mixin class _$LivePlayerSlotStateCopyWith<$Res>
     List<int> availableResolutionIndexes,
     int? playbackLatencyIndex,
     int? playbackResolutionIndex,
+    int? expectedVideoWidth,
+    int? expectedVideoHeight,
+    int playbackMetadataResolutionAttempts,
     PlayerVideoViewType videoViewType,
     LivePlayerFailureReason? failureReason,
   });
@@ -3074,6 +3153,9 @@ class __$LivePlayerSlotStateCopyWithImpl<$Res>
     Object? availableResolutionIndexes = null,
     Object? playbackLatencyIndex = freezed,
     Object? playbackResolutionIndex = freezed,
+    Object? expectedVideoWidth = freezed,
+    Object? expectedVideoHeight = freezed,
+    Object? playbackMetadataResolutionAttempts = null,
     Object? videoViewType = null,
     Object? failureReason = freezed,
   }) {
@@ -3127,6 +3209,19 @@ class __$LivePlayerSlotStateCopyWithImpl<$Res>
             ? _self.playbackResolutionIndex
             : playbackResolutionIndex // ignore: cast_nullable_to_non_nullable
                   as int?,
+        expectedVideoWidth: freezed == expectedVideoWidth
+            ? _self.expectedVideoWidth
+            : expectedVideoWidth // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        expectedVideoHeight: freezed == expectedVideoHeight
+            ? _self.expectedVideoHeight
+            : expectedVideoHeight // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        playbackMetadataResolutionAttempts:
+            null == playbackMetadataResolutionAttempts
+            ? _self.playbackMetadataResolutionAttempts
+            : playbackMetadataResolutionAttempts // ignore: cast_nullable_to_non_nullable
+                  as int,
         videoViewType: null == videoViewType
             ? _self.videoViewType
             : videoViewType // ignore: cast_nullable_to_non_nullable

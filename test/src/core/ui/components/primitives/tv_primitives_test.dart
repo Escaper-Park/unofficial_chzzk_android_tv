@@ -97,6 +97,8 @@ void main() {
     tester,
   ) async {
     const imageKey = ValueKey('optimized-image');
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
       const _PrimitiveHarness(
@@ -112,6 +114,17 @@ void main() {
     );
 
     expect(tester.getSize(find.byKey(imageKey)), const Size(24, 18));
+    final image = tester.widget<Image>(
+      find
+          .descendant(
+            of: find.byKey(imageKey),
+            matching: find.byType(Image),
+          )
+          .first,
+    );
+    final provider = image.image as ResizeImage;
+    expect(provider.width, 48);
+    expect(provider.height, 36);
 
     await tester.pump();
 

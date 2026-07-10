@@ -6,6 +6,7 @@ extension _LivePlayerBlocControlsHelpers on LivePlayerBloc {
     Emitter<LivePlayerState> emit,
   ) async {
     ++_browseRequestSerial;
+    ++_browseSessionSerial;
     emit(state.copyWith(overlayMode: LivePlayerOverlayMode.controls));
 
     final slot = state.activeSlot;

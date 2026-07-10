@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'bucketed_image_stream_retainer.dart';
+
 /// Displays asset and network images with explicit layout and decode sizes.
 class OptimizedImage extends StatelessWidget {
   const OptimizedImage.asset(
@@ -16,6 +18,7 @@ class OptimizedImage extends StatelessWidget {
   }) : _assetPath = assetPath,
        _networkUrl = null,
        headers = null,
+       streamRetainer = null,
        assert(width > 0, 'width must be greater than zero.'),
        assert(height > 0, 'height must be greater than zero.');
 
@@ -29,6 +32,7 @@ class OptimizedImage extends StatelessWidget {
     this.placeholder,
     this.errorFallback,
     this.headers,
+    this.streamRetainer,
   }) : _assetPath = null,
        _networkUrl = url,
        assert(width > 0, 'width must be greater than zero.'),
@@ -41,6 +45,7 @@ class OptimizedImage extends StatelessWidget {
   final Widget? placeholder;
   final Widget? errorFallback;
   final Map<String, String>? headers;
+  final BucketedImageStreamRetainer? streamRetainer;
 
   final String? _assetPath;
   final String? _networkUrl;
@@ -61,11 +66,18 @@ class OptimizedImage extends StatelessWidget {
 
   ImageProvider<Object> _imageProvider(BuildContext context) {
     final provider = _rawImageProvider();
-    final devicePixelRatio = MediaQuery.maybeOf(context)?.devicePixelRatio ?? 1;
+    final devicePixelRatio = _decodePixelRatio(
+      MediaQuery.maybeOf(context)?.devicePixelRatio ?? 1,
+    );
     final cacheWidth = _cacheSize(width, devicePixelRatio);
     final cacheHeight = _cacheSize(height, devicePixelRatio);
 
-    return ResizeImage.resizeIfNeeded(cacheWidth, cacheHeight, provider);
+    final resizedProvider = ResizeImage.resizeIfNeeded(
+      cacheWidth,
+      cacheHeight,
+      provider,
+    );
+    return streamRetainer?.retain(resizedProvider) ?? resizedProvider;
   }
 
   ImageProvider<Object> _rawImageProvider() {
@@ -109,10 +121,22 @@ class OptimizedImage extends StatelessWidget {
 
     return math.max(1, (value * devicePixelRatio).ceil());
   }
+
+  double _decodePixelRatio(double devicePixelRatio) {
+    if (!devicePixelRatio.isFinite || devicePixelRatio <= 0) {
+      return 1;
+    }
+
+    return math.min(
+      devicePixelRatio,
+      _OptimizedImageDesign.maximumDecodePixelRatio,
+    );
+  }
 }
 
 abstract final class _OptimizedImageDesign {
   static const fit = BoxFit.cover;
   static const alignment = Alignment.center;
   static const filterQuality = FilterQuality.low;
+  static const maximumDecodePixelRatio = 2.0;
 }

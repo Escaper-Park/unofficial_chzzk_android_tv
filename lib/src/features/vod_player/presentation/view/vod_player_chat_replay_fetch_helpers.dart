@@ -56,11 +56,15 @@ extension _VodPlayerChatReplayFetchHelpers on VodPlayerChatReplayController {
         _emit(state.copyWith(phase: VodPlayerChatReplayPhase.ready));
       }
     } on Object {
-      if (_isStale(revision) || isTailPrefetch) {
+      if (_isStale(revision)) {
         return;
       }
 
       _fetchRetryBackoff.recordFailure();
+      if (isTailPrefetch) {
+        return;
+      }
+
       _emit(state.copyWith(phase: VodPlayerChatReplayPhase.error));
     } finally {
       if (!_isStale(revision)) {
@@ -99,6 +103,7 @@ extension _VodPlayerChatReplayFetchHelpers on VodPlayerChatReplayController {
         loadedRangeEndMs == null ||
         _isFetching ||
         _isTailPrefetchInFlight ||
+        !_fetchRetryBackoff.canFetch() ||
         loadedRangeEndMs - positionMs >
             VodPlayerChatReplayController._tailPrefetchLeadTimeMs) {
       return;

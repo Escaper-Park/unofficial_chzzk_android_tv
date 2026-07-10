@@ -4,6 +4,7 @@ final class _LivePlayerOverlayLayer extends StatelessWidget {
   const _LivePlayerOverlayLayer({
     required this.controlsNode,
     required this.browseNode,
+    required this.browseThumbnailStreamRetainer,
     required this.playbackPaused,
     required this.muted,
     required this.overlayAutoHideController,
@@ -14,6 +15,7 @@ final class _LivePlayerOverlayLayer extends StatelessWidget {
 
   final FocusScopeNode controlsNode;
   final FocusScopeNode browseNode;
+  final BucketedImageStreamRetainer browseThumbnailStreamRetainer;
   final ValueNotifier<bool> playbackPaused;
   final ValueNotifier<bool> muted;
   final TvPlayerOverlayAutoHideController overlayAutoHideController;
@@ -34,6 +36,7 @@ final class _LivePlayerOverlayLayer extends StatelessWidget {
           snapshot: snapshot,
           controlsNode: controlsNode,
           browseNode: browseNode,
+          browseThumbnailStreamRetainer: browseThumbnailStreamRetainer,
           playbackPaused: playbackPaused,
           muted: muted,
           overlayAutoHideController: overlayAutoHideController,
@@ -51,6 +54,7 @@ final class _LivePlayerOverlayListenableBoundary extends StatelessWidget {
     required this.snapshot,
     required this.controlsNode,
     required this.browseNode,
+    required this.browseThumbnailStreamRetainer,
     required this.playbackPaused,
     required this.muted,
     required this.overlayAutoHideController,
@@ -62,6 +66,7 @@ final class _LivePlayerOverlayListenableBoundary extends StatelessWidget {
   final _LivePlayerOverlaySnapshot snapshot;
   final FocusScopeNode controlsNode;
   final FocusScopeNode browseNode;
+  final BucketedImageStreamRetainer browseThumbnailStreamRetainer;
   final ValueNotifier<bool> playbackPaused;
   final ValueNotifier<bool> muted;
   final TvPlayerOverlayAutoHideController overlayAutoHideController;
@@ -83,6 +88,7 @@ final class _LivePlayerOverlayListenableBoundary extends StatelessWidget {
               state: snapshot.state,
               controlsNode: controlsNode,
               browseNode: browseNode,
+              browseThumbnailStreamRetainer: browseThumbnailStreamRetainer,
               playbackPaused: playbackPaused.value,
               muted: muted.value,
               onPlaybackPausedChanged: (value) {
@@ -107,6 +113,7 @@ Widget? _livePlayerOverlayFor({
   required LivePlayerState state,
   required FocusScopeNode controlsNode,
   required FocusScopeNode browseNode,
+  required BucketedImageStreamRetainer browseThumbnailStreamRetainer,
   required bool playbackPaused,
   required bool muted,
   required ValueChanged<bool> onPlaybackPausedChanged,
@@ -137,6 +144,7 @@ Widget? _livePlayerOverlayFor({
     LivePlayerOverlayMode.browse => LivePlayerBrowseOverlay(
       state: state,
       browseNode: browseNode,
+      thumbnailStreamRetainer: browseThumbnailStreamRetainer,
       onInteraction: onBrowseInteraction,
       onSectionUp: () {
         context.read<LivePlayerBloc>().add(

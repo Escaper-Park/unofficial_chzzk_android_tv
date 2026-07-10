@@ -18,6 +18,7 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
   var _connectAttempt = 0;
   var _isConnecting = false;
   var _sessionActive = false;
+  Timer? _messageSnapshotTimer;
 
   void _syncSession({required bool notify}) {
     final mode = PlayerChatPresentationMode.fromLiveSettingsIndex(
@@ -147,7 +148,6 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
 
               _updateChatSnapshot(
                 messages: messages,
-                status: _LivePlayerChatLayerStatus.data,
               );
             },
             onError: (Object _, StackTrace _) {
@@ -197,6 +197,8 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
 
   void _disconnectNow({bool clearMessages = false}) {
     _chatLayerTimers.cancelAll();
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
     _connectSerial += 1;
     _connectAttempt = 0;
     _isConnecting = false;
@@ -245,9 +247,56 @@ mixin _LivePlayerChatLayerConnection on State<LivePlayerChatLayer> {
     _messages = nextMessages;
     _status = nextStatus;
 
+    if (messages != null &&
+        status == null &&
+        widget.messageSnapshotInterval > Duration.zero) {
+      _scheduleMessageSnapshot();
+      return;
+    }
+
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
+    _publishChatSnapshot();
+  }
+
+  void _scheduleMessageSnapshot() {
+    if (_messageSnapshotTimer != null) {
+      return;
+    }
+
+    _messageSnapshotTimer = Timer(widget.messageSnapshotInterval, () {
+      _messageSnapshotTimer = null;
+      if (!mounted) {
+        return;
+      }
+
+      _publishChatSnapshot();
+    });
+  }
+
+  void _syncMessageSnapshotInterval() {
+    final hadPendingSnapshot = _messageSnapshotTimer != null;
+    _messageSnapshotTimer?.cancel();
+    _messageSnapshotTimer = null;
+
+    if (widget.messageSnapshotInterval > Duration.zero) {
+      if (hadPendingSnapshot) {
+        _scheduleMessageSnapshot();
+        return;
+      }
+    }
+
+    _publishChatSnapshot();
+  }
+
+  void _publishChatSnapshot() {
+    if (!mounted) {
+      return;
+    }
+
     final nextSnapshot = _LivePlayerChatLayerSnapshot(
-      messages: nextMessages,
-      status: nextStatus,
+      messages: _messages,
+      status: _status,
     );
     if (_chatSnapshot.value == nextSnapshot) {
       return;

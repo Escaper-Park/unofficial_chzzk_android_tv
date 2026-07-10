@@ -66,8 +66,16 @@ Stream<List<PlayerChatMessage>> liveChatMessageSnapshotsFromBatches(
     appendTimerInterval = null;
   }
 
+  void releaseBuffers() {
+    messages = <PlayerChatMessage>[];
+    seenIds.clear();
+    pendingMessages.clear();
+    emojiRegistry.clear();
+  }
+
   void closeIfDone() {
     if (sourceDone && pendingMessages.isEmpty && appendTimer == null) {
+      releaseBuffers();
       unawaited(output.close());
     }
   }
@@ -127,6 +135,10 @@ Stream<List<PlayerChatMessage>> liveChatMessageSnapshotsFromBatches(
       }
     }
 
+    while (pendingMessages.length > playerChatPendingMessageBufferSize) {
+      seenIds.remove(pendingMessages.removeFirst().id);
+    }
+
     scheduleNextMessage();
   }
 
@@ -165,8 +177,10 @@ Stream<List<PlayerChatMessage>> liveChatMessageSnapshotsFromBatches(
     },
     onCancel: () async {
       clearAppendTimer();
-      pendingMessages.clear();
-      await subscription?.cancel();
+      releaseBuffers();
+      final activeSubscription = subscription;
+      subscription = null;
+      await activeSubscription?.cancel();
     },
   );
 

@@ -19,6 +19,7 @@ void _useVodPlayerVideoRuntimeBindings({
     initialized: runtime.initialized,
     failed: runtime.failed,
     ended: runtime.ended,
+    controllerDisposalCoordinator: runtime.controllerDisposalCoordinator,
     handledSeekSerial: runtime.handledSeekSerial,
     pendingWatchEventSeekPositionSeconds:
         runtime.pendingWatchEventSeekPositionSeconds,
@@ -99,8 +100,6 @@ void _useVodPlayerVideoRuntimeBindings({
     failed: runtime.failed,
     ended: runtime.ended,
     seekRequest: seekRequest,
-    reporter: reporter,
-    chatReplayController: chatReplayController,
     handledSeekSerial: runtime.handledSeekSerial,
     pendingWatchEventSeekPositionSeconds:
         runtime.pendingWatchEventSeekPositionSeconds,

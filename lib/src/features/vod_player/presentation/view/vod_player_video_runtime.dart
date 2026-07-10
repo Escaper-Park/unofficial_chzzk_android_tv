@@ -6,6 +6,7 @@ final class _VodPlayerVideoRuntime {
     required this.initialized,
     required this.failed,
     required this.ended,
+    required this.controllerDisposalCoordinator,
     required this.handledSeekSerial,
     required this.pendingWatchEventSeekPositionSeconds,
     required this.watchEventSeekHold,
@@ -29,6 +30,7 @@ final class _VodPlayerVideoRuntime {
   final ValueNotifier<bool> initialized;
   final ValueNotifier<bool> failed;
   final ValueNotifier<bool> ended;
+  final ControllerDisposalCoordinator controllerDisposalCoordinator;
   final ObjectRef<int?> handledSeekSerial;
   final ObjectRef<int?> pendingWatchEventSeekPositionSeconds;
   final VodPlayerWatchEventSeekHold watchEventSeekHold;

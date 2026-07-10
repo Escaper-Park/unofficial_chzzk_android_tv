@@ -32,6 +32,7 @@ import 'package:unofficial_chzzk_android_tv/src/features/live/domain/entities/li
 import 'package:unofficial_chzzk_android_tv/src/features/live/domain/entities/live_sort.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live/domain/entities/live_status.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live/domain/repositories/live_repository.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/live_player/domain/use_cases/resolve_live_playback_uri.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/bloc/live_player_bloc.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/live_player_route_target.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/live_player/presentation/live_player_screen_design.dart';
@@ -116,6 +117,37 @@ void main() {
       until: () =>
           bloc.state.settingsPreferences.liveSettings.chatWindowIndex == 2,
     );
+  });
+
+  testWidgets('opening browse keeps the active chat layer mounted', (
+    tester,
+  ) async {
+    final bloc = await _pumpLivePlayer(
+      tester,
+      preferences: const SettingsPreferences(
+        liveSettings: LiveSettings(chatWindowIndex: 1),
+      ),
+    );
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+          bloc.state.activeSlot.playbackUri != null,
+    );
+
+    const chatLayerKey = ValueKey(
+      'live-chat-layer-channel-a-chat-a',
+    );
+    await tester.pump();
+    expect(find.byKey(chatLayerKey), findsOneWidget);
+
+    bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: false));
+    await _pumpUntil(
+      tester,
+      until: () => bloc.state.overlayMode == LivePlayerOverlayMode.browse,
+    );
+
+    expect(find.byKey(chatLayerKey), findsOneWidget);
   });
 
   testWidgets('left and right cycle overlay chat position presets', (
@@ -606,50 +638,290 @@ void main() {
     );
   });
 
-  testWidgets('single and multiview transitions keep primary player stable', (
-    tester,
-  ) async {
-    final bloc = await _pumpLivePlayer(tester);
-    final videoPlatform =
-        VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
-
-    await _pumpUntil(
+  testWidgets(
+    'single PlatformView and multiview Texture transitions replace once',
+    (
       tester,
-      until: () =>
-          bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
-          bloc.state.activeSlot.playbackUri != null,
-    );
-    await _pumpUntil(
-      tester,
-      until: () => videoPlatform.mixWithOthersValues.isNotEmpty,
-    );
+    ) async {
+      final bloc = await _pumpLivePlayer(tester);
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
 
-    final playbackUri = bloc.state.activeSlot.playbackUri!.toString();
-    final singlePlayerId = videoPlatform.latestPlayerIdForUri(playbackUri);
-    expect(singlePlayerId, isNotNull);
-    expect(videoPlatform.mixWithOthersValues.last, isTrue);
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri != null,
+      );
+      await _pumpUntil(
+        tester,
+        until: () => videoPlatform.mixWithOthersValues.isNotEmpty,
+      );
 
-    bloc.add(
-      const LivePlayerEvent.viewModeSelected(
-        viewMode: LivePlayerViewMode.multiview,
-      ),
-    );
-    await _pumpUntil(tester, until: () => bloc.state.isMultiview);
-    await tester.pump();
-    expect(videoPlatform.latestPlayerIdForUri(playbackUri), singlePlayerId);
+      final playbackUri = bloc.state.activeSlot.playbackUri!.toString();
+      final singlePlayerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+      expect(singlePlayerId, isNotNull);
+      expect(videoPlatform.mixWithOthersValues.last, isTrue);
+      expect(
+        videoPlatform.viewTypeForPlayer(singlePlayerId!),
+        VideoViewType.platformView,
+      );
 
-    bloc.add(
-      const LivePlayerEvent.viewModeSelected(
-        viewMode: LivePlayerViewMode.single,
-      ),
-    );
-    await _pumpUntil(
-      tester,
-      until: () => bloc.state.viewMode == LivePlayerViewMode.single,
-    );
-    await tester.pump();
-    expect(videoPlatform.latestPlayerIdForUri(playbackUri), singlePlayerId);
-  });
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.multiview,
+        ),
+      );
+      await _pumpUntil(tester, until: () => bloc.state.isMultiview);
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return playerId != null &&
+              playerId != singlePlayerId &&
+              videoPlatform.viewTypeForPlayer(playerId) ==
+                  VideoViewType.textureView;
+        },
+      );
+      final multiviewPlayerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.single,
+        ),
+      );
+      await _pumpUntil(
+        tester,
+        until: () => bloc.state.viewMode == LivePlayerViewMode.single,
+      );
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return playerId != null &&
+              playerId != multiviewPlayerId &&
+              videoPlatform.viewTypeForPlayer(playerId) ==
+                  VideoViewType.platformView;
+        },
+      );
+    },
+  );
+
+  testWidgets(
+    'single PlatformView is disposed before its replacement starts',
+    (tester) async {
+      final bloc = await _pumpLivePlayer(
+        tester,
+        preferences: const SettingsPreferences(
+          generalSetting: GeneralSetting(
+            videoViewTypeIndex: playerVideoViewTypeIndexMax,
+          ),
+        ),
+      );
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri != null,
+      );
+
+      final playbackUri = bloc.state.activeSlot.playbackUri!.toString();
+      final firstPlatformPlayerId = videoPlatform.latestPlayerIdForUri(
+        playbackUri,
+      );
+      expect(firstPlatformPlayerId, isNotNull);
+      expect(
+        videoPlatform.viewTypeForPlayer(firstPlatformPlayerId!),
+        VideoViewType.platformView,
+      );
+      videoPlatform.delayDisposalForPlayer(firstPlatformPlayerId);
+
+      final texturePreferences = bloc.state.settingsPreferences.copyWith(
+        generalSetting: bloc.state.settingsPreferences.generalSetting.copyWith(
+          videoViewTypeIndex: playerVideoViewTypeIndexMin,
+        ),
+      );
+      bloc.add(
+        LivePlayerEvent.preferencesChanged(preferences: texturePreferences),
+      );
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.videoViewType ==
+            PlayerVideoViewType.textureView,
+      );
+      await tester.pump(const Duration(milliseconds: 20));
+
+      expect(
+        videoPlatform.latestPlayerIdForUri(playbackUri),
+        firstPlatformPlayerId,
+      );
+      expect(
+        videoPlatform.callsForPlayer(firstPlatformPlayerId),
+        containsAllInOrder(['setVolume:0.0', 'pause']),
+      );
+
+      videoPlatform.completeDisposalForPlayer(firstPlatformPlayerId);
+      await tester.runAsync(() async {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      });
+      await tester.idle();
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return playerId != null && playerId != firstPlatformPlayerId;
+        },
+      );
+      final texturePlayerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+      expect(texturePlayerId, isNotNull);
+      expect(
+        videoPlatform.callsForPlayer(firstPlatformPlayerId),
+        contains('dispose'),
+      );
+      expect(
+        videoPlatform.viewTypeForPlayer(texturePlayerId!),
+        VideoViewType.textureView,
+      );
+
+      final platformPreferences = texturePreferences.copyWith(
+        generalSetting: texturePreferences.generalSetting.copyWith(
+          videoViewTypeIndex: playerVideoViewTypeIndexMax,
+        ),
+      );
+      bloc.add(
+        LivePlayerEvent.preferencesChanged(preferences: platformPreferences),
+      );
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return bloc.state.activeSlot.videoViewType ==
+                  PlayerVideoViewType.platformView &&
+              playerId != null &&
+              playerId != texturePlayerId &&
+              videoPlatform.callsForPlayer(playerId).contains('play');
+        },
+      );
+      final platformPlayerId = videoPlatform.latestPlayerIdForUri(playbackUri)!;
+      expect(
+        videoPlatform.viewTypeForPlayer(platformPlayerId),
+        VideoViewType.platformView,
+      );
+
+      final startupCalls = videoPlatform.callsForPlayer(platformPlayerId);
+      expect(startupCalls.where((call) => call == 'play'), hasLength(1));
+      expect(
+        startupCalls.where((call) => call == 'setVolume:1.0'),
+        hasLength(1),
+      );
+    },
+  );
+
+  testWidgets(
+    'single replacement recovers when native disposal never completes',
+    (tester) async {
+      final bloc = await _pumpLivePlayer(
+        tester,
+        preferences: const SettingsPreferences(
+          generalSetting: GeneralSetting(
+            videoViewTypeIndex: playerVideoViewTypeIndexMax,
+          ),
+        ),
+      );
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri != null,
+      );
+
+      final playbackUri = bloc.state.activeSlot.playbackUri!.toString();
+      final stalledPlayerId = videoPlatform.latestPlayerIdForUri(playbackUri)!;
+      videoPlatform.delayDisposalForPlayer(stalledPlayerId);
+
+      bloc.add(
+        LivePlayerEvent.preferencesChanged(
+          preferences: bloc.state.settingsPreferences.copyWith(
+            generalSetting: const GeneralSetting(
+              videoViewTypeIndex: playerVideoViewTypeIndexMin,
+            ),
+          ),
+        ),
+      );
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.videoViewType ==
+            PlayerVideoViewType.textureView,
+      );
+      await tester.pump(const Duration(milliseconds: 20));
+      expect(
+        videoPlatform.latestPlayerIdForUri(playbackUri),
+        stalledPlayerId,
+      );
+
+      await tester.pump(const Duration(seconds: 3, milliseconds: 1));
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return playerId != null &&
+              playerId != stalledPlayerId &&
+              videoPlatform.callsForPlayer(playerId).contains('play');
+        },
+      );
+
+      final replacementPlayerId = videoPlatform.latestPlayerIdForUri(
+        playbackUri,
+      )!;
+      expect(
+        videoPlatform.viewTypeForPlayer(replacementPlayerId),
+        VideoViewType.textureView,
+      );
+
+      bloc.add(
+        LivePlayerEvent.preferencesChanged(
+          preferences: bloc.state.settingsPreferences.copyWith(
+            generalSetting: const GeneralSetting(
+              videoViewTypeIndex: playerVideoViewTypeIndexMax,
+            ),
+          ),
+        ),
+      );
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.videoViewType ==
+            PlayerVideoViewType.platformView,
+      );
+      await tester.pump(const Duration(seconds: 3, milliseconds: 1));
+      await _pumpUntil(
+        tester,
+        until: () {
+          final playerId = videoPlatform.latestPlayerIdForUri(playbackUri);
+          return playerId != null &&
+              playerId != replacementPlayerId &&
+              videoPlatform.viewTypeForPlayer(playerId) ==
+                  VideoViewType.platformView &&
+              videoPlatform.callsForPlayer(playerId).contains('play');
+        },
+      );
+
+      videoPlatform.completeDisposalForPlayer(stalledPlayerId);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pump(const Duration(seconds: 3, milliseconds: 1));
+    },
+  );
 
   testWidgets('live video buffering indicator ignores short buffering blips', (
     tester,
@@ -774,6 +1046,19 @@ void main() {
       tester,
       until: () =>
           bloc.state.slotById('slot-1')?.status == LivePlayerSlotStatus.playing,
+    );
+    final channelBPlayerId = videoPlatform.latestPlayerIdForUri(channelBUri);
+    expect(channelBPlayerId, isNotNull);
+    final channelBStartupCalls = videoPlatform.callsForPlayer(
+      channelBPlayerId!,
+    );
+    expect(
+      channelBStartupCalls,
+      containsAllInOrder(['setVolume:0.0', 'play']),
+    );
+    expect(
+      channelBStartupCalls.where((call) => call == 'setVolume:0.0'),
+      hasLength(1),
     );
     await _pumpUntil(
       tester,
@@ -1016,6 +1301,11 @@ void main() {
   ) async {
     final bloc = await _pumpLivePlayer(
       tester,
+      preferences: const SettingsPreferences(
+        generalSetting: GeneralSetting(
+          videoViewTypeIndex: playerVideoViewTypeIndexMin,
+        ),
+      ),
       liveRepository: const _FakeLiveRepository(
         detailsByChannelId: {
           'channel-b': LiveDetail(
@@ -1189,7 +1479,7 @@ void main() {
     );
   });
 
-  testWidgets('multiview PIP uses texture views for overlay slots', (
+  testWidgets('all multiview layouts use stable texture views', (
     tester,
   ) async {
     final bloc = await _pumpLivePlayer(
@@ -1266,10 +1556,19 @@ void main() {
 
     final pipUri = bloc.state.slotById('slot-1')!.playbackUri!.toString();
     final pbpPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
+    final multiviewPrimaryPlayerId = videoPlatform.latestPlayerIdForUri(
+      primaryUri,
+    );
     expect(pbpPlayerId, isNotNull);
+    expect(multiviewPrimaryPlayerId, isNotNull);
+    expect(multiviewPrimaryPlayerId, isNot(primaryPlayerId));
     expect(
       videoPlatform.viewTypeForPlayer(pbpPlayerId!),
-      VideoViewType.platformView,
+      VideoViewType.textureView,
+    );
+    expect(
+      videoPlatform.viewTypeForPlayer(multiviewPrimaryPlayerId!),
+      VideoViewType.textureView,
     );
 
     bloc.add(
@@ -1282,9 +1581,22 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
     );
+    await tester.runAsync(() async {
+      await Future<void>.delayed(Duration.zero);
+    });
+    await tester.idle();
+    await _pumpUntil(
+      tester,
+      until: () {
+        final playerId = videoPlatform.latestPlayerIdForUri(pipUri);
+        return playerId != null &&
+            videoPlatform.viewTypeForPlayer(playerId) ==
+                VideoViewType.textureView;
+      },
+    );
 
     final pipPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-    expect(pipPlayerId, isNot(pbpPlayerId));
+    expect(pipPlayerId, pbpPlayerId);
     expect(
       videoPlatform.viewTypeForPlayer(pipPlayerId!),
       VideoViewType.textureView,
@@ -1296,10 +1608,13 @@ void main() {
       ),
       findsNothing,
     );
-    expect(videoPlatform.latestPlayerIdForUri(primaryUri), primaryPlayerId);
     expect(
-      videoPlatform.viewTypeForPlayer(primaryPlayerId),
-      VideoViewType.platformView,
+      videoPlatform.latestPlayerIdForUri(primaryUri),
+      multiviewPrimaryPlayerId,
+    );
+    expect(
+      videoPlatform.viewTypeForPlayer(multiviewPrimaryPlayerId),
+      VideoViewType.textureView,
     );
 
     bloc.add(
@@ -1312,18 +1627,13 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.focus,
     );
-    await _pumpUntil(
-      tester,
-      until: () {
-        final focusPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-        return focusPlayerId != null &&
-            focusPlayerId != pipPlayerId &&
-            videoPlatform.viewTypeForPlayer(focusPlayerId) ==
-                VideoViewType.platformView;
-      },
-    );
+    await tester.pump();
     final focusPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-    expect(focusPlayerId, isNotNull);
+    expect(focusPlayerId, pipPlayerId);
+    expect(
+      videoPlatform.viewTypeForPlayer(focusPlayerId!),
+      VideoViewType.textureView,
+    );
 
     bloc.add(
       const LivePlayerEvent.multiviewLayoutModeSelected(
@@ -1335,18 +1645,9 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
     );
-    await _pumpUntil(
-      tester,
-      until: () {
-        final nextPipPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-        return nextPipPlayerId != null &&
-            nextPipPlayerId != focusPlayerId &&
-            videoPlatform.viewTypeForPlayer(nextPipPlayerId) ==
-                VideoViewType.textureView;
-      },
-    );
+    await tester.pump();
     final nextPipPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-    expect(nextPipPlayerId, isNotNull);
+    expect(nextPipPlayerId, focusPlayerId);
 
     bloc.add(
       const LivePlayerEvent.multiviewLayoutModeSelected(
@@ -1358,15 +1659,12 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pbp,
     );
-    await _pumpUntil(
-      tester,
-      until: () {
-        final nextPbpPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
-        return nextPbpPlayerId != null &&
-            nextPbpPlayerId != nextPipPlayerId &&
-            videoPlatform.viewTypeForPlayer(nextPbpPlayerId) ==
-                VideoViewType.platformView;
-      },
+    await tester.pump();
+    final nextPbpPlayerId = videoPlatform.latestPlayerIdForUri(pipUri);
+    expect(nextPbpPlayerId, nextPipPlayerId);
+    expect(
+      videoPlatform.viewTypeForPlayer(nextPbpPlayerId!),
+      VideoViewType.textureView,
     );
   });
 
@@ -1461,7 +1759,25 @@ void main() {
       until: () =>
           bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
     );
-    await tester.pump();
+    await _pumpUntil(
+      tester,
+      until: () {
+        for (final slotId in ['slot-1', 'slot-2', 'slot-3']) {
+          final uri = bloc.state.slotById(slotId)?.playbackUri?.toString();
+          final playerId = uri == null
+              ? null
+              : videoPlatform.latestPlayerIdForUri(uri);
+          if (playerId == null ||
+              find
+                  .byKey(ValueKey('fake-video-view-$playerId'))
+                  .evaluate()
+                  .isEmpty) {
+            return false;
+          }
+        }
+        return true;
+      },
+    );
 
     final pipRects = [
       for (final slotId in ['slot-1', 'slot-2', 'slot-3'])
@@ -1500,19 +1816,340 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets(
+    'multiview PIP slot bounds ignore video resolution and aspect ratio',
+    (tester) async {
+      const primaryUri = 'https://example.com/live.m3u8';
+      const hdUri = 'https://example.com/channel-b.m3u8';
+      const uhdUri = 'https://example.com/channel-c.m3u8';
+      const fourByThreeUri = 'https://example.com/channel-d.m3u8';
+      final bloc = await _pumpLivePlayer(
+        tester,
+        devicePixelRatio: 2,
+        videoSizesByUri: const {
+          primaryUri: Size(1080, 1920),
+          hdUri: Size(1920, 1080),
+          uhdUri: Size(3840, 2160),
+          fourByThreeUri: Size(1440, 1080),
+        },
+        preferences: const SettingsPreferences(
+          generalSetting: GeneralSetting(
+            videoViewTypeIndex: playerVideoViewTypeIndexMax,
+          ),
+          liveSettings: LiveSettings(
+            multiviewMaxCount: 4,
+            multiviewPipLayoutIndex: 0,
+            multiviewPipPositionX: 100,
+            multiviewPipPositionY: 100,
+            multiviewPipSize: 33,
+          ),
+        ),
+        liveRepository: _FakeLiveRepository(
+          detailsByChannelId: {
+            'channel-b': _liveDetailForChannel(
+              liveId: 2,
+              channelId: 'channel-b',
+              channelName: 'Channel B',
+            ),
+            'channel-c': _liveDetailForChannel(
+              liveId: 3,
+              channelId: 'channel-c',
+              channelName: 'Channel C',
+            ),
+            'channel-d': _liveDetailForChannel(
+              liveId: 4,
+              channelId: 'channel-d',
+              channelName: 'Channel D',
+            ),
+          },
+        ),
+      );
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri != null,
+      );
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.multiview,
+        ),
+      );
+      await _pumpUntil(tester, until: () => bloc.state.isMultiview);
+      await _addMultiviewLive(
+        tester,
+        bloc,
+        slotId: 'slot-1',
+        live: _liveForChannel(
+          liveId: 2,
+          channelId: 'channel-b',
+          channelName: 'Channel B',
+        ),
+      );
+      await _addMultiviewLive(
+        tester,
+        bloc,
+        slotId: 'slot-2',
+        live: _liveForChannel(
+          liveId: 3,
+          channelId: 'channel-c',
+          channelName: 'Channel C',
+        ),
+      );
+      await _addMultiviewLive(
+        tester,
+        bloc,
+        slotId: 'slot-3',
+        live: _liveForChannel(
+          liveId: 4,
+          channelId: 'channel-d',
+          channelName: 'Channel D',
+        ),
+      );
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+      );
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.idle();
+      await _pumpUntil(
+        tester,
+        until: () {
+          for (final slotId in ['slot-1', 'slot-2', 'slot-3']) {
+            final uri = bloc.state.slotById(slotId)?.playbackUri?.toString();
+            final playerId = uri == null
+                ? null
+                : videoPlatform.latestPlayerIdForUri(uri);
+            if (playerId == null ||
+                find
+                    .byKey(ValueKey('fake-video-view-$playerId'))
+                    .evaluate()
+                    .isEmpty) {
+              return false;
+            }
+          }
+          return true;
+        },
+      );
+
+      final hdSlotRect = _playbackSlotRect(tester, 'slot-1');
+      final uhdSlotRect = _playbackSlotRect(tester, 'slot-2');
+      final fourByThreeSlotRect = _playbackSlotRect(tester, 'slot-3');
+      _expectSameSize(hdSlotRect, uhdSlotRect);
+      _expectSameSize(hdSlotRect, fourByThreeSlotRect);
+      _expectRect(
+        _videoRectForSlot(
+          tester,
+          videoPlatform,
+          bloc.state.slotById('slot-1')!,
+        ),
+        hdSlotRect,
+      );
+      _expectRect(
+        _videoRectForSlot(
+          tester,
+          videoPlatform,
+          bloc.state.slotById('slot-2')!,
+        ),
+        uhdSlotRect,
+      );
+      _expectContainedAndCentered(
+        outer: fourByThreeSlotRect,
+        inner: _videoRectForSlot(
+          tester,
+          videoPlatform,
+          bloc.state.slotById('slot-3')!,
+        ),
+        aspectRatio: 4 / 3,
+      );
+
+      bloc.add(const LivePlayerEvent.activeSlotSelected(slotId: 'slot-1'));
+      await _pumpUntil(
+        tester,
+        until: () {
+          if (bloc.state.activeSlotId != 'slot-1') {
+            return false;
+          }
+          final playerId = videoPlatform.latestPlayerIdForUri(primaryUri);
+          return playerId != null &&
+              videoPlatform.viewTypeForPlayer(playerId) ==
+                  VideoViewType.textureView &&
+              find
+                  .byKey(ValueKey('fake-video-view-$playerId'))
+                  .evaluate()
+                  .isNotEmpty;
+        },
+      );
+
+      final portraitSlotRect = _playbackSlotRect(tester, 'primary');
+      _expectSameSize(portraitSlotRect, _playbackSlotRect(tester, 'slot-2'));
+      _expectSameSize(portraitSlotRect, _playbackSlotRect(tester, 'slot-3'));
+      _expectContainedAndCentered(
+        outer: portraitSlotRect,
+        inner: _videoRectForSlot(
+          tester,
+          videoPlatform,
+          bloc.state.slotById('primary')!,
+        ),
+        aspectRatio: 9 / 16,
+      );
+
+      for (final uri in [primaryUri, hdUri, uhdUri, fourByThreeUri]) {
+        final playerId = videoPlatform.latestPlayerIdForUri(uri);
+        expect(playerId, isNotNull);
+        expect(
+          find.ancestor(
+            of: find.byKey(ValueKey('fake-video-view-$playerId')),
+            matching: find.byType(FittedBox),
+          ),
+          findsNothing,
+        );
+      }
+    },
+  );
+
+  testWidgets('unknown video dimensions use a 16:9 fallback', (tester) async {
+    const primaryUri = 'https://example.com/live.m3u8';
+    final bloc = await _pumpLivePlayer(
+      tester,
+      videoSizesByUri: const {primaryUri: Size.zero},
+    );
+    final videoPlatform =
+        VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+    await _pumpUntil(
+      tester,
+      until: () =>
+          bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+          bloc.state.activeSlot.playbackUri != null,
+    );
+
+    _expectRect(
+      _videoRectForSlot(tester, videoPlatform, bloc.state.activeSlot),
+      _playbackSlotRect(tester, bloc.state.activeSlotId),
+    );
+  });
+
+  testWidgets(
+    'HLS dimensions override a bogus positive decoder size',
+    (tester) async {
+      const variantUri = 'https://example.com/1080p/index.m3u8';
+      final bloc = await _pumpLivePlayer(
+        tester,
+        videoSizesByUri: const {variantUri: Size(1, 1)},
+        loadLivePlaybackPlaylistText: ({required playlistUri}) async {
+          return '''
+          #EXTM3U
+          #EXT-X-STREAM-INF:BANDWIDTH=6000000,RESOLUTION=1920x1080
+          1080p/index.m3u8
+          ''';
+        },
+      );
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri?.toString() == variantUri,
+      );
+
+      expect(bloc.state.activeSlot.expectedVideoAspectRatio, 16 / 9);
+      _expectRect(
+        _videoRectForSlot(tester, videoPlatform, bloc.state.activeSlot),
+        _playbackSlotRect(tester, bloc.state.activeSlotId),
+      );
+    },
+  );
+
+  testWidgets(
+    'tiny decoder dimensions use 16:9 when HLS metadata is unavailable',
+    (tester) async {
+      const primaryUri = 'https://example.com/live.m3u8';
+      final bloc = await _pumpLivePlayer(
+        tester,
+        videoSizesByUri: const {primaryUri: Size(1, 1)},
+      );
+      final videoPlatform =
+          VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+      await _pumpUntil(
+        tester,
+        until: () =>
+            bloc.state.activeSlot.status == LivePlayerSlotStatus.playing &&
+            bloc.state.activeSlot.playbackUri != null,
+      );
+
+      expect(bloc.state.activeSlot.expectedVideoAspectRatio, isNull);
+      _expectRect(
+        _videoRectForSlot(tester, videoPlatform, bloc.state.activeSlot),
+        _playbackSlotRect(tester, bloc.state.activeSlotId),
+      );
+    },
+  );
+
+  testWidgets('rotation correction is not applied twice to video geometry', (
+    tester,
+  ) async {
+    const primaryUri = 'https://example.com/live.m3u8';
+    final bloc = await _pumpLivePlayer(
+      tester,
+      logicalSize: const Size(960, 540),
+      videoSizesByUri: const {primaryUri: Size(1080, 1920)},
+      rotationCorrectionsByUri: const {primaryUri: 90},
+    );
+    final videoPlatform =
+        VideoPlayerPlatform.instance as _FakeVideoPlayerPlatform;
+
+    await _pumpUntil(
+      tester,
+      until: () => bloc.state.activeSlot.status == LivePlayerSlotStatus.playing,
+    );
+
+    _expectContainedAndCentered(
+      outer: _playbackSlotRect(tester, bloc.state.activeSlotId),
+      inner: _videoRectForSlot(tester, videoPlatform, bloc.state.activeSlot),
+      aspectRatio: 9 / 16,
+    );
+  });
 }
 
 Future<LivePlayerBloc> _pumpLivePlayer(
   WidgetTester tester, {
   SettingsPreferences preferences = defaultSettingsPreferences,
   LiveRepository liveRepository = const _FakeLiveRepository(),
+  Size logicalSize = const Size(960, 540),
+  double devicePixelRatio = 1,
+  Map<String, Size> videoSizesByUri = const {},
+  Map<String, int> rotationCorrectionsByUri = const {},
+  LoadLivePlaybackPlaylistText loadLivePlaybackPlaylistText =
+      _fakeLivePlaybackPlaylistTextLoader,
 }) async {
-  tester.view.physicalSize = const Size(960, 540);
-  tester.view.devicePixelRatio = 1;
+  tester.view.devicePixelRatio = devicePixelRatio;
+  tester.view.physicalSize = Size(
+    logicalSize.width * devicePixelRatio,
+    logicalSize.height * devicePixelRatio,
+  );
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   final previousVideoPlayerPlatform = VideoPlayerPlatform.instance;
-  final fakeVideoPlayerPlatform = _FakeVideoPlayerPlatform();
+  final fakeVideoPlayerPlatform = _FakeVideoPlayerPlatform(
+    videoSizesByUri: videoSizesByUri,
+    rotationCorrectionsByUri: rotationCorrectionsByUri,
+  );
   VideoPlayerPlatform.instance = fakeVideoPlayerPlatform;
   addTearDown(() async {
     VideoPlayerPlatform.instance = previousVideoPlayerPlatform;
@@ -1526,7 +2163,7 @@ Future<LivePlayerBloc> _pumpLivePlayer(
     followingRepository: const _FakeFollowingRepository(),
     categoryRepository: const _FakeCategoryRepository(),
     groupRepository: const _FakeGroupRepository(),
-    loadLivePlaybackPlaylistText: _fakeLivePlaybackPlaylistTextLoader,
+    loadLivePlaybackPlaylistText: loadLivePlaybackPlaylistText,
     settingsPreferencesRepository: settingsRepository,
   );
   addTearDown(bloc.close);
@@ -1652,6 +2289,11 @@ Future<void> _pumpUntil(
     if (until()) {
       return;
     }
+    if (attempts % 4 == 3) {
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+    }
   }
 
   fail('Expected live player state to update.');
@@ -1690,6 +2332,28 @@ void _expectRect(Rect actual, Rect expected) {
   expect(actual.top, moreOrLessEquals(expected.top, epsilon: 0.01));
   expect(actual.width, moreOrLessEquals(expected.width, epsilon: 0.01));
   expect(actual.height, moreOrLessEquals(expected.height, epsilon: 0.01));
+}
+
+void _expectSameSize(Rect first, Rect second) {
+  expect(first.width, moreOrLessEquals(second.width, epsilon: 0.01));
+  expect(first.height, moreOrLessEquals(second.height, epsilon: 0.01));
+}
+
+void _expectContainedAndCentered({
+  required Rect outer,
+  required Rect inner,
+  required double aspectRatio,
+}) {
+  expect(inner.left, greaterThanOrEqualTo(outer.left));
+  expect(inner.top, greaterThanOrEqualTo(outer.top));
+  expect(inner.right, lessThanOrEqualTo(outer.right));
+  expect(inner.bottom, lessThanOrEqualTo(outer.bottom));
+  expect(inner.center.dx, moreOrLessEquals(outer.center.dx, epsilon: 0.01));
+  expect(inner.center.dy, moreOrLessEquals(outer.center.dy, epsilon: 0.01));
+  expect(
+    inner.width / inner.height,
+    moreOrLessEquals(aspectRatio, epsilon: 0.01),
+  );
 }
 
 LivePlayerState _multiviewChatPolicyState({
@@ -2117,10 +2781,18 @@ Never _unsupportedFakeOperation(String operation) {
 }
 
 final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
+  _FakeVideoPlayerPlatform({
+    this.videoSizesByUri = const {},
+    this.rotationCorrectionsByUri = const {},
+  });
+
+  final Map<String, Size> videoSizesByUri;
+  final Map<String, int> rotationCorrectionsByUri;
   final _streams = <int, StreamController<VideoEvent>>{};
   final _playerUriById = <int, String?>{};
   final _viewTypeByPlayerId = <int, VideoViewType?>{};
   final _pendingInitializationByUri = <String, Completer<void>>{};
+  final _pendingDisposalByPlayerId = <int, Completer<void>>{};
   final mixWithOthersValues = <bool>[];
   final buildViewPlayerIds = <int>[];
   final playerCalls = <({int playerId, String method, double? volume})>[];
@@ -2139,9 +2811,15 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   @override
   Future<void> dispose(int playerId) async {
     playerCalls.add((playerId: playerId, method: 'dispose', volume: null));
+    final delayedDisposal = _pendingDisposalByPlayerId[playerId];
+    await delayedDisposal?.future;
+    _pendingDisposalByPlayerId.remove(playerId);
     _playerUriById.remove(playerId);
     _viewTypeByPlayerId.remove(playerId);
-    await _streams.remove(playerId)?.close();
+    final stream = _streams.remove(playerId);
+    if (stream != null) {
+      unawaited(stream.close());
+    }
   }
 
   @override
@@ -2225,6 +2903,19 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
     completer.complete();
   }
 
+  void delayDisposalForPlayer(int playerId) {
+    _pendingDisposalByPlayerId[playerId] = Completer<void>();
+  }
+
+  void completeDisposalForPlayer(int playerId) {
+    final completer = _pendingDisposalByPlayerId[playerId];
+    if (completer == null || completer.isCompleted) {
+      return;
+    }
+
+    completer.complete();
+  }
+
   void emitBufferingStart(int playerId) {
     _emit(
       playerId,
@@ -2250,6 +2941,12 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   }
 
   Future<void> disposeAll() async {
+    for (final completer in _pendingDisposalByPlayerId.values.toList()) {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    }
+    _pendingDisposalByPlayerId.clear();
     for (final stream in _streams.values) {
       await stream.close();
     }
@@ -2283,11 +2980,13 @@ final class _FakeVideoPlayerPlatform extends VideoPlayerPlatform {
   }
 
   void _emitInitialized(int playerId) {
+    final uri = _playerUriById[playerId];
     _emit(
       playerId,
       VideoEvent(
         eventType: VideoEventType.initialized,
-        size: const Size(16, 9),
+        size: videoSizesByUri[uri] ?? const Size(16, 9),
+        rotationCorrection: rotationCorrectionsByUri[uri],
         duration: const Duration(hours: 1),
       ),
     );

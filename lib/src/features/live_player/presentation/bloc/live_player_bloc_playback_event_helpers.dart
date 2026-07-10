@@ -51,6 +51,9 @@ extension _LivePlayerBlocPlaybackEventHelpers on LivePlayerBloc {
       slot.copyWith(
         status: LivePlayerSlotStatus.failure,
         playbackUri: null,
+        expectedVideoWidth: null,
+        expectedVideoHeight: null,
+        playbackMetadataResolutionAttempts: 0,
         failureReason: LivePlayerFailureReason.playbackFailed,
       ),
     );

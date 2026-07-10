@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '../../domain/entities/chat.dart';
 import 'player_chat_message_bubble.dart';
@@ -205,21 +206,35 @@ class _PlayerChatMessageList extends StatelessWidget {
     final displayCount = math.min(messages.length, style.maxRenderedMessages);
     final firstDisplayIndex = messages.length - displayCount;
 
+    final itemIndexByMessageId = <String, int>{
+      for (var index = 0; index < displayCount; index += 1)
+        messages[firstDisplayIndex + displayCount - 1 - index].id: index,
+    };
+    int? findItemIndex(Key key) =>
+        key is ValueKey<String> ? itemIndexByMessageId[key.value] : null;
+
     return ListView.separated(
       reverse: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
+      scrollCacheExtent: const ScrollCacheExtent.pixels(0),
       addAutomaticKeepAlives: false,
       addRepaintBoundaries: true,
       addSemanticIndexes: false,
       itemCount: displayCount,
+      findItemIndexCallback: findItemIndex,
       itemBuilder: (context, index) {
         final message = messages[firstDisplayIndex + displayCount - 1 - index];
         return KeyedSubtree(
           key: ValueKey(message.id),
-          child: PlayerChatMessageBubble(
-            message: message,
-            style: style,
+          child: TickerMode(
+            enabled:
+                TickerMode.valuesOf(context).enabled &&
+                index < PlayerChatPanelDesign.maxAnimatedMessageRows,
+            child: PlayerChatMessageBubble(
+              message: message,
+              style: style,
+            ),
           ),
         );
       },

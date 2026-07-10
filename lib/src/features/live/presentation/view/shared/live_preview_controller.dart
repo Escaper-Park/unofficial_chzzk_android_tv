@@ -32,6 +32,10 @@ final class LivePreviewController extends ValueNotifier<LivePreviewState> {
     required LivePreviewSettingsReader readSettings,
     required LivePreviewPlaybackUriResolver resolvePlaybackUri,
   }) async {
+    if (_disposed) {
+      return;
+    }
+
     if (!hasFocus) {
       stop();
       return;
@@ -72,9 +76,14 @@ final class LivePreviewController extends ValueNotifier<LivePreviewState> {
 
   @override
   void dispose() {
+    if (_disposed) {
+      return;
+    }
+
     _disposed = true;
     _generation += 1;
     _cancelTimers();
+    _progressTimer.dispose();
     super.dispose();
   }
 
@@ -129,6 +138,11 @@ final class LivePreviewController extends ValueNotifier<LivePreviewState> {
       },
     );
     _waitTimer = Timer(waitDuration, () {
+      _waitTimer = null;
+      if (!_isCurrent(requestGeneration)) {
+        return;
+      }
+
       unawaited(
         _playPreview(
           requestGeneration: requestGeneration,
@@ -146,10 +160,12 @@ final class LivePreviewController extends ValueNotifier<LivePreviewState> {
     required LivePreviewSettings settings,
     required LivePreviewPlaybackUriResolver resolvePlaybackUri,
   }) async {
-    _progressTimer.stop();
-    if (_isCurrent(requestGeneration)) {
-      value = LivePreviewState.waiting(1);
+    if (!_isCurrent(requestGeneration)) {
+      return;
     }
+
+    _progressTimer.stop();
+    value = LivePreviewState.waiting(1);
 
     final playbackUri = await resolvePlaybackUri(
       item: item,
@@ -176,10 +192,10 @@ final class LivePreviewController extends ValueNotifier<LivePreviewState> {
       return;
     }
 
-    _playbackTimer = Timer(
-      playbackDuration,
-      () => _finish(requestGeneration),
-    );
+    _playbackTimer = Timer(playbackDuration, () {
+      _playbackTimer = null;
+      _finish(requestGeneration);
+    });
   }
 
   void _finish(int requestGeneration) {

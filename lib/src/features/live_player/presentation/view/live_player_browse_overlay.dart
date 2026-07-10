@@ -23,6 +23,7 @@ class LivePlayerBrowseOverlay extends HookWidget {
     required this.onLiveSelected,
     required this.onReplacementClosed,
     required this.onReplacementSlotSelected,
+    required this.thumbnailStreamRetainer,
   });
 
   final LivePlayerState state;
@@ -35,12 +36,15 @@ class LivePlayerBrowseOverlay extends HookWidget {
   final ValueChanged<Live> onLiveSelected;
   final VoidCallback onReplacementClosed;
   final ValueChanged<String> onReplacementSlotSelected;
+  final BucketedImageStreamRetainer thumbnailStreamRetainer;
 
   @override
   Widget build(BuildContext context) {
     final placeholderFocusNode = useFocusNode(
       debugLabel: 'live player browse placeholder',
     );
+    useListenable(thumbnailStreamRetainer);
+    final thumbnailNow = thumbnailStreamRetainer.bucketNow;
     final showCards =
         state.browseStatus == LivePlayerBrowseLoadStatus.success &&
         state.browseItems.isNotEmpty;
@@ -75,8 +79,13 @@ class LivePlayerBrowseOverlay extends HookWidget {
           itemBuilder: (context, index) {
             final live = state.browseItems[index];
             return LivePlayerBrowseCard(
+              key: ValueKey(
+                'live-player-browse-${live.liveId}-${live.channel?.channelId}',
+              ),
               live: live,
               autofocus: index == 0,
+              thumbnailNow: thumbnailNow,
+              thumbnailStreamRetainer: thumbnailStreamRetainer,
               onPressed: () => onLiveSelected(live),
             );
           },

@@ -27,6 +27,7 @@ class LivePlayerChatLayer extends StatefulWidget {
     required this.chatSettings,
     required this.playbackActive,
     required this.connectLiveChat,
+    this.messageSnapshotInterval = Duration.zero,
     this.disconnectImmediatelyWhenInactive = false,
   });
 
@@ -36,6 +37,7 @@ class LivePlayerChatLayer extends StatefulWidget {
   final ChatSettings chatSettings;
   final bool playbackActive;
   final ConnectLiveChat connectLiveChat;
+  final Duration messageSnapshotInterval;
   final bool disconnectImmediatelyWhenInactive;
 
   @override
@@ -55,11 +57,15 @@ class _LivePlayerChatLayerState extends State<LivePlayerChatLayer>
     super.didUpdateWidget(oldWidget);
 
     _syncSession(notify: true);
+    if (oldWidget.messageSnapshotInterval != widget.messageSnapshotInterval) {
+      _syncMessageSnapshotInterval();
+    }
   }
 
   @override
   void dispose() {
     _chatLayerTimers.cancelAll();
+    _messageSnapshotTimer?.cancel();
     _connectSerial += 1;
     unawaited(_disposeConnection());
     _chatSnapshot.dispose();

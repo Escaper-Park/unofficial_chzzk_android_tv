@@ -114,6 +114,8 @@ int _activeSlotPlaybackInputHash(LivePlayerSlotState slot) {
     slot.status,
     slot.channelId,
     slot.playbackUri,
+    slot.expectedVideoWidth,
+    slot.expectedVideoHeight,
   );
 }
 

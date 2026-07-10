@@ -65,7 +65,9 @@ bool _sameActiveSlotPlaybackInput(
   return previous.slotId == current.slotId &&
       previous.status == current.status &&
       previous.channelId == current.channelId &&
-      previous.playbackUri == current.playbackUri;
+      previous.playbackUri == current.playbackUri &&
+      previous.expectedVideoWidth == current.expectedVideoWidth &&
+      previous.expectedVideoHeight == current.expectedVideoHeight;
 }
 
 bool _livePlayerOverlayBuildWhen(

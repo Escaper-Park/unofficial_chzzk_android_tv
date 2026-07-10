@@ -62,4 +62,30 @@ void main() {
     gates.removeAt(0).complete();
     await controller.drain();
   });
+
+  test(
+    'coalesces superseded requests while a platform call is pending',
+    () async {
+      final calls = <bool>[];
+      final firstCall = Completer<void>();
+      final controller = SerializedWakelockController(
+        setEnabled: ({required enabled}) {
+          calls.add(enabled);
+          return calls.length == 1 ? firstCall.future : Future<void>.value();
+        },
+      );
+
+      controller
+        ..setEnabled(enabled: true)
+        ..setEnabled(enabled: false)
+        ..setEnabled(enabled: true);
+
+      expect(calls, [true]);
+
+      firstCall.complete();
+      await controller.drain();
+
+      expect(calls, [true]);
+    },
+  );
 }

@@ -258,15 +258,12 @@ PlayerVideoViewType _effectiveVideoViewTypeForSlot(
   LivePlayerState state,
   LivePlayerSlotState slot,
 ) {
-  if (!state.isMultiview ||
-      state.multiviewLayoutMode != LivePlayerMultiviewLayoutMode.pip) {
+  if (!state.isMultiview) {
     return slot.videoViewType;
   }
 
-  if (slot.slotId == state.activeSlotId) {
-    return slot.videoViewType;
-  }
-
+  // Multiple Android SurfaceView PlatformViews cannot be composed reliably
+  // with Flutter overlays on the API levels used by common TV devices.
   return PlayerVideoViewType.textureView;
 }
 

@@ -17,7 +17,7 @@ extension _LivePlayerBlocLifecycleHelpers on LivePlayerBloc {
       return;
     }
 
-    await _loadTarget(emit, target);
+    await _loadTarget(emit, target, readPersistedPreferences: true);
   }
 
   Future<void> _onRetryRequested(

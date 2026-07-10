@@ -23,6 +23,7 @@ import '../../../settings/domain/repositories/settings_preferences_repository.da
 import '../bloc/live_player_bloc.dart';
 import '../live_player_screen_design.dart';
 import '../live_player_screen_string.dart';
+import 'live_player_browse_card.dart';
 import 'live_player_browse_overlay.dart';
 import 'live_player_chat_layer.dart';
 import 'live_player_chat_shortcuts.dart';
@@ -58,6 +59,16 @@ class LivePlayerView extends HookWidget {
     );
     final browseNode = useFocusScopeNode(
       debugLabel: 'live player browse section',
+    );
+    final browseThumbnailStreamRetainer = useMemoized(
+      () => BucketedImageStreamRetainer(
+        bucketDuration: livePlayerBrowseThumbnailRefreshInterval,
+      ),
+      const [],
+    );
+    useEffect(
+      () => browseThumbnailStreamRetainer.dispose,
+      [browseThumbnailStreamRetainer],
     );
     final feedbackController = useMemoized(
       TvSnackbarFeedbackController.new,
@@ -289,6 +300,7 @@ class LivePlayerView extends HookWidget {
           controlsOverlay: _LivePlayerOverlayLayer(
             controlsNode: controlsNode,
             browseNode: browseNode,
+            browseThumbnailStreamRetainer: browseThumbnailStreamRetainer,
             playbackPaused: playbackPaused,
             muted: muted,
             overlayAutoHideController: overlayAutoHideController,

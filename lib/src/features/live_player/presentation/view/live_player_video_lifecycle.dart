@@ -2,13 +2,14 @@ part of 'live_player_video_surface.dart';
 
 void _useLivePlayerControllerLifecycle({
   required VideoPlayerController controller,
+  required _LivePlayerVideoFrameValueListenable frameValueListenable,
   required ValueNotifier<bool> initialized,
   required ValueNotifier<bool> failed,
   required ValueNotifier<bool> ended,
   required ObjectRef<LivePlayerWatchEventReporter?> reporterRef,
   required LivePlayerPlaybackSessionController playbackSessionController,
   required _LivePlayerVideoSessionHandle playbackSessionHandle,
-  required double volume,
+  required ObjectRef<double> volumeRef,
   required bool Function() playbackSuspended,
   required VoidCallback onReady,
   required VoidCallback reportPlaybackFailure,
@@ -18,75 +19,112 @@ void _useLivePlayerControllerLifecycle({
     () {
       var disposed = false;
       final reporter = reporterRef.value;
-      initialized.value = false;
-      failed.value = false;
-      ended.value = false;
       playbackSessionController.register(playbackSessionHandle.sessionHandle);
 
       void handleControllerChange() {
-        if (controller.value.hasError) {
+        final value = frameValueListenable.value;
+        if (value.hasError) {
           reportPlaybackFailure();
           return;
         }
 
-        if (controller.value.isCompleted) {
+        if (value.isCompleted) {
           syncWatchEvent();
         }
       }
 
-      controller.addListener(handleControllerChange);
+      frameValueListenable.addListener(handleControllerChange);
 
-      unawaited(
-        controller
-            .initialize()
-            .then((_) async {
-              if (disposed) {
-                return;
-              }
+      Future<void> initializeController() async {
+        try {
+          await playbackSessionController.waitForControllerDisposals();
+          if (disposed) {
+            return;
+          }
 
-              initialized.value = true;
-              await controller.setVolume(volume);
-              if (disposed) {
-                return;
-              }
-              onReady();
-              if (disposed) {
-                return;
-              }
-              if (!playbackSuspended()) {
-                await controller.play();
-                if (disposed) {
-                  return;
-                }
-              }
+          await controller.initialize();
+          if (disposed) {
+            return;
+          }
 
-              syncWatchEvent();
-            })
-            .catchError((Object _) {
-              if (disposed) {
-                return;
-              }
+          final volume = volumeRef.value;
+          if (controller.value.volume != volume) {
+            await controller.setVolume(volume);
+            if (disposed) {
+              return;
+            }
+          }
 
-              reportPlaybackFailure();
-            }),
-      );
+          await _syncLivePlayerControllerPlayback(
+            controller: controller,
+            playbackSuspended: playbackSuspended(),
+          );
+          if (disposed) {
+            return;
+          }
+
+          initialized.value = true;
+          onReady();
+          if (disposed) {
+            return;
+          }
+
+          syncWatchEvent();
+        } on Object {
+          if (!disposed) {
+            reportPlaybackFailure();
+          }
+        }
+      }
+
+      // A keyed Hook effect is mounted before the previous effect is disposed.
+      // Defer startup by one microtask so the previous native player can first
+      // publish its disposal barrier for this slot.
+      unawaited(Future<void>.microtask(initializeController));
 
       return () {
         disposed = true;
         reporter?.suspend();
-        controller.removeListener(handleControllerChange);
+        frameValueListenable.removeListener(handleControllerChange);
         playbackSessionController.unregister(
           playbackSessionHandle.sessionHandle,
         );
-        unawaited(playbackSessionHandle.disposeController());
+        playbackSessionHandle.suspend();
+        unawaited(
+          playbackSessionController.scheduleControllerDisposal(
+            playbackSessionHandle.disposeController,
+          ),
+        );
       };
     },
     [
       controller,
+      frameValueListenable,
       playbackSessionController,
       playbackSessionHandle,
     ],
   );
+}
+
+Future<void> _syncLivePlayerControllerPlayback({
+  required VideoPlayerController controller,
+  required bool playbackSuspended,
+}) async {
+  final value = controller.value;
+  if (!value.isInitialized) {
+    return;
+  }
+
+  if (playbackSuspended) {
+    if (value.isPlaying) {
+      await controller.pause();
+    }
+    return;
+  }
+
+  if (!value.isPlaying && !value.isCompleted) {
+    await controller.play();
+  }
 }
 
 final class _LivePlayerVideoSessionHandle {
@@ -101,6 +139,10 @@ final class _LivePlayerVideoSessionHandle {
   bool get suspended => _suspended;
 
   void suspend() {
+    if (_suspended) {
+      return;
+    }
+
     _suspended = true;
     if (_disposed || !_controller.value.isInitialized) {
       return;
@@ -119,16 +161,17 @@ final class _LivePlayerVideoSessionHandle {
     }
   }
 
-  Future<void> disposeController() async {
+  Future<void> disposeController() {
     if (_disposed) {
-      return;
+      return Future<void>.value();
     }
 
     _disposed = true;
     try {
-      await _controller.dispose();
+      return _controller.dispose().catchError((Object _) {});
     } on Object {
       // The widget is already leaving the tree; cleanup must not surface.
+      return Future<void>.value();
     }
   }
 }

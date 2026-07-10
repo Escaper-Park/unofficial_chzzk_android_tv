@@ -60,6 +60,7 @@ class LivePlayerSurface extends StatelessWidget {
       child: LivePlayerVideoSurface(
         slotId: slot.slotId,
         playbackUri: playbackUri,
+        expectedVideoAspectRatio: slot.expectedVideoAspectRatio,
         playbackHttpHeaders: playbackHttpHeaders,
         videoViewType: videoViewType,
         playbackPaused: playbackPaused,

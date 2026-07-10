@@ -71,13 +71,17 @@ class TvPlayerBrowseOverlay extends StatelessWidget {
         }
 
         if (event.logicalKey == LogicalKeyboardKey.arrowUp && onUp != null) {
-          onUp!();
+          if (event is KeyDownEvent) {
+            onUp!();
+          }
           return KeyEventResult.handled;
         }
 
         if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
             onDown != null) {
-          onDown!();
+          if (event is KeyDownEvent) {
+            onDown!();
+          }
           return KeyEventResult.handled;
         }
 

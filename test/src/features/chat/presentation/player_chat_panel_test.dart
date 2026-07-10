@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unofficial_chzzk_android_tv/src/core/ui/ui.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/domain/entities/chat.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_formatters.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_message_bubble.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_panel.dart';
+import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_panel_design.dart';
 import 'package:unofficial_chzzk_android_tv/src/features/chat/presentation/view/player_chat_panel_style.dart';
 
 void main() {
@@ -156,6 +159,170 @@ void main() {
 
     expect(find.text('tester'), findsNothing);
     expect(find.byType(OptimizedImage), findsNWidgets(2));
+  });
+
+  testWidgets('limits emoji image widgets in a single spam message', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const _ChatHarness(
+        child: SizedBox(
+          width: 640,
+          height: 120,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: PlayerChatPanelStyle(showPanelContainer: false),
+            messages: [
+              PlayerChatMessage(
+                source: PlayerChatMessageSource.live,
+                id: 'emoji-spam',
+                messageTime: 1,
+                messageTypeCode: 1,
+                content: '{:one:}{:two:}{:three:}{:four:}{:five:}{:six:}',
+                emojis: {
+                  'one': 'https://example.com/one.gif',
+                  'two': 'https://example.com/two.gif',
+                  'three': 'https://example.com/three.gif',
+                  'four': 'https://example.com/four.gif',
+                  'five': 'https://example.com/five.gif',
+                  'six': 'https://example.com/six.gif',
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(OptimizedImage), findsNWidgets(3));
+  });
+
+  testWidgets('preserves message state when newer chat items are prepended', (
+    tester,
+  ) async {
+    const first = PlayerChatMessage(
+      source: PlayerChatMessageSource.live,
+      id: 'first',
+      messageTime: 1,
+      messageTypeCode: 1,
+      content: 'first',
+    );
+    const second = PlayerChatMessage(
+      source: PlayerChatMessageSource.live,
+      id: 'second',
+      messageTime: 2,
+      messageTypeCode: 1,
+      content: 'second',
+    );
+    const third = PlayerChatMessage(
+      source: PlayerChatMessageSource.live,
+      id: 'third',
+      messageTime: 3,
+      messageTypeCode: 1,
+      content: 'third',
+    );
+
+    Widget panel(List<PlayerChatMessage> messages) {
+      return _ChatHarness(
+        child: SizedBox(
+          width: 320,
+          height: 240,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: const PlayerChatPanelStyle(showPanelContainer: false),
+            messages: messages,
+          ),
+        ),
+      );
+    }
+
+    await tester.pumpWidget(panel(const [first, second]));
+    final firstBubble = find.descendant(
+      of: find.byKey(const ValueKey('first')),
+      matching: find.byType(PlayerChatMessageBubble),
+    );
+    final firstState = tester.state(firstBubble);
+
+    await tester.pumpWidget(panel(const [first, second, third]));
+    final updatedFirstBubble = find.descendant(
+      of: find.byKey(const ValueKey('first')),
+      matching: find.byType(PlayerChatMessageBubble),
+    );
+
+    expect(tester.state(updatedFirstBubble), same(firstState));
+  });
+
+  testWidgets('builds no offscreen chat cache and bounds animated rows', (
+    tester,
+  ) async {
+    final messages = [
+      for (var index = 0; index < 6; index += 1)
+        PlayerChatMessage(
+          source: PlayerChatMessageSource.live,
+          id: 'message-$index',
+          messageTime: index,
+          messageTypeCode: 1,
+          content: 'message $index',
+        ),
+    ];
+
+    await tester.pumpWidget(
+      _ChatHarness(
+        child: SizedBox(
+          width: 320,
+          height: 800,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: const PlayerChatPanelStyle(showPanelContainer: false),
+            messages: messages,
+          ),
+        ),
+      ),
+    );
+
+    final list = tester.widget<ListView>(find.byType(ListView));
+    expect(list.scrollCacheExtent, const ScrollCacheExtent.pixels(0));
+    for (var index = 0; index < messages.length; index += 1) {
+      final bubble = find.descendant(
+        of: find.byKey(ValueKey('message-$index')),
+        matching: find.byType(PlayerChatMessageBubble),
+      );
+      expect(bubble, findsOneWidget);
+      expect(
+        TickerMode.valuesOf(tester.element(bubble)).enabled,
+        index >= messages.length - PlayerChatPanelDesign.maxAnimatedMessageRows,
+      );
+    }
+  });
+
+  testWidgets('does not build distant historical chat rows', (tester) async {
+    final messages = [
+      for (var index = 0; index < 60; index += 1)
+        PlayerChatMessage(
+          source: PlayerChatMessageSource.live,
+          id: 'history-$index',
+          messageTime: index,
+          messageTypeCode: 1,
+          content: 'history $index',
+        ),
+    ];
+
+    await tester.pumpWidget(
+      _ChatHarness(
+        child: SizedBox(
+          width: 320,
+          height: 120,
+          child: PlayerChatPanel(
+            showTitle: false,
+            style: const PlayerChatPanelStyle(showPanelContainer: false),
+            messages: messages,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('history-59')), findsOneWidget);
+    expect(find.byKey(const ValueKey('history-0')), findsNothing);
   });
 }
 

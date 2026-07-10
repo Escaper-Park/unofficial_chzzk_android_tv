@@ -30,7 +30,10 @@ extension _VodPlayerChatReplayVisibilityQueue on VodPlayerChatReplayController {
   }
 
   void _scheduleNextVisibleMessage() {
-    if (_isDisposed || !state.isVisible || _pendingVisibleMessages.isEmpty) {
+    if (_isDisposed ||
+        _isSuspended ||
+        !state.isVisible ||
+        _pendingVisibleMessages.isEmpty) {
       return;
     }
 
@@ -58,7 +61,10 @@ extension _VodPlayerChatReplayVisibilityQueue on VodPlayerChatReplayController {
   }
 
   void _appendNextVisibleMessage() {
-    if (_isDisposed || !state.isVisible || _pendingVisibleMessages.isEmpty) {
+    if (_isDisposed ||
+        _isSuspended ||
+        !state.isVisible ||
+        _pendingVisibleMessages.isEmpty) {
       return;
     }
 

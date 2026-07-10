@@ -662,6 +662,7 @@ void main() {
       await bloc.stream.firstWhere(
         (state) => state.settingsPreferences.liveSettings.chatWindowIndex == 1,
       );
+      await Future<void>.delayed(Duration.zero);
 
       expect(repository.savedPreferences, hasLength(1));
       expect(
@@ -1938,6 +1939,10 @@ void main() {
                 _resolutionUri('channel-b', '360p'),
       );
 
+      final transitionStates = <LivePlayerState>[];
+      final transitionSubscription = bloc.stream.listen(transitionStates.add);
+      addTearDown(transitionSubscription.cancel);
+
       bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
       final shifted = await bloc.stream.firstWhere(
         (state) =>
@@ -1949,6 +1954,40 @@ void main() {
       );
 
       expect(shifted.audibleSlotIds, {'slot-1'});
+      expect(shifted.slotById('primary')?.expectedVideoWidth, 640);
+      expect(shifted.slotById('primary')?.expectedVideoHeight, 360);
+      expect(shifted.slotById('slot-1')?.expectedVideoWidth, 1920);
+      expect(shifted.slotById('slot-1')?.expectedVideoHeight, 1080);
+      final activatedStates = transitionStates
+          .where((state) => state.activeSlotId == 'slot-1')
+          .toList(growable: false);
+      expect(activatedStates, isNotEmpty);
+      expect(
+        activatedStates,
+        everyElement(
+          isA<LivePlayerState>()
+              .having(
+                (state) => state.slotById('primary')?.playbackUri,
+                'overlay URI',
+                _resolutionUri('channel-a', '360p'),
+              )
+              .having(
+                (state) => state.slotById('slot-1')?.playbackUri,
+                'main URI',
+                _resolutionUri('channel-b', '1080p'),
+              )
+              .having(
+                (state) => state.slotById('primary')?.expectedVideoWidth,
+                'overlay expected width',
+                640,
+              )
+              .having(
+                (state) => state.slotById('slot-1')?.expectedVideoWidth,
+                'main expected width',
+                1920,
+              ),
+        ),
+      );
     },
   );
 
@@ -1989,6 +2028,10 @@ void main() {
           _resolutionUri('channel-b', '720p'),
     );
 
+    final transitionStates = <LivePlayerState>[];
+    final transitionSubscription = bloc.stream.listen(transitionStates.add);
+    addTearDown(transitionSubscription.cancel);
+
     bloc.add(
       LivePlayerEvent.preferencesChanged(
         preferences: bloc.state.settingsPreferences.copyWith(
@@ -2007,7 +2050,331 @@ void main() {
           state.slotById('slot-1')?.playbackUri ==
               _resolutionUri('channel-b', '360p'),
     );
+    final pipStates = transitionStates
+        .where(
+          (state) =>
+              state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+        )
+        .toList(growable: false);
+    expect(pipStates, isNotEmpty);
+    expect(
+      pipStates,
+      everyElement(
+        isA<LivePlayerState>()
+            .having(
+              (state) => state.slotById('primary')?.playbackUri,
+              'main URI',
+              _resolutionUri('channel-a', '1080p'),
+            )
+            .having(
+              (state) => state.slotById('slot-1')?.playbackUri,
+              'overlay URI',
+              _resolutionUri('channel-b', '360p'),
+            ),
+      ),
+    );
   });
+
+  test(
+    'pending PIP entry is cancelled by selecting the current PBP layout',
+    () async {
+      final loader = _ControllablePlaylistTextLoader(
+        _playlistTextByChannelIds(['channel-a', 'channel-b']),
+      );
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+          detailsByChannelId: {
+            'channel-b': _liveDetail(
+              channelId: 'channel-b',
+              liveId: 2,
+              livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+            ),
+          },
+        ),
+        loadLivePlaybackPlaylistText: loader.load,
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      await _enterMultiviewAndAddLive(bloc, channelId: 'channel-b', liveId: 2);
+      bloc.add(
+        const LivePlayerEvent.slotResolutionSelected(
+          slotId: 'slot-1',
+          resolutionIndex: 2,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('slot-1')?.playbackUri ==
+            _resolutionUri('channel-b', '720p'),
+      );
+
+      loader.holdAll = true;
+      final transitionStates = <LivePlayerState>[];
+      final subscription = bloc.stream.listen(transitionStates.add);
+      addTearDown(subscription.cancel);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await loader.waitForPendingCount(1);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pbp,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+      loader.completeAll();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(bloc.state.multiviewLayoutMode, LivePlayerMultiviewLayoutMode.pbp);
+      expect(
+        transitionStates.where(
+          (state) =>
+              state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+        ),
+        isEmpty,
+      );
+    },
+  );
+
+  test(
+    'pending PIP active switch is cancelled by reselecting current slot',
+    () async {
+      final loader = _ControllablePlaylistTextLoader(
+        _playlistTextByChannelIds(['channel-a', 'channel-b']),
+      );
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+          detailsByChannelId: {
+            'channel-b': _liveDetail(
+              channelId: 'channel-b',
+              liveId: 2,
+              livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+            ),
+          },
+        ),
+        loadLivePlaybackPlaylistText: loader.load,
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      await _enterMultiviewAndAddLive(bloc, channelId: 'channel-b', liveId: 2);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+      );
+
+      loader.holdAll = true;
+      final transitionStates = <LivePlayerState>[];
+      final subscription = bloc.stream.listen(transitionStates.add);
+      addTearDown(subscription.cancel);
+      bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
+      await loader.waitForPendingCount(2);
+      bloc.add(
+        const LivePlayerEvent.activeSlotSelected(slotId: 'primary'),
+      );
+      await Future<void>.delayed(Duration.zero);
+      loader.completeAll();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(bloc.state.activeSlotId, 'primary');
+      expect(
+        bloc.state.slotById('primary')?.playbackUri,
+        _resolutionUri('channel-a', '1080p'),
+      );
+      expect(
+        bloc.state.slotById('slot-1')?.playbackUri,
+        _resolutionUri('channel-b', '360p'),
+      );
+      expect(
+        transitionStates.where((state) => state.activeSlotId == 'slot-1'),
+        isEmpty,
+      );
+    },
+  );
+
+  test(
+    'loading PIP slot resolves again for its latest active role',
+    () async {
+      final channelBPlaylist = Uri.parse(
+        'https://example.com/channel-b/master.m3u8',
+      );
+      final loader = _ControllablePlaylistTextLoader(
+        _playlistTextByChannelIds(['channel-a', 'channel-b']),
+      )..heldUris.add(channelBPlaylist);
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+          detailsByChannelId: {
+            'channel-b': _liveDetail(
+              channelId: 'channel-b',
+              liveId: 2,
+              livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+            ),
+          },
+        ),
+        loadLivePlaybackPlaylistText: loader.load,
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.multiview,
+        ),
+      );
+      await bloc.stream.firstWhere((state) => state.isMultiview);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+      );
+
+      bloc.add(
+        const LivePlayerEvent.browseLiveSelected(
+          live: Live(
+            liveId: 2,
+            title: 'channel-b',
+            concurrentUserCount: 20,
+            adult: false,
+            channel: LiveChannel(
+              channelId: 'channel-b',
+              channelName: 'channel-b',
+              verifiedMark: false,
+            ),
+          ),
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('slot-1')?.status ==
+            LivePlayerSlotStatus.loadingSource,
+      );
+      await loader.waitForPendingCount(1);
+
+      bloc.add(
+        const LivePlayerEvent.activeSlotSelected(slotId: 'slot-1'),
+      );
+      await bloc.stream.firstWhere(
+        (state) => state.activeSlotId == 'slot-1',
+      );
+      loader.completeNext();
+      await loader.waitForPendingCount(1);
+      loader.completeNext();
+
+      final ready = await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('slot-1')?.status == LivePlayerSlotStatus.ready &&
+            state.slotById('slot-1')?.playbackUri ==
+                _resolutionUri('channel-b', '1080p'),
+      );
+      expect(ready.activeSlotId, 'slot-1');
+    },
+  );
+
+  test(
+    'leaving PIP emits single view only after the single source is ready',
+    () async {
+      final loader = _ControllablePlaylistTextLoader(
+        _playlistTextByChannelIds(['channel-a', 'channel-b']),
+      );
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+          detailsByChannelId: {
+            'channel-b': _liveDetail(
+              channelId: 'channel-b',
+              liveId: 2,
+              livePlaybackJson: _livePlaybackJsonForChannel('channel-b'),
+            ),
+          },
+        ),
+        loadLivePlaybackPlaylistText: loader.load,
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      await _enterMultiviewAndAddLive(bloc, channelId: 'channel-b', liveId: 2);
+      bloc.add(
+        const LivePlayerEvent.multiviewLayoutModeSelected(
+          layoutMode: LivePlayerMultiviewLayoutMode.pip,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.multiviewLayoutMode == LivePlayerMultiviewLayoutMode.pip,
+      );
+      bloc.add(const LivePlayerEvent.activeSlotShiftRequested(delta: 1));
+      await bloc.stream.firstWhere(
+        (state) => state.activeSlotId == 'slot-1',
+      );
+      bloc.add(
+        const LivePlayerEvent.slotResolutionSelected(
+          slotId: 'slot-1',
+          resolutionIndex: 2,
+        ),
+      );
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.slotById('slot-1')?.playbackUri ==
+            _resolutionUri('channel-b', '720p'),
+      );
+
+      loader.holdAll = true;
+      final transitionStates = <LivePlayerState>[];
+      final subscription = bloc.stream.listen(transitionStates.add);
+      addTearDown(subscription.cancel);
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.single,
+        ),
+      );
+      await loader.waitForPendingCount(1);
+      expect(transitionStates.where((state) => !state.isMultiview), isEmpty);
+      loader.completeAll();
+
+      final single = await bloc.stream.firstWhere(
+        (state) =>
+            !state.isMultiview &&
+            state.activeSlot.playbackUri ==
+                _resolutionUri('channel-b', '1080p'),
+      );
+      expect(single.activeSlotId, 'primary');
+      expect(
+        transitionStates.where((state) => !state.isMultiview),
+        everyElement(
+          isA<LivePlayerState>().having(
+            (state) => state.activeSlot.playbackUri,
+            'single playback URI',
+            _resolutionUri('channel-b', '1080p'),
+          ),
+        ),
+      );
+    },
+  );
 
   test(
     'PIP role resolution changes survive active slot switches for the session',
@@ -2182,6 +2549,63 @@ void main() {
   });
 
   test(
+    'multiview retries missing HLS dimensions once for an unchanged source',
+    () async {
+      final masterUri = Uri.parse(
+        'https://example.com/channel-a/master.m3u8',
+      );
+      var playlistLoadCount = 0;
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(
+            livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+        ),
+        settingsPreferencesRepository: _FakeSettingsPreferencesRepository(
+          preferences: const SettingsPreferences(
+            liveSettings: LiveSettings(
+              resolutionIndex: 0,
+              multiviewResolutionIndex: 0,
+            ),
+          ),
+        ),
+        loadLivePlaybackPlaylistText: ({required playlistUri}) async {
+          expect(playlistUri, masterUri);
+          playlistLoadCount += 1;
+          if (playlistLoadCount == 1) {
+            throw StateError('transient playlist failure');
+          }
+          return _variantPlaylistText();
+        },
+      );
+      addTearDown(bloc.close);
+
+      await _startReadyLive(bloc);
+      expect(bloc.state.activeSlot.expectedVideoAspectRatio, isNull);
+      expect(bloc.state.activeSlot.playbackMetadataResolutionAttempts, 1);
+
+      bloc.add(
+        const LivePlayerEvent.viewModeSelected(
+          viewMode: LivePlayerViewMode.multiview,
+        ),
+      );
+      final recovered = await bloc.stream.firstWhere(
+        (state) =>
+            state.isMultiview &&
+            state.activeSlot.expectedVideoWidth == 640 &&
+            state.activeSlot.expectedVideoHeight == 360,
+      );
+
+      expect(
+        recovered.activeSlot.playbackUri,
+        _resolutionUri('channel-a', '360p'),
+      );
+      expect(recovered.activeSlot.playbackMetadataResolutionAttempts, 2);
+      expect(playlistLoadCount, 2);
+    },
+  );
+
+  test(
     'multiview layout change skips reload when slot resolution is unchanged',
     () async {
       final playlistLoads = <Uri>[];
@@ -2247,6 +2671,13 @@ void main() {
         liveRepository: _FakeLiveRepository(
           detail: _liveDetail(
             livePlaybackJson: _livePlaybackJsonForChannel('channel-a'),
+          ),
+        ),
+        settingsPreferencesRepository: _FakeSettingsPreferencesRepository(
+          preferences: const SettingsPreferences(
+            generalSetting: GeneralSetting(
+              videoViewTypeIndex: playerVideoViewTypeIndexMin,
+            ),
           ),
         ),
         loadLivePlaybackPlaylistText: ({required playlistUri}) async {
@@ -2928,6 +3359,316 @@ void main() {
     },
   );
 
+  test('browse up path switches from following to popular', () async {
+    final bloc = _livePlayerBloc(
+      liveRepository: _FakeLiveRepository(
+        detail: _liveDetail(playbackUri: 'https://example.com/live.m3u8'),
+        livePage: const LivePage(
+          items: [
+            Live(
+              liveId: 22,
+              title: 'Popular live',
+              concurrentUserCount: 99,
+              adult: false,
+              channel: LiveChannel(
+                channelId: 'popular-channel',
+                channelName: 'Popular Channel',
+                verifiedMark: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+      followingRepository: _FakeFollowingRepository(
+        livePage: const FollowingLivePage(
+          items: [
+            FollowingChannel(
+              channelId: 'following-channel',
+              channelName: 'Following Channel',
+              verifiedMark: false,
+              openLive: true,
+              liveInfo: FollowingLiveInfo(
+                liveId: 11,
+                title: 'Following live',
+                concurrentUserCount: 10,
+                adult: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    addTearDown(bloc.close);
+
+    bloc.add(
+      const LivePlayerEvent.started(
+        initialTarget: LivePlayerInitialTarget(channelId: 'channel-a'),
+      ),
+    );
+    await bloc.stream.firstWhere(
+      (state) => state.activeSlot.status == LivePlayerSlotStatus.ready,
+    );
+
+    final browseStates = <LivePlayerState>[];
+    final browseSubscription = bloc.stream.listen(browseStates.add);
+    addTearDown(browseSubscription.cancel);
+    bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: true));
+    final following = await bloc.stream.firstWhere(
+      (state) =>
+          state.browseSection == LivePlayerBrowseSection.following &&
+          state.browseStatus == LivePlayerBrowseLoadStatus.success,
+    );
+    expect(following.browseItems.single.title, 'Following live');
+    expect(
+      browseStates.where(
+        (state) =>
+            state.browseSection == LivePlayerBrowseSection.following &&
+            state.browseStatus == LivePlayerBrowseLoadStatus.loading,
+      ),
+      hasLength(1),
+    );
+
+    bloc.add(const LivePlayerEvent.browseNextSectionRequested());
+    final popular = await bloc.stream.firstWhere(
+      (state) =>
+          state.browseSection == LivePlayerBrowseSection.popular &&
+          state.browseStatus == LivePlayerBrowseLoadStatus.success,
+    );
+
+    expect(popular.browseItems.single.title, 'Popular live');
+  });
+
+  test('browse fetch does not wait for group storage read', () async {
+    final groupRead = Completer<void>();
+    final followingRepository = _FakeFollowingRepository(
+      livePage: const FollowingLivePage(
+        items: [
+          FollowingChannel(
+            channelId: 'following-channel',
+            channelName: 'Following Channel',
+            verifiedMark: false,
+            openLive: true,
+            liveInfo: FollowingLiveInfo(
+              liveId: 11,
+              title: 'Following live',
+              concurrentUserCount: 10,
+              adult: false,
+            ),
+          ),
+        ],
+      ),
+    );
+    final bloc = _livePlayerBloc(
+      liveRepository: _FakeLiveRepository(
+        detail: _liveDetail(playbackUri: 'https://example.com/live.m3u8'),
+        livePage: const LivePage(
+          items: [
+            Live(
+              liveId: 22,
+              title: 'Popular live',
+              concurrentUserCount: 20,
+              adult: false,
+              channel: LiveChannel(
+                channelId: 'popular-channel',
+                channelName: 'Popular Channel',
+                verifiedMark: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+      followingRepository: followingRepository,
+      groupRepository: _FakeGroupRepository(
+        readGate: groupRead.future,
+        collection: const GroupCollection(
+          groups: [
+            GroupItem(id: 'group-a', groupName: 'Group A'),
+          ],
+        ),
+      ),
+    );
+    addTearDown(bloc.close);
+    await _startReadyLive(bloc);
+
+    bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: true));
+    final following = await bloc.stream.firstWhere(
+      (state) =>
+          state.browseSection == LivePlayerBrowseSection.following &&
+          state.browseStatus == LivePlayerBrowseLoadStatus.success,
+    );
+
+    expect(followingRepository.fetchLiveCount, 1);
+    expect(following.browseItems.single.title, 'Following live');
+    expect(groupRead.isCompleted, isFalse);
+
+    bloc.add(const LivePlayerEvent.browseNextSectionRequested());
+    await bloc.stream.firstWhere(
+      (state) =>
+          state.browseSection == LivePlayerBrowseSection.popular &&
+          state.browseStatus == LivePlayerBrowseLoadStatus.success,
+    );
+    groupRead.complete();
+    await Future<void>.delayed(Duration.zero);
+    expect(bloc.state.groupCollection.groups.single.id, 'group-a');
+  });
+
+  test(
+    'browse can reopen while an earlier group storage read is still pending',
+    () async {
+      final groupRead = Completer<void>();
+      final groupRepository = _FakeGroupRepository(
+        readGate: groupRead.future,
+      );
+      final followingRepository = _FakeFollowingRepository(
+        livePage: const FollowingLivePage(
+          items: [
+            FollowingChannel(
+              channelId: 'following-channel',
+              channelName: 'Following Channel',
+              verifiedMark: false,
+              openLive: true,
+              liveInfo: FollowingLiveInfo(
+                liveId: 11,
+                title: 'Following live',
+                concurrentUserCount: 10,
+                adult: false,
+              ),
+            ),
+          ],
+        ),
+      );
+      final bloc = _livePlayerBloc(
+        liveRepository: _FakeLiveRepository(
+          detail: _liveDetail(playbackUri: 'https://example.com/live.m3u8'),
+        ),
+        followingRepository: followingRepository,
+        groupRepository: groupRepository,
+      );
+      addTearDown(bloc.close);
+      await _startReadyLive(bloc);
+
+      bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: true));
+      await bloc.stream.firstWhere(
+        (state) =>
+            state.overlayMode == LivePlayerOverlayMode.browse &&
+            state.browseStatus == LivePlayerBrowseLoadStatus.success,
+      );
+
+      bloc.add(const LivePlayerEvent.browseClosed());
+      await bloc.stream.firstWhere(
+        (state) => state.overlayMode == LivePlayerOverlayMode.none,
+      );
+
+      final reopened = bloc.stream.firstWhere(
+        (state) =>
+            state.overlayMode == LivePlayerOverlayMode.browse &&
+            state.browseStatus == LivePlayerBrowseLoadStatus.success &&
+            followingRepository.fetchLiveCount == 2,
+      );
+      bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: true));
+      await reopened.timeout(const Duration(seconds: 1));
+
+      expect(followingRepository.fetchLiveCount, 2);
+      expect(groupRepository.readCount, 1);
+      expect(groupRead.isCompleted, isFalse);
+      groupRead.complete();
+      await Future<void>.delayed(Duration.zero);
+    },
+  );
+
+  test('closing the route stops pending group detail traversal', () async {
+    final firstGroupDetail = Completer<void>();
+    final liveRepository = _FakeLiveRepository(
+      detail: _liveDetail(playbackUri: 'https://example.com/live.m3u8'),
+      detailsByChannelId: {
+        'group-channel-a': _liveDetail(
+          channelId: 'group-channel-a',
+          liveId: 31,
+          playbackUri: 'https://example.com/group-a.m3u8',
+        ),
+        'group-channel-b': _liveDetail(
+          channelId: 'group-channel-b',
+          liveId: 32,
+          playbackUri: 'https://example.com/group-b.m3u8',
+        ),
+      },
+      liveDetailGates: {
+        'group-channel-a': firstGroupDetail.future,
+      },
+    );
+    final bloc = _livePlayerBloc(
+      liveRepository: liveRepository,
+      followingRepository: _FakeFollowingRepository(
+        livePage: const FollowingLivePage(
+          items: [
+            FollowingChannel(
+              channelId: 'following-channel',
+              channelName: 'Following Channel',
+              verifiedMark: false,
+              openLive: true,
+              liveInfo: FollowingLiveInfo(
+                liveId: 11,
+                title: 'Following live',
+                concurrentUserCount: 10,
+                adult: false,
+              ),
+            ),
+          ],
+        ),
+      ),
+      groupRepository: _FakeGroupRepository(
+        collection: const GroupCollection(
+          groups: [
+            GroupItem(
+              id: 'group-a',
+              groupName: 'Group A',
+              memberChannelIds: ['group-channel-a', 'group-channel-b'],
+            ),
+          ],
+          activatedGroupId: 'group-a',
+        ),
+      ),
+      settingsPreferencesRepository: _FakeSettingsPreferencesRepository(
+        preferences: const SettingsPreferences(
+          liveSettings: LiveSettings(showGroupInVideoPlayer: 1),
+        ),
+      ),
+    );
+    await _startReadyLive(bloc);
+
+    bloc.add(const LivePlayerEvent.browseRequested(isSignedIn: true));
+    await bloc.stream.firstWhere(
+      (state) =>
+          state.browseStatus == LivePlayerBrowseLoadStatus.success &&
+          state.activeGroup?.id == 'group-a',
+    );
+
+    bloc.add(const LivePlayerEvent.browsePreviousSectionRequested());
+    for (
+      var attempt = 0;
+      attempt < 100 &&
+          !liveRepository.getLiveDetailCalls.contains('group-channel-a');
+      attempt++
+    ) {
+      await Future<void>.delayed(Duration.zero);
+    }
+    expect(
+      liveRepository.getLiveDetailCalls,
+      contains('group-channel-a'),
+    );
+
+    final closeFuture = bloc.close();
+    await Future<void>.delayed(Duration.zero);
+    firstGroupDetail.complete();
+    await closeFuture;
+    await Future<void>.delayed(Duration.zero);
+
+    expect(
+      liveRepository.getLiveDetailCalls,
+      isNot(contains('group-channel-b')),
+    );
+  });
+
   test(
     'browse live selected keeps browse overlay while switching slot',
     () async {
@@ -3209,12 +3950,14 @@ class _FakeLiveRepository implements LiveRepository {
   _FakeLiveRepository({
     this.detail,
     this.detailsByChannelId = const {},
+    this.liveDetailGates = const {},
     this.status,
     this.livePage = const LivePage(),
   });
 
   final LiveDetail? detail;
   final Map<String, LiveDetail> detailsByChannelId;
+  final Map<String, Future<void>> liveDetailGates;
   LiveStatus? status;
   Completer<LiveStatus>? pendingStatus;
   final LivePage livePage;
@@ -3240,6 +3983,10 @@ class _FakeLiveRepository implements LiveRepository {
   @override
   Future<LiveDetail> getLiveDetail({required String channelId}) async {
     getLiveDetailCalls.add(channelId);
+    final gate = liveDetailGates[channelId];
+    if (gate != null) {
+      await gate;
+    }
     final detail = detailsByChannelId[channelId] ?? this.detail;
     if (detail == null) {
       throw StateError('missing detail');
@@ -3312,9 +4059,12 @@ class _FakeLiveRepository implements LiveRepository {
 }
 
 class _FakeFollowingRepository implements FollowingRepository {
-  _FakeFollowingRepository();
+  _FakeFollowingRepository({
+    this.livePage = const FollowingLivePage(),
+  });
 
-  final FollowingLivePage livePage = const FollowingLivePage();
+  final FollowingLivePage livePage;
+  int fetchLiveCount = 0;
 
   @override
   Future<FollowingChannelPage> fetchFollowingChannels({
@@ -3331,6 +4081,7 @@ class _FakeFollowingRepository implements FollowingRepository {
   Future<FollowingLivePage> fetchFollowingLives({
     FollowingLiveSort? sortType,
   }) async {
+    fetchLiveCount += 1;
     return livePage;
   }
 }
@@ -3474,13 +4225,18 @@ class _FakeGroupRepository implements GroupRepository {
   _FakeGroupRepository({
     GroupCollection? collection,
     this.addResult = GroupAddMemberResult.added,
+    this.readGate,
   }) : collection = collection ?? defaultGroupCollection;
 
   GroupCollection collection;
   final GroupAddMemberResult addResult;
+  final Future<void>? readGate;
+  int readCount = 0;
 
   @override
   Future<GroupCollection> read() async {
+    readCount += 1;
+    await readGate;
     return collection;
   }
 
@@ -3550,6 +4306,51 @@ LoadLivePlaybackPlaylistText _fakeLivePlaybackPlaylistTextLoader({
 
     return playlistText;
   };
+}
+
+final class _ControllablePlaylistTextLoader {
+  _ControllablePlaylistTextLoader(this.playlistTextByUri);
+
+  final Map<Uri, String> playlistTextByUri;
+  final Set<Uri> heldUris = <Uri>{};
+  final List<({Uri uri, Completer<String> completer})> pending = [];
+  bool holdAll = false;
+
+  Future<String> load({required Uri playlistUri}) {
+    final playlistText = playlistTextByUri[playlistUri];
+    if (playlistText == null) {
+      throw StateError('missing playlist text for $playlistUri');
+    }
+    if (!holdAll && !heldUris.contains(playlistUri)) {
+      return Future<String>.value(playlistText);
+    }
+
+    final completer = Completer<String>();
+    pending.add((uri: playlistUri, completer: completer));
+    return completer.future;
+  }
+
+  Future<void> waitForPendingCount(int count) async {
+    for (var attempt = 0; attempt < 100 && pending.length < count; attempt++) {
+      await Future<void>.delayed(Duration.zero);
+    }
+    if (pending.length < count) {
+      throw StateError(
+        'Expected $count pending playlist loads, found ${pending.length}.',
+      );
+    }
+  }
+
+  void completeNext() {
+    final request = pending.removeAt(0);
+    request.completer.complete(playlistTextByUri[request.uri]!);
+  }
+
+  void completeAll() {
+    while (pending.isNotEmpty) {
+      completeNext();
+    }
+  }
 }
 
 class _FakeSettingsPreferencesRepository

@@ -5,6 +5,9 @@ extension _LivePlayerBlocBrowseSelectionHelpers on LivePlayerBloc {
     _BrowseLiveSelected event,
     Emitter<LivePlayerState> emit,
   ) async {
+    if (state.isMultiview) {
+      _beginMultiviewPlaybackTransition();
+    }
     if (state.isMultiview && _slotForLive(event.live) != null) {
       _emitFeedback(emit, LivePlayerFeedbackType.multiviewLiveAlreadyAdded);
       return;
@@ -61,6 +64,9 @@ extension _LivePlayerBlocBrowseSelectionHelpers on LivePlayerBloc {
     _BrowseReplacementSlotSelected event,
     Emitter<LivePlayerState> emit,
   ) async {
+    if (state.isMultiview) {
+      _beginMultiviewPlaybackTransition();
+    }
     final live = state.pendingReplacementLive;
     final channelId = live?.channel?.channelId;
     if (live == null ||

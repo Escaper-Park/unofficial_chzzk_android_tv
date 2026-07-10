@@ -216,6 +216,131 @@ void main() {
     expect(fetchCount, 3);
     expect(controller.state.phase, VodPlayerChatReplayPhase.ready);
   });
+
+  test(
+    'bounds dense raw chat history and refetches trimmed positions',
+    () async {
+      var fetchCount = 0;
+      final controller = VodPlayerChatReplayController(
+        videoNo: 123,
+        isChatEnabled: true,
+        chatChannelId: 'chat-a',
+        initialPresentationMode: PlayerChatPresentationMode.overlay,
+        fetchPage:
+            ({
+              required videoNo,
+              required playerMessageTime,
+              previousVideoChatSize,
+            }) async {
+              fetchCount += 1;
+              if (playerMessageTime == 0) {
+                return VideoChatPage(
+                  messages: [_message('zero', playerMessageTime: 0)],
+                );
+              }
+
+              return VideoChatPage(
+                messages: [
+                  for (var index = 0; index < 3000; index += 1)
+                    _message('dense-$index', playerMessageTime: index),
+                ],
+              );
+            },
+      );
+      addTearDown(controller.dispose);
+
+      await controller.syncToPosition(
+        const Duration(milliseconds: 2999),
+      );
+      expect(fetchCount, 1);
+
+      await controller.syncToPosition(Duration.zero);
+
+      expect(fetchCount, 2);
+      expect(controller.state.messages.single.content, 'zero');
+    },
+  );
+
+  test('backs off repeated tail prefetch failures', () async {
+    var now = DateTime(2026);
+    var fetchCount = 0;
+    final controller = VodPlayerChatReplayController(
+      videoNo: 123,
+      isChatEnabled: true,
+      chatChannelId: 'chat-a',
+      initialPresentationMode: PlayerChatPresentationMode.overlay,
+      retryClock: () => now,
+      fetchPage:
+          ({
+            required videoNo,
+            required playerMessageTime,
+            previousVideoChatSize,
+          }) async {
+            fetchCount += 1;
+            if (fetchCount > 1) {
+              throw StateError('tail prefetch failure');
+            }
+
+            return VideoChatPage(
+              nextPlayerMessageTime: 2000,
+              messages: [_message('one', playerMessageTime: 1000)],
+            );
+          },
+    );
+    addTearDown(controller.dispose);
+
+    await controller.syncToPosition(const Duration(milliseconds: 1000));
+    await Future<void>.delayed(Duration.zero);
+    expect(fetchCount, 2);
+
+    await controller.syncToPosition(const Duration(milliseconds: 1000));
+    now = now.add(const Duration(milliseconds: 999));
+    await controller.syncToPosition(const Duration(milliseconds: 1000));
+    expect(fetchCount, 2);
+
+    now = now.add(const Duration(milliseconds: 1));
+    await controller.syncToPosition(const Duration(milliseconds: 1000));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(fetchCount, 3);
+  });
+
+  test(
+    'suspends fetch and resumes from the latest playback position',
+    () async {
+      final requestedPositions = <int>[];
+      final controller = VodPlayerChatReplayController(
+        videoNo: 123,
+        isChatEnabled: true,
+        chatChannelId: 'chat-a',
+        initialPresentationMode: PlayerChatPresentationMode.overlay,
+        fetchPage:
+            ({
+              required videoNo,
+              required playerMessageTime,
+              previousVideoChatSize,
+            }) async {
+              requestedPositions.add(playerMessageTime);
+              return VideoChatPage(
+                messages: [
+                  _message('resumed', playerMessageTime: playerMessageTime),
+                ],
+              );
+            },
+      );
+      addTearDown(controller.dispose);
+
+      controller.setSuspended(suspended: true);
+      await controller.syncToPosition(const Duration(seconds: 12));
+      expect(requestedPositions, isEmpty);
+
+      controller.setSuspended(suspended: false);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(requestedPositions, [12000]);
+      expect(controller.state.messages.single.content, 'resumed');
+    },
+  );
 }
 
 VideoChatMessage _message(String content, {required int playerMessageTime}) {

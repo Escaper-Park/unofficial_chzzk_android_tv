@@ -63,6 +63,9 @@ extension _LivePlayerBlocStatusHelpers on LivePlayerBloc {
             status: LivePlayerSlotStatus.failure,
             liveStatus: liveStatus,
             playbackUri: null,
+            expectedVideoWidth: null,
+            expectedVideoHeight: null,
+            playbackMetadataResolutionAttempts: 0,
             failureReason: LivePlayerFailureReason.entryBlocked,
           ),
         );

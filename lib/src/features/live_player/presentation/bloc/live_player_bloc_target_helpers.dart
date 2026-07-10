@@ -6,6 +6,7 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
     LivePlayerInitialTarget target, {
     String? slotId,
     bool preserveMetadataWhileLoading = false,
+    bool readPersistedPreferences = false,
   }) async {
     final targetSlotId = slotId ?? state.activeSlotId;
     final targetSlot = state.slotById(targetSlotId);
@@ -19,12 +20,16 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
       ++_statusRefreshSerial;
     }
     _nextSlotStatusRefreshSerial(targetSlotId);
-    final entrySettings = await _readEntrySettings();
+    final entrySettings = readPersistedPreferences
+        ? await _readEntrySettings()
+        : _entrySettingsForPreferences(state.settingsPreferences);
     if (!_isSlotTargetRequestCurrent(targetSlotId, requestSerial)) {
       return;
     }
 
-    _persistedSettingsPreferences = entrySettings.preferences;
+    if (readPersistedPreferences) {
+      _persistedSettingsPreferences = entrySettings.preferences;
+    }
     final targetChangesLive =
         targetSlot.channelId != target.channelId ||
         targetSlot.liveId != target.liveId;
@@ -46,25 +51,33 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
       availableResolutionIndexes: LivePlaybackResolutionOptions.allIndexes,
       playbackLatencyIndex: null,
       playbackResolutionIndex: null,
+      expectedVideoWidth: null,
+      expectedVideoHeight: null,
+      playbackMetadataResolutionAttempts: 0,
       failureReason: null,
     );
+    final currentState = state;
+    final loadingState = currentState.copyWith(
+      channelMyInfo: targetSlotId == state.activeSlotId
+          ? preserveMetadataWhileLoading
+                ? state.channelMyInfo
+                : null
+          : state.channelMyInfo,
+      slotVolumeById: slotVolumeById,
+      slots: [
+        for (final current in state.slots)
+          current.slotId == targetSlotId ? loadingSlot : current,
+      ],
+    );
     emit(
-      state.copyWith(
-        settingsPreferences: entrySettings.preferences,
-        multiviewLayoutMode: _multiviewLayoutModeForIndex(
-          entrySettings.liveSettings.multiviewScreenModeIndex,
-        ),
-        channelMyInfo: targetSlotId == state.activeSlotId
-            ? preserveMetadataWhileLoading
-                  ? state.channelMyInfo
-                  : null
-            : state.channelMyInfo,
-        slotVolumeById: slotVolumeById,
-        slots: [
-          for (final current in state.slots)
-            current.slotId == targetSlotId ? loadingSlot : current,
-        ],
-      ),
+      readPersistedPreferences
+          ? loadingState.copyWith(
+              settingsPreferences: entrySettings.preferences,
+              multiviewLayoutMode: _multiviewLayoutModeForIndex(
+                entrySettings.liveSettings.multiviewScreenModeIndex,
+              ),
+            )
+          : loadingState,
     );
 
     final resolutionIndex = _resolutionIndexForSlot(
@@ -121,10 +134,61 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
         );
       case LivePlayerTargetLoadResultType.ready:
         final detail = result.detail!;
-        final playbackSource = result.playbackSource!;
+        var playbackSource = result.playbackSource!;
+        var playbackLatencyIndex = result.playbackLatencyIndex!;
+        var playbackResolutionIndex = result.playbackResolutionIndex!;
+
+        while (true) {
+          if (!_isSlotTargetRequestCurrent(targetSlotId, requestSerial)) {
+            return;
+          }
+          final desiredPreferences = state.settingsPreferences;
+          final desiredLatencyIndex =
+              desiredPreferences.liveSettings.latencyIndex;
+          final desiredResolutionIndex = _resolutionIndexForSlot(
+            slotId: targetSlotId,
+            preferences: desiredPreferences,
+          );
+          if (playbackLatencyIndex == desiredLatencyIndex &&
+              playbackResolutionIndex == desiredResolutionIndex) {
+            break;
+          }
+
+          final correctedSource = await _playbackSourceLoader.resolve(
+            livePlaybackJson: detail.livePlaybackJson,
+            latencyIndex: desiredLatencyIndex,
+            resolutionIndex: desiredResolutionIndex,
+          );
+          if (!_isSlotTargetRequestCurrent(targetSlotId, requestSerial)) {
+            return;
+          }
+          if (correctedSource == null) {
+            final latestSlot = state.slotById(targetSlotId);
+            if (latestSlot != null) {
+              _emitSlot(
+                emit,
+                latestSlot.copyWith(
+                  status: LivePlayerSlotStatus.failure,
+                  playbackUri: null,
+                  failureReason: LivePlayerFailureReason.playbackSourceMissing,
+                ),
+              );
+            }
+            return;
+          }
+
+          playbackSource = correctedSource;
+          playbackLatencyIndex = desiredLatencyIndex;
+          playbackResolutionIndex = desiredResolutionIndex;
+        }
+
+        final latestSlot = state.slotById(targetSlotId);
+        if (latestSlot == null) {
+          return;
+        }
         _emitSlot(
           emit,
-          currentSlot.copyWith(
+          latestSlot.copyWith(
             status: LivePlayerSlotStatus.ready,
             channelId: detail.channel?.channelId ?? target.channelId,
             liveId: detail.liveId,
@@ -135,9 +199,13 @@ extension _LivePlayerBlocTargetHelpers on LivePlayerBloc {
             playbackUri: playbackSource.playbackUri,
             availableResolutionIndexes:
                 playbackSource.availableResolutionIndexes,
-            playbackLatencyIndex: result.playbackLatencyIndex,
-            playbackResolutionIndex: result.playbackResolutionIndex,
-            videoViewType: result.videoViewType!,
+            playbackLatencyIndex: playbackLatencyIndex,
+            playbackResolutionIndex: playbackResolutionIndex,
+            expectedVideoWidth: playbackSource.expectedVideoWidth,
+            expectedVideoHeight: playbackSource.expectedVideoHeight,
+            playbackMetadataResolutionAttempts: 1,
+            videoViewType:
+                state.settingsPreferences.generalSetting.videoViewType,
             failureReason: null,
           ),
         );

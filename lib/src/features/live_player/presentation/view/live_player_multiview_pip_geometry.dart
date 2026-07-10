@@ -5,24 +5,39 @@ List<Rect> _pipRects(Size size, int count, LiveSettings settings) {
     return const [];
   }
 
-  final availableWidth =
-      size.width - LivePlayerScreenDesign.multiviewPipScreenPadding * 2;
-  final availableHeight =
-      size.height - LivePlayerScreenDesign.multiviewPipScreenPadding * 2;
-  const gap = LivePlayerScreenDesign.multiviewPipGap;
+  final viewportWidth = _finiteNonNegativeExtent(size.width);
+  final viewportHeight = _finiteNonNegativeExtent(size.height);
+  final screenPadding = math.min(
+    LivePlayerScreenDesign.multiviewPipScreenPadding,
+    math.min(viewportWidth, viewportHeight) / 2,
+  );
+  final availableWidth = math.max(
+    0.0,
+    viewportWidth - screenPadding * 2,
+  );
+  final availableHeight = math.max(
+    0.0,
+    viewportHeight - screenPadding * 2,
+  );
+  final horizontal = settings.multiviewPipLayoutIndex == 0;
+  final availableMainAxis = horizontal ? availableWidth : availableHeight;
+  final gap = _pipGap(
+    availableMainAxis: availableMainAxis,
+    count: count,
+  );
   final totalGap = gap * (count - 1);
   final maxSizePercent = count >= 2
       ? LivePlayerScreenDesign.multiviewPipMultiMaxSizePercent
       : LivePlayerScreenDesign.multiviewPipSingleMaxSizePercent;
   final sizePercent = settings.multiviewPipSize.clamp(1, maxSizePercent) / 100;
-  final horizontal = settings.multiviewPipLayoutIndex == 0;
 
   final pipSize = _pipSize(
-    availableWidth: math.max(0, availableWidth),
-    availableHeight: math.max(0, availableHeight),
+    availableWidth: availableWidth,
+    availableHeight: availableHeight,
     totalGap: totalGap,
     sizePercent: sizePercent,
     horizontal: horizontal,
+    count: count,
   );
   final pipWidth = pipSize.width;
   final pipHeight = pipSize.height;
@@ -42,12 +57,8 @@ List<Rect> _pipRects(Size size, int count, LiveSettings settings) {
   return [
     for (var index = 0; index < count; index += 1)
       Rect.fromLTWH(
-        LivePlayerScreenDesign.multiviewPipScreenPadding +
-            originX +
-            (horizontal ? (pipWidth + gap) * index : 0),
-        LivePlayerScreenDesign.multiviewPipScreenPadding +
-            originY +
-            (horizontal ? 0 : (pipHeight + gap) * index),
+        screenPadding + originX + (horizontal ? (pipWidth + gap) * index : 0),
+        screenPadding + originY + (horizontal ? 0 : (pipHeight + gap) * index),
         pipWidth,
         pipHeight,
       ),
@@ -60,24 +71,48 @@ Size _pipSize({
   required double totalGap,
   required double sizePercent,
   required bool horizontal,
+  required int count,
 }) {
+  final safeCount = math.max(1, count);
   if (horizontal) {
-    final width = math.max(0.0, availableWidth - totalGap) * sizePercent;
-    final height = width * 9 / 16;
+    final usableWidth = math.max(0.0, availableWidth - totalGap);
+    final width = math.min(
+      usableWidth * sizePercent,
+      usableWidth / safeCount,
+    );
+    final height = width / _pipSlotAspectRatio;
     if (height <= availableHeight) {
       return Size(width, height);
     }
 
-    return Size(availableHeight * 16 / 9, availableHeight);
+    return Size(availableHeight * _pipSlotAspectRatio, availableHeight);
   }
 
-  final height = math.max(0.0, availableHeight - totalGap) * sizePercent;
-  final width = height * 16 / 9;
+  final usableHeight = math.max(0.0, availableHeight - totalGap);
+  final height = math.min(
+    usableHeight * sizePercent,
+    usableHeight / safeCount,
+  );
+  final width = height * _pipSlotAspectRatio;
   if (width <= availableWidth) {
     return Size(width, height);
   }
 
-  return Size(availableWidth, availableWidth * 9 / 16);
+  return Size(availableWidth, availableWidth / _pipSlotAspectRatio);
+}
+
+double _pipGap({
+  required double availableMainAxis,
+  required int count,
+}) {
+  if (count <= 1) {
+    return 0;
+  }
+
+  return math.min(
+    LivePlayerScreenDesign.multiviewPipGap,
+    availableMainAxis / (count - 1),
+  );
 }
 
 double _pipAxisOrigin({
@@ -88,3 +123,13 @@ double _pipAxisOrigin({
   final travel = (available - content).clamp(0, double.infinity);
   return travel * positionPercent.clamp(0, 100) / 100;
 }
+
+double _finiteNonNegativeExtent(double value) {
+  if (!value.isFinite || value <= 0) {
+    return 0;
+  }
+
+  return value;
+}
+
+const _pipSlotAspectRatio = 16 / 9;

@@ -19,6 +19,12 @@ typedef PostVodPlayerWatchEvent =
       required int totalLengthSeconds,
     });
 
+typedef _PendingVodWatchEvent = ({
+  String watchEventType,
+  int positionSeconds,
+  int? awtSeconds,
+});
+
 final class VodPlayerWatchEventReporter {
   VodPlayerWatchEventReporter({
     required String channelId,
@@ -52,7 +58,10 @@ final class VodPlayerWatchEventReporter {
   final DateTime Function() _now;
   final Duration _continuedInterval;
 
-  Future<void> _pendingSend = Future<void>.value();
+  final List<_PendingVodWatchEvent> _pendingEvents = [];
+  Future<void> _sendLoopDone = Future<void>.value();
+  int? _replaceableContinuedEventIndex;
+  var _sendLoopRunning = false;
   bool _hasStarted = false;
   bool _isPlaybackActive = false;
   bool _hasPaused = false;
@@ -182,8 +191,10 @@ final class VodPlayerWatchEventReporter {
     );
   }
 
-  Future<void> flush() {
-    return _pendingSend;
+  Future<void> flush() async {
+    while (_sendLoopRunning || _pendingEvents.isNotEmpty) {
+      await _sendLoopDone;
+    }
   }
 
   int? _awtSeconds() {
@@ -198,14 +209,57 @@ final class VodPlayerWatchEventReporter {
     required int positionSeconds,
     int? awtSeconds,
   }) {
-    _pendingSend = _pendingSend.then((_) async {
+    final event = (
+      watchEventType: watchEventType,
+      positionSeconds: positionSeconds.clamp(0, _durationSeconds).toInt(),
+      awtSeconds: awtSeconds,
+    );
+    final replaceableIndex = _replaceableContinuedEventIndex;
+    if (watchEventType == _watchContinued && replaceableIndex != null) {
+      _pendingEvents[replaceableIndex] = event;
+    } else {
+      _pendingEvents.add(event);
+      _replaceableContinuedEventIndex = watchEventType == _watchContinued
+          ? _pendingEvents.length - 1
+          : null;
+    }
+    _ensureSendLoop();
+  }
+
+  void _ensureSendLoop() {
+    if (_sendLoopRunning || _pendingEvents.isEmpty) {
+      return;
+    }
+
+    _sendLoopRunning = true;
+    final done = Completer<void>();
+    _sendLoopDone = done.future;
+    unawaited(
+      _drainSendQueue().whenComplete(() {
+        _sendLoopRunning = false;
+        done.complete();
+        _ensureSendLoop();
+      }),
+    );
+  }
+
+  Future<void> _drainSendQueue() async {
+    while (_pendingEvents.isNotEmpty) {
+      final event = _pendingEvents.removeAt(0);
+      final replaceableIndex = _replaceableContinuedEventIndex;
+      if (replaceableIndex != null) {
+        _replaceableContinuedEventIndex = replaceableIndex == 0
+            ? null
+            : replaceableIndex - 1;
+      }
+
       try {
         await _postWatchEvent(
           channelId: _channelId,
           videoNo: _videoNo,
-          watchEventType: watchEventType,
-          awtSeconds: awtSeconds,
-          positionSeconds: positionSeconds.clamp(0, _durationSeconds).toInt(),
+          watchEventType: event.watchEventType,
+          awtSeconds: event.awtSeconds,
+          positionSeconds: event.positionSeconds,
           sessionId: _sessionId,
           eventDurationSeconds: _reportedDurationSeconds,
           totalLengthSeconds: _durationSeconds,
@@ -213,6 +267,6 @@ final class VodPlayerWatchEventReporter {
       } on Object {
         debugPrint('Failed to post VOD watch event.');
       }
-    });
+    }
   }
 }

@@ -30,7 +30,10 @@ class TvPlayerOverlayAutoHideController extends ChangeNotifier {
       return;
     }
 
-    _timer = Timer(_displayDuration, onTimeout);
+    _timer = Timer(_displayDuration, () {
+      _timer = null;
+      onTimeout();
+    });
   }
 
   void cancel() {

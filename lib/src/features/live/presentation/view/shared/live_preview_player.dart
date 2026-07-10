@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../../core/utils/controller_disposal_barrier.dart';
 import '../../../../settings/domain/entities/settings_preferences.dart';
 
 class LivePreviewPlayer extends HookWidget {
@@ -26,6 +27,7 @@ class LivePreviewPlayer extends HookWidget {
       () => VideoPlayerController.networkUrl(
         playbackUri,
         viewType: _videoViewTypeFor(videoViewType),
+        positionUpdateInterval: null,
       ),
       [playbackUri, videoViewType],
     );
@@ -57,34 +59,43 @@ class LivePreviewPlayer extends HookWidget {
       }
 
       controller.addListener(handleControllerChange);
-      unawaited(
-        controller
-            .initialize()
-            .then((_) async {
-              if (disposed) {
-                return;
-              }
+      Future<void> initializeController() async {
+        await mediaControllerDisposalCoordinator.waitForPending();
+        if (disposed) {
+          return;
+        }
 
-              initialized.value = true;
-              await controller.setVolume(muted ? 0 : 1);
-              if (disposed) {
-                return;
-              }
-              await controller.play();
-              if (disposed) {
-                return;
-              }
-            })
-            .catchError((Object _) {
-              reportFailure();
-            }),
+        await controller.initialize();
+        if (disposed) {
+          return;
+        }
+
+        initialized.value = true;
+        await controller.setVolume(muted ? 0 : 1);
+        if (disposed) {
+          return;
+        }
+        await controller.play();
+      }
+
+      unawaited(
+        Future<void>.microtask(initializeController).catchError((Object _) {
+          if (disposed) {
+            return;
+          }
+          reportFailure();
+        }),
       );
 
       return () {
         disposed = true;
         controller.removeListener(handleControllerChange);
         frameValueListenable.dispose();
-        unawaited(controller.dispose());
+        unawaited(
+          mediaControllerDisposalCoordinator.schedule(
+            () => _disposeLivePreviewController(controller),
+          ),
+        );
       };
     }, [controller, frameValueListenable]);
 
@@ -121,6 +132,24 @@ class LivePreviewPlayer extends HookWidget {
       ),
     );
   }
+}
+
+Future<void> _disposeLivePreviewController(
+  VideoPlayerController controller,
+) {
+  if (controller.value.isInitialized) {
+    try {
+      unawaited(controller.setVolume(0).catchError((Object _) {}));
+    } on Object {
+      // Best-effort decoder suspension before native disposal.
+    }
+    try {
+      unawaited(controller.pause().catchError((Object _) {}));
+    } on Object {
+      // Best-effort decoder suspension before native disposal.
+    }
+  }
+  return controller.dispose();
 }
 
 final class _LivePreviewVideoFrameValueListenable
