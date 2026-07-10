@@ -16,7 +16,6 @@ List<InlineSpan> _playerChatContentSpans({
 
   final spans = <InlineSpan>[];
   var start = 0;
-  var emojiImageCount = 0;
   for (final match in _playerChatEmojiPattern.allMatches(text)) {
     if (match.start > start) {
       spans.add(TextSpan(text: text.substring(start, match.start)));
@@ -24,12 +23,9 @@ List<InlineSpan> _playerChatContentSpans({
 
     final key = match.group(1);
     final imageUrl = key == null ? null : message.emojis[key];
-    if (imageUrl == null ||
-        imageUrl.isEmpty ||
-        emojiImageCount >= PlayerChatPanelDesign.maxEmojiImagesPerMessage) {
+    if (imageUrl == null || imageUrl.isEmpty) {
       spans.add(TextSpan(text: match.group(0)));
     } else {
-      emojiImageCount += 1;
       spans.add(
         _playerChatEmojiSpan(
           imageUrl: imageUrl,

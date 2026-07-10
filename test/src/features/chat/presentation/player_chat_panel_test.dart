@@ -161,7 +161,7 @@ void main() {
     expect(find.byType(OptimizedImage), findsNWidgets(2));
   });
 
-  testWidgets('limits emoji image widgets in a single spam message', (
+  testWidgets('renders every registered emoji in a single message', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -194,7 +194,8 @@ void main() {
       ),
     );
 
-    expect(find.byType(OptimizedImage), findsNWidgets(3));
+    expect(find.byType(OptimizedImage), findsNWidgets(6));
+    expect(find.textContaining('{:'), findsNothing);
   });
 
   testWidgets('preserves message state when newer chat items are prepended', (

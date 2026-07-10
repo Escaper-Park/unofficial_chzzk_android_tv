@@ -25,7 +25,6 @@ abstract final class PlayerChatPanelDesign {
   static const iconSize = 16.0;
   static const cheeseIconSize = 15.0;
   static const emojiMinSize = 20.0;
-  static const maxEmojiImagesPerMessage = 3;
   static const maxAnimatedMessageRows = 4;
   static const donationAmountGap = 4.0;
   static const donationAmountPadding = EdgeInsets.symmetric(
