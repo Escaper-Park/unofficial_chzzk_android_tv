@@ -19,6 +19,53 @@ import 'package:unofficial_chzzk_android_tv/src/features/vod/presentation/vod_pl
 
 void main() {
   testWidgets(
+    'adult vod entry uses detail status instead of incomplete card status',
+    (tester) async {
+      final authBloc = AuthSessionBloc(const _FakeAuthSessionRepository());
+      final detail = _vodDetail().copyWith(
+        adult: true,
+        userAdultStatus: 'ADULT',
+      );
+      final vodRepository = _FakeVodRepository(detail: detail);
+      const channelRepository = _FakeChannelRepository(
+        myInfo: ChannelMyInfo(
+          channelId: 'channel-a',
+          cheatKey: false,
+          naverMembership: false,
+        ),
+      );
+      late BuildContext entryContext;
+
+      addTearDown(authBloc.close);
+
+      await tester.pumpWidget(
+        _Harness(
+          authBloc: authBloc,
+          vodRepository: vodRepository,
+          channelRepository: channelRepository,
+          onPressed: (context) {
+            entryContext = context;
+          },
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await tester.pump();
+
+      VodDetail? allowedDetail;
+      await handleVodPlayerEntryFromCard(
+        entryContext,
+        _vod().copyWith(adult: true, userAdultStatus: null),
+        onAllowed: (_, target) {
+          allowedDetail = target.detail;
+        },
+      );
+
+      expect(allowedDetail, detail);
+      expect(allowedDetail?.userAdultStatus, 'ADULT');
+    },
+  );
+
+  testWidgets(
     'in-player vod switching can bypass route pending entry guard',
     (tester) async {
       final authBloc = AuthSessionBloc(const _FakeAuthSessionRepository());
