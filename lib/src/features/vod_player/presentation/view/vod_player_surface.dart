@@ -29,7 +29,6 @@ class VodPlayerSurface extends HookWidget {
     required this.playbackSnapshot,
     required this.chatPresentationModeIndex,
     required this.chatSettings,
-    required this.chatSuspended,
   });
 
   final VodPlayerSlotState slot;
@@ -40,7 +39,6 @@ class VodPlayerSurface extends HookWidget {
   final ValueNotifier<VodPlayerPlaybackSnapshot> playbackSnapshot;
   final int chatPresentationModeIndex;
   final ChatSettings chatSettings;
-  final bool chatSuspended;
 
   @override
   Widget build(BuildContext context) {
@@ -149,12 +147,7 @@ class VodPlayerSurface extends HookWidget {
 
       return null;
     }, [chatController, chatPresentationModeIndex]);
-    useEffect(() {
-      chatController.setSuspended(suspended: chatSuspended);
-      return null;
-    }, [chatController, chatSuspended]);
-
-    final chatLayer = isVodChatAvailable(detail) && !chatSuspended
+    final chatLayer = isVodChatAvailable(detail)
         ? VodPlayerChatLayer(
             controller: chatController,
             chatSettings: chatSettings,

@@ -93,23 +93,6 @@ Future<void> _handleVodPlayerEntryFromCard(
   final vodRepository = context.read<VodRepository>();
   final channelRepository = context.read<ChannelRepository>();
 
-  final initialDecision = await _checkVodEntry(
-    context: context,
-    vod: item,
-    isSignedIn: isSignedIn,
-    channelRepository: channelRepository,
-  );
-  if (!context.mounted || initialDecision == null) {
-    return;
-  }
-
-  final initialBlockReason = initialDecision.blockReason;
-  if (initialBlockReason != null &&
-      initialBlockReason != VodPlayerEntryBlockReason.missingVideoId) {
-    await _showBlockedDialog(context, initialBlockReason);
-    return;
-  }
-
   final detail = await _loadVodDetail(vodRepository, item.videoNo);
   if (!context.mounted) {
     return;
@@ -133,9 +116,22 @@ Future<void> _handleVodPlayerEntryFromCard(
       await _showBlockedDialog(context, detailBlockReason);
       return;
     }
-  } else if (initialBlockReason != null) {
-    await _showBlockedDialog(context, initialBlockReason);
-    return;
+  } else {
+    final fallbackDecision = await _checkVodEntry(
+      context: context,
+      vod: item,
+      isSignedIn: isSignedIn,
+      channelRepository: channelRepository,
+    );
+    if (!context.mounted || fallbackDecision == null) {
+      return;
+    }
+
+    final fallbackBlockReason = fallbackDecision.blockReason;
+    if (fallbackBlockReason != null) {
+      await _showBlockedDialog(context, fallbackBlockReason);
+      return;
+    }
   }
 
   if (!context.mounted) {

@@ -55,3 +55,6 @@ AGENTS.md
 ARCHITECTURE.md
 /docs/
 TODO.md
+
+# Local Codex machine configuration
+/.codex/
